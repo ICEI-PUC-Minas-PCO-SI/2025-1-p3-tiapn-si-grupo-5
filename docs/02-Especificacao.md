@@ -101,13 +101,10 @@ O projeto está restrito aos itens apresentados na tabela a seguir.
 
 ## Diagrama de casos de uso
 
-O diagrama de casos de uso é o próximo passo após a elicitação de requisitos. Ele utiliza um modelo gráfico e uma tabela com as descrições sucintas dos casos de uso e dos atores. O diagrama contempla a fronteira do sistema e o detalhamento dos requisitos funcionais, com a indicação dos atores, casos de uso e seus relacionamentos.
+O diagrama de casos de uso abaixo descreve o sistema apresentado e seus três atores principais: **Cliente**, **Analista** e **Gestor**: 
 
-As referências abaixo irão auxiliá-lo na geração do artefato “diagrama de casos de uso”.
+![Diagrama de casos de uso](images/diagrama-de-casos-de-uso.png)
 
-> **Links úteis**:
-> - [Criando casos de uso](https://www.ibm.com/docs/pt-br/engineering-lifecycle-management-suite/design-rhapsody/10.0?topic=cases-creating-use)
-> - [Como criar diagrama de caso de uso: tutorial passo a passo](https://gitmind.com/pt/fazer-diagrama-de-caso-uso.html/)
-> - [Lucidchart](https://www.lucidchart.com/)
-> - [Astah](https://astah.net/)
-> - [Diagrams](https://app.diagrams.net/)
+- O **Cliente** pode realizar ações como Cadastrar-se no Sistema, Abrir Chamado, Acompanhar Status do Chamado e Responder Comentários. 
+- O **Analista** tem a capacidade de Visualizar Chamados Abertos, Pegar um chamado para tender, Atualizar Status do Chamado e Responder ao Cliente. 
+- O **Gestor** pode Gerenciar Cadastro de Analistas, Visualizar Dashboard e Configurar Parâmetros. 
