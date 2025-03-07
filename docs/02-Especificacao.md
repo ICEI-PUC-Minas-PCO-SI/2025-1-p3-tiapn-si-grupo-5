@@ -105,6 +105,6 @@ O diagrama de casos de uso abaixo descreve o sistema apresentado e seus três at
 
 ![Diagrama de casos de uso](images/diagrama-de-casos-de-uso.png)
 
-- O **Cliente** pode realizar ações como Cadastrar-se no Sistema, Abrir Chamado, Acompanhar Status do Chamado e Responder Comentários. 
-- O **Analista** tem a capacidade de Visualizar Chamados Abertos, Pegar um chamado para tender, Atualizar Status do Chamado e Responder ao Cliente. 
-- O **Gestor** pode Gerenciar Cadastro de Analistas, Visualizar Dashboard e Configurar Parâmetros. 
+- O **Cliente** pode realizar ações como Cadastrar-se no sistema, Abrir chamado, Acompanhar status do chamado e Responder comentários. 
+- O **Analista** tem a capacidade de Visualizar Chamados Abertos, Pegar um chamado para atender, Atualizar status do chamado e Responder ao cliente. 
+- O **Gestor** pode Gerenciar cadastro de analistas, Visualizar dashboard e Configurar parâmetros. 
