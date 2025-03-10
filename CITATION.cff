@@ -2,29 +2,26 @@ cff-version: 1.2.0
 message: Please cite this software using these metadata.
 title: Coloque aqui o título do seu trabalho
 authors:
-  - family-names: Sobrenome do aluno 1
-    given-names: Nome do aluno 1 
-  - family-names: Sobrenome do aluno 2
-    given-names: Nome do aluno 2 
-  - family-names: Sobrenome do aluno 3
-    given-names: Nome do aluno 3 
-  - family-names: Sobrenome do aluno 4
-    given-names: Nome do aluno 4 
-  - family-names: Sobrenome do aluno 5
-    given-names: Nome do aluno 5 
-  - family-names: Sobrenome do aluno 6
-    given-names: Nome do aluno 6 
-  - name-suffix: Professor
-    affiliation: PUC Minas
-    family-names: Sobrenome do(a) professor(a)
-    given-names: Nome do(a) professor(a)
+  - family-names: Henrique Costa Leandro
+    given-names: Allef 
+  - family-names: Marques Araujo Pena
+    given-names: Arthur
+  - family-names: Xavier Santos Frota
+    given-names: Bruno
+  - family-names: Versiani de Melo Penna
+    given-names: Eduardo
+  - family-names: de Freitas Marçal
+    given-names: João Pedro
+  - family-names: Fernandes Nascimento
+    given-names: Lucas
   - name-suffix: Professora
-    affiliation: PUC Minas    
+    affiliation: PUC Minas
+    family-names: Soares Vieira de Vasconcelos
+    given-names: Amália
 keywords:
-    - coloque aqui a palavra-chave 1
-    - coloque aqui a palavra-chave 2
-    - coloque aqui a palavra-chave 3
-repository-code: coloque o link do seu repositório
+    - Track IT
+    - Gestão de demandas de TI
+repository-code: https://github.com/ICEI-PUC-Minas-PCO-SI/2025-1-p3-tiapn-si-grupo-5
 license: CC-BY-4.0
 version: 1.0.0
 date-released: 2024-08-01
