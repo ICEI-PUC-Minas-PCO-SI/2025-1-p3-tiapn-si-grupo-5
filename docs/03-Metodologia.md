@@ -53,14 +53,12 @@ Discuta como a configuração do projeto foi feita na ferramenta de versionament
 ###  Quadro de tarefas
 
 > Apresente a divisão de tarefas entre os membros do grupo e o acompanhamento da execução, conforme o exemplo abaixo.
-| Tópico | Responsável |
-|--------|------------|
-| **Definição de introdução, cliente, problema** | Arthur Marques |
-| **Definição de objetivos, público-alvo e justificativas** | João Pedro |
-| **Especificações, personas, histórias de usuário** | Allef Henrique |
-| **Requisitos, restrições, diagrama de caso de uso, planejamento de cronograma** | Lucas Fernandes |
-| **Slides de apresentação** | Eduardo Versiani |
-| **Identificação e mapa dos stakeholders** | Bruno Xavier |
+- Definição de introdução, cliente, problema - Arthur Marques 
+- Definição de objetivos, público alvo e justificativas - João Pedro
+- Especificações, personas, histórias de usuário - Allef Henrique
+- Requisitos, Restrições, Diagrama de caso de uso, Planejamento de Cronograma - Lucas Fernandes
+- Slides de apresentação - Eduardo Versiani
+- Identificação e mapa dos stackholders - Bruno Xavier
 
 #### Sprint 1
 
