@@ -54,15 +54,6 @@ Discuta como a configuração do projeto foi feita na ferramenta de versionament
 
 > Apresente a divisão de tarefas entre os membros do grupo e o acompanhamento da execução, conforme o exemplo abaixo.
 
-  Atualizado em: 10/03/2025
-
-- Definição de introdução, cliente, problema - Arthur Marques 
-- Definição de objetivos, público alvo e justificativas - João Pedro
-- Especificações, personas, histórias de usuário - Allef Henrique
-- Requisitos, Restrições, Diagrama de caso de uso, Planejamento de Cronograma - Lucas Fernandes
-- Slides de apresentação - Eduardo Versiani
-- Identificação e mapa dos stackholders - Bruno Xavier
-
 #### Sprint 1
 
 Atualizado em: 06/03/2025
@@ -70,6 +61,7 @@ Atualizado em: 06/03/2025
 | Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
 | :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
 | Lucas Fernandes Nascimento | Requisitos, Restrições, Diagramas de caso de uso, Planejamento de Cronograma, Custos e pessoal do projeto | 06/03/2025 | 12/03/2025 | 📝    | XX/03/2025      |
+| Eduardo Versiani de Melo Penna | Slides de apresentação | 10/03/2025 | 📝 | 12/03/2025
 | AlunaZ        | Objetivos    | 03/02/2024     | 10/02/2024 | 📝    |                 |
 | AlunoY        | Histórias de usuário  | 01/01/2024     | 07/01/2005 | ⌛     |                 |
 | AlunoK        | Personas 1  |    01/01/2024        | 12/02/2005 | ❌    |       |
