@@ -117,5 +117,6 @@ Exemplo: os artefatos do projeto são desenvolvidos a partir de diversas platafo
 | Repositório de código fonte         | GitHub                             | http://....                            |
 | Documentos do projeto               | GitHub                             | http://....                            |
 | Projeto de interface                | Figma                              | http://....                            |
+| Slides de Apresemtação         | Canva                             | [http://.... ](https://www.canva.com/design/DAGg-JQH1tc/SFLiuPJI_AGmRgNFB_OHkg/edit?utm_content=DAGg-JQH1tc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)                           |
 | Gerenciamento do projeto            | GitHub Projects                    | http://....                            |
 | Hospedagem                          | Vercel                             | http://....                            |
