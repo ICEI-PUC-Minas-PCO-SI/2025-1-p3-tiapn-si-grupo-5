@@ -53,6 +53,9 @@ Discuta como a configuração do projeto foi feita na ferramenta de versionament
 ###  Quadro de tarefas
 
 > Apresente a divisão de tarefas entre os membros do grupo e o acompanhamento da execução, conforme o exemplo abaixo.
+
+  Atualizado em: 10/03/2025
+
 - Definição de introdução, cliente, problema - Arthur Marques 
 - Definição de objetivos, público alvo e justificativas - João Pedro
 - Especificações, personas, histórias de usuário - Allef Henrique
