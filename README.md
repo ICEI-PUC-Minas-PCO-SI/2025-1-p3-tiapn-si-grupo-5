@@ -1,5 +1,7 @@
 # Track IT
 
+![Diagrama de casos de uso](docs/images/trackit-logo.png)
+
 `CURSO: Sistemas de Informação`
 
 `DISCIPLINA: Trabalho Interdisciplinar Aplicações para Processos de Negócios`
