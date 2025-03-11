@@ -56,7 +56,7 @@ Atualizado em: 10/03/2025
 | Lucas Fernandes Nascimento | Requisitos, Restrições, Diagramas de caso de uso, Planejamento de Cronograma, Custos e pessoal do projeto | 06/03/2025 | 12/03/2025 | 📝    | XX/03/2025      |
 | Eduardo Versiani de Melo Penna | Slides de apresentação | 07/03/2025 | 12/03/2025 | 📝 | XX/03/2025 |
 | Bruno Xavier Santos Frota | Identificação e mapa dos stakeholders    | 09/03/2024 | 12/03/2025 | 📝 | XX/03/2025 |
-| AlunoY        | Histórias de usuário  | 01/01/2024     | 07/01/2005 | ⌛     |                 |
+| Arthur Marques Araujo Pena        | Definição de Introdução, Cliente e Problema  | 01/03/2024     | 12/03/2005 | 📝 | XX/03/2025 |
 | AlunoK        | Personas 1  |    01/01/2024        | 12/02/2005 | ❌    |       |
 
 
