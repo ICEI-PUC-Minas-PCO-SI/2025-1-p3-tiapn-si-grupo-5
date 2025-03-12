@@ -3,10 +3,15 @@
 Nessa tópico abordaremos a definição do problema e da solução proposta para o projeto, a partir da perspectiva do usuário. Nesta seção, serão descritos:
 
 **Personas:** Perfis fictícios que representam os usuários do sistema, com base em dados reais.
+
 **Histórias de usuários:** Descrições curtas que detalham as necessidades e expectativas dos usuários em relação ao sistema.
+
 **Requisitos funcionais e não funcionais:** Características e funcionalidades essenciais do sistema, além de requisitos relacionados à performance, segurança, etc.
+
 **Planejamento de cronograma:** Detalhamento do tempo necessário para o desenvolvimento do projeto e suas etapas.
+
 **Custos e pessoal do projeto:** Estimativas financeiras e identificação dos recursos humanos necessários para executar o projeto.
+
 <span style="color:red">Pré-requisitos: <a href="01-Contexto.md"> Documentação de contexto</a></span>
 
 ## Personas
