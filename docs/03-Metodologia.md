@@ -49,7 +49,7 @@ Discuta como a configuração do projeto foi feita na ferramenta de versionament
 
 #### Sprint 1
 
-Atualizado em: 10/03/2025
+Atualizado em: 12/03/2025
 
 | Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
 | :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
@@ -58,6 +58,7 @@ Atualizado em: 10/03/2025
 | Bruno Xavier Santos Frota | Identificação e mapa dos stakeholders    | 09/03/2024 | 12/03/2025 | 📝 | XX/03/2025 |
 | Arthur Marques Araujo Pena | Definição de Introdução, Cliente e Problema  | 09/03/2024     | 12/03/2025 | 📝 | XX/03/2025 |
 | Allef Henrique Costa Leandro       | Especificações, personas, histórias de usuário  |    09/03/2025        | 12/03/2025 | 📝    |   XX/03/2025    |
+| XXXXX       | YYYYY |    ZZ/03/2025        | 12/03/2025 | 📝    |   XX/03/2025    |
 
 
 #### Sprint 2

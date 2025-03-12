@@ -2,55 +2,29 @@
 
 <span style="color:red">Pré-requisitos: <a href="01-Contexto.md"> Documentação de contexto</a></span>
 
-Especificação do Projeto
- 
-Na seção Especificação do Projeto do projeto você definirá o problema e a ideia de solução a partir da perspectiva do usuário. É composta pela definição de:
-
-personas; 
-
-histórias de usuários; 
-
-requisitos funcionais e não funcionais; 
-
-planejamento de cronograma; 
-
-custos e pessoal do projeto. 
-
-
 ## Personas
 
-<div align="center">
+Analisando o escopo do projeto, definimos as seguintes personas:
+
+<div align="left">
   <img src="images/imagem-persona-1.png" alt="Imagem Persona 1" />
 </div>
 
 
-**Carlos, o Cliente:** Carlos tem 35 anos, ele é um Servidor Público, ele precisa de um sistema intuitivo para abrir e acompanhar chamados técnicos e a frustação dele é falta de atualizações rápidas sobre o status dos chamados.
+**Carlos, o Servidor:** Carlos tem 35 anos e é um servidor público da PBH que precisa abrir e acompanhar chamados técnicos relacionadoS a suas atividades nos sistemas de RH. Sua frustação é a falta de atualizações rápidas sobre o status dos chamados.
 
-<div align="center">
+<div align="left">
   <img src="images/imagem-persona-2.png" alt="Imagem Persona 2" />
 </div>
 
+**Mariana, a Analista:** Mariana tem 28 anos e é uma analista de TI da ASTIN que precisa de ferramentas para gerenciar e responder chamados eficientemente. Sua frustração é o volume excessivo de chamados que chegam por e-mail sem um sistema de priorização e organização adequado.
 
-**Mariana, a Analista:** Mariana tem 28 anos, é Analista de TI e precisa de ferramentas para gerenciar e responder chamados eficientemente. Sua frustração é o volume excessivo de chamados sem um sistema de priorização adequado.
-
-<div align="center">
+<div align="left">
   <img src="images/imagem-persona-3.png" alt="Imagem Persona 3" />
 </div>
 
 
-**Roberto, o Gestor:** Roberto tem 45 anos, é Gerente de Suporte e precisa monitorar sua equipe e obter métricas sobre os atendimentos. Sua frustração é a dificuldade em identificar gargalos e avaliar o desempenho da equipe.
-
-Enumere e detalhe as personas da sua solução. Para tanto, baseie-se tanto nos documentos disponibilizados na disciplina e/ou nos seguintes links:
-
-> **Links úteis**:
-> - [Rock content](https://rockcontent.com/blog/personas/)
-> - [Hotmart](https://blog.hotmart.com/pt-br/como-criar-persona-negocio/)
-> - [O que é persona?](https://resultadosdigitais.com.br/blog/persona-o-que-e/)
-> - [Persona x público-alvo](https://flammo.com.br/blog/persona-e-publico-alvo-qual-a-diferenca/)
-> - [Mapa de empatia](https://resultadosdigitais.com.br/blog/mapa-da-empatia/)
-> - [Mapa de stalkeholders](https://www.racecomunicacao.com.br/blog/como-fazer-o-mapeamento-de-stakeholders/)
->
-Lembre-se que você deve ser enumerar e descrever precisamente e personalizada todos os clientes ideais que sua solução almeja.
+**Roberto, o Gestor:** Roberto tem 45 anos e é gerente da ASTIN. Ele precisa monitorar sua equipe e obter métricas sobre os atendimentos. Sua frustração é a dificuldade em identificar gargalos e avaliar o desempenho da equipe.
 
 ## Histórias de usuários
 
@@ -58,30 +32,9 @@ Com base na análise das personas, foram identificadas as seguintes histórias d
 
 |EU COMO... `PERSONA`        | QUERO/PRECISO ... `FUNCIONALIDADE`           |PARA ... `MOTIVO/VALOR`                    |
 |----------------------------|----------------------------------------------|-------------------------------------------|
-|**Servidor Público**           | Abrir e acompanhar chamados técnicos         | Resolver problemas rapidamente            |
-|**Analista de Suporte Técnico** |Gerenciar e responder chamados rapidamente    | Resolver problemas sem atrasos            |
+|**Servidor Público**           | Abrir e acompanhar chamados técnicos         | Resolver problemas dos sistemas de RH rapidamente            |
+|**Analista de Suporte Técnico** |Organizar, filtrar e responder os chamados rapidamente    | Solucionar as demandas sem atrasos            |
 |**Gerente de TI**               | Obter métricas detalhadas sobre a equipe     | Melhorar a eficiência e tomada de decisão |
-|**Usuário Final**               |Registrar problemas técnicos de forma simples | Solicitar suporte sem dificuldades        |
-
-
-## Histórias de Usuários
-
-**Cliente abre chamado:**
-Como cliente, quero poder abrir um chamado informando detalhes da minha solicitação para que o suporte possa resolvê-la rapidamente.
-
-**Analista gerencia chamados:**
-Como analista, quero visualizar e filtrar os chamados atribuídos a mim para gerenciar melhor meu tempo e prioridades.
-
-**Gestor acompanha desempenho:**
-Como gestor, quero acessar um dashboard com métricas dos chamados para tomar decisões estratégicas baseadas em dados.
-
-
-> **Links úteis**:
-> - [Histórias de usuários com exemplos e template](https://www.atlassian.com/br/agile/project-management/user-stories)
-> - [Como escrever boas histórias de usuário (user stories)](https://medium.com/vertice/como-escrever-boas-users-stories-hist%C3%B3rias-de-usu%C3%A1rios-b29c75043fac)
-> - [User stories: requisitos que humanos entendem](https://www.luiztools.com.br/post/user-stories-descricao-de-requisitos-que-humanos-entendem/)
-> - [Histórias de usuários: mais exemplos](https://www.reqview.com/doc/user-stories-example.html)
-> - [9 common user story mistakes](https://airfocus.com/blog/user-story-mistakes/)
 
 ## Requisitos
 

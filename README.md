@@ -8,9 +8,7 @@
 
 `1º semestre/2025`
 
-O projeto TrackIT tem como objetivo desenvolver um sistema de gestão de demandas de Tecnologia da Informação (TI) para a Prefeitura de Belo Horizonte, especificamente para a Assessoria de Tecnologia da Informação (ASTIN). Atualmente o fluxo de atendimento é realizado de forma manual, utilizando e-mails e planilhas Excel, resultando em falta de padronização, riscos de erros e dificuldades no acompanhamento das demandas, o sistema tem o objetivo de otimizar e maximizar o desempenho da equipe visando uma maior produtividade, organização e agilidade para resolução das demandas. Com a implementação do TrackIT, espera-se centralizar as solicitações, padronizar o registro de chamados e melhorar a comunicação entre os usuários e a equipe de TI, proporcionando uma experiência mais eficiente e transparente para todos os envolvidos.
-
-Além disso, o sistema incluirá funcionalidades como dashboards para análise de indicadores de desempenho, permitindo que gestores e analistas monitorem o progresso das demandas e tomem decisões informadas. O projeto busca, assim, não apenas resolver os problemas atuais, mas também trazer melhorias significativas na gestão de TI da Prefeitura, beneficiando tanto os usuários dos sistemas de Recursos Humanos quanto a equipe de suporte técnico.
+O projeto TrackIT tem como objetivo desenvolver um sistema de gestão de demandas de Tecnologia da Informação (TI) para a Prefeitura de Belo Horizonte, especificamente para a Assessoria de Tecnologia da Informação (ASTIN). Atualmente o fluxo de atendimento é realizado de forma manual, utilizando e-mails e planilhas Excel, resultando em uma série de problemas. O sistema tem o objetivo de otimizar e maximizar o desempenho da equipe visando uma maior produtividade, organização e agilidade para resolução das demandas. Com a implementação do TrackIT, espera-se centralizar as solicitações, padronizar o registro de chamados e melhorar a comunicação entre os usuários e a equipe de TI, proporcionando uma experiência mais eficiente e transparente para todos os envolvidos.
 
 ## Integrantes
 
