@@ -1,6 +1,6 @@
 # Especificação do projeto
 
-Nessa tópico abordaremos a definição do problema e da solução proposta para o projeto, a partir da perspectiva do usuário. Nesta seção, serão descritos:
+Nesse tópico abordaremos a definição do problema e da solução proposta para o projeto, a partir da perspectiva do usuário. Nesta seção, serão descritos:
 
 **Personas:** Perfis fictícios que representam os usuários do sistema, com base em dados reais.
 
