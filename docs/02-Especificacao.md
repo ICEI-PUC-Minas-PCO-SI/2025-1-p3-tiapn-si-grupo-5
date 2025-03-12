@@ -16,7 +16,6 @@ planejamento de cronograma;
 
 custos e pessoal do projeto. 
 
-## Personas
 
 ## Personas
 
@@ -52,13 +51,13 @@ Com base na análise das personas, foram identificadas as seguintes histórias d
 
 ## Histórias de Usuários
 
-## Cliente abre chamado:
+**Cliente abre chamado:**
 Como cliente, quero poder abrir um chamado informando detalhes da minha solicitação para que o suporte possa resolvê-la rapidamente.
 
-## Analista gerencia chamados:
+**Analista gerencia chamados:**
 Como analista, quero visualizar e filtrar os chamados atribuídos a mim para gerenciar melhor meu tempo e prioridades.
 
-## Gestor acompanha desempenho:
+**Gestor acompanha desempenho:**
 Como gestor, quero acessar um dashboard com métricas dos chamados para tomar decisões estratégicas baseadas em dados.
 
 
