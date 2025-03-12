@@ -1,25 +1,32 @@
 # Especificação do projeto
 
+Nessa tópico abordaremos a definição do problema e da solução proposta para o projeto, a partir da perspectiva do usuário. Nesta seção, serão descritos:
+
+**Personas:** Perfis fictícios que representam os usuários do sistema, com base em dados reais.
+**Histórias de usuários:** Descrições curtas que detalham as necessidades e expectativas dos usuários em relação ao sistema.
+**Requisitos funcionais e não funcionais:** Características e funcionalidades essenciais do sistema, além de requisitos relacionados à performance, segurança, etc.
+**Planejamento de cronograma:** Detalhamento do tempo necessário para o desenvolvimento do projeto e suas etapas.
+**Custos e pessoal do projeto:** Estimativas financeiras e identificação dos recursos humanos necessários para executar o projeto.
 <span style="color:red">Pré-requisitos: <a href="01-Contexto.md"> Documentação de contexto</a></span>
 
 ## Personas
 
 Analisando o escopo do projeto, definimos as seguintes personas:
 
-<div align="left">
+<div align="center">
   <img src="images/imagem-persona-1.png" alt="Imagem Persona 1" />
 </div>
 
 
 **Carlos, o Servidor:** Carlos tem 35 anos e é um servidor público da PBH que precisa abrir e acompanhar chamados técnicos relacionadoS a suas atividades nos sistemas de RH. Sua frustação é a falta de atualizações rápidas sobre o status dos chamados.
 
-<div align="left">
+<div align="center">
   <img src="images/imagem-persona-2.png" alt="Imagem Persona 2" />
 </div>
 
 **Mariana, a Analista:** Mariana tem 28 anos e é uma analista de TI da ASTIN que precisa de ferramentas para gerenciar e responder chamados eficientemente. Sua frustração é o volume excessivo de chamados que chegam por e-mail sem um sistema de priorização e organização adequado.
 
-<div align="left">
+<div align="center">
   <img src="images/imagem-persona-3.png" alt="Imagem Persona 3" />
 </div>
 
