@@ -19,8 +19,10 @@ custos e pessoal do projeto.
 
 ## Personas
 <div align="center">
- ![imagem-persona-1](images/imagem-persona-1.png)
- </div>
+  <img src="images/imagem-persona-1.png" alt="Imagem Persona 1" />
+</div>
+
+
 **Carlos, o Cliente:** Carlos tem 35 anos, ele é um Servidor Público, ele precisa de um sistema intuitivo para abrir e acompanhar chamados técnicos e a frustação dele é falta de atualizações rápidas sobre o status dos chamados.
 <div align="center">
  ![imagem-persona-1](images/imagem-persona-2.png)
