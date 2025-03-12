@@ -8,7 +8,31 @@ Apresente uma visão geral do que será abordado nesta parte do documento, enume
 
 ## Personas
 
-Exemplo: _Pedro Paulo tem 26 anos, é arquiteto recém-formado e autônomo. Pensa em se desenvolver profissionalmente por meio de um mestrado fora do país, pois adora viajar, é solteiro e sempre quis fazer um intercâmbio. Está buscando uma agência que o ajude a encontrar universidades na Europa que aceitem alunos estrangeiros._
+Personas
+Carlos, o Cliente:
+Idade: 35 anos
+Profissão: Servidor Público
+Necessidades: Um sistema intuitivo para abrir e acompanhar chamados técnicos.
+Frustrações: Falta de atualizações rápidas sobre o status dos chamados.
+
+Mariana, a Analista:
+Idade: 28 anos
+Profissão: Analista de TI
+Necessidades: Ferramentas para gerenciar e responder chamados eficientemente.
+Frustrações: Volume excessivo de chamados sem um sistema de priorização adequado.
+
+Roberto, o Gestor:
+Idade: 45 anos
+Profissão: Gerente de suporte
+Necessidades: Monitoramento da equipe e métricas sobre atendimentos.
+Frustrações: Dificuldade em identificar gargalos e avaliar desempenho da equipe
+
+Claudio, Coordenador:
+Idade: 30 anos
+Profissão: Coordenador de Atendimento
+Necessidades: Uma visão centralizada de todos os chamados para distribuir demandas de forma eficiente.
+Frustrações: Dificuldade em priorizar chamados urgentes devido à falta de categorização adequada.
+
 
 Enumere e detalhe as personas da sua solução. Para tanto, baseie-se tanto nos documentos disponibilizados na disciplina e/ou nos seguintes links:
 
@@ -26,12 +50,25 @@ Lembre-se que você deve ser enumerar e descrever precisamente e personalizada t
 
 Com base na análise das personas, foram identificadas as seguintes histórias de usuários:
 
-|EU COMO... `PERSONA`| QUERO/PRECISO ... `FUNCIONALIDADE` |PARA ... `MOTIVO/VALOR`                 |
-|--------------------|------------------------------------|----------------------------------------|
-|Usuário do sistema  | Registrar minhas tarefas           | Não esquecer de fazê-las               |
-|Administrador       | Alterar permissões                 | Permitir que possam administrar contas |
+|EU COMO... `PERSONA`        | QUERO/PRECISO ... `FUNCIONALIDADE`           |PARA ... `MOTIVO/VALOR`                    |
+|----------------------------|----------------------------------------------|-------------------------------------------|
+|Servidor Público            | Abrir e acompanhar chamados técnicos         | Resolver problemas rapidamente            |
+|Analista de Suporte Técnico |Gerenciar e responder chamados rapidamente    | Resolver problemas sem atrasos            |
+|Gerente de TI               | Obter métricas detalhadas sobre a equipe     | Melhorar a eficiência e tomada de decisão |
+|Coordenador de Atendimento  | Ter uma visão centralizada dos chamados      | Distribuir demandas de forma eficiente    |
+|Usuário Final               |Registrar problemas técnicos de forma simples | Solicitar suporte sem dificuldades        |
 
-Apresente aqui as histórias de usuários que são relevantes para o projeto da sua solução. As histórias de usuários consistem em uma ferramenta poderosa para a compreensão e elicitação dos requisitos funcionais e não funcionais da sua aplicação. Se possível, agrupe as histórias de usuários por contexto, para facilitar consultas recorrentes a esta parte do documento.
+
+Histórias de Usuários
+Cliente abre chamado:
+Como cliente, quero poder abrir um chamado informando detalhes da minha solicitação para que o suporte possa resolvê-la rapidamente.
+
+Analista gerencia chamados:
+Como analista, quero visualizar e filtrar os chamados atribuídos a mim para gerenciar melhor meu tempo e prioridades.
+
+Gestor acompanha desempenho:
+Como gestor, quero acessar um dashboard com métricas dos chamados para tomar decisões estratégicas baseadas em dados.
+
 
 > **Links úteis**:
 > - [Histórias de usuários com exemplos e template](https://www.atlassian.com/br/agile/project-management/user-stories)
