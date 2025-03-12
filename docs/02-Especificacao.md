@@ -49,10 +49,10 @@ Com base na análise das personas, foram identificadas as seguintes histórias d
 
 |EU COMO... `PERSONA`        | QUERO/PRECISO ... `FUNCIONALIDADE`           |PARA ... `MOTIVO/VALOR`                    |
 |----------------------------|----------------------------------------------|-------------------------------------------|
-|Servidor Público            | Abrir e acompanhar chamados técnicos         | Resolver problemas rapidamente            |
-|Analista de Suporte Técnico |Gerenciar e responder chamados rapidamente    | Resolver problemas sem atrasos            |
-|Gerente de TI               | Obter métricas detalhadas sobre a equipe     | Melhorar a eficiência e tomada de decisão |
-|Usuário Final               |Registrar problemas técnicos de forma simples | Solicitar suporte sem dificuldades        |
+|**Servidor Público**           | Abrir e acompanhar chamados técnicos         | Resolver problemas rapidamente            |
+|**Analista de Suporte Técnico** |Gerenciar e responder chamados rapidamente    | Resolver problemas sem atrasos            |
+|**Gerente de TI**               | Obter métricas detalhadas sobre a equipe     | Melhorar a eficiência e tomada de decisão |
+|**Usuário Final**               |Registrar problemas técnicos de forma simples | Solicitar suporte sem dificuldades        |
 
 
 ## Histórias de Usuários
