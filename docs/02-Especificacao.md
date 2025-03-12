@@ -18,40 +18,13 @@ custos e pessoal do projeto.
 
 ## Personas
 
-Personas
+## Personas
 
-Carlos, o Cliente:
+**Carlos, o Cliente:** Carlos tem 35 anos, ele é um Servidor Público, ele precisa de um sistema intuitivo para abrir e acompanhar chamados técnicos e a frustação dele é falta de atualizações rápidas sobre o status dos chamados.
 
-Idade: 35 anos
+**Mariana, a Analista:** Mariana tem 28 anos, é Analista de TI e precisa de ferramentas para gerenciar e responder chamados eficientemente. Sua frustração é o volume excessivo de chamados sem um sistema de priorização adequado.
 
-Profissão: Servidor Público
-
-Necessidades: Um sistema intuitivo para abrir e acompanhar chamados técnicos.
-
-Frustrações: Falta de atualizações rápidas sobre o status dos chamados.
-
-
-Mariana, a Analista:
-
-Idade: 28 anos
-
-Profissão: Analista de TI
-
-Necessidades: Ferramentas para gerenciar e responder chamados eficientemente.
-
-Frustrações: Volume excessivo de chamados sem um sistema de priorização adequado.
-
-
-Roberto, o Gestor:
-
-Idade: 45 anos
-
-Profissão: Gerente de suporte
-
-Necessidades: Monitoramento da equipe e métricas sobre atendimentos.
-
-Frustrações: Dificuldade em identificar gargalos e avaliar desempenho da equipe
-
+**Roberto, o Gestor:** Roberto tem 45 anos, é Gerente de Suporte e precisa monitorar sua equipe e obter métricas sobre os atendimentos. Sua frustração é a dificuldade em identificar gargalos e avaliar o desempenho da equipe.
 
 Enumere e detalhe as personas da sua solução. Para tanto, baseie-se tanto nos documentos disponibilizados na disciplina e/ou nos seguintes links:
 
@@ -77,15 +50,15 @@ Com base na análise das personas, foram identificadas as seguintes histórias d
 |Usuário Final               |Registrar problemas técnicos de forma simples | Solicitar suporte sem dificuldades        |
 
 
-Histórias de Usuários
+## Histórias de Usuários
 
-Cliente abre chamado:
+## Cliente abre chamado:
 Como cliente, quero poder abrir um chamado informando detalhes da minha solicitação para que o suporte possa resolvê-la rapidamente.
 
-Analista gerencia chamados:
+## Analista gerencia chamados:
 Como analista, quero visualizar e filtrar os chamados atribuídos a mim para gerenciar melhor meu tempo e prioridades.
 
-Gestor acompanha desempenho:
+## Gestor acompanha desempenho:
 Como gestor, quero acessar um dashboard com métricas dos chamados para tomar decisões estratégicas baseadas em dados.
 
 
