@@ -9,22 +9,35 @@ Apresente uma visão geral do que será abordado nesta parte do documento, enume
 ## Personas
 
 Personas
+
 Carlos, o Cliente:
+
 Idade: 35 anos
+
 Profissão: Servidor Público
+
 Necessidades: Um sistema intuitivo para abrir e acompanhar chamados técnicos.
+
 Frustrações: Falta de atualizações rápidas sobre o status dos chamados.
 
 Mariana, a Analista:
+
 Idade: 28 anos
+
 Profissão: Analista de TI
+
 Necessidades: Ferramentas para gerenciar e responder chamados eficientemente.
+
 Frustrações: Volume excessivo de chamados sem um sistema de priorização adequado.
 
 Roberto, o Gestor:
+
 Idade: 45 anos
+
 Profissão: Gerente de suporte
+
 Necessidades: Monitoramento da equipe e métricas sobre atendimentos.
+
 Frustrações: Dificuldade em identificar gargalos e avaliar desempenho da equipe
 
 
