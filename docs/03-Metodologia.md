@@ -54,7 +54,7 @@ Atualizado em: 12/03/2025
 | Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
 | :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
 | Lucas Fernandes Nascimento | Requisitos, Restrições, Diagramas de caso de uso, Planejamento de Cronograma, Custos e pessoal do projeto | 06/03/2025 | 12/03/2025 | 📝    | XX/03/2025      |
-| Eduardo Versiani de Melo Penna | Slides de apresentação | 07/03/2025 | 12/03/2025 | 📝 | XX/03/2025 |
+| Eduardo Versiani de Melo Penna | Slides de apresentação | 07/03/2025 | 12/03/2025 | ✔️ | 12/03/2025 |
 | Bruno Xavier Santos Frota | Identificação e mapa dos stakeholders    | 09/03/2024 | 12/03/2025 | 📝 | XX/03/2025 |
 | Arthur Marques Araujo Pena | Definição de Introdução, Cliente e Problema  | 09/03/2024     | 12/03/2025 | 📝 | XX/03/2025 |
 | Allef Henrique Costa Leandro       | Especificações, personas, histórias de usuário  |    09/03/2025        | 12/03/2025 | 📝    |   XX/03/2025    |
