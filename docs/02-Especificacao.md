@@ -2,7 +2,7 @@
 
 <span style="color:red">Pré-requisitos: <a href="01-Contexto.md"> Documentação de contexto</a></span>
 
-1.4. Especificação do Projeto
+Especificação do Projeto
  
 Na seção Especificação do Projeto do projeto você definirá o problema e a ideia de solução a partir da perspectiva do usuário. É composta pela definição de:
 
