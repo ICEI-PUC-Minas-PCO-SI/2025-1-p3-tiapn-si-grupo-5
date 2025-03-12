@@ -18,19 +18,21 @@ custos e pessoal do projeto.
 
 
 ## Personas
+
 <div align="center">
   <img src="images/imagem-persona-1.png" alt="Imagem Persona 1" />
 </div>
 
-
 **Carlos, o Cliente:** Carlos tem 35 anos, ele é um Servidor Público, ele precisa de um sistema intuitivo para abrir e acompanhar chamados técnicos e a frustação dele é falta de atualizações rápidas sobre o status dos chamados.
 <div align="center">
- ![imagem-persona-1](images/imagem-persona-2.png)
+  <img src="images/imagem-persona-2.png" alt="Imagem Persona 2" />
 </div>
+
 **Mariana, a Analista:** Mariana tem 28 anos, é Analista de TI e precisa de ferramentas para gerenciar e responder chamados eficientemente. Sua frustração é o volume excessivo de chamados sem um sistema de priorização adequado.
 <div align="center">
- ![imagem-persona-1](images/imagem-persona-3.png)
+  <img src="images/imagem-persona-3.png" alt="Imagem Persona 3" />
 </div>
+
 **Roberto, o Gestor:** Roberto tem 45 anos, é Gerente de Suporte e precisa monitorar sua equipe e obter métricas sobre os atendimentos. Sua frustração é a dificuldade em identificar gargalos e avaliar o desempenho da equipe.
 
 Enumere e detalhe as personas da sua solução. Para tanto, baseie-se tanto nos documentos disponibilizados na disciplina e/ou nos seguintes links:
