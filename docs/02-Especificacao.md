@@ -27,12 +27,6 @@ Profissão: Gerente de suporte
 Necessidades: Monitoramento da equipe e métricas sobre atendimentos.
 Frustrações: Dificuldade em identificar gargalos e avaliar desempenho da equipe
 
-Claudio, Coordenador:
-Idade: 30 anos
-Profissão: Coordenador de Atendimento
-Necessidades: Uma visão centralizada de todos os chamados para distribuir demandas de forma eficiente.
-Frustrações: Dificuldade em priorizar chamados urgentes devido à falta de categorização adequada.
-
 
 Enumere e detalhe as personas da sua solução. Para tanto, baseie-se tanto nos documentos disponibilizados na disciplina e/ou nos seguintes links:
 
@@ -55,7 +49,6 @@ Com base na análise das personas, foram identificadas as seguintes histórias d
 |Servidor Público            | Abrir e acompanhar chamados técnicos         | Resolver problemas rapidamente            |
 |Analista de Suporte Técnico |Gerenciar e responder chamados rapidamente    | Resolver problemas sem atrasos            |
 |Gerente de TI               | Obter métricas detalhadas sobre a equipe     | Melhorar a eficiência e tomada de decisão |
-|Coordenador de Atendimento  | Ter uma visão centralizada dos chamados      | Distribuir demandas de forma eficiente    |
 |Usuário Final               |Registrar problemas técnicos de forma simples | Solicitar suporte sem dificuldades        |
 
 
