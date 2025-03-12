@@ -53,6 +53,7 @@ Com base na análise das personas, foram identificadas as seguintes histórias d
 
 
 Histórias de Usuários
+
 Cliente abre chamado:
 Como cliente, quero poder abrir um chamado informando detalhes da minha solicitação para que o suporte possa resolvê-la rapidamente.
 
