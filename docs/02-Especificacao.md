@@ -20,6 +20,7 @@ Necessidades: Um sistema intuitivo para abrir e acompanhar chamados técnicos.
 
 Frustrações: Falta de atualizações rápidas sobre o status dos chamados.
 
+
 Mariana, a Analista:
 
 Idade: 28 anos
@@ -29,6 +30,7 @@ Profissão: Analista de TI
 Necessidades: Ferramentas para gerenciar e responder chamados eficientemente.
 
 Frustrações: Volume excessivo de chamados sem um sistema de priorização adequado.
+
 
 Roberto, o Gestor:
 
