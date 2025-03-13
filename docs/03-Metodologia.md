@@ -58,7 +58,7 @@ Atualizado em: 12/03/2025
 | Bruno Xavier Santos Frota | Identificação e mapa dos stakeholders    | 09/03/2024 | 12/03/2025 | 📝 | XX/03/2025 |
 | Arthur Marques Araujo Pena | Definição de Introdução, Cliente e Problema  | 09/03/2024     | 12/03/2025 | ✔️ | 12/03/2025 |
 | Allef Henrique Costa Leandro       | Especificações, personas, histórias de usuário  |    09/03/2025        | 12/03/2025 | ✔️    |   12/03/2025    |
-| João Pedro de Freitas Marçal      | Objetivos, justificativa e público-alvo  |    11/03/2025        | 12/03/2025 | 📝    |   12/03/2025    |
+| João Pedro de Freitas Marçal      | Objetivos, justificativa e público-alvo  |    11/03/2025        | 12/03/2025 | ✔️    |   12/03/2025    |
 
 
 #### Sprint 2
