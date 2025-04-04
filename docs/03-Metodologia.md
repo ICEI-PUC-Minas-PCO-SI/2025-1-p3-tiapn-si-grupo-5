@@ -55,7 +55,7 @@ Atualizado em: 12/03/2025
 
 
 #### Sprint 2
-- _Scrum master_: 
+- _Scrum master_: Eduardo Versiani de Melo Penna
 - Modelagem do Processo 01: Eduardo Versiani de Melo Penna e Lucas Fernandes Nascimento
 - Modelagem do Processo 02: Arthur Marques Araujo Pena, Bruno Xavier Santos Frota, João Pedro de Freitas Marçal
 - Documentação: Allef Henrique Costa Leandro, Arthur Marques Araujo Pena, Bruno Xavier Santos Frota, Eduardo Versiani de Melo Penna, João Pedro de Freitas Marçal e Lucas Fernandes Nascimento
@@ -67,7 +67,7 @@ Atualizado em: 04/04/2024
 | Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
 | :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
 | Lucas Fernandes Nascimento     | Modelagem AS IS  | 26/03/2025     | 09/04/2025 | 📝    | XX/04/2025      |
-| AlunaZ        | CSS unificado    | 03/02/2024     | 10/03/2024 | 📝    |                 |
+| Eduardo Versiani de Melo Penna       | Modelagem TO BE    | 26/03/2025     | 09/04/2025 | 📝    |   XX/04/2025      |
 | AlunoY        | Página de login  | 01/02/2024     | 07/03/2024 | ⌛     |                 |
 | AlunoK        | Script de login  |  01/01/2024    | 12/03/2024 | ❌    |       |
 
