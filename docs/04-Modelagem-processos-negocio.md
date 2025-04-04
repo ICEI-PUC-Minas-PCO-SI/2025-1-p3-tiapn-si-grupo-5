@@ -40,9 +40,10 @@ Use o seguinte modelo:
 
 | **Indicador** | **Objetivos** | **Descrição** | **Fonte de dados** | **Fórmula de cálculo** |
 | ---           | ---           | ---           | ---             | ---             |
-| Percentual de reclamações | Avaliar quantitativamente as reclamações | Percentual de reclamações em relação ao total de atendimentos | Tabela Reclamações | número total de reclamações / número total de atendimentos |
-| Taxa de requisições atendidas | Melhorar a prestação de serviços medindo a porcentagem de requisições atendidas| Mede a % de requisições atendidas na semana | Tabela Solicitações | (número de requisições atendidas / número total de requisições) * 100 |
-| Taxa de entrega de material | Manter controle sobre os materiais que estão sendo entregues | Mede % de material entregue dentro do mês | Tabela Pedidos | (número de pedidos entregues / número total de pedidos) * 100 |
+| Tempo médio de atendimento | Avaliar a eficiência no atendimento das demandas | Tempo médio entre a abertura da solicitação e a resolução | PDU 2024 | soma dos tempos de atendimento / número de atendimentos |
+| Taxa de retrabalho               | Identificar ineficiências ou falhas na primeira análise                      | Percentual de demandas que retornam para nova análise após resposta inicial | Histórico de Atendimentos do email da ASTIN | (nº de demandas reabertas / nº total de demandas) * 100                  |
+| Percentual de atendimentos resolvidos sem escalonamento | Avaliar a autonomia e capacidade da equipe técnica                          | Proporção de atendimentos resolvidos sem envolvimento do gestor          | Tabela de Atendimentos  | (nº de atendimentos sem escalonamento / nº total de atendimentos) * 100 |
+
 
 
 Obs.: todas as informações necessárias para gerar os indicadores devem estar no diagrama de classe a ser apresentado posteriormente.
