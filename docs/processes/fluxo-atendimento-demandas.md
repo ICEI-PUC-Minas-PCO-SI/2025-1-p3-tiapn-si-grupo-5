@@ -20,35 +20,86 @@ O fluxo envolve três atores principais:
 
 **Envio da solicitação**
 
-O usuário envia um email para a caixa de entrada da ASTIN. Não existe uma padronização nessas solicitações que chegam, algumas não tem assunto, outras vem mal explicadas e algumas são enviadas por engano pois o usuário não sabe direito o setor responsável por realizar determinado processo ou atendimento.
+O usuário envia um e-mail para a caixa de entrada da ASTIN. Não há padronização nessas solicitações: algumas chegam sem assunto, outras são mal explicadas e, em certos casos, o e-mail é enviado por engano, pois o usuário não sabe exatamente qual setor é responsável pelo atendimento ou processo solicitado.
 
 **Visualização da solicitação e cadastro no PDU**
 
-O analista verifica na caixa de email que chegou uma nova solicitação. A partir disto, ele abre a planilha de Excel (_PDU_) e cadastra a demanda nesta planilha. Os principais campos da planilha utilizados para o registro de uma nova solicitação são: Nome do solicitante, tipo da demanda, prioridade e data da solicitação. Como as informações do solicitante não possuem padrão, o preenchimento de uma nova demanda na planilha pode ser feito com inconsistências.
+O analista identifica a chegada de uma nova solicitação na caixa de entrada e, em seguida, abre a planilha do Excel (_PDU_) para cadastrar a demanda. Os principais campos utilizados nesse registro são: nome do solicitante, tipo da demanda, prioridade e data da solicitação. Como as informações fornecidas pelo usuário não seguem um padrão, o preenchimento pode conter inconsistências.
 
-**Geração de Protocolo e Resposta Email**
+**Geração de protocolo e resposta por e-mail**
 
-Após o preenchimento dos campos da planilha, é gerado automaticamente um número de protocolo sequencial para controle interno das demandas, além de uma reposta pronta para mandar para o soliciante. Essa resposta pronta depende do tipo de informações preenchidas nos campos da planilha. Por exemplo, caso for uma demanda para solucionar problema X, têm-se uma resposta específica, para Y, têm-se outra.
+Após preencher os campos da planilha, é gerado automaticamente um número de protocolo sequencial para controle interno das demandas. Com base nas informações registradas, o analista utiliza uma resposta pronta, que varia conforme o tipo da solicitação. Por exemplo, se a demanda estiver relacionada ao problema X, há uma resposta específica; se for sobre Y, aplica-se outra.
 
-**Colocar a demanda na TAG de email**
+**Organização por tag de e-mail**
 
-O analista identifica as demandas que atende através de tags de email, colocando a demanda que quer atender em sua tag após o cadastro no _PDU_. As tags são descritas pelo nome do analista e, como não existe padrão em relação a isso, há analistas que criam subtags como "aguardando retorno" ou "resolvido" para controle interno junto à equipe de atendimentos.
+Para organizar o atendimento, o analista utiliza tags no e-mail, movendo a solicitação para a sua tag específica após o cadastro no _PDU_. Essas tags geralmente levam o nome do analista. Em alguns casos, são criadas subtags como "aguardando retorno" ou "resolvido" para controle interno da equipe de atendimento, embora não exista um padrão formal para isso.
 
-**Envio do protocolo e uma primeira análise**
+**Envio do protocolo e primeira análise**
 
-O analista após colocar a demanda em sua tag, envia ao solicitante a mensagem pronta com o número do protocolo seguido de uma primeira análise da demanda do usuário solicitante
+Após organizar a demanda com a tag, o analista responde ao solicitante com a mensagem pronta contendo o número do protocolo, seguida de uma primeira análise sobre a solicitação.
 
 **Loop do atendimento**
 
-Com isso, forma-se uma espécie de loop: o usuário verifica se a primeira análise soluciona a demanda, caso não, retorna o email ao analista detalhando o processo ou inconcistência, que por sua vez envia novas análises que serão novamente avaliadas pelo usuário até que o usuário tenha sua demanda solucionada.
+Forma-se então um ciclo de atendimento: o usuário avalia se a primeira análise resolve sua demanda. Caso não resolva, ele responde ao e-mail com mais detalhes ou correções. O analista, por sua vez, realiza novas análises, que são reenviadas ao usuário, até que a demanda seja finalmente solucionada.
 
 **Participação do gestor**
 
-Existem casos que é necessário a intervenção do gestor no processo, para articulação entre as áreas ou considerações mais sensíveis em relação à regra de negócios, com isso, ele intervém na demanda e aponta suas avaliações.
+Em determinados casos, é necessária a intervenção do gestor, seja para articular entre áreas ou tratar questões mais sensíveis relacionadas às regras de negócio. Nesses momentos, o gestor intervém diretamente na demanda através do email, apontando suas considerações e orientações.
 
 **Demanda solucionada**
 
-Quando a resposta do analista e caso haja, a intervenção do gestor, solucionam a demanda do usuário, o atendimento pode ser encerrado, o que é feito através da mudança do status na demanda no _PDU_ de em aberto/aguardando análise para resolvido. Em paralelo a isso, o gestor consegue visualizar métrica dos atendimentos realizados pelo analista, existe um gráfico bem simples na planilha que mostra a quantidade de demandas que o analista iniciou, concluiu e o tipo de demanda que mais atende, porém de modo simples para a análise do gestor.
+Quando a resposta do analista (e, se houver, a intervenção do gestor) resolve a demanda do usuário, o atendimento é encerrado. Isso é feito por meio da alteração do status da solicitação no _PDU_, de "em aberto/aguardando análise" para "resolvido". Paralelamente, o gestor consegue visualizar métricas dos atendimentos por meio de um gráfico simples presente na planilha. Esse gráfico exibe a quantidade de demandas iniciadas e concluídas por cada analista, além dos tipos de demandas mais frequentes, servindo como um recurso básico para análise de desempenho.
+
+### Identificação de Gargalos no Processo Atual (AS-IS)
+
+**1. Falta de padronização nas solicitações dos usuários**
+
+- Os e-mails chegam sem padrão de formato, assunto ou conteúdo, o que dificulta a triagem e o entendimento da demanda.
+- Isso gera retrabalho para o analista, que precisa interpretar informações mal explicadas ou incompletas.
+
+**2. Registro manual e suscetível a erros no PDU (planilha Excel)**
+
+- O preenchimento da planilha é feito manualmente, com base em informações não padronizadas.
+- Isso pode gerar inconsistências nos dados, dificultando o controle e rastreabilidade das demandas.
+- Além disso, a planilha não oferece recursos avançados de validação ou automação.
+
+**3. Respostas automáticas baseadas em preenchimento manual**
+
+- As mensagens de resposta são dependentes da forma como os campos da planilha são preenchidos.
+- Caso o analista preencha incorretamente ou de forma incompleta, a resposta automática pode ser inadequada ou até gerar mal-entendidos com o solicitante.
+
+**4. Organização informal via tags de e-mail**
+
+- O uso de tags para controle de demandas por e-mail é individual e sem padronização.
+- Isso dificulta a colaboração entre analistas e a rastreabilidade por parte de gestores.
+- Subtags criadas livremente como "aguardando retorno" ou "resolvido" não garantem visibilidade uniforme para a equipe.
+
+**5. Processo de atendimento com muitos ciclos (loop de atendimento)**
+
+- A ausência de formulários padronizados ou ferramentas de suporte ao analista leva a múltiplas trocas de e-mail para solucionar a demanda.
+- Esse "loop" de ida e volta pode atrasar significativamente a resolução das demandas.
+- A falta de histórico estruturado das interações dificulta o entendimento do progresso da solicitação. Muitos usuários respodem um retorno do analista encaminhando um novo email, tornando a rastreabilidade a demanda totalmente dificultada. Além disso, muitos também não utilizam a opção "Responder pra todos" quando há vários envolvidos no email, com isso, as áreas incluídas não visualizam o retorno, o que atrasa ainda mais o processo.
+
+**6. Intervenção do gestor de forma não sistematizada**
+
+- A participação do gestor ocorre de forma reativa, quando o analista percebe a necessidade.
+- Não há um fluxo definido para escalonamento ou registro claro da intervenção, o que pode levar à perda de informações importantes e atrasos.
+
+**7. Encerramento da demanda e acompanhamento pouco eficiente**
+
+- O fechamento do atendimento é feito de forma manual, com alteração de status na planilha.
+- O acompanhamento por parte da gestão é baseado em gráficos simples, limitando a análise detalhada de produtividade e tipos de demandas recorrentes.
+
+
+### Consequências dos Gargalos Identificados
+
+- **Atraso na resolução das demandas**
+- **Retrabalho para analistas e usuários**
+- **Baixa visibilidade e controle por parte da gestão**
+- **Dificuldade na mensuração de desempenho**
+- **Falta de escalabilidade do processo**
+
+
 
 **Nome da atividade 1**
 
