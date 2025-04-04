@@ -6,13 +6,11 @@
 > - [Modelagem de processos AS-IS x TO-BE](https://dheka.com.br/modelagem-as-is-to-be/)
 > - [20 dicas práticas de modelagem de processos](https://dheka.com.br/20-dicas-praticas-de-modelagem-de-processos/)
 
-## Modelagem da situação atual (Modelagem AS IS)
+## Modelagem da situação atual (Modelagem AS IS) PROCESSO 1
 
-Apresente uma descrição textual de como os sistemas atuais resolvem o problema que seu projeto se propõe a resolver. Caso sua proposta seja inovadora e não existam processos claramente definidos, apresente como as tarefas que seu sistema pretende implementar são executadas atualmente, mesmo que não se utilize tecnologia computacional.
+Atualmente, o processo do atendimento das demandas na ASTIN ocorre de maneira manual e descentralizada, sendo descrito por uma planilha de Excel para registro das solicitações e troca de mensagens por email para contato com o usuário solicitante. Esse processo gera ineficiências, retrabalho e dificuldades no acompanhamento das solicitações.
 
-Com o tema do projeto definido, escolham alguns processos no contexto de negócios. Para ilustrar os potenciais ganhos com a automatização, imaginem processos manuais, ineficientes e/ou com muitas idas e vindas, gerando, assim, retrabalho. Colem aqui os modelos dos processos atuais (modelo AS-IS), elaborados com o apoio da ferramenta baseada em BPMN utilizada na disciplina.
-
-## Descrição geral da proposta (Modelagem TO BE)
+## Descrição geral da proposta (Modelagem TO BE) PROCESSO 1
 
 Tendo identificado os gargalos dos modelos AS-IS, apresentem uma descrição da proposta de solução, buscando maior eficiência com a introdução da tecnologia. Abordem também os limites dessa solução e seu alinhamento com as estratégias e objetivos do contexto de negócio escolhido.
 
@@ -20,9 +18,16 @@ Cole aqui os modelos da solução proposta (modelo TO-BE), elaborados com o apoi
 
 Apresente aqui uma descrição da sua proposta, abordando seus limites e suas ligações com as estratégias e objetivos do negócio. Apresente também as oportunidades de melhoria.
 
+## Modelagem da situação atual (Modelagem AS IS) PROCESSO 2
+
+
+## Descrição geral da proposta (Modelagem TO BE) PROCESSO 2
+
+
+
 ## Modelagem dos processos
 
-[PROCESSO 1 - Nome do processo](./processes/processo-1-nome-do-processo.md "Detalhamento do processo 1.")
+[PROCESSO 1 - Nome do processo](./processes/fluxo-atendimento-demandas.md "Detalhamento do processo 1.")
 
 [PROCESSO 2 - Nome do processo](./processes/processo-2-nome-do-processo.md "Detalhamento do processo 2.")
 
