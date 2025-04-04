@@ -97,6 +97,7 @@ Exemplo: os artefatos do projeto são desenvolvidos a partir de diversas platafo
 | Repositório de código fonte         | GitHub                             | http://....                            |
 | Documentos do projeto               | GitHub                             | http://....                            |
 | Projeto de interface                | Figma                              | http://....                            |
+| Modelagem de Processos                         | Lucid.app                             | [http://....](https://lucid.app/lucidchart/4c140509-cd82-42cc-b4e3-0c3382ea2737/edit?viewport_loc=104%2C161%2C2217%2C1076%2C0_0&invitationId=inv_94730dbe-5f9c-4e6f-8a68-ee316f7e33b5)                         |
 | Slides de Apresentação         | Canva                             | [http://.... ](https://www.canva.com/design/DAGg-JQH1tc/SFLiuPJI_AGmRgNFB_OHkg/edit?utm_content=DAGg-JQH1tc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)                           |
 | Gerenciamento do projeto            | GitHub Projects                    | http://....                            |
 | Hospedagem                          | Vercel                             | http://....                            |
