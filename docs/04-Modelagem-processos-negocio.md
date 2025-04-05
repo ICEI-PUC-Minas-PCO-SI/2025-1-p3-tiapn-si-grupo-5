@@ -40,10 +40,8 @@ Use o seguinte modelo:
 
 | **Indicador** | **Objetivos** | **Descrição** | **Fonte de dados** | **Fórmula de cálculo** |
 | ---           | ---           | ---           | ---             | ---             |
-| Tempo médio de atendimento | Avaliar a eficiência no atendimento das demandas | Tempo médio entre a abertura da solicitação e a resolução | PDU 2024 | soma dos tempos de atendimento / número de atendimentos |
-| Taxa de retrabalho               | Identificar ineficiências ou falhas na primeira análise                      | Percentual de demandas que retornam para nova análise após resposta inicial | Histórico de Atendimentos do email da ASTIN | (nº de demandas reabertas / nº total de demandas) * 100                  |
-| Percentual de atendimentos resolvidos sem escalonamento | Avaliar a autonomia e capacidade da equipe técnica                          | Proporção de atendimentos resolvidos sem envolvimento do gestor          | Tabela de Atendimentos  | (nº de atendimentos sem escalonamento / nº total de atendimentos) * 100 |
-
-
-
-Obs.: todas as informações necessárias para gerar os indicadores devem estar no diagrama de classe a ser apresentado posteriormente.
+| Tempo médio de atendimento | Avaliar a eficiência no atendimento das demandas | Tempo médio entre a abertura da solicitação e a resolução | PDU (as is) / TrackIT (to be) | soma dos tempos de atendimento / número de atendimentos |
+| Taxa de retrabalho               | Identificar ineficiências ou falhas na primeira análise                      | Percentual de demandas que retornam para nova análise após resposta inicial | Histórico de Atendimentos do email da ASTIN (as is) / TrackIT (to be) | (nº de demandas reabertas / nº total de demandas) * 100                  |
+| Percentual de atendimentos resolvidos sem escalonamento | Avaliar a autonomia e capacidade da equipe técnica                          | Proporção de atendimentos resolvidos sem envolvimento do gestor          | PDU (as is) / TrackIT (to be)  | (nº de atendimentos sem escalonamento / nº total de atendimentos) * 100 |
+| Taxa de chamados cancelados        | Identificar inconsistências ou erros na abertura de chamados                | Mede o percentual de solicitações que foram canceladas antes do atendimento    | PDU (as is) / TrackIT (to be)    | (nº de chamados cancelados / nº total de chamados abertos) * 100             |
+| Taxa de chamados duplicados        | Avaliar falhas no envio de solicitações repetidas                           | Percentual de chamados identificados como duplicados                            | PDU (as is) / TrackIT (to be)    | (nº de chamados duplicados / nº total de chamados abertos) * 100             |
