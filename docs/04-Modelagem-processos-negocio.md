@@ -12,11 +12,7 @@ Atualmente, o processo do atendimento das demandas na ASTIN ocorre de maneira ma
 
 ## Descrição geral da proposta (Modelagem TO BE) PROCESSO 1
 
-Tendo identificado os gargalos dos modelos AS-IS, apresentem uma descrição da proposta de solução, buscando maior eficiência com a introdução da tecnologia. Abordem também os limites dessa solução e seu alinhamento com as estratégias e objetivos do contexto de negócio escolhido.
-
-Cole aqui os modelos da solução proposta (modelo TO-BE), elaborados com o apoio da ferramenta baseada em BPMN utilizada na disciplina. Cada processo identificado deve ter seu modelo TO-BE específico. Descrevam as oportunidades de melhoria de cada processo da solução proposta.
-
-Apresente aqui uma descrição da sua proposta, abordando seus limites e suas ligações com as estratégias e objetivos do negócio. Apresente também as oportunidades de melhoria.
+Com a chegada do TRACK IT, o jeito de lidar com os pedidos na ASTIN vai mudar: tudo passará a ser feito automaticamente e reunido em um só lugar, numa plataforma online. Os próprios usuários cadastrados vão abrir seus pedidos ali, podendo ver o que está acontecendo com eles a qualquer momento. O trabalho vai seguir um padrão, com avisos automáticos e um registro de tudo que foi conversado, o que ajuda muito na comunicação entre o usuário e o pessoal técnico. Essa novidade vai diminuir a repetição de tarefas, acelerar o atendimento e permitir que os pedidos sejam controlados de forma mais inteligente, com telas de acompanhamento e relatórios.
 
 ## Modelagem da situação atual (Modelagem AS IS) PROCESSO 2
 
