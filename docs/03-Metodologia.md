@@ -66,8 +66,8 @@ Atualizado em: 04/04/2024
 
 | Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
 | :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
-| Lucas Fernandes Nascimento     | Modelagem AS IS  | 26/03/2025     | 09/04/2025 | 📝    | XX/04/2025      |
-| Eduardo Versiani de Melo Penna       | Modelagem TO BE    | 26/03/2025     | 09/04/2025 | ✔️    |   04/04/2025      |
+| Lucas Fernandes Nascimento     | Modelagem AS IS  | 26/03/2025     | 09/04/2025 | ✔️    | 04/04/2025      |
+| Eduardo Versiani de Melo Penna       | Modelagem TO BE    | 26/03/2025     | 09/04/2025 | 📝    |   XX/04/2025      |
 | AlunoY        | Página de login  | 01/02/2024     | 07/03/2024 | ⌛     |                 |
 | AlunoK        | Script de login  |  01/01/2024    | 12/03/2024 | ❌    |       |
 
