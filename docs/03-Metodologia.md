@@ -68,7 +68,7 @@ Atualizado em: 04/04/2024
 | :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
 | Lucas Fernandes Nascimento     | Modelagem AS IS  | 26/03/2025     | 09/04/2025 | ✔️    | 04/04/2025      |
 | Eduardo Versiani de Melo Penna       | Modelagem TO BE    | 26/03/2025     | 09/04/2025 | ✔️    |   07/04/2025      |
-| Arthur Marques Araujo PEna        | Modelagem TO BE / AS IS | 26/03/2025     | 09/04/2025 | ✔️     |   09/04/2025     |
+| Arthur Marques Araujo Pena        | Modelagem TO BE / AS IS | 26/03/2025     | 09/04/2025 | ✔️     |   09/04/2025     |
 | AlunoK        | Script de login  |  01/01/2024    | 12/03/2024 | ❌    |       |
 
 
