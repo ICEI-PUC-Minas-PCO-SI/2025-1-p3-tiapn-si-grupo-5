@@ -41,3 +41,35 @@ Após concluído todos os processos anteriores, o analista envia por email o rel
 **Análise do Gerente**
 
 Antes do gerente analisar o relatório em si, ele precisa analisar as informações que estão contidas nele, quando as informações são as que se eram esperadas, o gerente fornece um feedback positivo ao analista e assim a solicitação se encerra, caso contrário, ele envia um novo email com as informações que precisam ser alteradas, adicionadas ou excluídas, e assim o analista volta para o primeiro processo, Análise das Informações.
+
+### Identificação de Gargalos no Processo Atual (AS-IS)
+
+**1. Comunicação via E-mail para Alterações**
+
+-A dependência de e-mails para comunicar alterações nas informações dos relatórios é um ponto de atrito. A falta de clareza e objetividade nesses e-mails leva a retrabalho significativo tanto para o analista quanto para o gerente.
+- Se as informações pré-definidas não forem revisadas e atualizadas regularmente, podem levar à geração de relatórios que não atendem mais às necessidades dos gerentes.
+
+**2. Análise Manual das Informações**
+
+- A análise manual das informações solicitadas é suscetível a erros de interpretação por parte do analista, o que pode levar a buscas incorretas no banco de dados.
+- Analisar manualmente cada solicitação de relatório para identificar tabelas, colunas e dados é um processo repetitivo e que consome tempo valioso do analista.
+- A ausência de um guia ou ferramenta para auxiliar na identificação dos dados necessários pode levar a inconsistências na forma como diferentes analistas abordam a mesma solicitação.
+
+**3. Acesso Manual ao Banco de Dados**
+
+- Realizar consultas manualmente no banco de dados é um processo lento e propenso a erros de digitação ou na seleção de tabelas e campos.
+- A eficiência do acesso ao banco de dados depende do conhecimento específico de cada analista sobre a estrutura do banco e as consultas necessárias.
+
+**4. Análise Manual dos Dados Retornados do Banco**
+
+- A necessidade de analisar manualmente os dados retornados para verificar sua adequação é demorada e pode levar a erros na identificação de dados incorretos.
+- Se os dados retornados não forem os esperados, o analista precisa refazer todo o processo, desde a análise das informações até a consulta ao banco de dados, gerando um ciclo de retrabalho significativo.
+
+**5. Tratamento Manual dos Dados**
+
+- Transferir manualmente os dados do banco para uma planilha Excel é uma tarefa repetitiva, consumindo tempo que poderia ser dedicado a análises mais complexas.
+- A manipulação manual dos dados aumenta o risco de erros de digitação ou formatação.
+
+**6. Tratamento Manual dos Dados**
+- O tempo gasto no envio do relatório por e-mail e na subsequente análise do gerente pode atrasar a identificação de problemas ou informações incorretas.
+- Caso o gerente solicite alterações, o analista precisa retornar ao início do processo ("Análise das Informações"), criando um ciclo de espera e retrabalho.
