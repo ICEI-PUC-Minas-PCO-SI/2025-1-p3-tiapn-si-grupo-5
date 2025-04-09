@@ -16,10 +16,11 @@ Com a chegada do TRACK IT, o jeito de lidar com os pedidos na ASTIN vai mudar: t
 
 ## Modelagem da situação atual (Modelagem AS IS) PROCESSO 2
 
+Hoje, na ASTIN, o processo de geração de relatórios é feito de forma manual e sem padronização, as informações necessárias para a geração são colhidas através de emails enviados pelo solicitante. O analista vai manualmente no Banco de Dados para realizar os processos necessários, depois manualmente passa os dados retornados para uma planilha Excel. Esse processo gera um alto volume de retrabalho, além de estar exposto a várias erros humanos.
 
 ## Descrição geral da proposta (Modelagem TO BE) PROCESSO 2
 
-
+A TRACKIT têm como objetivo solucionar esse problema implementando uma de nossas aplicações: centralizando as informações e as trocas de mensagens entre o solicitante e o analista em um único local, além de automatizar a geração e o tratamento dos relatórios dentro da nossa própria plataforma. Com isso, diminuiremos o retrabalho, iremos melhorar a comunicação entre o solicitante e o técnico, aumentar a produtividade da equipe, além de minimizar os erros humanos.
 
 ## Modelagem dos processos
 
