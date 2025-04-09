@@ -91,3 +91,73 @@ _O diagrama abaixo descreve o fluxo do sistema automatizado para geração de re
 ### Detalhamento das atividades no modelo TO BE 
 
 No TRACK IT, o analista irá receber a demanda com todas as informações necessárias para gerar o relatório solicitado, posteriormente irá selecionar no sistema quais informações serão utilizadas e qual o período de tempo ele deseja receber as informações. O sistema gera o relatório automaticamente para o analista, que nesse momento irá analisar o relatório recebido, podendo alterar as informações dentro do próprio sistema para que um novo relatório seja gerado caso algo estivesse errado. Após verificar que tudo está correto, o analista poderá usar uma funcionalidade dentro do prórpio sistema para transformar esse relatório em uma planilha Excel. Após esse processo, ele encaminha o relatório para o solicitante e assim se encerra a demanda.
+
+O fluxo envolve dois atores principais:
+
+- **Gerentes (Solicitante)**: Recebe os relatórios mensalmente.
+
+- **Analista de Atendimento**: Recebe a solicitação e gera o relatório.
+
+### Fluxo do Processo
+
+**Informações dos Relatórios**
+
+As informações necessária para o relatórios serão adicionadas ao chamado que o solicitante abrir pelo sistema TRACKIT.
+
+**Gerar Relatório**
+
+O analista irá acessar a aplicação dentro do sistema TRACKIT e adicionar as informações que estiverem no chamado na própria e realizar a geração do relatório, após isso, o sistema retornará uma janela com uma prévia do relatório.
+
+**Análise do Relatório**
+
+Com o relatório em mãos, o analista irá analisá-lo para certificar-se de que não esqueceu de nenhuma informação, caso seja necessário, o sistema lhe fornecerá uma maneira para que ele possa fazer as alterações necessárias.
+
+**Tratamento do Relatório**
+
+Após concluir que o relatório está correto, o analista irá tratar o relatório para que ele seja convertido em uma planilha de Excel pela própria aplicação.
+
+**Encaminhamento do Relatório**
+
+Através do chamado aberto pelo solicitante, o analista irá encaminha o arquivo em formato .xlsx para o mesmo.
+
+**Encerramento do Chamado**
+
+Com o arquivo em mãos, o solicitante irá analisá-lo e retornar um feedback para o analista, sendo positivo o chamado é encerrado, se necessário alguma alteração será possível trocar mensagens pelo próprio chamado para acertar os detalhes que esstiverem errados.
+
+### Identificação de melhorias no Processo Futuro (TO BE)
+
+**1. Centralização da Solicitação e Informações**
+
+– Todas as informações necessárias são adicionadas diretamente ao chamado no sistema TRACKIT, centralizando a comunicação e garantindo que os dados estejam vinculados à solicitação.
+
+**2. Eliminação da Análise Manual das Informações**
+
+– As informações necessárias são inseridas diretamente no sistema TRACKIT pelo solicitante, simplificando o trabalho do analista e reduzindo o risco de erros de interpretação.
+
+**3. Geração Automatizada do Relatório e Pré-Visualização:**
+
+– O analista utiliza uma aplicação dentro do TRACKIT para gerar o relatório com base nas informações do chamado, e o sistema fornece uma prévia, agilizando o processo e minimizando a necessidade de conhecimento técnico aprofundado do banco de dados.
+
+**4. Facilidade de Alteração e Correção**
+
+– Permite que o analista analise a prévia do relatório e, se necessário, faça alterações diretamente na aplicação, tornando o processo de correção mais rápido e eficiente.
+
+**5. Tratamento Automatizado do Relatório**
+
+– A própria aplicação dentro do TRACKIT converte o relatório para planilha Excel, economizando tempo do analista e eliminando o risco de erros na transferência manual.
+
+**6. Comunicação e Feedback Integrados**
+
+–  O relatório é encaminhado através do próprio chamado no TRACKIT, e o feedback do solicitante também é registrado no mesmo local, facilitando a comunicação e o rastreamento do status da solicitação. A possibilidade de troca de mensagens dentro do chamado para acertar detalhes agiliza a resolução de problemas.
+
+**7. Redução do Ciclo de Retrabalho**
+
+–  A centralização das informações, a geração automatizada, a facilidade de correção e a comunicação integrada diminuem a probabilidade de erros e agilizam a identificação e correção de problemas, evitando que o analista precise retornar ao início do processo com frequência.
+
+### Consequências dos ganhos identificados
+
+- **Redução significativa do trabalho manual do analista**
+- **Diminuição da probabilidade de erros humanos**
+- **Aceleração do processo de geração e entrega de relatórios**
+- **Melhora na comunicação e no rastreamento das solicitações**
+- **Otimização do tempo do analista para tarefas mais estratégicas**
