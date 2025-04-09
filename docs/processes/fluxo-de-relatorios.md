@@ -1,7 +1,7 @@
-### 3.3.2 Processo 2 – NOME DO PROCESSO
+### 3.3.2 Processo 2 – Fluxo de Relatórios Internos
  
 O diagrama abaixo motra o fluxo atual da produção de relatórios, logo após será mostrado como um sistema automatizado, centralizando as funcionalidades, pode aprimorar a eficiência dos processos.
-![Exemplo de um Modelo BPMN do PROCESSO 2](../images/RelatóriosASTIN.jpg)
+![Exemplo de um Modelo BPMN do PROCESSO 2](../images/relatorios-ASTIN.jpg)
 
 
 Detalhamento das atividades no modelo AS IS
