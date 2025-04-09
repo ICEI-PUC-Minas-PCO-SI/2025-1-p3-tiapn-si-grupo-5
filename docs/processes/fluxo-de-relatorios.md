@@ -73,3 +73,11 @@ Antes do gerente analisar o relatório em si, ele precisa analisar as informaç�
 **6. Tratamento Manual dos Dados**
 - O tempo gasto no envio do relatório por e-mail e na posteriormente na análise do gerente pode atrasar a identificação de problemas ou informações incorretas.
 - Caso o gerente solicite alterações, o analista precisa retornar ao início do processo ("Análise das Informações"), criando um ciclo de espera e retrabalho.
+
+### Consequências dos Gargalos Identificados
+
+- Comunicação ineficiente e não padronizada para alterações nas informações dos relatórios.
+- Processos manuais e repetitivos na análise das informações, acesso ao banco de dados e tratamento dos dados.
+- Grnde número de potenciais erros humanos em diversas etapas do processo.
+- Ciclos de retrabalho significativos devido a informações incorretas ou mal interpretadas.
+- Dependência excessiva da intervenção manual do analista em cada etapa.
