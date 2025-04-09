@@ -81,3 +81,13 @@ Antes do gerente analisar o relatório em si, ele precisa analisar as informaç�
 - Grnde número de potenciais erros humanos em diversas etapas do processo.
 - Ciclos de retrabalho significativos devido a informações incorretas ou mal interpretadas.
 - Dependência excessiva da intervenção manual do analista em cada etapa.
+
+## 3.3.2 Processo 2 – TRACK IT
+
+_O diagrama abaixo descreve o fluxo do sistema automatizado para geração de relatórios, TRACK IT, integra todas as funcionalidades em um único local, afim  de melhorar a eficiência dos processos._
+ 
+![Modelagem_TO_BE_Processo1](../images/relatorios-TRACKIT.png "Modelo BPMN TO BE do Processo 2.")
+
+### Detalhamento das atividades no modelo TO BE 
+
+No TRACK IT, o analista irá receber a demanda com todas as informações necessárias para gerar o relatório solicitado, posteriormente irá selecionar no sistema quais informações serão utilizadas e qual o período de tempo ele deseja receber as informações. O sistema gera o relatório automaticamente para o analista, que nesse momento irá analisar o relatório recebido, podendo alterar as informações dentro do próprio sistema para que um novo relatório seja gerado caso algo estivesse errado. Após verificar que tudo está correto, o analista poderá usar uma funcionalidade dentro do prórpio sistema para transformar esse relatório em uma planilha Excel. Após esse processo, ele encaminha o relatório para o solicitante e assim se encerra a demanda.
