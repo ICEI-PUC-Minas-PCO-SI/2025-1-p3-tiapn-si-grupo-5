@@ -46,7 +46,7 @@ Antes do gerente analisar o relatório em si, ele precisa analisar as informaç�
 
 **1. Comunicação via E-mail para Alterações**
 
--A dependência de e-mails para comunicar alterações nas informações dos relatórios é um ponto de atrito. A falta de clareza e objetividade nesses e-mails leva a retrabalho significativo tanto para o analista quanto para o gerente.
+- A dependência de e-mails para comunicar alterações nas informações dos relatórios é um ponto de atrito. A falta de clareza e objetividade nesses e-mails leva a retrabalho significativo tanto para o analista quanto para o gerente.
 - Se as informações pré-definidas não forem revisadas e atualizadas regularmente, podem levar à geração de relatórios que não atendem mais às necessidades dos gerentes.
 
 **2. Análise Manual das Informações**
