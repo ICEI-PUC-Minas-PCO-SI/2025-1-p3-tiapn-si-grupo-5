@@ -46,12 +46,12 @@ Antes do gerente analisar o relatório em si, ele precisa analisar as informaç�
 
 **1. Comunicação via E-mail para Alterações**
 
-- A dependência de e-mails para comunicar alterações nas informações dos relatórios é um ponto de atrito. A falta de clareza e objetividade nesses e-mails leva a retrabalho significativo tanto para o analista quanto para o gerente.
-- Se as informações pré-definidas não forem revisadas e atualizadas regularmente, podem levar à geração de relatórios que não atendem mais às necessidades dos gerentes.
+- A dependência de e-mails para comunicar alterações nas informações dos relatórios é um ponto de atrito. Se a comunicação não for clara e objetiva nesses e-mails, ocasiona em um retrabalho significativo tanto para o analista quanto para o gerente.
+- Se as informações pré-definidas não forem revisadas e atualizadas frequentemente, podem ser gerados relatórios que não atendem mais às necessidades dos gerentes.
 
 **2. Análise Manual das Informações**
 
-- A análise manual das informações solicitadas é suscetível a erros de interpretação por parte do analista, o que pode levar a buscas incorretas no banco de dados.
+- A análise manual das informações solicitadas pode ocasionar erros de interpretação por parte do analista, o que resulta em buscas incorretas no banco de dados.
 - Analisar manualmente cada solicitação de relatório para identificar tabelas, colunas e dados é um processo repetitivo e que consome tempo valioso do analista.
 - A ausência de um guia ou ferramenta para auxiliar na identificação dos dados necessários pode levar a inconsistências na forma como diferentes analistas abordam a mesma solicitação.
 
@@ -71,5 +71,5 @@ Antes do gerente analisar o relatório em si, ele precisa analisar as informaç�
 - A manipulação manual dos dados aumenta o risco de erros de digitação ou formatação.
 
 **6. Tratamento Manual dos Dados**
-- O tempo gasto no envio do relatório por e-mail e na subsequente análise do gerente pode atrasar a identificação de problemas ou informações incorretas.
+- O tempo gasto no envio do relatório por e-mail e na posteriormente na análise do gerente pode atrasar a identificação de problemas ou informações incorretas.
 - Caso o gerente solicite alterações, o analista precisa retornar ao início do processo ("Análise das Informações"), criando um ciclo de espera e retrabalho.
