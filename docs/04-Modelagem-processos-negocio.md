@@ -25,7 +25,7 @@ Com a chegada do TRACK IT, o jeito de lidar com os pedidos na ASTIN vai mudar: t
 
 [PROCESSO 1 - Nome do processo](./processes/fluxo-atendimento-demandas.md "Detalhamento do processo 1.")
 
-[PROCESSO 2 - Nome do processo](./processes/processo-2-nome-do-processo.md "Detalhamento do processo 2.")
+[PROCESSO 2 - Nome do processo](./processes/fluxo-de-relatorios.md "Detalhamento do processo 2.")
 
 
 ## Indicadores de desempenho
