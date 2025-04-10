@@ -13,6 +13,9 @@ Coloque aqui o conjunto de slides.
 Segue abaixo os slides da Sprint 1:
 - [TIAPN Slides.pdf](https://github.com/user-attachments/files/19213691/TIAPN.Slides.pdf)
 
+Segue abaixo os slides da Sprint 2:
+
+
 > **Links úteis**:
 > - [10 dicas de design para slides](https://rockcontent.com/blog/design-para-slides/)
 > - [7 dicas de design para criar apresentações de PowerPoint incríveis e eficientes](https://www.shutterstock.com/pt/blog/7-dicas-de-design-para-criar-apresentacoes-de-powerpoint-incriveis-e-eficientes)
