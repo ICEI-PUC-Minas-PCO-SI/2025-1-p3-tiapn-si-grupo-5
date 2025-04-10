@@ -14,7 +14,8 @@ Segue abaixo os slides da Sprint 1:
 - [TIAPN Slides.pdf](https://github.com/user-attachments/files/19213691/TIAPN.Slides.pdf)
 
 Segue abaixo os slides da Sprint 2:
-[TIAPN.pdf](https://github.com/user-attachments/files/19694752/TIAPN.pdf)
+
+- [TIAPN.pdf](https://github.com/user-attachments/files/19694752/TIAPN.pdf)
 
 
 > **Links úteis**:
