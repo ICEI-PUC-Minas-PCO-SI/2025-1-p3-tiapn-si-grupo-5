@@ -62,7 +62,7 @@ Atualizado em: 12/03/2025
 - Slides: Allef Henrique Costa Leandro
 
 
-Atualizado em: 04/04/2024
+Atualizado em: 10/04/2024
 
 | Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
 | :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
@@ -70,6 +70,7 @@ Atualizado em: 04/04/2024
 | Eduardo Versiani de Melo Penna       | Modelagem TO BE    | 26/03/2025     | 09/04/2025 | ✔️    |   07/04/2025      |
 | Arthur Marques Araujo Pena        | Modelagem TO BE / AS IS | 26/03/2025     | 09/04/2025 | ✔️     |   09/04/2025     |
 | Allef Henrique Costa Leandro        | Slides |  08/04/2025    | 10/04/2025 | ✔️    |  10/04/2025     |
+| Bruno Xavier Santos Frota        | Documentação processos |  09/04/2025    | 10/04/2025 | ✔️    |  10/04/2025     |
 
 
 Legenda:
