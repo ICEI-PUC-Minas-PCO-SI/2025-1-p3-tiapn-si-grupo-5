@@ -82,7 +82,7 @@ Antes do gerente analisar o relatório em si, ele precisa analisar as informaç�
 - Ciclos de retrabalho significativos devido a informações incorretas ou mal interpretadas.
 - Dependência excessiva da intervenção manual do analista em cada etapa.
 
-## 3.3.2 Processo 2 – FLUXO DE RELATORIOS INTERNOS (TO BE)
+## 3.3.4 Processo 2 – FLUXO DE RELATORIOS INTERNOS (TO BE)
 
 _O diagrama abaixo descreve o fluxo da extração automatizada para geração de relatórios, o fluxo integra todas as funcionalidades em um único local, afim  de melhorar a eficiência dos processos._
  
