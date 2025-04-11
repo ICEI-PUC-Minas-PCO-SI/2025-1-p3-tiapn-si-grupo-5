@@ -84,13 +84,13 @@ Antes do gerente analisar o relatório em si, ele precisa analisar as informaç�
 
 ## 3.3.2 Processo 2 – FLUXO DE RELATORIOS INTERNOS (TO BE)
 
-_O diagrama abaixo descreve o fluxo do sistema automatizado para geração de relatórios, o sistema integra todas as funcionalidades em um único local, afim  de melhorar a eficiência dos processos._
+_O diagrama abaixo descreve o fluxo da extração automatizada para geração de relatórios, o fluxo integra todas as funcionalidades em um único local, afim  de melhorar a eficiência dos processos._
  
 ![Modelagem_TO_BE_Processo1](../images/relatorios-TRACKIT.png "Modelo BPMN TO BE do Processo 2.")
 
 ### Detalhamento das atividades no modelo TO BE 
 
-Nesse sistema, o analista irá receber a demanda com todas as informações necessárias para gerar o relatório solicitado, posteriormente irá selecionar no sistema quais informações serão utilizadas e qual o período de tempo ele deseja receber as informações. O sistema gera o relatório automaticamente para o analista, que nesse momento irá analisar o relatório recebido, podendo alterar as informações dentro do próprio sistema para que um novo relatório seja gerado caso algo estivesse errado. Após verificar que tudo está correto, o analista poderá usar uma funcionalidade dentro do prórpio sistema para transformar esse relatório em uma planilha Excel. Após esse processo, ele encaminha o relatório para o solicitante e assim se encerra a demanda.
+Nesse fluxo, o analista irá receber a demanda com todas as informações necessárias para gerar o relatório solicitado, posteriormente irá selecionar quais informações serão utilizadas e qual o período de tempo ele deseja receber as informações. Um script automatizado gera o relatório automaticamente para o analista, que nesse momento irá analisar o relatório recebido gerado para planilha de Excel. Após esse processo, ele encaminha o relatório para o solicitante e assim se encerra a demanda.
 
 O fluxo envolve dois atores principais:
 
@@ -102,19 +102,19 @@ O fluxo envolve dois atores principais:
 
 **Informações dos Relatórios**
 
-As informações necessária para o relatórios serão adicionadas ao chamado que o solicitante abrir pelo sistema.
+As informações necessária para o relatórios serão adicionadas ao chamado que o solicitante abrir pelo TrackIT.
 
 **Gerar Relatório**
 
-O analista irá acessar a aplicação dentro do próprio sistema e adicionar as informações que estiverem no chamado na própria e realizar a geração do relatório, após isso, o sistema retornará uma janela com uma prévia do relatório.
+O analista irá receber a solicitação pelo TrackIT e executar o script automatizado com base nas informações do solicitante.
 
 **Análise do Relatório**
 
-Com o relatório em mãos, o analista irá analisá-lo para certificar-se de que não esqueceu de nenhuma informação, caso seja necessário, o sistema lhe fornecerá uma maneira para que ele possa fazer as alterações necessárias.
+Com o relatório em mãos, o analista irá analisá-lo para certificar-se de que não esqueceu de nenhuma informação.
 
 **Tratamento do Relatório**
 
-Após concluir que o relatório está correto, o analista irá tratar o relatório para que ele seja convertido em uma planilha de Excel pela própria aplicação.
+Após concluir que o relatório está correto, o analista irá tratar o relatório para que ele esteja corretamente convertido e formatado em uma planilha de Excel.
 
 **Encaminhamento do Relatório**
 
@@ -128,7 +128,7 @@ Com o arquivo em mãos, o solicitante irá analisá-lo e retornar um feedback pa
 
 **1. Centralização da Solicitação e Informações**
 
-– Todas as informações necessárias são adicionadas diretamente ao chamado no sistema, centralizando a comunicação e garantindo que os dados estejam vinculados à solicitação.
+– Todas as informações necessárias são adicionadas diretamente ao chamado no TrackIT, centralizando a comunicação e garantindo que os dados estejam vinculados à solicitação.
 
 **2. Eliminação da Análise Manual das Informações**
 
@@ -136,15 +136,15 @@ Com o arquivo em mãos, o solicitante irá analisá-lo e retornar um feedback pa
 
 **3. Geração Automatizada do Relatório e Pré-Visualização:**
 
-– O analista utiliza uma aplicação dentro do sistema para gerar o relatório com base nas informações do chamado, e o sistema fornece uma prévia, agilizando o processo e minimizando a necessidade de conhecimento técnico aprofundado do banco de dados.
+– O analista irá executar o script com base nos parâmetros informados pelo usuáriono TrackIT e visualizar o resultado obtido.
 
 **4. Facilidade de Alteração e Correção**
 
-– Permite que o analista analise a prévia do relatório e, se necessário, faça alterações diretamente na aplicação, tornando o processo de correção mais rápido e eficiente.
+– Permite que o analista analise a prévia do relatório antes de enviar, trazendo simplicidade ao processo.
 
 **5. Tratamento Automatizado do Relatório**
 
-– A própria aplicação dentro do sistema converte o relatório para planilha Excel, economizando tempo do analista e eliminando o risco de erros na transferência manual.
+– O próprio script dentro do sistema converte o relatório para planilha Excel, economizando tempo do analista e eliminando o risco de erros na transferência manual.
 
 **6. Comunicação e Feedback Integrados**
 
