@@ -73,6 +73,9 @@ As tabelas a seguir apresentam os requisitos funcionais e não funcionais que de
 |RNF-001| O sistema deve ser desenvolvido utilizando Node.js no backend e React no frontend, garantindo modularidade e escalabilidade. | 🔴 ALTA | 
 |RNF-002| O banco de dados deve utilizar MySQL, com estrutura relacional para garantir integridade e eficiência nas consultas. | 🔴 ALTA | 
 |RNF-003| O tempo médio de resposta para operações comuns (cadastro de chamados, atualizações, visualizações) deve ser inferior a 2 segundos. | 🟢 BAIXA | 
+|RNF-004| O sistema deve possuir uma interface responsiva (Apesar de que na PBH e ASTIN são utilizados apenas aplicações Desktop durante o serviço) | 🟢 BAIXA | 
+|RNF-005| O sistema deve permitir autenticação através de JWT e criptografia para proteger os dados dos usuários| 🟠 MÉDIA | 
+|RNF-006| O sistema deve possuir suporte aos principais browsers utilizados no mercado hoje, sobretudo Chrome, Edge e Firefox, os mais utilizados no contexto da PBH| 🟠 MÉDIA | 
 
 ## Restrições
 
@@ -94,3 +97,5 @@ O diagrama de casos de uso abaixo descreve o sistema apresentado e seus três at
 - O **Cliente** pode realizar ações como Cadastrar-se no sistema, Abrir chamado, Acompanhar status do chamado e Responder comentários. 
 - O **Analista** tem a capacidade de Visualizar Chamados Abertos, Pegar um chamado para atender, Atualizar status do chamado e Responder ao cliente. 
 - O **Gestor** pode Gerenciar cadastro de analistas, Visualizar dashboard e Configurar parâmetros. 
+
+##
