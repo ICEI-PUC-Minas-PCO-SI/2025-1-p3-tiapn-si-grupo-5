@@ -28,7 +28,7 @@ O Modelo ER abaixo representa, como as entidades (coisas, objetos) se relacionam
 
 ![Modelo ER da TrackIT](./images/EDRtrackIT.png "Modelo ER.")
 
-### Esquema relacional
+### Esquema Relacional
 
 O Esquema Relacional corresponde à representação dos dados em tabelas juntamente com as restrições de integridade e chave primária.
  
