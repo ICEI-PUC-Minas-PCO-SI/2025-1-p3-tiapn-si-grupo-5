@@ -34,7 +34,7 @@ Seguem respectivamente as telas de home para os 3 perfis do sistema: cliente, an
 
 ##  Telas do processo
 
-### Abertura de chamado
+### Cliente
 
 ![Abertura de chamado](./images/home-cliente-abrir-chamado.svg)
 
@@ -48,3 +48,39 @@ O cliente pode visualizar os chamados abertos por ele, de modo a ter uma visão 
 
 O cliente tem à disposição um chat interativo com o analista, de modo que pode conversar e enviar anexos para que a demanda possa ser solucionada.
 
+### Analista
+![Atribuir chamados](./images/home-analista-ver-chamados.svg)
+
+O analista através da seção atribuir chamados consegue visualizar os chamados que estão em aberto, clicar no chamado para ver os detalhes e atribuir o chamado a si mesmo para começar a atender.
+
+![Conversar com o cliente](./images/home-analista-taked-ticket-details.svg)
+
+O analista consegue conversar com o cliente pelo chamado bem como anexar arquivos e mudar o status do chamado ao decorrer do atendimento.
+
+![Ver chamados do analisata](./images/home-analista-meus-chamados.svg)
+
+O analista consegue visualizar todos os chamados que ele se atribuiu, de modo a ter uma visão geral do seu fluxo de trabalho e principais pendências.
+
+### Gestor
+
+![Visualizar dashbord](./images/home-gestor-dashbord.svg)
+
+O gestor consegue visualizar as métricas do atendimento da equipe. Através de KPIs e gráficos.
+
+![Visualizar chamados em aberto](./images/home-gestor-chamados-em-aberto.png)
+
+O gestor consegue visualizar tanto os chamados em aberto, quanto os da equipe dele, de modo que consiga ter uma visão gerencial e apurada.
+
+![Intervir em chamados](./images/home-gestor-chamados-em-aberto-detalhes.svg)
+
+O gestor consegue enviar mensagens nos chamados em aberto ou atribuídos e atribuir um chamado em aberto para alguém da equipe dele.
+
+![Gerenciar parâmetros](./images/home-gestor-prioridades.svg)
+
+O gestor consegue editar parâmetros utilizados na abertura do chamados e gerências. De modo que possa delimitar o escopo de atendimento de sua equipe.
+
+![Gerenciar usuários](./images/home-gestor-config-usuarios.svg)
+
+O gestor consegue criar, editar e excluir pefis do usuário. Essa feature é útil para que ele possa cadastrar os membros de sua equipe.
+
+Existem outras várias telas para cada perfil que podem ser visualizadas através do protótipo interativo no Figma. Essas apresentadas são as principais para o funcionamento do sistema.
