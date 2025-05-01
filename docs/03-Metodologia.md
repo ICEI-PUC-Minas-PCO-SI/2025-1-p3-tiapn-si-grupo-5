@@ -18,7 +18,7 @@ O projeto segue a seguinte convenção para o nome de branches:
 
 Quanto à gerência de issues, o projeto adota a seguinte convenção para etiquetas:
 
-- `doc`: melhorias ou acréscimos à documentação
+- `docs`: melhorias ou acréscimos à documentação
 - `bug`: uma funcionalidade encontra-se com problemas
 - `enhancement`: uma funcionalidade precisa ser melhorada
 - `feature`: uma nova funcionalidade precisa ser introduzida
@@ -74,11 +74,14 @@ Atualizado em: 10/04/2024
 
 #### Sprint 3
 
-Atualizado em: 18/04/2024
+Atualizado em: 01/05/2025
+
+- _Scrum master_: Lucas Fernandes Nascimento
+- Wireframes e definição das tecnologias: Lucas Fernandes Nascimento
 
 | Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
 | :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
-| XXXX | XXXX | XX/XX/2025 | XX/XX/2025 | ✔️    | XX/XX/2025      |
+| Lucas Fernandes Nascimento | Wireframe | 18/05/2025 | 07/05/2025 | ✔️    | 01/05/2025      |
 
 ### Processo
 
