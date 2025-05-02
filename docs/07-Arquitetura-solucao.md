@@ -209,38 +209,87 @@ Esse script deverá ser incluído em um arquivo .sql na pasta [de scripts SQL](.
 
 ## Tecnologias
 
-Descreva qual(is) tecnologias você vai usar para resolver o seu problema, ou seja, implementar a sua solução. Liste todas as tecnologias envolvidas, linguagens a serem utilizadas, serviços web, frameworks, bibliotecas, IDEs de desenvolvimento, e ferramentas.
 
 Apresente também uma figura explicando como as tecnologias estão relacionadas ou como uma interação do usuário com o sistema vai ser conduzida, por onde ela passa até retornar uma resposta ao usuário.
 
 
-| **Dimensão**   | **Tecnologia**  |
-| ---            | ---             |
-| Front-end      | HTML + CSS + JS + React |
-| Back-end       | Node.js         |
-| SGBD           | MySQL           |
-| Deploy         | Vercel          |
+| Camada             | Tecnologia / Ferramenta                 | Propósito                             |
+| ------------------ | --------------------------------------- | ------------------------------------- |
+| **Frontend**       | React                                   | UI reativa                            |
+|                    | TypeScript                              | Tipagem estática                      |
+|                    | Vite                                    | Bundler rápido                        |
+|                    | Tailwind CSS                            | Utility‑first CSS                     |
+|                    | shadcn/ui                               | Component library baseada em Tailwind |
+|                    | React Router                            | Navegação                             |
+|                    | React Query (TanStack Query)            | Fetch/cache de dados                  |
+|                    | React Hook Form + Zod                   | Gestão e validação de formulários     |
+|                    | Sonner (ou React‑Toastify)              | Toast notifications                   |
+|                    | Socket.io‑client                        | Chat em tempo real                    |
+|                    | eslint + Prettier + Husky + lint‑staged | Linter, formatting e git hooks        |
+|                    | Vitest                                  | Testes unitários e de componentes     |
+| **Backend**        | Node.js                                 | Runtime                               |
+|                    | TypeScript                              | Tipagem                               |
+|                    | Express.js                              | Framework HTTP                        |
+|                    | Prisma ORM                              | Modelagem e accesso ao MySQL          |
+|                    | jsonwebtoken                            | JWT auth                              |
+|                    | bcrypt                                  | Hash de senhas                        |
+|                    | Socket.io                               | Chat em tempo real                    |
+|                    | Nodemailer                              | Envio de e‑mail                       |
+|                    | Zod                                     | Validação de payloads                 |
+|                    | dotenv                                  | Variáveis de ambiente                 |
+|                    | winston ou pino                         | Logging                               |
+|                    | Jest + Supertest                        | Testes de unidade e integração        |
+|                    | ESLint + Prettier + Husky               | Linter, formatting e git hooks        |
+|                    | Docker (opcional)                       | Containerização                       |
+| **Banco de Dados** | MySQL (PlanetScale)                     | Dados relacionais                     |
+|                    | Prisma Migrate                          | Migrations                            |
+| **Armazenamento**  | Firebase Storage                        | Arquivos e imagens                    |
+| **CI/CD & Infra**  | GitHub Actions                          | Pipeline de build/test/deploy         |
+|                    | Vercel (frontend)                       | Deploy frontend                       |
+|                    | Railway (backend)                       | Deploy backend                        |
+|                    | PlanetScale                             | Banco MySQL serverless                |
+
 
 
 ## Hospedagem
 
-Explique como a hospedagem e o lançamento da plataforma foram realizados.
-
-> **Links úteis**:
-> - [Website com GitHub Pages](https://pages.github.com/)
-> - [Programação colaborativa com Repl.it](https://repl.it/)
-> - [Getting started with Heroku](https://devcenter.heroku.com/start)
-> - [Publicando seu site no Heroku](http://pythonclub.com.br/publicando-seu-hello-world-no-heroku.html)
+Serão utilzados o Vercel e o Railway para hospedagem do frontend e backend respectivamente, além disso o banco de dados será hospedado pelo PlanetScale. Detalhes maiores da implementação serão apresentados posteriormente.
 
 ## Qualidade de software
 
-Conceituar qualidade é uma tarefa complexa, mas ela pode ser vista como um método gerencial que, por meio de procedimentos disseminados por toda a organização, busca garantir um produto final que satisfaça às expectativas dos stakeholders.
+### Functional Suitability
+| Subcaracterística          | Justificativa                                                                                                              | Métrica (objetivo)                                                       |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Functional completeness    | Garantir que todas as funcionalidades-chave (cadastro, abertura de chamado, chat, dashboards) estejam implementadas.       | % de requisitos funcionais implementados (meta ≥ 100 %)                  |
+| Functional correctness     | As respostas do sistema (API) devem estar alinhadas ao esperado pelos casos de uso (por ex. geração de protocolo correto). | Nº de incidentes em produção por comportamento inesperado (meta ≤ 2/mês) |
+| Functional appropriateness | A interface e os fluxos devem permitir que o usuário complete tarefas com mínimo de esforço.                               | Tempo médio para abrir um chamado (meta ≤ 30 s)                          |
 
-No contexto do desenvolvimento de software, qualidade pode ser entendida como um conjunto de características a serem atendidas, de modo que o produto de software atenda às necessidades de seus usuários. Entretanto, esse nível de satisfação nem sempre é alcançado de forma espontânea, devendo ser continuamente construído. Assim, a qualidade do produto depende fortemente do seu respectivo processo de desenvolvimento.
+### Performance Efficiency
 
-A norma internacional ISO/IEC 25010, que é uma atualização da ISO/IEC 9126, define oito características e 30 subcaracterísticas de qualidade para produtos de software. Com base nessas características e nas respectivas subcaracterísticas, identifique as subcaracterísticas que sua equipe utilizará como base para nortear o desenvolvimento do projeto de software, considerando alguns aspectos simples de qualidade. Justifique as subcaracterísticas escolhidas pelo time e elenque as métricas que permitirão à equipe avaliar os objetos de interesse.
+| Subcaracterística    | Justificativa                                                               | Métrica (objetivo)                         |
+| -------------------- | --------------------------------------------------------------------------- | ------------------------------------------ |
+| Time behavior        | O sistema deve responder rapidamente às interações (forms, listagem, chat). | 95 % das requisições < 2 s                 |
+| Resource utilization | Uso moderado de CPU/memória no servidor para suportar escalabilidade.       | CPU < 70 % sob carga média; memória < 75 % |
 
-> **Links úteis**:
-> - [ISO/IEC 25010:2011 - Systems and Software Engineering — Systems and Software Quality Requirements and Evaluation (SQuaRE) — System and Software Quality Models](https://www.iso.org/standard/35733.html/)
-> - [Análise sobre a ISO 9126 – NBR 13596](https://www.tiespecialistas.com.br/analise-sobre-iso-9126-nbr-13596/)
-> - [Qualidade de software - Engenharia de Software](https://www.devmedia.com.br/qualidade-de-software-engenharia-de-software-29/18209)
+### Usability
+
+| Subcaracterística     | Justificativa                                                                   | Métrica (objetivo)                               |
+| --------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Operability           | Facilitar a curva de aprendizado e eficiência no uso (labels claras, feedback). | SUS (System Usability Scale) ≥ 80                |
+| Learnability          | Novos usuários devem conseguir abrir seu primeiro chamado sem ajuda externa.    | Tempo até 1º chamado ≤ 2 min (80 % dos usuários) |
+| User error protection | Minimizam-se erros de input (validações em formulário, confirmação de ações).   | Nº de erros de formulário por sessão ≤ 1         |
+
+### Security
+
+| Subcaracterística | Justificativa                                                             | Métrica (objetivo)                   |
+| ----------------- | ------------------------------------------------------------------------- | ------------------------------------ |
+| Confidentiality   | Dados sensíveis (senhas, e‑mails) devem permanecer protegidos.            | 100 % das senhas armazenadas em hash |
+| Authenticity      | Garantir que apenas usuários autenticados acessem suas áreas autorizadas. | 0 acessos não autorizados detectados |
+
+### Maintainability
+
+| Subcaracterística | Justificativa                                                          | Métrica (objetivo)                   |
+| ----------------- | ---------------------------------------------------------------------- | ------------------------------------ |
+| Modularity        | Código organizado em módulos (features) facilita evolução e debugging. | Cobertura de módulos testados ≥ 90 % |
+| Testability       | Facilidade para escrever e executar testes automatizados.              | Coverage (unit+integration) ≥ 80 %   |
+| Analysability     | Facilidade de localizar causa de defeitos em logs e monitoramento.     | MTTR (Mean Time to Repair) ≤ 4 h     |
