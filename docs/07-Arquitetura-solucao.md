@@ -254,7 +254,6 @@ Apresente também uma figura explicando como as tecnologias estão relacionadas 
 |                    | winston ou pino                         | Logging                               |
 |                    | Jest + Supertest                        | Testes de unidade e integração        |
 |                    | ESLint + Prettier + Husky               | Linter, formatting e git hooks        |
-|                    | Docker (opcional)                       | Containerização                       |
 | **Banco de Dados** | MySQL (PlanetScale)                     | Dados relacionais                     |
 |                    | Prisma Migrate                          | Migrations                            |
 | **Armazenamento**  | Firebase Storage                        | Arquivos e imagens                    |
