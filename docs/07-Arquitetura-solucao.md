@@ -2,9 +2,23 @@
 
 <span style="color:red">Pré-requisitos: <a href="05-Projeto-interface.md"> Projeto de interface</a></span>
 
-Definição de como o software é estruturado em termos dos componentes que fazem parte da solução e do ambiente de hospedagem da aplicação.
+A solução é composta por três camadas principais:
+<ol>
 
-![Arquitetura da Solução](images/arquitetura.png)
+<li><p><b>Frontend (Cliente - Navegador)</b></p>
+Desenvolvido com React, TypeScript, Vite e TailwindCSS, o frontend é responsável pela interface gráfica do usuário e comunicação com o backend por meio de HTTP (REST API) e WebSocket (via Socket.IO). Toda a navegação e exibição de dados acontece no navegador do usuário, com sessões autenticadas via JWT armazenadas localmente.
+
+<br><li><p><b>Backend (Servidor)</b></p>
+Implementado com Node.js e Express, o backend é a camada responsável pela lógica de negócio, regras de acesso, tratamento das requisições e conexão com o banco de dados e serviços externos. A autenticação é feita por JWT, e o chat em tempo real entre cliente e analista é viabilizado com Socket.IO.
+
+<br><li><p><b>Serviços de Dados</b></p>
+
+ - Banco de Dados Relacional (MySQL): utilizado para armazenar dados estruturados como usuários, chamados, mensagens e parâmetros do sistema.
+
+- Firebase Storage: armazena arquivos binários (imagens, documentos anexados aos chamados), e os registros no banco de dados fazem referência às URLs desses arquivos.
+</ol><br>
+
+![Arquitetura da Solução](images/arquitetura_de_solucao.svg)
 
 ## Diagrama de classes
 
