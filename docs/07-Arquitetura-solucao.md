@@ -46,23 +46,50 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 -- Schema db_trackit
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
 -- Schema db_trackit
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `db_trackit` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `db_trackit` DEFAULT CHARACTER SET utf8mb3 ;
 USE `db_trackit` ;
+
+-- -----------------------------------------------------
+-- Table `db_trackit`.`categoriaChamado`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `db_trackit`.`categoriaChamado` (
+  `idCategoria` INT NOT NULL,
+  `tipoCategoria` VARCHAR(15) NOT NULL,
+  `ativo` TINYINT NOT NULL,
+  PRIMARY KEY (`idCategoria`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
+
+
+-- -----------------------------------------------------
+-- Table `db_trackit`.`Gerencia`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `db_trackit`.`Gerencia` (
+  `idGerencia` INT NOT NULL,
+  `nomeGerencia` VARCHAR(20) NOT NULL,
+  `ativo` TINYINT NOT NULL,
+  PRIMARY KEY (`idGerencia`))
+ENGINE = InnoDB;
+
 
 -- -----------------------------------------------------
 -- Table `db_trackit`.`tipoUsuario`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `db_trackit`.`tipoUsuario` (
-  `idTipoUsuario` INT(2) NOT NULL,
+  `idTipoUsuario` INT NOT NULL,
   `tipoUsuario` VARCHAR(10) NOT NULL,
   PRIMARY KEY (`idTipoUsuario`))
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
@@ -70,21 +97,33 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `db_trackit`.`Usuario` (
   `idUsuario` INT NOT NULL AUTO_INCREMENT,
-  `nivelUsuario` INT NOT NULL,
+  `matricula` INT NOT NULL,
   `nomeUsuario` VARCHAR(50) NOT NULL,
   `email` VARCHAR(75) NOT NULL,
   `senhaHash` VARCHAR(20) NOT NULL,
   `dataCadastro` DATE NOT NULL,
   `ativo` TINYINT NOT NULL,
+  `ramal` INT NOT NULL,
+  `fotoPerfil` TEXT NULL,
+  `idGerencia` INT NOT NULL,
+  `tipoUsuario` INT NOT NULL,
   PRIMARY KEY (`idUsuario`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE,
-  INDEX `fk_Usuario_tipoUsuario1_idx` (`nivelUsuario` ASC) VISIBLE,
+  UNIQUE INDEX `matricula_UNIQUE` (`matricula` ASC) VISIBLE,
+  UNIQUE INDEX `idGerencia_UNIQUE` (`idGerencia` ASC) VISIBLE,
+  INDEX `fk_Usuario_tipoUsuario1_idx` (`tipoUsuario` ASC) VISIBLE,
+  CONSTRAINT `fk_Usuario_Gerencia1`
+    FOREIGN KEY (`idGerencia`)
+    REFERENCES `db_trackit`.`Gerencia` (`idGerencia`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_Usuario_tipoUsuario1`
-    FOREIGN KEY (`nivelUsuario`)
+    FOREIGN KEY (`tipoUsuario`)
     REFERENCES `db_trackit`.`tipoUsuario` (`idTipoUsuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
@@ -93,18 +132,10 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `db_trackit`.`statusChamado` (
   `idStatus` INT NOT NULL AUTO_INCREMENT,
   `nomeStatus` VARCHAR(15) NOT NULL,
+  `ativo` TINYINT NOT NULL,
   PRIMARY KEY (`idStatus`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `db_trackit`.`categoriaChamado`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_trackit`.`categoriaChamado` (
-  `idCategoria` INT NOT NULL,
-  `tipoCategoria` VARCHAR(15) NOT NULL,
-  PRIMARY KEY (`idCategoria`))
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
@@ -113,91 +144,98 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `db_trackit`.`prioridadeChamado` (
   `idPriorChamado` INT NOT NULL,
   `tipoPrior` VARCHAR(45) NOT NULL,
+  `ativo` TINYINT NOT NULL,
   PRIMARY KEY (`idPriorChamado`))
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
--- Table `db_trackit`.`chamado`
+-- Table `db_trackit`.`Chamado`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `db_trackit`.`chamado` (
-  `idChamado` INT(6) NOT NULL AUTO_INCREMENT,
-  `protocolo` VARCHAR(45) NOT NULL,
-  `titulo` LONGTEXT NOT NULL,
+CREATE TABLE IF NOT EXISTS `db_trackit`.`Chamado` (
+  `idChamado` INT NOT NULL AUTO_INCREMENT,
+  `protocolo` VARCHAR(8) NOT NULL,
+  `assunto` VARCHAR(30) NOT NULL,
+  `descricao` LONGTEXT NOT NULL,
   `dataAbertura` DATETIME NOT NULL,
-  `dataAtualizacao` DATETIME NULL,
-  `dataFechamento` DATETIME NULL,
-  `idUsuaAbriu` INT NOT NULL,
-  `idResponsavel` INT NOT NULL,
-  `statusAtual` INT NOT NULL,
-  `categoria` INT NOT NULL,
-  `prioridade` INT NOT NULL,
+  `dataAtualizacao` DATETIME NULL DEFAULT NULL,
+  `dataFechamento` DATETIME NULL DEFAULT NULL,
+  `idSolicitante` INT NOT NULL,
+  `idAnalista` INT NOT NULL,
+  `categoriaChamado` INT NOT NULL,
+  `statusChamado` INT NOT NULL,
+  `prioridadeChamado` INT NOT NULL,
   PRIMARY KEY (`idChamado`),
   UNIQUE INDEX `protocolo_UNIQUE` (`protocolo` ASC) VISIBLE,
-  INDEX `fk_chamado_Usuario1_idx` (`idUsuaAbriu` ASC) VISIBLE,
-  INDEX `fk_chamado_Usuario2_idx` (`idResponsavel` ASC) VISIBLE,
-  INDEX `fk_chamado_statusChamado1_idx` (`statusAtual` ASC) VISIBLE,
-  INDEX `fk_chamado_categoriaChamado1_idx` (`categoria` ASC) VISIBLE,
-  INDEX `fk_chamado_prioridadeChamado1_idx` (`prioridade` ASC) VISIBLE,
-  CONSTRAINT `fk_chamado_Usuario1`
-    FOREIGN KEY (`idUsuaAbriu`)
-    REFERENCES `db_trackit`.`Usuario` (`idUsuario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_chamado_Usuario2`
-    FOREIGN KEY (`idResponsavel`)
-    REFERENCES `db_trackit`.`Usuario` (`idUsuario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_chamado_statusChamado1`
-    FOREIGN KEY (`statusAtual`)
-    REFERENCES `db_trackit`.`statusChamado` (`idStatus`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_chamado_categoriaChamado1`
-    FOREIGN KEY (`categoria`)
+  INDEX `fk_Chamado_categoriaChamado1_idx` (`categoriaChamado` ASC) VISIBLE,
+  INDEX `fk_Chamado_Usuario1_idx` (`idAnalista` ASC) VISIBLE,
+  INDEX `fk_Chamado_Usuario2_idx` (`idSolicitante` ASC) VISIBLE,
+  INDEX `fk_Chamado_statusChamado1_idx` (`statusChamado` ASC) VISIBLE,
+  INDEX `fk_Chamado_prioridadeChamado1_idx` (`prioridadeChamado` ASC) VISIBLE,
+  CONSTRAINT `fk_Chamado_categoriaChamado1`
+    FOREIGN KEY (`categoriaChamado`)
     REFERENCES `db_trackit`.`categoriaChamado` (`idCategoria`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_chamado_prioridadeChamado1`
-    FOREIGN KEY (`prioridade`)
+  CONSTRAINT `fk_Chamado_Usuario1`
+    FOREIGN KEY (`idAnalista`)
+    REFERENCES `db_trackit`.`Usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Chamado_Usuario2`
+    FOREIGN KEY (`idSolicitante`)
+    REFERENCES `db_trackit`.`Usuario` (`idUsuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Chamado_statusChamado1`
+    FOREIGN KEY (`statusChamado`)
+    REFERENCES `db_trackit`.`statusChamado` (`idStatus`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Chamado_prioridadeChamado1`
+    FOREIGN KEY (`prioridadeChamado`)
     REFERENCES `db_trackit`.`prioridadeChamado` (`idPriorChamado`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
 -- Table `db_trackit`.`msgChamado`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `db_trackit`.`msgChamado` (
-  `idMsg` INT NOT NULL AUTO_INCREMENT,
-  `idChamado` INT NOT NULL,
-  `idUsuario` INT NOT NULL,
-  `idAnalista` INT NOT NULL,
+  `idMensagem` INT NOT NULL AUTO_INCREMENT,
   `mensagem` TEXT NOT NULL,
   `timestamp` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
   `remetente` ENUM('usuario', 'analista') NOT NULL,
-  PRIMARY KEY (`idMsg`),
-  INDEX `fk_msgChamado_chamado1_idx` (`idChamado` ASC) VISIBLE,
-  INDEX `fk_msgChamado_chamado2_idx` (`idUsuario` ASC) VISIBLE,
-  INDEX `fk_msgChamado_chamado3_idx` (`idAnalista` ASC) VISIBLE,
-  CONSTRAINT `fk_msgChamado_chamado1`
+  `urlAnexo` VARCHAR(45) NULL,
+  `nomeArquivo` VARCHAR(45) NULL,
+  `idSolicitante` INT NOT NULL,
+  `idResponsavel` INT NOT NULL,
+  `idChamado` INT NOT NULL,
+  PRIMARY KEY (`idMensagem`),
+  INDEX `fk_msgChamado_Chamado1_idx` (`idChamado` ASC) VISIBLE,
+  INDEX `fk_msgChamado_Chamado2_idx` (`idResponsavel` ASC) VISIBLE,
+  INDEX `fk_msgChamado_Chamado3_idx` (`idSolicitante` ASC) VISIBLE,
+  CONSTRAINT `fk_msgChamado_Chamado1`
     FOREIGN KEY (`idChamado`)
-    REFERENCES `db_trackit`.`chamado` (`idChamado`)
+    REFERENCES `db_trackit`.`Chamado` (`idChamado`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_msgChamado_chamado2`
-    FOREIGN KEY (`idUsuario`)
-    REFERENCES `db_trackit`.`chamado` (`idUsuaAbriu`)
+  CONSTRAINT `fk_msgChamado_Chamado2`
+    FOREIGN KEY (`idResponsavel`)
+    REFERENCES `db_trackit`.`Chamado` (`idAnalista`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_msgChamado_chamado3`
-    FOREIGN KEY (`idAnalista`)
-    REFERENCES `db_trackit`.`chamado` (`idResponsavel`)
+  CONSTRAINT `fk_msgChamado_Chamado3`
+    FOREIGN KEY (`idSolicitante`)
+    REFERENCES `db_trackit`.`Chamado` (`idSolicitante`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
