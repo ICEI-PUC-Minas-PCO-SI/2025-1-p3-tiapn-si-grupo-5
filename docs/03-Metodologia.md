@@ -81,9 +81,10 @@ Atualizado em: 01/05/2025
 
 | Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
 | :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
-| Lucas Fernandes Nascimento | Wireframe | 18/04/2025 | 07/05/2025 | ✔️    | 01/05/2025      |
 | Allef Henrique Costa Leandro | Diagrama de Fluxo | 29/04/2025 | 07/05/2025 | ✔️    | 07/05/2025      |
-
+| Eduardo Versiani de Melo Penna  | Userflow | 25/04/2025 | 07/05/2025 | ✔️    | 06/05/2025      |
+| Eduardo Versiani de Melo Penna  | Slides | 20/04/2025 | 07/05/2025 | ✔️    | 07/05/2025      |
+| Lucas Fernandes Nascimento | Wireframe | 18/04/2025 | 07/05/2025 | ✔️    | 01/05/2025      |
 
 ### Processo
 
