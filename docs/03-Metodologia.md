@@ -86,6 +86,7 @@ Atualizado em: 01/05/2025
 | Eduardo Versiani de Melo Penna  | Slides | 20/04/2025 | 07/05/2025 | ✔️    | 07/05/2025      |
 | Lucas Fernandes Nascimento | Wireframe | 18/04/2025 | 07/05/2025 | ✔️    | 01/05/2025      |
 | Lucas Fernandes Nascimento | Tecnologias e Arquitetura de Solução | 18/04/2025 | 07/05/2025 | ✔️    | 05/05/2025      |
+| Bruno Xavier Santos Frota | Diagrama DER em notação Peter Chen | 03/05/2025 | 07/05/2025 | ✔️    | 07/05/2025      |
 
 ### Processo
 
