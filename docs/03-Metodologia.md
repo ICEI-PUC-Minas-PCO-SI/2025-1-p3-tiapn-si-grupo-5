@@ -74,7 +74,7 @@ Atualizado em: 10/04/2024
 
 #### Sprint 3
 
-Atualizado em: 01/05/2025
+Atualizado em: 08/05/2025
 
 - _Scrum master_: Lucas Fernandes Nascimento
 - A divisão dos papéis pode ser verificada nas issues do Github Projects do repositório (SPRINT 3 - TRACKIT)
@@ -87,6 +87,7 @@ Atualizado em: 01/05/2025
 | Lucas Fernandes Nascimento | Wireframe | 18/04/2025 | 07/05/2025 | ✔️    | 01/05/2025      |
 | Lucas Fernandes Nascimento | Tecnologias e Arquitetura de Solução | 18/04/2025 | 07/05/2025 | ✔️    | 05/05/2025      |
 | Bruno Xavier Santos Frota | Diagrama DER em notação Peter Chen | 03/05/2025 | 07/05/2025 | ✔️    | 07/05/2025      |
+| João Pedro De Freitas Marçal | Diagrama de Classes | 06/05/2025 | 08/05/2025 | ✔️    | 08/05/2025      |
 
 ### Processo
 
