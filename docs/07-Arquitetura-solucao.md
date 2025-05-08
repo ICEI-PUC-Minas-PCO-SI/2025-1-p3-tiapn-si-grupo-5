@@ -22,11 +22,112 @@ Implementado com Node.js e Express, o backend é a camada responsável pela lóg
 
 ## Diagrama de classes
 
-O diagrama de classes ilustra graficamente a estrutura do software e como cada uma das classes estará interligada. Essas classes servem de modelo para materializar os objetos que serão executados na memória.
+![image](https://github.com/user-attachments/assets/1e806d3a-ea30-4f3d-8c2e-e89868855116)
 
-> **Links úteis**:
-> - [Diagramas de classes - documentação da IBM](https://www.ibm.com/docs/pt-br/rational-soft-arch/9.7.0?topic=diagrams-class)
-> - [O que é um diagrama de classe UML?](https://www.lucidchart.com/pages/pt/o-que-e-diagrama-de-classe-uml)
+1- Gerencia
+Atributos:
+idGerencia: Identificador do setor de gerência.
+cargo: Cargo da pessoa responsável pela gerência.
+nomeGerencia: Nome do responsável pela gerência.
+Métodos:
+modificarUsuario(): Modifica as informações de um usuário.
+excluirUsuario(): Exclui um usuário do sistema.
+
+2- Usuário
+Atributos:
+idUsuario: Identificador único do usuário.
+matricula: Número de matrícula do usuário.
+nomeUsuario: Nome do usuário.
+email: E-mail do usuário.
+senhaHash: Senha do usuário, armazenada de forma segura.
+dataCadastro: Data de cadastro do usuário.
+ativo: Indica se o usuário está ativo.
+fotoPerfil: Foto de perfil do usuário.
+tipoUsuario: Tipo do usuário, relacionado à classe TipoUsuario.
+idGerencia: Relacionamento com o setor de gerência do usuário.
+Métodos:
+verifLogin(): Verifica as credenciais de login.
+registrarChamado(): Registra um novo chamado.
+comentarChamado(): Comenta em um chamado.
+
+3- TipoUsuario
+Atributos:
+idTipoUsuario: Identificador do tipo de usuário.
+nome: Nome do tipo de usuário (ex: "Analista", "Solicitante").
+temPermissao: Indica se o tipo de usuário tem permissões para realizar determinadas ações.
+
+4- MensagemChamado
+Atributos:
+idMensagem: Identificador único da mensagem.
+mensagem: Texto da mensagem.
+timestamp: Data e hora em que a mensagem foi criada.
+remetente: Quem enviou a mensagem.
+urlAnexo: Link para um anexo, caso haja.
+nomeArquivo: Nome do arquivo do anexo.
+idChamado: Identificador do chamado ao qual a mensagem está vinculada.
+idSolicitante: Identificador de quem solicitou a mensagem.
+idAnalista: Identificador do analista que responde ou gerencia a mensagem.
+Método: enviarMensagem(): Envia uma mensagem para um chamado.
+
+5- Chamado
+Atributos:
+idChamado: Identificador único do chamado.
+protocolo: Número de protocolo relacionado ao chamado.
+assunto: Título ou resumo do chamado.
+descricao: Descrição detalhada do problema ou solicitação.
+dataAbertura: Data e hora de abertura do chamado.
+dataAtualizacao: Data e hora da última atualização.
+dataFechamento: Data e hora de fechamento do chamado (se houver).
+status: Estado atual do chamado (relacionado à classe StatusChamado).
+categoria: Categoria do chamado (relacionada à classe CategoriaChamado).
+prioridade: Prioridade do chamado (relacionada à classe prioridadeChamado).
+idSolicitante: Identificador de quem criou o chamado.
+idAnalista: Identificador do analista responsável.
+Métodos:
+enviarMensagem(): Envia uma mensagem para o chamado.
+atribuirStatus(): Atribui um status ao chamado.
+encerrarChamado(): Encerra o chamado após sua resolução.
+
+6- StatusChamado
+Atributos:
+idStatus: Identificador do status.
+nomeStatus: Nome do status (ex: "Aberto", "Fechado").
+ativo: Indica se o status está ativo.
+Método: alterarStatus(): Altera o status do chamado.
+
+7- CategoriaChamado
+Atributos:
+idCategoria: Identificador da categoria.
+tipoCategoria: Tipo ou nome da categoria (ex: "Problema Técnico").
+ativo: Indica se a categoria está ativa.
+Método: alterarCategoria(): Altera os dados da categoria.
+
+8- PrioridadeChamado
+Atributos:
+idPrioridade: Identificador da prioridade.
+tipoPrior: Tipo de prioridade (ex: "Alta", "Média").
+descricaoPrior: Descrição detalhada da prioridade.
+ativo: Indica se a prioridade está ativa.
+Método: alterarPrioridade(): Altera a prioridade do chamado.
+
+9- Notificação
+Atributos:
+idNotificacao: Identificador único da notificação.
+habilitada: Indica se a notificação está habilitada ou não.
+idChamado: Relacionamento com o chamado a que a notificação se refere.
+idUsuário: Identificador do usuário para quem a notificação é direcionada.
+Método: enviarNotif(): Envia uma notificação para um usuário sobre um chamado.
+
+Relacionamentos:
+Chamado - MensagemChamado: Um chamado pode ter várias mensagens, e cada mensagem pertence a um chamado específico (relacionamento de 1 para N).
+Chamado - StatusChamado: Cada chamado tem um status que pode ser alterado ao longo do tempo (relacionamento de 1 para 1).
+Chamado - CategoriaChamado: Cada chamado pertence a uma categoria específica (relacionamento de 1 para 1).
+Chamado - PrioridadeChamado: Cada chamado tem uma prioridade associada (relacionamento de 1 para 1).
+Chamado - Notificação: As notificações são associadas aos chamados e informam os usuários sobre atualizações (relacionamento de 1 para N).
+Gerencia - Usuário: Um usuário pode ser associado a uma gerência (relacionamento de 1 para N).
+Usuário - TipoUsuario: Cada usuário tem um tipo específico, como "Solicitante", "Analista", etc. (relacionamento de 1 para 1).
+O modelo é voltado para um sistema de suporte, onde os usuários registram chamados, os analistas gerenciam e atualizam esses chamados, e o sistema envia notificações relacionadas a esses chamados.
+
 
 ##  Modelo de dados
 
