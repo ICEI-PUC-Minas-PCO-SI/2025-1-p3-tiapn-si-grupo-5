@@ -77,7 +77,7 @@ Atualizado em: 10/04/2024
 Atualizado em: 01/05/2025
 
 - _Scrum master_: Lucas Fernandes Nascimento
-- Wireframes e definição das tecnologias: Lucas Fernandes Nascimento
+- A divisão dos papéis pode ser verificada nas issues do Github Projects do repositório (SPRINT 3 - TRACKIT)
 
 | Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
 | :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
@@ -85,6 +85,7 @@ Atualizado em: 01/05/2025
 | Eduardo Versiani de Melo Penna  | Userflow | 25/04/2025 | 07/05/2025 | ✔️    | 06/05/2025      |
 | Eduardo Versiani de Melo Penna  | Slides | 20/04/2025 | 07/05/2025 | ✔️    | 07/05/2025      |
 | Lucas Fernandes Nascimento | Wireframe | 18/04/2025 | 07/05/2025 | ✔️    | 01/05/2025      |
+| Lucas Fernandes Nascimento | Tecnologias e Arquitetura de Solução | 18/04/2025 | 07/05/2025 | ✔️    | 05/05/2025      |
 
 ### Processo
 
