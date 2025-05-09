@@ -18,7 +18,7 @@ O projeto segue a seguinte convenção para o nome de branches:
 
 Quanto à gerência de issues, o projeto adota a seguinte convenção para etiquetas:
 
-- `documentation`: melhorias ou acréscimos à documentação
+- `docs`: melhorias ou acréscimos à documentação
 - `bug`: uma funcionalidade encontra-se com problemas
 - `enhancement`: uma funcionalidade precisa ser melhorada
 - `feature`: uma nova funcionalidade precisa ser introduzida
@@ -55,14 +55,14 @@ Atualizado em: 12/03/2025
 
 
 #### Sprint 2
+
+Atualizado em: 10/04/2024
+
 - _Scrum master_: Eduardo Versiani de Melo Penna
 - Modelagem do Processo 01: Eduardo Versiani de Melo Penna e Lucas Fernandes Nascimento
 - Modelagem do Processo 02: Arthur Marques Araujo Pena, Bruno Xavier Santos Frota, João Pedro de Freitas Marçal
 - Documentação: Allef Henrique Costa Leandro, Arthur Marques Araujo Pena, Bruno Xavier Santos Frota, Eduardo Versiani de Melo Penna, João Pedro de Freitas Marçal e Lucas Fernandes Nascimento
 - Slides: Allef Henrique Costa Leandro
-
-
-Atualizado em: 10/04/2024
 
 | Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
 | :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
@@ -72,16 +72,26 @@ Atualizado em: 10/04/2024
 | Allef Henrique Costa Leandro        | Slides |  08/04/2025    | 10/04/2025 | ✔️    |  10/04/2025     |
 | Bruno Xavier Santos Frota        | Documentação processos |  09/04/2025    | 10/04/2025 | ✔️    |  10/04/2025     |
 
+#### Sprint 3
 
-Legenda:
-- ✔️: terminado
-- 📝: em execução
-- ⌛: atrasado
-- ❌: não iniciado
+Atualizado em: 08/05/2025
+
+- _Scrum master_: Lucas Fernandes Nascimento
+- A divisão dos papéis pode ser verificada nas issues do Github Projects do repositório (SPRINT 3 - TRACKIT)
+
+| Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
+| :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
+| Allef Henrique Costa Leandro | Diagrama de Fluxo | 29/04/2025 | 07/05/2025 | ✔️    | 07/05/2025      |
+| Eduardo Versiani de Melo Penna  | Userflow | 25/04/2025 | 07/05/2025 | ✔️    | 06/05/2025      |
+| Eduardo Versiani de Melo Penna  | Slides | 20/04/2025 | 07/05/2025 | ✔️    | 07/05/2025      |
+| Lucas Fernandes Nascimento | Wireframe | 18/04/2025 | 07/05/2025 | ✔️    | 01/05/2025      |
+| Lucas Fernandes Nascimento | Tecnologias e Arquitetura de Solução | 18/04/2025 | 07/05/2025 | ✔️    | 05/05/2025      |
+| Bruno Xavier Santos Frota | Diagrama DER em notação Peter Chen | 03/05/2025 | 07/05/2025 | ✔️    | 07/05/2025      |
+| João Pedro De Freitas Marçal | Diagrama de Classes | 06/05/2025 | 08/05/2025 | ✔️    | 08/05/2025      |
 
 ### Processo
 
-Coloque informações sobre detalhes da implementação do Scrum seguido pelo grupo. O grupo deverá fazer uso do recurso de gerenciamento de projeto oferecido pelo GitHub, que permite acompanhar o andamento do projeto, a execução das tarefas e o status de desenvolvimento da solução.
+Durante as sprints 1 e 2, a divisão de tarefas e discussões à respeito das pautas do projeto foram feitas através de conversas no WhatsApp e reuniões via Microsoft Teams. A partir da sprint 3, foi adotado a divisão de tarfeas através das issues e do github projects, com objetivo de tornar a divisão de papéis mais transparente e organizada.
 
 ## Relação de ambientes de trabalho
 
@@ -95,10 +105,11 @@ Exemplo: os artefatos do projeto são desenvolvidos a partir de diversas platafo
 
 | Ambiente                            | Plataforma                         | Link de acesso                         |
 |-------------------------------------|------------------------------------|----------------------------------------|
-| Repositório de código fonte         | GitHub                             | http://....                            |
-| Documentos do projeto               | GitHub                             | http://....                            |
-| Projeto de interface                | Figma                              | http://....                            |
-| Modelagem de Processos                         | Lucid.app                             | [http://....](https://lucid.app/lucidchart/4c140509-cd82-42cc-b4e3-0c3382ea2737/edit?viewport_loc=104%2C161%2C2217%2C1076%2C0_0&invitationId=inv_94730dbe-5f9c-4e6f-8a68-ee316f7e33b5)                         |
-| Slides de Apresentação         | Canva                             | [http://.... ](https://www.canva.com/design/DAGg-JQH1tc/SFLiuPJI_AGmRgNFB_OHkg/edit?utm_content=DAGg-JQH1tc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)                           |
-| Gerenciamento do projeto            | GitHub Projects                    | http://....                            |
-| Hospedagem                          | Vercel                             | http://....                            |
+| Repositório de código fonte         | GitHub                             | [Código Fonte](https://github.com/ICEI-PUC-Minas-PCO-SI/2025-1-p3-tiapn-si-grupo-5/tree/main/src)                          |
+| Documentos do projeto               | GitHub                             | [Documentação](https://github.com/ICEI-PUC-Minas-PCO-SI/2025-1-p3-tiapn-si-grupo-5/tree/main/docs)                           |
+| Projeto de interface                | Figma                              | [Figma]()                           |
+| Modelagem de Processos                         | Lucid.app                             | [Processos](https://lucid.app/lucidchart/4c140509-cd82-42cc-b4e3-0c3382ea2737/edit?viewport_loc=104%2C161%2C2217%2C1076%2C0_0&invitationId=inv_94730dbe-5f9c-4e6f-8a68-ee316f7e33b5)                         |
+| Slides de Apresentação         | Canva                             | [Slides](https://www.canva.com/design/DAGg-JQH1tc/SFLiuPJI_AGmRgNFB_OHkg/edit?utm_content=DAGg-JQH1tc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)                           |
+| Gerenciamento do projeto            | GitHub Projects                    | [Projects](https://github.com/orgs/ICEI-PUC-Minas-PCO-SI/projects/130)                          |
+
+##

@@ -1,11 +1,5 @@
 # Modelagem dos processos de negócio
 
-<span style="color:red">Pré-requisitos: <a href="02-Especificacao.md"> Especificação do projeto</a></span>
-
-> **Links úteis**:
-> - [Modelagem de processos AS-IS x TO-BE](https://dheka.com.br/modelagem-as-is-to-be/)
-> - [20 dicas práticas de modelagem de processos](https://dheka.com.br/20-dicas-praticas-de-modelagem-de-processos/)
-
 ## Modelagem da situação atual (Modelagem AS IS) PROCESSO 1
 
 Atualmente, o processo do atendimento das demandas na ASTIN ocorre de maneira manual e descentralizada, sendo descrito por uma planilha de Excel para registro das solicitações e troca de mensagens por email para contato com o usuário solicitante. Esse processo gera ineficiências, retrabalho e dificuldades no acompanhamento das solicitações.
@@ -20,7 +14,7 @@ Hoje, na ASTIN, o processo de geração de relatórios é feito de forma manual 
 
 ## Descrição geral da proposta (Modelagem TO BE) PROCESSO 2
 
-A TRACKIT têm como objetivo solucionar esse problema implementando uma de nossas aplicações: centralizando as informações e as trocas de mensagens entre o solicitante e o analista em um único local, além de automatizar a geração e o tratamento dos relatórios dentro da nossa própria plataforma. Com isso, diminuiremos o retrabalho, iremos melhorar a comunicação entre o solicitante e o técnico, aumentar a produtividade da equipe, além de minimizar os erros humanos.
+A proposta par a melhoria na geração de relatórios é realizar a extração dos dados através de um script automático, que irá centralizar a extração manual de relatório por relatório através de um script que apenas com a passagem de parâmetros específicos, faz esse trabalho automaticamente. Com isso, diminuiremos o retrabalho, iremos melhorar a comunicação entre o solicitante e o técnico, aumentar a produtividade da equipe, além de minimizar os erros humanos.
 
 ## Modelagem dos processos
 
@@ -42,3 +36,5 @@ Use o seguinte modelo:
 | Percentual de atendimentos resolvidos sem escalonamento | Avaliar a autonomia e capacidade da equipe técnica                          | Proporção de atendimentos resolvidos sem envolvimento do gestor          | Histórico de Atendimentos do email da ASTIN (as is) / TrackIT (to be)  | (nº de atendimentos sem escalonamento / nº total de atendimentos) * 100 |
 | Taxa de chamados cancelados        | Identificar inconsistências ou erros na abertura de chamados                | Mede o percentual de solicitações que foram canceladas antes do atendimento    | PDU (as is) / TrackIT (to be)    | (nº de chamados cancelados / nº total de chamados abertos) * 100             |
 | Taxa de chamados duplicados        | Avaliar falhas no envio de solicitações repetidas                           | Percentual de chamados identificados como duplicados                            | PDU (as is) / TrackIT (to be)    | (nº de chamados duplicados / nº total de chamados abertos) * 100             |
+
+##

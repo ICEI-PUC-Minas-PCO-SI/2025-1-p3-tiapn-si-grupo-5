@@ -2,17 +2,132 @@
 
 <span style="color:red">Pré-requisitos: <a href="05-Projeto-interface.md"> Projeto de interface</a></span>
 
-Definição de como o software é estruturado em termos dos componentes que fazem parte da solução e do ambiente de hospedagem da aplicação.
+A solução é composta por três camadas principais:
+<ol>
 
-![Arquitetura da Solução](images/arquitetura.png)
+<li><p><b>Frontend (Cliente - Navegador)</b></p>
+Desenvolvido com React, TypeScript, Vite e TailwindCSS, o frontend é responsável pela interface gráfica do usuário e comunicação com o backend por meio de HTTP (REST API) e WebSocket (via Socket.IO). Toda a navegação e exibição de dados acontece no navegador do usuário, com sessões autenticadas via JWT armazenadas localmente.
+
+<br><li><p><b>Backend (Servidor)</b></p>
+Implementado com Node.js e Express, o backend é a camada responsável pela lógica de negócio, regras de acesso, tratamento das requisições e conexão com o banco de dados e serviços externos. A autenticação é feita por JWT, e o chat em tempo real entre cliente e analista é viabilizado com Socket.IO.
+
+<br><li><p><b>Serviços de Dados</b></p>
+
+ - Banco de Dados Relacional (MySQL): utilizado para armazenar dados estruturados como usuários, chamados, mensagens e parâmetros do sistema.
+
+- Firebase Storage: armazena arquivos binários (imagens, documentos anexados aos chamados), e os registros no banco de dados fazem referência às URLs desses arquivos.
+</ol><br>
+
+![Arquitetura da Solução](images/arquitetura_de_solucao.svg)
 
 ## Diagrama de classes
 
-O diagrama de classes ilustra graficamente a estrutura do software e como cada uma das classes estará interligada. Essas classes servem de modelo para materializar os objetos que serão executados na memória.
+![image](https://github.com/user-attachments/assets/1e806d3a-ea30-4f3d-8c2e-e89868855116)
 
-> **Links úteis**:
-> - [Diagramas de classes - documentação da IBM](https://www.ibm.com/docs/pt-br/rational-soft-arch/9.7.0?topic=diagrams-class)
-> - [O que é um diagrama de classe UML?](https://www.lucidchart.com/pages/pt/o-que-e-diagrama-de-classe-uml)
+1- Gerencia
+Atributos:
+idGerencia: Identificador do setor de gerência.
+cargo: Cargo da pessoa responsável pela gerência.
+nomeGerencia: Nome do responsável pela gerência.
+Métodos:
+modificarUsuario(): Modifica as informações de um usuário.
+excluirUsuario(): Exclui um usuário do sistema.
+
+2- Usuário
+Atributos:
+idUsuario: Identificador único do usuário.
+matricula: Número de matrícula do usuário.
+nomeUsuario: Nome do usuário.
+email: E-mail do usuário.
+senhaHash: Senha do usuário, armazenada de forma segura.
+dataCadastro: Data de cadastro do usuário.
+ativo: Indica se o usuário está ativo.
+fotoPerfil: Foto de perfil do usuário.
+tipoUsuario: Tipo do usuário, relacionado à classe TipoUsuario.
+idGerencia: Relacionamento com o setor de gerência do usuário.
+Métodos:
+verifLogin(): Verifica as credenciais de login.
+registrarChamado(): Registra um novo chamado.
+comentarChamado(): Comenta em um chamado.
+
+3- TipoUsuario
+Atributos:
+idTipoUsuario: Identificador do tipo de usuário.
+nome: Nome do tipo de usuário (ex: "Analista", "Solicitante").
+temPermissao: Indica se o tipo de usuário tem permissões para realizar determinadas ações.
+
+4- MensagemChamado
+Atributos:
+idMensagem: Identificador único da mensagem.
+mensagem: Texto da mensagem.
+timestamp: Data e hora em que a mensagem foi criada.
+remetente: Quem enviou a mensagem.
+urlAnexo: Link para um anexo, caso haja.
+nomeArquivo: Nome do arquivo do anexo.
+idChamado: Identificador do chamado ao qual a mensagem está vinculada.
+idSolicitante: Identificador de quem solicitou a mensagem.
+idAnalista: Identificador do analista que responde ou gerencia a mensagem.
+Método: enviarMensagem(): Envia uma mensagem para um chamado.
+
+5- Chamado
+Atributos:
+idChamado: Identificador único do chamado.
+protocolo: Número de protocolo relacionado ao chamado.
+assunto: Título ou resumo do chamado.
+descricao: Descrição detalhada do problema ou solicitação.
+dataAbertura: Data e hora de abertura do chamado.
+dataAtualizacao: Data e hora da última atualização.
+dataFechamento: Data e hora de fechamento do chamado (se houver).
+status: Estado atual do chamado (relacionado à classe StatusChamado).
+categoria: Categoria do chamado (relacionada à classe CategoriaChamado).
+prioridade: Prioridade do chamado (relacionada à classe prioridadeChamado).
+idSolicitante: Identificador de quem criou o chamado.
+idAnalista: Identificador do analista responsável.
+Métodos:
+enviarMensagem(): Envia uma mensagem para o chamado.
+atribuirStatus(): Atribui um status ao chamado.
+encerrarChamado(): Encerra o chamado após sua resolução.
+
+6- StatusChamado
+Atributos:
+idStatus: Identificador do status.
+nomeStatus: Nome do status (ex: "Aberto", "Fechado").
+ativo: Indica se o status está ativo.
+Método: alterarStatus(): Altera o status do chamado.
+
+7- CategoriaChamado
+Atributos:
+idCategoria: Identificador da categoria.
+tipoCategoria: Tipo ou nome da categoria (ex: "Problema Técnico").
+ativo: Indica se a categoria está ativa.
+Método: alterarCategoria(): Altera os dados da categoria.
+
+8- PrioridadeChamado
+Atributos:
+idPrioridade: Identificador da prioridade.
+tipoPrior: Tipo de prioridade (ex: "Alta", "Média").
+descricaoPrior: Descrição detalhada da prioridade.
+ativo: Indica se a prioridade está ativa.
+Método: alterarPrioridade(): Altera a prioridade do chamado.
+
+9- Notificação
+Atributos:
+idNotificacao: Identificador único da notificação.
+habilitada: Indica se a notificação está habilitada ou não.
+idChamado: Relacionamento com o chamado a que a notificação se refere.
+idUsuário: Identificador do usuário para quem a notificação é direcionada.
+Método: enviarNotif(): Envia uma notificação para um usuário sobre um chamado.
+
+Relacionamentos:
+Chamado - MensagemChamado: Um chamado pode ter várias mensagens, e cada mensagem pertence a um chamado específico (relacionamento de 1 para N).
+Chamado - StatusChamado: Cada chamado tem um status que pode ser alterado ao longo do tempo (relacionamento de 1 para 1).
+Chamado - CategoriaChamado: Cada chamado pertence a uma categoria específica (relacionamento de 1 para 1).
+Chamado - PrioridadeChamado: Cada chamado tem uma prioridade associada (relacionamento de 1 para 1).
+Chamado - Notificação: As notificações são associadas aos chamados e informam os usuários sobre atualizações (relacionamento de 1 para N).
+Gerencia - Usuário: Um usuário pode ser associado a uma gerência (relacionamento de 1 para N).
+Usuário - TipoUsuario: Cada usuário tem um tipo específico, como "Solicitante", "Analista", etc. (relacionamento de 1 para 1).
+O modelo é voltado para um sistema de suporte, onde os usuários registram chamados, os analistas gerenciam e atualizam esses chamados, e o sistema envia notificações relacionadas a esses chamados.
+
 
 ##  Modelo de dados
 
@@ -247,38 +362,86 @@ Esse script deverá ser incluído em um arquivo .sql na pasta [de scripts SQL](.
 
 ## Tecnologias
 
-Descreva qual(is) tecnologias você vai usar para resolver o seu problema, ou seja, implementar a sua solução. Liste todas as tecnologias envolvidas, linguagens a serem utilizadas, serviços web, frameworks, bibliotecas, IDEs de desenvolvimento, e ferramentas.
 
 Apresente também uma figura explicando como as tecnologias estão relacionadas ou como uma interação do usuário com o sistema vai ser conduzida, por onde ela passa até retornar uma resposta ao usuário.
 
 
-| **Dimensão**   | **Tecnologia**  |
-| ---            | ---             |
-| Front-end      | HTML + CSS + JS + React |
-| Back-end       | Node.js         |
-| SGBD           | MySQL           |
-| Deploy         | Vercel          |
+| Camada             | Tecnologia / Ferramenta                 | Propósito                             |
+| ------------------ | --------------------------------------- | ------------------------------------- |
+| **Frontend**       | React                                   | UI reativa                            |
+|                    | TypeScript                              | Tipagem estática                      |
+|                    | Vite                                    | Bundler rápido                        |
+|                    | Tailwind CSS                            | Utility‑first CSS                     |
+|                    | shadcn/ui                               | Component library baseada em Tailwind |
+|                    | React Router                            | Navegação                             |
+|                    | React Query (TanStack Query)            | Fetch/cache de dados                  |
+|                    | React Hook Form + Zod                   | Gestão e validação de formulários     |
+|                    | Sonner (ou React‑Toastify)              | Toast notifications                   |
+|                    | Socket.io‑client                        | Chat em tempo real                    |
+|                    | eslint + Prettier + Husky + lint‑staged | Linter, formatting e git hooks        |
+|                    | Vitest                                  | Testes unitários e de componentes     |
+| **Backend**        | Node.js                                 | Runtime                               |
+|                    | TypeScript                              | Tipagem                               |
+|                    | Express.js                              | Framework HTTP                        |
+|                    | Prisma ORM                              | Modelagem e accesso ao MySQL          |
+|                    | jsonwebtoken                            | JWT auth                              |
+|                    | bcrypt                                  | Hash de senhas                        |
+|                    | Socket.io                               | Chat em tempo real                    |
+|                    | Nodemailer                              | Envio de e‑mail                       |
+|                    | Zod                                     | Validação de payloads                 |
+|                    | dotenv                                  | Variáveis de ambiente                 |
+|                    | winston ou pino                         | Logging                               |
+|                    | Jest + Supertest                        | Testes de unidade e integração        |
+|                    | ESLint + Prettier + Husky               | Linter, formatting e git hooks        |
+| **Banco de Dados** | MySQL (PlanetScale)                     | Dados relacionais                     |
+|                    | Prisma Migrate                          | Migrations                            |
+| **Armazenamento**  | Firebase Storage                        | Arquivos e imagens                    |
+| **CI/CD & Infra**  | GitHub Actions                          | Pipeline de build/test/deploy         |
+|                    | Vercel (frontend)                       | Deploy frontend                       |
+|                    | Railway (backend)                       | Deploy backend                        |
+|                    | PlanetScale                             | Banco MySQL serverless                |
+
 
 
 ## Hospedagem
 
-Explique como a hospedagem e o lançamento da plataforma foram realizados.
-
-> **Links úteis**:
-> - [Website com GitHub Pages](https://pages.github.com/)
-> - [Programação colaborativa com Repl.it](https://repl.it/)
-> - [Getting started with Heroku](https://devcenter.heroku.com/start)
-> - [Publicando seu site no Heroku](http://pythonclub.com.br/publicando-seu-hello-world-no-heroku.html)
+Serão utilzados o Vercel e o Railway para hospedagem do frontend e backend respectivamente, além disso o banco de dados será hospedado pelo PlanetScale. Detalhes maiores da implementação serão apresentados posteriormente.
 
 ## Qualidade de software
 
-Conceituar qualidade é uma tarefa complexa, mas ela pode ser vista como um método gerencial que, por meio de procedimentos disseminados por toda a organização, busca garantir um produto final que satisfaça às expectativas dos stakeholders.
+### Functional Suitability
+| Subcaracterística          | Justificativa                                                                                                              | Métrica (objetivo)                                                       |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| Functional completeness    | Garantir que todas as funcionalidades-chave (cadastro, abertura de chamado, chat, dashboards) estejam implementadas.       | % de requisitos funcionais implementados (meta ≥ 100 %)                  |
+| Functional correctness     | As respostas do sistema (API) devem estar alinhadas ao esperado pelos casos de uso (por ex. geração de protocolo correto). | Nº de incidentes em produção por comportamento inesperado (meta ≤ 2/mês) |
+| Functional appropriateness | A interface e os fluxos devem permitir que o usuário complete tarefas com mínimo de esforço.                               | Tempo médio para abrir um chamado (meta ≤ 30 s)                          |
 
-No contexto do desenvolvimento de software, qualidade pode ser entendida como um conjunto de características a serem atendidas, de modo que o produto de software atenda às necessidades de seus usuários. Entretanto, esse nível de satisfação nem sempre é alcançado de forma espontânea, devendo ser continuamente construído. Assim, a qualidade do produto depende fortemente do seu respectivo processo de desenvolvimento.
+### Performance Efficiency
 
-A norma internacional ISO/IEC 25010, que é uma atualização da ISO/IEC 9126, define oito características e 30 subcaracterísticas de qualidade para produtos de software. Com base nessas características e nas respectivas subcaracterísticas, identifique as subcaracterísticas que sua equipe utilizará como base para nortear o desenvolvimento do projeto de software, considerando alguns aspectos simples de qualidade. Justifique as subcaracterísticas escolhidas pelo time e elenque as métricas que permitirão à equipe avaliar os objetos de interesse.
+| Subcaracterística    | Justificativa                                                               | Métrica (objetivo)                         |
+| -------------------- | --------------------------------------------------------------------------- | ------------------------------------------ |
+| Time behavior        | O sistema deve responder rapidamente às interações (forms, listagem, chat). | 95 % das requisições < 2 s                 |
+| Resource utilization | Uso moderado de CPU/memória no servidor para suportar escalabilidade.       | CPU < 70 % sob carga média; memória < 75 % |
 
-> **Links úteis**:
-> - [ISO/IEC 25010:2011 - Systems and Software Engineering — Systems and Software Quality Requirements and Evaluation (SQuaRE) — System and Software Quality Models](https://www.iso.org/standard/35733.html/)
-> - [Análise sobre a ISO 9126 – NBR 13596](https://www.tiespecialistas.com.br/analise-sobre-iso-9126-nbr-13596/)
-> - [Qualidade de software - Engenharia de Software](https://www.devmedia.com.br/qualidade-de-software-engenharia-de-software-29/18209)
+### Usability
+
+| Subcaracterística     | Justificativa                                                                   | Métrica (objetivo)                               |
+| --------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------ |
+| Operability           | Facilitar a curva de aprendizado e eficiência no uso (labels claras, feedback). | SUS (System Usability Scale) ≥ 80                |
+| Learnability          | Novos usuários devem conseguir abrir seu primeiro chamado sem ajuda externa.    | Tempo até 1º chamado ≤ 2 min (80 % dos usuários) |
+| User error protection | Minimizam-se erros de input (validações em formulário, confirmação de ações).   | Nº de erros de formulário por sessão ≤ 1         |
+
+### Security
+
+| Subcaracterística | Justificativa                                                             | Métrica (objetivo)                   |
+| ----------------- | ------------------------------------------------------------------------- | ------------------------------------ |
+| Confidentiality   | Dados sensíveis (senhas, e‑mails) devem permanecer protegidos.            | 100 % das senhas armazenadas em hash |
+| Authenticity      | Garantir que apenas usuários autenticados acessem suas áreas autorizadas. | 0 acessos não autorizados detectados |
+
+### Maintainability
+
+| Subcaracterística | Justificativa                                                          | Métrica (objetivo)                   |
+| ----------------- | ---------------------------------------------------------------------- | ------------------------------------ |
+| Modularity        | Código organizado em módulos (features) facilita evolução e debugging. | Cobertura de módulos testados ≥ 90 % |
+| Testability       | Facilidade para escrever e executar testes automatizados.              | Coverage (unit+integration) ≥ 80 %   |
+| Analysability     | Facilidade de localizar causa de defeitos em logs e monitoramento.     | MTTR (Mean Time to Repair) ≤ 4 h     |

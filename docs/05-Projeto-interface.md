@@ -5,18 +5,21 @@
 
 Visão geral da interação do usuário pelas telas do sistema e protótipo interativo das telas com as funcionalidades que fazem parte do sistema (wireframes).
 
- Apresente as principais interfaces da plataforma. Discuta como ela foi elaborada de forma a atender os requisitos funcionais, não funcionais e histórias de usuário abordados na <a href="02-Especificacao.md"> Especificação do projeto</a></span>.
-
  ## User flow
 
 Fluxo de usuário (user flow) é uma técnica que permite ao desenvolvedor mapear todo o fluxo de navegação do usuário na aplicação. Essa técnica serve para alinhar os caminhos e as possíveis ações que o usuário pode realizar junto com os membros da equipe.
 
-![Exemplo de user flow](images/user_flow.jpg)
+ ## User flow - Usuário
 
-> **Links úteis**:
-> - [User flow: o quê é e como fazer?](https://medium.com/7bits/fluxo-de-usu%C3%A1rio-user-flow-o-que-%C3%A9-como-fazer-79d965872534)
-> - [User flow vs site maps](http://designr.com.br/sitemap-e-user-flow-quais-as-diferencas-e-quando-usar-cada-um/)
-> - [Top 25 user flow tools & templates for smooth](https://www.mockplus.com/blog/post/user-flow-tools)
+![Exemplo de user flow](images/USERFLOW.jpg)
+
+ ## User flow - Analista
+
+![Exemplo de user flow](images/Userflow%20analista.jpg)
+
+ ## User flow - Gestor
+
+![Exemplo de user flow](images/Userflow%20gestor.jpg)
 
 ### Diagrama de fluxo
 
@@ -24,57 +27,72 @@ O diagrama apresenta o estudo do fluxo de interação do usuário com o sistema 
 
 O diagrama de fluxo pode ser desenvolvido com “boxes” que possuem, internamente, a indicação dos principais elementos de interface — tais como menus e acessos — e funcionalidades, como editar, pesquisar, filtrar e configurar, além da conexão entre esses boxes a partir do processo de interação.
 
-![Exemplo de diagrama de fluxo](images/diagrama_fluxo.jpg)
+![Exemplo de user flow](images/Diagrama%20de%20usuário.jpg)
 
-> **Links úteis**:
-> - [Como criar um diagrama de fluxo de usuário](https://www.lucidchart.com/blog/how-to-make-a-user-flow-diagram)
-> - [Fluxograma online: seis sites para fazer gráfico sem instalar nada](https://www.techtudo.com.br/listas/2019/03/fluxograma-online-seis-sites-para-fazer-grafico-sem-instalar-nada.ghtml)
 
 ## Wireframes
 
-São protótipos usados no design de interface para sugerir a estrutura de um site web e seu relacionamento entre suas páginas. Um wireframe web é uma ilustração que mostra o layout dos elementos fundamentais na interface.
+O wireframe do projeto pode ser visualizado na íntegra através do protótipo interativo no Figma: [Protótipo via Figma](https://www.figma.com/design/mQ01IKXNd8l9l0xQwxCgcQ/wireframe-trackit?node-id=0-1&t=4R3iXTh5kUjHYW4C-1)
 
-![Exemplo de wireframe](images/wireframe.png)
- 
-> **Links úteis**:
-> - [Protótipos: baixa, média ou alta fidelidade?](https://medium.com/ladies-that-ux-br/prot%C3%B3tipos-baixa-m%C3%A9dia-ou-alta-fidelidade-71d897559135)
-> - [Protótipos vs wireframes](https://www.nngroup.com/videos/prototypes-vs-wireframes-ux-projects/)
-> - [Ferramentas de wireframes](https://rockcontent.com/blog/wireframes/)
-> - [MarvelApp](https://marvelapp.com/developers/documentation/tutorials/)
-> - [Figma](https://www.figma.com/)
-> - [Adobe XD](https://www.adobe.com/br/products/xd.html#scroll)
-> - [Axure](https://www.axure.com/edu) (Licença Educacional)
-> - [InvisionApp](https://www.invisionapp.com/) (Licença Educacional)
+## Interface do sistema e telas principais do sistema
 
+As interfaces do sistema seguem um padrão bem definido e organizado. Todas as tela são compostas por uma sidebar expandível que contém as operações que o usuário pode realizar dentro do sistema.
 
-## Interface do sistema
+Seguem respectivamente as telas de home para os 3 perfis do sistema: cliente, analista e gestor. As telas de home possuem um botão CTA (call to action), instruindo o determinado perfil de usuário para realizar a principal ação dentro do sistema.
 
-Visão geral da interação do usuário por meio das telas do sistema. Apresente as principais interfaces da plataforma em sua versão final.
+![Home cliente](./images/home-cliente-logado.svg)
+![Home analista](./images/home-analista-logado.svg)
+![Home cliente](./images/home-gestor-logado.svg)
 
-### Tela principal do sistema
+##  Telas do processo
 
-Descrição da tela principal do sistema.
+### Cliente
 
-> Insira aqui a tela principal do sistema
+![Abertura de chamado](./images/home-cliente-abrir-chamado.svg)
 
+O cliente deve preencher as informações do formulário para conseguir abrir o chamado. Ao criá-lo, o sistema gera automaticamente um número de protocolo, salva no banco de dados e adiciona a fila de chamados não atribuídos, para que os analistas consigam visualizar e atribuir.
 
-###  Telas do processo 1
+![Visualização dos chamados - Cliente](./images/home-cliente-ver-chamados.svg)
 
-Descrição da tela relativa à atividade 1 do processo 1.
+O cliente pode visualizar os chamados abertos por ele, de modo a ter uma visão global de quais atendimentos ainda estão pendentes.
 
-> Insira aqui a tela da atividade 1
+![Chat com analista](./images/home-ticket-detalhes.svg)
 
-Descrição da tela relativa à atividade 2 do processo 1.
+O cliente tem à disposição um chat interativo com o analista, de modo que pode conversar e enviar anexos para que a demanda possa ser solucionada.
 
-> Insira aqui a tela da atividade 2
+### Analista
+![Atribuir chamados](./images/home-analista-ver-chamados.svg)
 
+O analista através da seção atribuir chamados consegue visualizar os chamados que estão em aberto, clicar no chamado para ver os detalhes e atribuir o chamado a si mesmo para começar a atender.
 
-### Telas do processo 2
+![Conversar com o cliente](./images/home-analista-taked-ticket-details.svg)
 
-Descrição da tela relativa à atividade 1 do processo 2.
+O analista consegue conversar com o cliente pelo chamado bem como anexar arquivos e mudar o status do chamado ao decorrer do atendimento.
 
-> Insira aqui a tela da atividade 1
+![Ver chamados do analisata](./images/home-analista-meus-chamados.svg)
 
-Descrição da tela relativa à atividade 2 do processo 2.
+O analista consegue visualizar todos os chamados que ele se atribuiu, de modo a ter uma visão geral do seu fluxo de trabalho e principais pendências.
 
-> Insira aqui a tela da atividade 2
+### Gestor
+
+![Visualizar dashbord](./images/home-gestor-dashbord.svg)
+
+O gestor consegue visualizar as métricas do atendimento da equipe. Através de KPIs e gráficos.
+
+![Visualizar chamados em aberto](./images/home-gestor-chamados-em-aberto.png)
+
+O gestor consegue visualizar tanto os chamados em aberto, quanto os da equipe dele, de modo que consiga ter uma visão gerencial e apurada.
+
+![Intervir em chamados](./images/home-gestor-chamados-em-aberto-detalhes.svg)
+
+O gestor consegue enviar mensagens nos chamados em aberto ou atribuídos e atribuir um chamado em aberto para alguém da equipe dele.
+
+![Gerenciar parâmetros](./images/home-gestor-prioridades.svg)
+
+O gestor consegue editar parâmetros utilizados na abertura do chamados e gerências. De modo que possa delimitar o escopo de atendimento de sua equipe.
+
+![Gerenciar usuários](./images/home-gestor-config-usuarios.svg)
+
+O gestor consegue criar, editar e excluir pefis do usuário. Essa feature é útil para que ele possa cadastrar os membros de sua equipe.
+
+Existem outras várias telas para cada perfil que podem ser visualizadas através do protótipo interativo no Figma. Essas apresentadas são as principais para o funcionamento do sistema.

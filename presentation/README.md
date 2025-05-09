@@ -11,11 +11,16 @@ Coloque aqui o conjunto de slides.
 
 
 Segue abaixo os slides da Sprint 1:
-- [TIAPN Slides.pdf](https://github.com/user-attachments/files/19213691/TIAPN.Slides.pdf)
+- [SLIDE SPRINT 1](../docs/slides/slide_sprint_1.pdf)
 
 Segue abaixo os slides da Sprint 2:
 
-- [TIAPN.pdf](https://github.com/user-attachments/files/19694752/TIAPN.pdf)
+- [SLIDE SPRINT 2](../docs/slides/slide_sprint_2.pdf)
+
+Segue abaixo os slides da Sprint 3:
+
+- [SLIDE SPRINT 3](../docs/slides/slide_sprint_3.pdf)
+
 
 
 > **Links úteis**:

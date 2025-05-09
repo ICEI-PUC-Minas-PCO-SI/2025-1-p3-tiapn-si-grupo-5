@@ -1,4 +1,4 @@
-### 3.3.2 Processo 2 – FLUXO DE RELATORIOS INTERNOS (AS IS)
+### 3.3.2 Processo 2 – FLUXO DE GERAÇÃO DE RELATÓRIOS INTERNOS (AS IS)
 O diagrama abaixo motra o fluxo atual da produção de relatórios, logo após será mostrado como um sistema automatizado, centralizando as funcionalidades, pode aprimorar a eficiência dos processos.
 ![Modelo AS IS](../images/relatorios-ASTIN.png "Modelo BPMN AS IS do Processo 2.")
 
@@ -161,3 +161,5 @@ Com o arquivo em mãos, o solicitante irá analisá-lo e retornar um feedback pa
 - **Aceleração do processo de geração e entrega de relatórios**
 - **Melhora na comunicação e no rastreamento das solicitações**
 - **Otimização do tempo do analista para tarefas mais estratégicas**
+
+##

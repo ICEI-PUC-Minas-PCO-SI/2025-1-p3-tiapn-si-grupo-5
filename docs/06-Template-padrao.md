@@ -2,11 +2,17 @@
 
 <span style="color:red">Pré-requisitos: <a href="02-Especificacao.md"> Especificação do projeto</a></span>, <a href="03-Metodologia.md"> Metodologia</a>, <a href="05-Projeto-interface.md"> Projeto de interface</a>
 
-Layout padrão da aplicação que será utilizado em todas as páginas com a definição de identidade visual, aspectos de responsividade e iconografia.
+![Template Padrão](./images/home-cliente-logado.svg)
 
-> **Links úteis**:
->
-> - [CSS website layout (W3Schools)](https://www.w3schools.com/css/css_website_layout.asp)
-> - [Website page layouts](http://www.cellbiol.com/bioinformatics_web_development/chapter-3-your-first-web-page-learning-html-and-css/website-page-layouts/)
-> - [Perfect liquid layout](https://matthewjamestaylor.com/perfect-liquid-layouts)
-> - [How and why icons improve your web design](https://usabilla.com/blog/how-and-why-icons-improve-you-web-design/)
+A aplicação será composta em todas as telas or uma sidebar com as principais ações que o usuário pode executar dentro do sistema. Existem botões CTA para direcionar o tipo de usuário à tarefa principal que ele pode executar no sistema.
+
+<b>Paleta de Cores:</b>
+
+![Paleta de Cores](./images/paleta_de_cores.svg)
+
+<br>Tipografias:</br>
+
+![Tipografias](./images/estilo_de_fonte.svg)
+
+
+A responsividade será implementada junto à biblioteca Shadcn, que disponibiliza componentes Reacts responsivos.
