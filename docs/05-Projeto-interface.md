@@ -95,4 +95,4 @@ O gestor consegue editar parâmetros utilizados na abertura do chamados e gerên
 
 O gestor consegue criar, editar e excluir pefis do usuário. Essa feature é útil para que ele possa cadastrar os membros de sua equipe.
 
-Existem outras várias telas para cada perfil que podem ser visualizadas através do protótipo interativo no Figma. Essas apresentadas são as principais para o funcionamento do sistema.
+Existem outras várias telas para cada perfil que podem ser visualizadas através do protótipo interativo no <a href='https://www.figma.com/design/mQ01IKXNd8l9l0xQwxCgcQ/wireframe-trackit?node-id=0-1&t=P2jZDK4UVQqXLUjh-1'>Figma</a> Essas apresentadas são as principais para o funcionamento do sistema.

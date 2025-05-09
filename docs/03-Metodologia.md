@@ -107,7 +107,7 @@ Exemplo: os artefatos do projeto são desenvolvidos a partir de diversas platafo
 |-------------------------------------|------------------------------------|----------------------------------------|
 | Repositório de código fonte         | GitHub                             | [Código Fonte](https://github.com/ICEI-PUC-Minas-PCO-SI/2025-1-p3-tiapn-si-grupo-5/tree/main/src)                          |
 | Documentos do projeto               | GitHub                             | [Documentação](https://github.com/ICEI-PUC-Minas-PCO-SI/2025-1-p3-tiapn-si-grupo-5/tree/main/docs)                           |
-| Projeto de interface                | Figma                              | [Figma]()                           |
+| Projeto de interface                | Figma                              | [Figma](https://www.figma.com/design/mQ01IKXNd8l9l0xQwxCgcQ/wireframe-trackit?node-id=0-1&t=P2jZDK4UVQqXLUjh-1)                           |
 | Modelagem de Processos                         | Lucid.app                             | [Processos](https://lucid.app/lucidchart/4c140509-cd82-42cc-b4e3-0c3382ea2737/edit?viewport_loc=104%2C161%2C2217%2C1076%2C0_0&invitationId=inv_94730dbe-5f9c-4e6f-8a68-ee316f7e33b5)                         |
 | Slides de Apresentação         | Canva                             | [Slides](https://www.canva.com/design/DAGg-JQH1tc/SFLiuPJI_AGmRgNFB_OHkg/edit?utm_content=DAGg-JQH1tc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)                           |
 | Gerenciamento do projeto            | GitHub Projects                    | [Projects](https://github.com/orgs/ICEI-PUC-Minas-PCO-SI/projects/130)                          |
