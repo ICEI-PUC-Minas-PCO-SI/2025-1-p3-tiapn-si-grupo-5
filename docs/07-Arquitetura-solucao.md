@@ -141,14 +141,14 @@ Apresente o modelo de dados por meio de um modelo relacional que contemple todos
 
 Este modelo de banco de dados simplificado visa estruturar as informações essenciais para um sistema de abertura de chamados, focando nas entidades principais e seus relacionamentos. Cada tabela possui uma chave primária (PK) para identificar seus registros de forma única e chaves estrangeiras (FK) utilizadas para estabelecer os relacionamentos entre as tabelas, garantindo a integridade referencial. O Modelo ER abaixo representa, como as entidades (coisas, objetos) se relacionam entre si na aplicação interativa.
 
-![Modelo ER da TrackIT](./images/EDRtrackIT.png "Modelo ER.")
+![Modelo ER da TrackIT](./images/EDRtrackIT.png)
 
 ### Esquema Relacional
 
 O modelo de banco de dados a seguir foi projetado para que permita a interação entre usuários e analistas, o rastreamento de problemas e a gestão do ciclo de vida dos chamados. Cada tabela possui uma chave primária única para identificar seus registros além de possuir chaves estrangeiras que são utilizadas para estabelecer e reforçar os relacionamentos entre as tabelas, garantindo a integridade referencial dos dados buscando representar de forma clara e estruturada as entidades e seus relacionamentos no sistema de abertura de chamados, fornecendo uma base sólida para a criação do banco de dados físico. O Esquema Relacional abaixo corresponde à representação dos dados em tabelas juntamente com as restrições de integridade e chave primária. 
  
 
-![Esquema Relacional da TrackIT](./images/ModeloRelacional.png "Modelo Lógico.")
+![Esquema Relacional da TrackIT](./images/ModeloRelacional.png)
 ---
 
 ### Modelo físico
