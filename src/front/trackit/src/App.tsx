@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
-export function App() {
+xport function App() {
   return (
     <div className="flex flex-col items-center justify-center h-screen space-y-4">
       <Card className="p-4 w-[400px]">
