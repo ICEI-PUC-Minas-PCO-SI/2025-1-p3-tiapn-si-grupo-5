@@ -1,0 +1,1 @@
+## Dependências instaladas que deverão ser utilizadas no projeto
