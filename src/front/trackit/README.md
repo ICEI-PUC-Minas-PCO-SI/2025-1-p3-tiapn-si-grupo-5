@@ -1,4 +1,9 @@
 ## Dependências instaladas que deverão ser utilizadas no projeto
+### Para instalar as dependências do projeto basta rodar:
+
+```bash
+npm install
+```
 
 - [React Route](https://reactrouter.com/home): Navegação de página SPA
 - [Tailwind](https://tailwindcss.com/): Estilização dos componentes React
