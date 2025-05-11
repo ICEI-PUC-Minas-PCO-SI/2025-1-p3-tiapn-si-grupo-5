@@ -50,6 +50,11 @@
   --sidebar-ring: oklch(0.704 0.04 256.788);
 }
 
+#root {
+  min-width: 100vw;
+  min-height: 100vh; 
+}
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -63,7 +68,7 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
-  min-width: 320px;
+  min-width: 100vw;
   min-height: 100vh;
 }
 
