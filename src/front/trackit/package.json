@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint --fix",
     "preview": "vite preview",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.2",
@@ -40,6 +40,6 @@
     "vite": "^6.3.5"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": "eslint --fix"
+    "*.{js,jsx,ts,tsx}": "npm run lint"
   }
 }
