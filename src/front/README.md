@@ -1,6 +1,5 @@
-
 ## Dependências instaladas que deverão ser utilizadas no projeto
-### Para instalar as dependências do projeto basta rodar:
+### Para instalar as dependências do projeto basta rodar, no diretório ./src/front/trackit:
 
 ```bash
 npm install
