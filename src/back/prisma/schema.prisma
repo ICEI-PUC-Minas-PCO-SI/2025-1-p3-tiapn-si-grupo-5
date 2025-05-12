@@ -1,0 +1,141 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model chamado {
+  idChamado                              Int                @id @default(autoincrement())
+  protocolo                              String             @unique(map: "protocolo_UNIQUE") @db.VarChar(8)
+  assunto                                String             @db.VarChar(100)
+  descricao                              String             @db.LongText
+  dataAbertura                           DateTime           @default(now()) @db.DateTime(0)
+  dataAtualizacao                        DateTime?          @db.DateTime(0)
+  dataFechamento                         DateTime?          @db.DateTime(0)
+  idSolicitante                          Int?
+  idAnalista                             Int?
+  idTipoChamado                          Int?
+  idStatus                               Int?
+  idPrioridade                           Int?
+  usuario_chamado_idSolicitanteTousuario usuario?           @relation("chamado_idSolicitanteTousuario", fields: [idSolicitante], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_1")
+  usuario_chamado_idAnalistaTousuario    usuario?           @relation("chamado_idAnalistaTousuario", fields: [idAnalista], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_2")
+  tipochamado                            tipochamado?       @relation(fields: [idTipoChamado], references: [idTipoChamado], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_3")
+  statuschamado                          statuschamado?     @relation(fields: [idStatus], references: [idStatus], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_4")
+  prioridadechamado                      prioridadechamado? @relation(fields: [idPrioridade], references: [idPrioridade], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_5")
+  msgchamado                             msgchamado[]
+  notificacao                            notificacao[]
+
+  @@index([idAnalista], map: "idAnalista")
+  @@index([idPrioridade], map: "idPrioridade")
+  @@index([idSolicitante], map: "idSolicitante")
+  @@index([idStatus], map: "idStatus")
+  @@index([idTipoChamado], map: "idTipoChamado")
+}
+
+model gerencia {
+  idGerencia   Int       @id @default(autoincrement())
+  nomeGerencia String    @db.VarChar(50)
+  ativo        Int       @default(1) @db.TinyInt
+  usuario      usuario[]
+}
+
+model logatividade {
+  idLog     Int       @id @default(autoincrement())
+  descricao String    @db.Text
+  dataHora  DateTime? @default(now()) @db.DateTime(0)
+  idUsuario Int?
+  usuario   usuario?  @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "logatividade_ibfk_1")
+
+  @@index([idUsuario], map: "idUsuario")
+}
+
+model msgchamado {
+  idMensagem  Int                  @id @default(autoincrement())
+  mensagem    String               @db.Text
+  timestamp   DateTime?            @default(now()) @db.DateTime(0)
+  remetente   msgchamado_remetente
+  urlAnexo    String?              @db.Text
+  nomeArquivo String?              @db.VarChar(255)
+  idChamado   Int
+  idRemetente Int
+  chamado     chamado              @relation(fields: [idChamado], references: [idChamado], onDelete: NoAction, onUpdate: NoAction, map: "msgchamado_ibfk_1")
+  usuario     usuario              @relation(fields: [idRemetente], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "msgchamado_ibfk_2")
+
+  @@index([idChamado], map: "idChamado")
+  @@index([idRemetente], map: "idRemetente")
+}
+
+model notificacao {
+  idNotificacao Int       @id @default(autoincrement())
+  titulo        String    @db.VarChar(100)
+  mensagem      String    @db.Text
+  lida          Int       @default(0) @db.TinyInt
+  dataHora      DateTime? @default(now()) @db.DateTime(0)
+  idUsuario     Int
+  idChamado     Int?
+  usuario       usuario   @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade, onUpdate: NoAction, map: "notificacao_ibfk_1")
+  chamado       chamado?  @relation(fields: [idChamado], references: [idChamado], onDelete: Cascade, onUpdate: NoAction, map: "notificacao_ibfk_2")
+
+  @@index([idChamado], map: "idChamado")
+  @@index([idUsuario], map: "idUsuario")
+}
+
+model prioridadechamado {
+  idPrioridade   Int       @id @default(autoincrement())
+  nomePrioridade String    @db.VarChar(50)
+  ativo          Int       @default(1) @db.TinyInt
+  chamado        chamado[]
+}
+
+model statuschamado {
+  idStatus   Int       @id @default(autoincrement())
+  nomeStatus String    @db.VarChar(50)
+  ativo      Int       @default(1) @db.TinyInt
+  chamado    chamado[]
+}
+
+model tipochamado {
+  idTipoChamado Int       @id @default(autoincrement())
+  nomeTipo      String    @db.VarChar(50)
+  ativo         Int       @default(1) @db.TinyInt
+  chamado       chamado[]
+}
+
+model tipousuario {
+  idTipoUsuario Int       @id @default(autoincrement())
+  tipoUsuario   String    @db.VarChar(20)
+  usuario       usuario[]
+}
+
+model usuario {
+  idUsuario                              Int            @id @default(autoincrement())
+  matricula                              Int            @unique(map: "matricula_UNIQUE")
+  nomeUsuario                            String         @db.VarChar(50)
+  email                                  String         @unique(map: "email_UNIQUE") @db.VarChar(75)
+  senha                                  String         @db.VarChar(255)
+  dataCadastro                           DateTime       @default(now()) @db.DateTime(0)
+  ativo                                  Int            @default(1) @db.TinyInt
+  ramal                                  Int?
+  fotoPerfil                             String?        @db.Text
+  idGerencia                             Int?
+  idTipoUsuario                          Int?
+  chamado_chamado_idSolicitanteTousuario chamado[]      @relation("chamado_idSolicitanteTousuario")
+  chamado_chamado_idAnalistaTousuario    chamado[]      @relation("chamado_idAnalistaTousuario")
+  logatividade                           logatividade[]
+  msgchamado                             msgchamado[]
+  notificacao                            notificacao[]
+  gerencia                               gerencia?      @relation(fields: [idGerencia], references: [idGerencia], onDelete: NoAction, onUpdate: NoAction, map: "usuario_ibfk_1")
+  tipousuario                            tipousuario?   @relation(fields: [idTipoUsuario], references: [idTipoUsuario], onDelete: NoAction, onUpdate: NoAction, map: "usuario_ibfk_2")
+
+  @@index([idGerencia], map: "idGerencia")
+  @@index([idTipoUsuario], map: "idTipoUsuario")
+}
+
+enum msgchamado_remetente {
+  usuario
+  analista
+}
