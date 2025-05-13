@@ -1,4 +1,4 @@
-## Dependências instaladas que deverão ser utilizadas no projeto
+## Configurando o Front-End
 ### Instalando dependências
 
 Para instalar as dependências do projeto automaticamente, basta rodar, no diretório `./src/front/trackit`:
@@ -31,6 +31,8 @@ src/
 - [ShadcnUI](https://ui.shadcn.com/): Biblioteca com componentes React pré-construídos utilizando Tailwind.
 - [Husky](https://typicode.github.io/husky/): Ferramenta para hooks de git (controle de commits).
 
+## Explicando sobre as dependências
+
 ### ESLint com Husky
 
 O projeto está configurado com o [ESLint](https://eslint.org/docs/latest/), ele é uma ferramenta de análise de código estático para JavaScript e TypeScript. Em aplicações React com TypeScript, o ESLint é configurado para identificar problemas de estilo, erros de sintaxe e potenciais bugs no seu código, garantindo a consistência e a qualidade do projeto. Ele se integra com o TypeScript para entender a tipagem estática e aplicar regras específicas para código TypeScript e React, ajudando a manter um código limpo e seguindo as melhores práticas. Pode ser verificado em `trackit/eslint.config.js`.
@@ -45,6 +47,8 @@ npm run lint --fix
 ### Utilização dos componentes do ShadCNUI
 
 Os componentes da aplicação devem ser construídos com base nos componentes pré-prontos da biblioteca. A importação deles deve ser feita através da CLI, conforme documentação do [ShadCNUI](https://ui.shadcn.com/docs/componentS/). É ensinado o passo a passo das importações. As cores estão no layoult do [Figma](https://www.figma.com/design/mQ01IKXNd8l9l0xQwxCgcQ/wireframe-trackit?node-id=0-1&t=2bcxI0IfRlNEfzNN-1), ele compartilha os mesmos estilos do ShadCNUI, porém adaptações tanto em componentes, quanto em estilos e cores devem ser feitas para atender as necessidades da aplicação.
+
+Para além disso, os ícones devem ser importados como componentes React através da biblioteca react-icons, a qual já está instalada. A importação para código pode ser feita conforme documentação do [React-Icons](https://react-icons.github.io/react-icons/)
 
 ### Especificações das Features
 
