@@ -12,6 +12,8 @@ Gerar os objetos do Prisma:
 npx prisma generate
 ```
 
+- Caso ele não crie o arquivo .env, você deverá ser criado.
+
 ### Estrutura de pastas
 
 back/             
