@@ -52,6 +52,8 @@
 }
 
 #root {
+  margin: 0;
+  padding: 0;
   min-width: 100vw;
   min-height: 100vh; 
 }
@@ -63,14 +65,6 @@ a {
 }
 a:hover {
   color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 100vw;
-  min-height: 100vh;
 }
 
 .input-layout {
@@ -85,8 +79,6 @@ body {
 .label-layout {
   @apply justify-start text-slate-950 text-base font-normal leading-normal text-[1rem]
 }
-
-
 
 @media (prefers-color-scheme: light) {
   :root {
