@@ -14,7 +14,6 @@ import { IoEyeOutline } from "react-icons/io5";
 import { IoEyeOffOutline } from "react-icons/io5";
 
 import { useState } from 'react'
-import { ViewPassword } from './ViewPassword'
 
 export function Login() {
     const [isShow, setIsShow] = useState(false);
@@ -26,7 +25,7 @@ export function Login() {
         <div className="grid grid-cols-2 gap-[2.25rem]">
             <div className="">
                 <header>
-                    <div className="pt-[3.75rem] pl-[3.75rem]">
+                    <div className="mt-[3.75rem] ml-[3.75rem]">
                         <img className="w-28 h-24" src={Logo} alt="Logo Track It" />
                     </div>
                 </header>
@@ -66,8 +65,6 @@ export function Login() {
                                     </button>
                                 </div>
                             </div>
-                                
-                            
 
                             <div className="w-[100%]">
                                 <Button className="btn-layout">
@@ -84,9 +81,8 @@ export function Login() {
                     <div className="w-full flex justify-center mt-[1.5rem]">
                         <div className="w-[37.5rem] flex flex-col justify-end items-end gap-[1.5rem]">
 
-                            {/* Alterar link para tela de Esqueceu senha */}
                             <h3 className="font-'[Inter]' text-[1rem] font-normal leading-[24px] underline decoration-solid ">
-                                <Link to="register" className="!text-slate-950 hover:!text-sky-700">
+                                <Link to="noPassword" className="!text-slate-950 hover:!text-sky-700">
                                     Esqueceu a senha?
                                 </Link>
                             </h3>

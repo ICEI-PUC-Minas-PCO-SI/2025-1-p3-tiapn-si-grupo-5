@@ -7,6 +7,8 @@ import { RouterProvider, createBrowserRouter } from "react-router"
 
 import { Register } from './pages/registerLogin/Register.tsx'
 import { Login } from './pages/registerLogin/Login.tsx'
+import path from 'path'
+import { ForgotPassword } from './pages/registerLogin/ForgotPassword.tsx'
 
 const router = createBrowserRouter([
   {
@@ -16,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: "register",
     element: <Register />
+  },
+  {
+    path: "noPassword",
+    element: <ForgotPassword />
   }
 ])
 
