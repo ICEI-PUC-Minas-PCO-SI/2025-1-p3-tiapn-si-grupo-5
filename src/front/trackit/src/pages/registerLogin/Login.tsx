@@ -1,28 +1,62 @@
-// Images
 import Logo from '../../assets/TrackIt_Logo.svg'
 import Suport from '../../assets/Suporte_solucao.svg'
 
-// Components
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/label'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 
-// Link
 import { Link } from 'react-router'
 
-// Icons
 import { IoEyeOutline } from "react-icons/io5";
 import { IoEyeOffOutline } from "react-icons/io5";
 
 import { useState } from 'react'
 
 export function Login() {
-    const [isShow, setIsShow] = useState(false);
+      {/*const [isShow, setIsShow] = useState(false);
     
-    const handlePassword = () => setIsShow(!isShow);
+  *const handlePassword = () => setIsShow(!isShow);*/}
 
     return (
+        <div className="flex w-full h-screen">
 
-        <div className="grid grid-cols-2 gap-[2.25rem]">
+            {/* Conteúdo - Login, etc.*/}
+            <div className="flex w-full h-full p-9 items-start justify-start gap-16">
+
+                {/* Logo + mensagem inicial*/}
+                <div className='flex flex-col gap-4 items-start justify-start w-full h-full'>
+                    <img className="w-24 h-20" src={Logo} alt="Logo Track It"/>
+                    <div className='self-stretch inline-flex flex-col justify-start items-center gap-1'>
+                        <h2 className="justify-start text-slate-800 text-[1.5rem] font-semibold leading-loose font-'[Inter]'">
+                            Bem-vindo ao TrackIT
+                        </h2>
+                        <h1 className="justify-start text-[2rem] text-slate-950 font-bold leading-[3rem] font-'[Inter]'">
+                            Entre com suas credenciais
+                        </h1>
+                    </div>
+                </div>
+                
+                {/* Formulário de Login*/}
+
+            </div>
+
+            {/* Imagem */}
+            <div className='flex w-full h-full p-9 items-start justify-start gap-16'>
+
+            </div>
+        </div>
+
+
+/*         <div className="grid grid-cols-2 gap-[2.25rem]">
             <div className="">
                 <header>
                     <div className="mt-[3.75rem] ml-[3.75rem]">
@@ -103,20 +137,6 @@ export function Login() {
                     </div>
 
                 </footer>
-            </div>
-
-            <aside className="h-screen flex flex-col justify-center items-center bg-slate-100">
-                <div>
-                    <img src={Suport} alt="Transformando suporte em solução" />
-                    
-                </div>
-                <h1 className="font-'[Inter]' text-[2rem] font-bold leading-[48px] text-slate-950">
-                    Transformando{' '}
-                    <span className="text-cyan-800">suporte </span>
-                    em{' '}
-                    <span className="text-cyan-800">solução</span>
-                </h1>
-            </aside>
-        </div>
+            </div> */
     )
 }
