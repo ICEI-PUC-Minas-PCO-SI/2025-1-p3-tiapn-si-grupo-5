@@ -73,24 +73,20 @@ body {
   min-height: 100vh;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  cursor: pointer;
-  transition: border-color 0.25s;
+.input-layout {
+  @apply h-[2.5rem] p-[0.75rem] rounded-[6px] border-1 border-slate-500 
+}
+.btn-layout {
+ @apply bg-sky-700 w-full h-[3rem] rounded-[6px] cursor-pointer
+      hover:bg-sky-500 hover:shadow-[0px_2px_8px_0px]
+      hover:shadow-slate-800 transition-all duration-200 
+      text-[1rem] text-slate-100 font-medium;
+}
+.label-layout {
+  @apply justify-start text-slate-950 text-base font-normal leading-normal text-[1rem]
 }
 
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+
 
 @media (prefers-color-scheme: light) {
   :root {
