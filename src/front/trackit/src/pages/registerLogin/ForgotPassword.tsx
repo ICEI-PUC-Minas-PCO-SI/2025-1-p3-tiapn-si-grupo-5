@@ -19,7 +19,7 @@ export function ForgotPassword() {
         <main>
 
             {/* Trocar hidden por flex, precisa criar dinamica para trocar parametros! */}
-            <div className="hidden flex-col justify-center items-center mt-[7.25rem] ">
+            <div className="hidden flex-col justify-center items-center mp-[7.25rem] ">
                 <div className="w-[37.5rem] flex flex-col justify-center items-center gap-[2rem] ">
 
                     <VscKey className="w-[5rem] h-[5rem] text-cyan-800 -scale-x-100 rotate-45" />

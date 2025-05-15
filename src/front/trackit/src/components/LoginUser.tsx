@@ -41,9 +41,9 @@ export function LoginUser() {
     return (
         <form
             onSubmit={handleSubmit(handleLoginUser)}
-            className="flex flex-col w-full h-full justify-start gap-4"
+            className="flex flex-col w-full h-full justify-start gap-4 px-[3rem]"
         >
-            <div>
+            <div className="">
                 <label className="label-layout">E-mail:</label>
                 <Input placeholder="Digite seu e-mail" {...register("email")} />
                 {errors.email && (
@@ -65,9 +65,9 @@ export function LoginUser() {
                         aria-label={isShow ? "Ocultar senha" : "Mostrar senha"}
                     >
                         {isShow ? (
-                            <IoEyeOffOutline size={20} />
+                            <IoEyeOffOutline size={24} />
                         ) : (
-                            <IoEyeOutline size={20} />
+                            <IoEyeOutline size={24} />
                         )}
                     </button>
                 </div>

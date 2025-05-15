@@ -8,7 +8,7 @@ export function Login() {
     return (
         <div className="flex w-full h-screen">
             {/* Conteúdo - Login, etc.*/}
-            <div className="flex flex-col w-full h-full p-9 items-start justify-start gap-12">
+            <div className="flex flex-col w-full h-full p-9 items-start justify-start gap-[4rem]">
                 <div className="flex flex-col gap-4 items-start justify-start w-full h-full">
                     <img className="w-24 h-20" src={Logo} alt="Logo Track It" />
                     <div className="self-stretch inline-flex flex-col justify-start items-center gap-1">
@@ -20,12 +20,14 @@ export function Login() {
                         </h1>
                     </div>
                 </div>
+
                 {/* Formulário de Login*/}
                 <LoginUser />
-                <footer className="flex flex-col w-full h-full items-start justify-start gap-4">
+
+                <footer className="flex flex-col w-full h-full items-end justify-start gap-4 px-[3rem] mt-[-2.5rem]">
                     <Link
                         to="noPassword"
-                        className="block w-full text-right !text-slate-950 hover:!text-sky-700 !underline decoration-solid font-'[Inter]' text-[1rem] font-normal leading-[24px]"
+                        className=" !text-slate-950 hover:!text-sky-700 !underline decoration-solid font-'[Inter]' text-[1rem] font-normal leading-[24px]"
                     >
                         Esqueceu a senha?
                     </Link>
@@ -45,6 +47,7 @@ export function Login() {
                     </div>
                 </footer>
             </div>
+            
             <div className="flex w-full h-full p-9 flex-col justify-center items-center gap-1 bg-slate-100">
                 <div>
                     <img

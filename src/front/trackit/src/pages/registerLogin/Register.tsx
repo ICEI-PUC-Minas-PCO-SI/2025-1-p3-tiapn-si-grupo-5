@@ -30,7 +30,7 @@ export function Register() {
     const handlePassword = () => setIsShow(!isShow);
 
     return (
-        <div className="grid grid-cols-2 gap-[2.25rem]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-[2.25rem]">
             <div className="">
                 <header>
                     <div className="mt-[2.25rem] ml-[2.25rem]">
@@ -50,7 +50,7 @@ export function Register() {
                     </div>
 
                     <div className="w-full flex justify-center items-center">
-                        <div className="w-[37.5rem] flex flex-col justify-center items-center gap-[1rem]">
+                        <div className="w-full max-w-[37.5rem] flex flex-col justify-center items-center gap-[1rem]">
                             
                             <div className="w-[100%]">
                                 <label className="label-layout">
