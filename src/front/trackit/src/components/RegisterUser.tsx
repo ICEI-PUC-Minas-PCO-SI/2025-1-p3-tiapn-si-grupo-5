@@ -26,15 +26,15 @@ const registerUserSchema = z.object({
         }),
 
     registration: z.string()
-    .min(4, "A matrícula deve ter pelo menos 4 dígitos") 
-    .regex(/^[0-9]{1,14}[0-9Xx]{1}$/, {
-        message: "Matrícula inválida. Digite os números e o dígito verificador (ex: 123456X)"
-    }),
+        .min(4, "A matrícula deve ter pelo menos 4 dígitos")
+        .regex(/^[0-9]{1,14}[0-9Xx]{1}$/, {
+            message: "Matrícula inválida. Digite os números e o dígito verificador (ex: 123456X)"
+        }),
     ramal: z.string()
-    .regex(/^\d{10}$/,{
-    message: "Ramal inválido. Deve conter exatamente 10 dígitos numéricos",
-     },
-    ),
+        .regex(/^\d{10}$/, {
+            message: "Ramal inválido. Deve conter exatamente 10 dígitos numéricos",
+        },
+        ),
     administration: z.enum([
         "dcap",
         "gecea",
@@ -89,7 +89,7 @@ export function RegisterUser() {
     return (
         <form
             onSubmit={handleSubmit(handleRegisterUser)}
-            className="flex flex-col w-full h-full justify-start gap-4 px-[3rem]"
+            className="flex flex-col w-full h-full justify-start gap-1 px-[3rem]"
         >
             <div className="w-[100%]">
                 <label className="">
@@ -193,6 +193,20 @@ export function RegisterUser() {
                         {errors.password.message}
                     </span>
                 )}
+
+
+            </div>
+            <div className="w-full">
+                <label>
+                    Confirmar senha:
+                </label>
+                <div className="relative w-full">
+                    <Input type={isShow ? "text" : "password"} placeholder="Digite novamente a senha" />
+                    <button onClick={handlePassword} className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-500 focus: outline-0" >
+                        {!isShow && <IoEyeOutline size={24} />}
+                        {isShow && <IoEyeOffOutline size={24} />}
+                    </button>
+                </div>
             </div>
             <Button type="submit">Cadastre-se</Button>
         </form>

@@ -9,18 +9,17 @@ import { RegisterUser } from '@/components/RegisterUser'
 export function Register() {
 
     return (
-        <div className="flex w-full h-screen">
+        <div className="flex w-full">
             {/* Conteúdo - Login, etc.*/}
             <div className="flex flex-col w-full h-full p-9 items-start justify-start gap-[1.125rem]">
-                <div className="flex flex-col gap-4 items-start justify-start w-full h-full">
-                    <img className="w-24 h-20" src={Logo} alt="Logo Track It" />
-                    <div className="self-stretch inline-flex flex-col justify-start items-center gap-1">
+                
+                    <div className=" flex flex-col w-full h-full self-stretch justify-start items-center gap-1">
                         <h2 className="title-h2 text-slate-800">Bem-vindo ao TrackIT</h2>
                         <h1 className="title-h1 text-slate-950">
                             Entre com suas credenciais
                         </h1>
                     </div>
-                </div>
+                
 
                 {/* Formulário de Cadastro*/}
                 <RegisterUser />
@@ -43,7 +42,7 @@ export function Register() {
                 </footer>
             </div>
 
-            <div className="flex w-full h-full p-9 flex-col justify-center items-center gap-1 bg-slate-100">
+            <div className="flex min-h-screen w-full p-9 flex-col justify-center items-center gap-1 bg-slate-100">
                 <div>
                     <img
                         className="w-auto h-auto"
