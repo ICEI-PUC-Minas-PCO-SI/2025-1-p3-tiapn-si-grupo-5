@@ -52,7 +52,11 @@ const registerUserSchema = z.object({
             /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/,
             "A senha deve conter pelo menos uma letra e um número"
         ),
-});
+    confirmPassword: z.string().nonempty("Confirme a senha"),
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "As senhas não correspodem",
+    path: ["confirmPassword"],
+})
 
 type registerUserSchema = z.infer<typeof registerUserSchema>;
 
@@ -91,8 +95,8 @@ export function RegisterUser() {
             onSubmit={handleSubmit(handleRegisterUser)}
             className="flex flex-col w-full h-full justify-start gap-1 px-[3rem]"
         >
-            <div className="w-[100%]">
-                <label className="">
+            <div>
+                <label>
                     Nome:
                 </label>
                 <Input type="text" placeholder="Digite seu nome completo" {...register("name")} />
@@ -103,8 +107,8 @@ export function RegisterUser() {
                 )}
             </div>
 
-            <div className="w-[100%]">
-                <label className="">
+            <div>
+                <label>
                     Matrícula:
                 </label>
                 <Input type="text" placeholder="Digite sua matrícula (BM)" {...register("registration")} />
@@ -115,8 +119,8 @@ export function RegisterUser() {
                 )}
             </div>
 
-            <div className="w-[100%]">
-                <label className="">
+            <div>
+                <label>
                     Ramal:
                 </label>
                 <Input type="tel" placeholder="Ramal" {...register("ramal")} />
@@ -127,8 +131,8 @@ export function RegisterUser() {
                 )}
             </div>
 
-            <div className="w-[100%]">
-                <label className="">
+            <div>
+                <label>
                     Gerência:
                 </label>
                 <Controller
@@ -159,8 +163,8 @@ export function RegisterUser() {
                 )}
             </div>
 
-            <div className="">
-                <label className="">E-mail:</label>
+            <div>
+                <label>E-mail:</label>
                 <Input placeholder="Digite seu e-mail" {...register("email")} />
                 {errors.email && (
                     <span className="text-red-500 text-sm font-'[Inter]'">{errors.email.message}</span>
@@ -168,7 +172,7 @@ export function RegisterUser() {
             </div>
 
             <div>
-                <label className="">Senha:</label>
+                <label>Senha:</label>
                 <div className="relative w-full">
                     <Input
                         type={isShow ? "text" : "password"}
@@ -193,20 +197,27 @@ export function RegisterUser() {
                         {errors.password.message}
                     </span>
                 )}
-
-
             </div>
             <div className="w-full">
                 <label>
                     Confirmar senha:
                 </label>
                 <div className="relative w-full">
-                    <Input type={isShow ? "text" : "password"} placeholder="Digite novamente a senha" />
+                    <Input 
+                    type={isShow ? "text" : "password"} 
+                    placeholder="Digite novamente a senha" 
+                    {...register("confirmPassword")}/>
+
                     <button onClick={handlePassword} className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-500 focus: outline-0" >
                         {!isShow && <IoEyeOutline size={24} />}
                         {isShow && <IoEyeOffOutline size={24} />}
                     </button>
                 </div>
+                {errors.confirmPassword && (
+                    <span className="text-red-500 text-sm font-'[Inter]'">
+                        {errors.confirmPassword.message}
+                    </span>
+                )}
             </div>
             <Button type="submit">Cadastre-se</Button>
         </form>
