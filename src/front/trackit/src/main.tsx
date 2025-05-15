@@ -1,13 +1,9 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles/index.css'
-import { App } from './App.tsx'
-
 import { RouterProvider, createBrowserRouter } from "react-router"
-
 import { Register } from './pages/registerLogin/Register.tsx'
 import { Login } from './pages/registerLogin/Login.tsx'
-import path from 'path'
 import { ForgotPassword } from './pages/registerLogin/ForgotPassword.tsx'
 import { ResetPassword } from './pages/ResetPassword.tsx'
 
