@@ -51,13 +51,6 @@
   --sidebar-ring: oklch(0.704 0.04 256.788);
 }
 
-#root {
-  margin: 0;
-  padding: 0;
-  min-width: 100vw;
-  min-height: 100vh;
-}
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
