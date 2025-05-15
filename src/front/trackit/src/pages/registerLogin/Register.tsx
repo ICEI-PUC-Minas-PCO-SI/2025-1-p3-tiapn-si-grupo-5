@@ -1,7 +1,4 @@
-// Images
-import Logo from '../../assets/TrackIt_Logo.svg'
 import Suport from '../../assets/Support_Register.svg'
-
 import { Link } from 'react-router'
 import { RegisterUser } from '@/components/RegisterUser'
 
@@ -9,17 +6,15 @@ import { RegisterUser } from '@/components/RegisterUser'
 export function Register() {
 
     return (
-        <div className="flex w-full">
+        <div className="flex w-full min-h-screen">
             {/* Conteúdo - Login, etc.*/}
             <div className="flex flex-col w-full h-full p-9 items-start justify-start gap-[1.125rem]">
-                
-                    <div className=" flex flex-col w-full h-full self-stretch justify-start items-center gap-1">
-                        <h2 className="title-h2 text-slate-800">Bem-vindo ao TrackIT</h2>
-                        <h1 className="title-h1 text-slate-950">
-                            Entre com suas credenciais
-                        </h1>
-                    </div>
-                
+                <div className=" flex flex-col w-full h-full self-stretch justify-start items-center gap-1">
+                    <h1 className="title-h1 text-slate-950">
+                        Cadastre suas credenciais
+                    </h1>
+                </div>
+
 
                 {/* Formulário de Cadastro*/}
                 <RegisterUser />

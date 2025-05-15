@@ -89,7 +89,7 @@ export function RegisterUser() {
     return (
         <form
             onSubmit={handleSubmit(handleRegisterUser)}
-            className="flex flex-col w-full h-full justify-start gap-1 px-[3rem]"
+            className="flex flex-col w-full h-full justify-start gap-4 px-[3rem]"
         >
             <div className="w-[100%]">
                 <label className="">
