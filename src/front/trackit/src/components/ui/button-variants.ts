@@ -7,15 +7,14 @@ export const buttonVariants = cva(
       variant: {
         default:
           "bg-sky-700 w-full h-[3rem] rounded-[6px] cursor-pointer hover:bg-sky-600 hover:shadow-[0px_2px_8px_0px] hover:shadow-slate-800 transition-all duration-200 text-[1rem] text-slate-100 font-medium font-[Poppins] text-[16px] font-semibold",
-        destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "bg-transparent w-full h-[3rem] rounded-[6px] cursor-pointer hover:shadow-md hover:shadow-slate-200 transition-all duration-300 ease-in-out text-[1rem] text-slate-700 font-[Poppins] text-[16px] font-semibold",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
-        ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-slate-100 w-full h-[3rem] rounded-[6px] cursor-pointer hover:bg-slate-200 hover:shadow-[0px_2px_8px_0px] hover:shadow-slate-800 transition-all duration-200 text-[1rem] text-slate-700 font-[Poppins] text-[16px] font-semibold",
+        disabled:
+          "bg-sky-700 w-full h-[3rem] rounded-[6px] cursor-not-allowed text-[1rem] text-slate-100 font-[Poppins] text-[16px] font-semibold opacity-50",
+        delete:
+          "bg-red-600 w-full h-[3rem] rounded-[6px] cursor-pointer hover:bg-red-700 hover:shadow-[0px_2px_8px_0px] hover:shadow-red-800 transition-all duration-200 text-[1rem] text-white font-[Poppins] text-[16px] font-semibold",
       },
       size: {
         default: "",

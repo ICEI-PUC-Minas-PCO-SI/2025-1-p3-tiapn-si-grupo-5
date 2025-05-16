@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS `tipoUsuario` (
 -- Tabela de Usuários
 CREATE TABLE IF NOT EXISTS `Usuario` (
   `idUsuario` INT NOT NULL AUTO_INCREMENT,
-  `matricula` INT NOT NULL,
+  `matricula` VARCHAR(15) NOT NULL,
   `nomeUsuario` VARCHAR(50) NOT NULL,
   `email` VARCHAR(75) NOT NULL,
   `senha` VARCHAR(255) NOT NULL,
