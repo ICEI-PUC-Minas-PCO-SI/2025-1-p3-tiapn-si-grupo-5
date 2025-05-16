@@ -9,9 +9,9 @@ export function ForgotPassword() {
 
     return (
 
-        <main className="flex flex-col justify-center items-center pt-[7.25rem]">
+        <main className="flex flex-col min-h-screen items-center overflow-y-auto">
 
-                <div className="w-[37.5rem] flex flex-col justify-center items-center gap-[2rem] ">
+                <div className="w-full max-w-[37.5rem] flex flex-col justify-center items-center gap-[2rem] pt-[7.25rem] px-4">
 
                     <VscKey className="w-[5rem] h-[5rem] text-cyan-800 -scale-x-100 rotate-45" />
                     <h1 className="text-[2rem] text-slate-950 font-bold leading-[3rem] font-'[Inter]'">Esqueceu a senha?</h1>
