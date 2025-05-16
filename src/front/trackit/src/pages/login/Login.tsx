@@ -20,7 +20,7 @@ export function Login() {
                 <LoginUser />
                 <footer className="flex flex-col w-full h-full items-end justify-start gap-4 px-[3rem] mt-[-2.5rem]">
                     <Link
-                        to="noPassword"
+                        to="forgot-password"
                         className=" !text-slate-950 hover:!text-sky-700 !underline decoration-solid paragraph-base"
                     >
                         Esqueceu a senha?
