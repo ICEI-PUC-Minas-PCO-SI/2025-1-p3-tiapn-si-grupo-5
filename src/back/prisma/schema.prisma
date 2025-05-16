@@ -113,7 +113,7 @@ model tipousuario {
 
 model usuario {
   idUsuario                              Int            @id @default(autoincrement())
-  matricula                              Int            @unique(map: "matricula_UNIQUE")
+  matricula                              String         @unique(map: "matricula_UNIQUE") @db.VarChar(15)
   nomeUsuario                            String         @db.VarChar(50)
   email                                  String         @unique(map: "email_UNIQUE") @db.VarChar(75)
   senha                                  String         @db.VarChar(255)
