@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "react-router";
+import { toast } from "sonner";
 
 // Schema de validação com Zod
 const loginUserSchema = z.object({
@@ -40,8 +41,30 @@ export function LoginUser() {
     });
 
     // Função que exibe os dados que o usuário digitou em ambos os inputs. Na integração com a API, essa função deve ser substituída pela chamada à API de login.
-    function handleLoginUser(data: LoginUserSchema) {
-        console.log("Dados enviados:", data);
+    async function handleLoginUser(data: LoginUserSchema) {
+        try {
+            const response = await fetch("http://localhost:3000/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email: data.email,
+                    senha: data.password,
+                }),
+            });
+
+            if (!response.ok) {
+                toast.error("Erro ao cadastrar!");
+                return;
+            }
+
+            toast.success("Cadastro realizado com sucesso!");
+
+
+        } catch (error) {
+            console.error("Erro ao fazer login:", error);
+        }
     }
 
     return (

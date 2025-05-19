@@ -1,13 +1,16 @@
 import express from 'express';
 import { PrismaClient } from './generated/prisma';
+import bcrypt from 'bcrypt';
 
 const cors = require('cors');
 
-const app = express();  // Declarar app primeiro
+const app = express(); 
 app.use(cors());
 app.use(express.json());
 
 const prisma = new PrismaClient();
+
+const SALT_ROUNDS = 10; // complexidade do hash
 
 // Rota GET /usuarios
 app.get('/usuarios', async (req, res) => {
@@ -23,41 +26,66 @@ app.post('/usuarios', async (req, res) => {
   try {
     const { nomeUsuario, matricula, ramal, email, senha, gerencia } = req.body;
 
+    // Hashear senha
+    const hashedSenha = await bcrypt.hash(senha, SALT_ROUNDS);
+
     const ramalNumber = Number(ramal);
     const gerenciaIdNumber = Number(gerencia);
 
     const novoUsuario = await prisma.usuario.create({
-      data: { nomeUsuario,
+      data: { 
+        nomeUsuario,
         matricula, 
         ramal: ramalNumber,
         email, 
-        senha,
+        senha: hashedSenha, // salvar senha hasheada
         gerencia: {
-          connect: { idGerencia: gerenciaIdNumber  },
+          connect: { idGerencia: gerenciaIdNumber },
         }
       },
     });
 
-    res.status(201).json(novoUsuario);
-  } catch (error) {
-  console.error("Erro ao criar usuário:", error);
+    // Não retorne a senha
+    const { senha: _, ...usuarioSemSenha } = novoUsuario;
 
-  if (error instanceof Error) {
-    res.status(500).json({
-      error: "Erro ao criar usuário",
-      detalhes: {
-        name: error.name,
-        message: error.message,
-        stack: error.stack,
-      },
-    });
-  } else {
-    res.status(500).json({
-      error: "Erro desconhecido ao criar usuário",
-      detalhes: JSON.stringify(error, null, 2),
-    });
+    res.status(201).json(usuarioSemSenha);
+
+  } catch (error) {
+    console.error("Erro ao criar usuário:", error);
+    res.status(500).json({ error: "Erro ao criar usuário" });
   }
-}
+});
+
+app.post('/login', async (req, res) => {
+  try {
+    const { email, senha } = req.body;
+
+    const usuario = await prisma.usuario.findUnique({
+      where: { email },
+    });
+
+    if (!usuario) {
+      res.status(401).json({ error: "Email ou senha inválidos" });
+    } else {
+      const senhaValida = await bcrypt.compare(senha, usuario.senha);
+
+      if (!senhaValida) {
+        res.status(401).json({ error: "Email ou senha inválidos" });
+      } else {
+        res.status(200).json({
+          message: "Login realizado com sucesso",
+          usuario: {
+            nome: usuario.nomeUsuario,
+            email: usuario.email,
+          },
+        });
+      }
+    }
+
+  } catch (error) {
+    console.error("Erro no login:", error);
+    res.status(500).json({ error: "Erro no servidor" });
+  }
 });
 
 export default app;
