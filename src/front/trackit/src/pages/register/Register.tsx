@@ -19,6 +19,9 @@ export function Register() {
                 {/* Formulário de Cadastro*/}
                 <RegisterUser />
 
+                {/* /*<SelectItem value="">Diretoria Central de Administração de Pessoa (DCAP)</SelectItem>
+                                    <SelectItem value="">Gerência de Central de Atendimento (GECEA)</SelectItem>*/}
+
                 <footer className="flex flex-col w-full h-full items-end justify-start gap-4 px-[3rem]">
                     <div className="w-full border-1 border-slate-500"></div>
                     <div className="w-full flex justify-center items-center">

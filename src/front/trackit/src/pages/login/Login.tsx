@@ -1,10 +1,10 @@
 import Logo from "../../assets/TrackIt_Logo.svg";
 import Suport from "../../assets/Suporte_solucao.svg";
-import '../../styles/index.css';
 import { Link } from "react-router";
 import { LoginUser } from "@/components/LoginUser";
 
 export function Login() {
+
     return (
         <div className="flex w-full min-h-screen">
             <div className="flex flex-col w-full min-h-screen p-9 items-start justify-start gap-[4rem]">

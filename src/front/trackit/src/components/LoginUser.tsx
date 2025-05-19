@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "react-router";
 
 // Schema de validação com Zod
 const loginUserSchema = z.object({
@@ -22,6 +23,8 @@ const loginUserSchema = z.object({
 type LoginUserSchema = z.infer<typeof loginUserSchema>;
 
 export function LoginUser() {
+    const [searchParams] = useSearchParams();
+
     const [isShow, setIsShow] = useState(false);
     const handlePassword = () => setIsShow(!isShow);
 
@@ -30,6 +33,9 @@ export function LoginUser() {
         handleSubmit,
         formState: { errors },
     } = useForm<LoginUserSchema>({
+        defaultValues: {
+            email: searchParams.get('email') ?? ''
+        },
         resolver: zodResolver(loginUserSchema),
     });
 
