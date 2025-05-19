@@ -9,6 +9,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 import { IoEyeOutline } from "react-icons/io5";
 import { IoEyeOffOutline } from "react-icons/io5";
 import { useState } from "react";
@@ -96,12 +97,15 @@ export function RegisterUser() {
             });
 
             if (!response.ok) {
-                const errorText = await response.text();
-                alert("Erro ao cadastrar: " + errorText);
+                toast.error("Erro ao cadastrar!");
                 return;
             }
 
+            toast.success("Cadastro realizado com sucesso!");  
+            setTimeout(() => {
             navigate(`/?email=${data.email}`);
+            }, 1200);
+ 
 
         } catch (error) {
             console.error("Erro ao cadastrar!");

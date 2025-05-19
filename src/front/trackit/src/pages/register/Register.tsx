@@ -1,6 +1,7 @@
 import Suport from '../../assets/Support_Register.svg'
 import { Link } from 'react-router'
 import { RegisterUser } from '@/components/RegisterUser'
+import { Toaster } from 'sonner'
 
 
 export function Register() {
@@ -18,6 +19,16 @@ export function Register() {
 
                 {/* Formulário de Cadastro*/}
                 <RegisterUser />
+                <Toaster position="bottom-right"
+                    richColors closeButton
+                    toastOptions={{
+                        style: {
+                            fontSize: '1rem',        
+                            padding: '1.25rem 1.5rem', 
+                            maxWidth: '400px',       
+                        },
+                    }}
+                />
 
                 {/* /*<SelectItem value="">Diretoria Central de Administração de Pessoa (DCAP)</SelectItem>
                                     <SelectItem value="">Gerência de Central de Atendimento (GECEA)</SelectItem>*/}
