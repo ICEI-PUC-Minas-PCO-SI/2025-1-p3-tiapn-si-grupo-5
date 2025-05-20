@@ -1,7 +1,12 @@
 import express from 'express';
 import { PrismaClient } from './generated/prisma';
-import bcrypt from 'bcrypt';
+import { autenticarToken } from './authMiddleware';
 
+import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+import jwt from 'jsonwebtoken';
+
+dotenv.config();
 const cors = require('cors');
 
 const app = express(); 
@@ -13,7 +18,7 @@ const prisma = new PrismaClient();
 const SALT_ROUNDS = 10; // complexidade do hash
 
 // Rota GET /usuarios
-app.get('/usuarios', async (req, res) => {
+app.get('/usuarios', autenticarToken, async (req, res) => {
   try {
     const clients = await prisma.usuario.findMany();
     res.json(clients);
@@ -72,12 +77,15 @@ app.post('/login', async (req, res) => {
       if (!senhaValida) {
         res.status(401).json({ error: "Email ou senha inválidos" });
       } else {
+        const token = jwt.sign(
+          { id: usuario.idUsuario, email: usuario.email },
+          process.env.JWT_SECRET as string,
+          { expiresIn: '15m' }
+        );
+
         res.status(200).json({
           message: "Login realizado com sucesso",
-          usuario: {
-            nome: usuario.nomeUsuario,
-            email: usuario.email,
-          },
+          token,
         });
       }
     }

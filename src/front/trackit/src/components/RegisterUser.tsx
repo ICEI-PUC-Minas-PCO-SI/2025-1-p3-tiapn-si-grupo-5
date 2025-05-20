@@ -170,7 +170,6 @@ export function RegisterUser() {
                                 <SelectGroup>
                                     <SelectLabel>Gerências</SelectLabel>
                                     <SelectItem value="1">Assessoria de Tecnologia da Informação (ASTIN)</SelectItem>
-
                                     <SelectItem value="4">Gerência de Gestão da Folha de Pagamento (GESFO)</SelectItem>
                                     <SelectItem value="2">Gerência de Gestão de Direitos e Benefícios (GETED)</SelectItem>
                                     <SelectItem value="3">Gerência de Gestão de Ingresso e da Vida Funcional (GEVIF)</SelectItem>
