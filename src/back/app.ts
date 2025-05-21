@@ -1,8 +1,7 @@
 import express from 'express';
+import { hashPassword , compareHashedPassword } from './services/hashedPassword';
 import { PrismaClient } from './generated/prisma';
-import { autenticarToken } from './authMiddleware';
-
-import bcrypt from 'bcrypt';
+import { autenticarToken } from './middlewares/authJWT';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 
@@ -14,8 +13,6 @@ app.use(cors());
 app.use(express.json());
 
 const prisma = new PrismaClient();
-
-const SALT_ROUNDS = 10; // complexidade do hash
 
 // Rota GET /usuarios
 app.get('/usuarios', autenticarToken, async (req, res) => {
@@ -30,31 +27,23 @@ app.get('/usuarios', autenticarToken, async (req, res) => {
 app.post('/usuarios', async (req, res) => {
   try {
     const { nomeUsuario, matricula, ramal, email, senha, gerencia } = req.body;
-
-    // Hashear senha
-    const hashedSenha = await bcrypt.hash(senha, SALT_ROUNDS);
-
+    const hashedSenha = await hashPassword(senha);
     const ramalNumber = Number(ramal);
     const gerenciaIdNumber = Number(gerencia);
-
     const novoUsuario = await prisma.usuario.create({
       data: { 
         nomeUsuario,
         matricula, 
         ramal: ramalNumber,
         email, 
-        senha: hashedSenha, // salvar senha hasheada
+        senha: hashedSenha,
         gerencia: {
           connect: { idGerencia: gerenciaIdNumber },
         }
       },
     });
-
-    // Não retorne a senha
     const { senha: _, ...usuarioSemSenha } = novoUsuario;
-
     res.status(201).json(usuarioSemSenha);
-
   } catch (error) {
     console.error("Erro ao criar usuário:", error);
     res.status(500).json({ error: "Erro ao criar usuário" });
@@ -72,17 +61,15 @@ app.post('/login', async (req, res) => {
     if (!usuario) {
       res.status(401).json({ error: "Email ou senha inválidos" });
     } else {
-      const senhaValida = await bcrypt.compare(senha, usuario.senha);
-
+      const senhaValida = compareHashedPassword(senha, usuario.senha);
       if (!senhaValida) {
         res.status(401).json({ error: "Email ou senha inválidos" });
       } else {
         const token = jwt.sign(
           { id: usuario.idUsuario, email: usuario.email },
           process.env.JWT_SECRET as string,
-          { expiresIn: '15m' }
+          { expiresIn: '30m' }
         );
-
         res.status(200).json({
           message: "Login realizado com sucesso",
           token,
