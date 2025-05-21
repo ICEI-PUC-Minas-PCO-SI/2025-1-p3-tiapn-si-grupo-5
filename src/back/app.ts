@@ -1,12 +1,13 @@
 import express from 'express';
-import { hashPassword , compareHashedPassword } from './services/hashedPassword';
+import { compareHashedPassword } from './services/hashedPassword';
+import userRoustes from './routes/userRoutes';
 import { PrismaClient } from './generated/prisma';
 import { autenticarToken } from './middlewares/authJWT';
+import cors from "cors";
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 
 dotenv.config();
-const cors = require('cors');
 
 const app = express(); 
 app.use(cors());
@@ -24,31 +25,7 @@ app.get('/usuarios', autenticarToken, async (req, res) => {
   }
 });
 
-app.post('/usuarios', async (req, res) => {
-  try {
-    const { nomeUsuario, matricula, ramal, email, senha, gerencia } = req.body;
-    const hashedSenha = await hashPassword(senha);
-    const ramalNumber = Number(ramal);
-    const gerenciaIdNumber = Number(gerencia);
-    const novoUsuario = await prisma.usuario.create({
-      data: { 
-        nomeUsuario,
-        matricula, 
-        ramal: ramalNumber,
-        email, 
-        senha: hashedSenha,
-        gerencia: {
-          connect: { idGerencia: gerenciaIdNumber },
-        }
-      },
-    });
-    const { senha: _, ...usuarioSemSenha } = novoUsuario;
-    res.status(201).json(usuarioSemSenha);
-  } catch (error) {
-    console.error("Erro ao criar usuário:", error);
-    res.status(500).json({ error: "Erro ao criar usuário" });
-  }
-});
+app.use("/usuarios", userRoustes);
 
 app.post('/login', async (req, res) => {
   try {
