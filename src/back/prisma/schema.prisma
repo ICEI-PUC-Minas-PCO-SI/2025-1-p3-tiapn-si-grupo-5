@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -21,11 +20,11 @@ model chamado {
   idTipoChamado                          Int?
   idStatus                               Int?
   idPrioridade                           Int?
-  usuario_chamado_idSolicitanteTousuario usuario?           @relation("chamado_idSolicitanteTousuario", fields: [idSolicitante], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_1")
-  usuario_chamado_idAnalistaTousuario    usuario?           @relation("chamado_idAnalistaTousuario", fields: [idAnalista], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_2")
-  tipochamado                            tipochamado?       @relation(fields: [idTipoChamado], references: [idTipoChamado], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_3")
-  statuschamado                          statuschamado?     @relation(fields: [idStatus], references: [idStatus], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_4")
-  prioridadechamado                      prioridadechamado? @relation(fields: [idPrioridade], references: [idPrioridade], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_5")
+  usuario_chamado_idSolicitanteTousuario usuario?           @relation("chamado_idSolicitanteTousuario", fields: [idSolicitante], references: [idUsuario], onDelete: Restrict, onUpdate: Restrict, map: "chamado_ibfk_1")
+  usuario_chamado_idAnalistaTousuario    usuario?           @relation("chamado_idAnalistaTousuario", fields: [idAnalista], references: [idUsuario], onDelete: Restrict, onUpdate: Restrict, map: "chamado_ibfk_2")
+  tipochamado                            tipochamado?       @relation(fields: [idTipoChamado], references: [idTipoChamado], onDelete: Restrict, onUpdate: Restrict, map: "chamado_ibfk_3")
+  statuschamado                          statuschamado?     @relation(fields: [idStatus], references: [idStatus], onDelete: Restrict, onUpdate: Restrict, map: "chamado_ibfk_4")
+  prioridadechamado                      prioridadechamado? @relation(fields: [idPrioridade], references: [idPrioridade], onDelete: Restrict, onUpdate: Restrict, map: "chamado_ibfk_5")
   msgchamado                             msgchamado[]
   notificacao                            notificacao[]
 
@@ -48,7 +47,7 @@ model logatividade {
   descricao String    @db.Text
   dataHora  DateTime? @default(now()) @db.DateTime(0)
   idUsuario Int?
-  usuario   usuario?  @relation(fields: [idUsuario], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "logatividade_ibfk_1")
+  usuario   usuario?  @relation(fields: [idUsuario], references: [idUsuario], onDelete: Restrict, onUpdate: Restrict, map: "logatividade_ibfk_1")
 
   @@index([idUsuario], map: "idUsuario")
 }
@@ -62,8 +61,8 @@ model msgchamado {
   nomeArquivo String?              @db.VarChar(255)
   idChamado   Int
   idRemetente Int
-  chamado     chamado              @relation(fields: [idChamado], references: [idChamado], onDelete: NoAction, onUpdate: NoAction, map: "msgchamado_ibfk_1")
-  usuario     usuario              @relation(fields: [idRemetente], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "msgchamado_ibfk_2")
+  chamado     chamado              @relation(fields: [idChamado], references: [idChamado], onUpdate: Restrict, map: "msgchamado_ibfk_1")
+  usuario     usuario              @relation(fields: [idRemetente], references: [idUsuario], onUpdate: Restrict, map: "msgchamado_ibfk_2")
 
   @@index([idChamado], map: "idChamado")
   @@index([idRemetente], map: "idRemetente")
@@ -77,8 +76,8 @@ model notificacao {
   dataHora      DateTime? @default(now()) @db.DateTime(0)
   idUsuario     Int
   idChamado     Int?
-  usuario       usuario   @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade, onUpdate: NoAction, map: "notificacao_ibfk_1")
-  chamado       chamado?  @relation(fields: [idChamado], references: [idChamado], onDelete: Cascade, onUpdate: NoAction, map: "notificacao_ibfk_2")
+  usuario       usuario   @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade, onUpdate: Restrict, map: "notificacao_ibfk_1")
+  chamado       chamado?  @relation(fields: [idChamado], references: [idChamado], onDelete: Cascade, onUpdate: Restrict, map: "notificacao_ibfk_2")
 
   @@index([idChamado], map: "idChamado")
   @@index([idUsuario], map: "idUsuario")
@@ -128,8 +127,8 @@ model usuario {
   logatividade                           logatividade[]
   msgchamado                             msgchamado[]
   notificacao                            notificacao[]
-  gerencia                               gerencia?      @relation(fields: [idGerencia], references: [idGerencia], onDelete: NoAction, onUpdate: NoAction, map: "usuario_ibfk_1")
-  tipousuario                            tipousuario?   @relation(fields: [idTipoUsuario], references: [idTipoUsuario], onDelete: NoAction, onUpdate: NoAction, map: "usuario_ibfk_2")
+  gerencia                               gerencia?      @relation(fields: [idGerencia], references: [idGerencia], onDelete: Restrict, onUpdate: Restrict, map: "usuario_ibfk_1")
+  tipousuario                            tipousuario?   @relation(fields: [idTipoUsuario], references: [idTipoUsuario], onDelete: Restrict, onUpdate: Restrict, map: "usuario_ibfk_2")
 
   @@index([idGerencia], map: "idGerencia")
   @@index([idTipoUsuario], map: "idTipoUsuario")
