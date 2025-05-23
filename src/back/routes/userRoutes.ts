@@ -1,11 +1,10 @@
 import express from "express";
 import { registerUser } from "../controllers/registerUser";
-import { PrismaClient } from "../generated/prisma";
-import { hashPassword } from "../services/hashedPassword";
+import { loginUser } from "../controllers/loginUser";
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
-router.post("/", registerUser);
+router.post("/register", registerUser);
+router.post("/login", loginUser)
 
 export default router;

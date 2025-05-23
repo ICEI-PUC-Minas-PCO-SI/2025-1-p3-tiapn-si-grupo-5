@@ -43,7 +43,7 @@ export function LoginUser() {
     // Função que exibe os dados que o usuário digitou em ambos os inputs. Na integração com a API, essa função deve ser substituída pela chamada à API de login.
     async function handleLoginUser(data: LoginUserSchema) {
         try {
-            const response = await fetch("http://localhost:3000/login", {
+            const response = await fetch("http://localhost:3000/usuarios/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

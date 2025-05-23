@@ -81,7 +81,7 @@ export function RegisterUser() {
         const fullRegistration = paddedNumericPart + verifier;
 
         try {
-            const response = await fetch("http://localhost:3000/usuarios", {
+            const response = await fetch("http://localhost:3000/usuarios/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
