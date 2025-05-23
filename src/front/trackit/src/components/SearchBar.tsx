@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 
-export function Searchbar() {
+export function Searchbar({ onSearch }: { onSearch: (query: string) => void }) {
   const [searchValue, setSearchValue] = useState("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchValue(value);
-    console.log(value);
+    onSearch(value);
   };
 
   return (
