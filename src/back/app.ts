@@ -1,28 +1,11 @@
-import express from 'express';
-import userRoustes from './routes/userRoutes';
-import { PrismaClient } from "./generated/prisma";
-import cors from 'cors';
-import dotenv from 'dotenv';
+import express from "express";
+import usuarioRoutes from "./routes/usuarioRoutes";
 
-
-dotenv.config();
-
-const app = express(); 
-app.use(cors());
+const app = express();
 app.use(express.json());
 
 const prisma = new PrismaClient();
 
-// Rota GET /usuarios
-app.get('/usuarios', async (req, res) => {
-  try {
-    const clients = await prisma.usuario.findMany();
-    res.json(clients);
-  } catch (error) {
-    res.status(500).json({ error: "Erro ao buscar usuários" });
-  }
-});
-
-app.use("/usuarios", userRoustes);
+app.use("/usuarios", usuarioRoutes);
 
 export default app;
