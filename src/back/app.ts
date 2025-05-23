@@ -1,9 +1,9 @@
 import express from 'express';
 import { compareHashedPassword } from './services/hashedPassword';
 import userRoustes from './routes/userRoutes';
-import { PrismaClient } from './generated/prisma';
+import { PrismaClient } from "./generated/prisma";
 import { autenticarToken } from './middlewares/authJWT';
-import cors from "cors";
+import cors from 'cors';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 

@@ -1,6 +1,6 @@
 import express from "express";
 import { registerUser } from "../controllers/registerUser";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/prisma";
 import { hashPassword } from "../services/hashedPassword";
 
 const router = express.Router();

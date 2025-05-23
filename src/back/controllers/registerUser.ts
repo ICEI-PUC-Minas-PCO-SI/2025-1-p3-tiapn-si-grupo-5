@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/prisma";
 import { hashPassword } from "../services/hashedPassword";
 import { Request, Response } from "express";
 
