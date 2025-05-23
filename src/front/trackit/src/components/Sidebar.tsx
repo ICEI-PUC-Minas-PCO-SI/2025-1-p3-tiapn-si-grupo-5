@@ -10,7 +10,7 @@ import { SidebarVariant } from "./SidebarVariant";
 const userPicture = null;
 const userName = "usuário";
 const userManagement = "gerência";
-const userType = 1;
+const userType = 3;
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
