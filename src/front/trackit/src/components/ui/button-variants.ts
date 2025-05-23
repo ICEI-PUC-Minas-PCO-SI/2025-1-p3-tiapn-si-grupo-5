@@ -6,21 +6,20 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-sky-700 w-full h-[3rem] rounded-[6px] cursor-pointer hover:bg-sky-600 hover:shadow-[0px_2px_8px_0px] hover:shadow-slate-800 transition-all duration-200 text-[1rem] text-slate-100 font-medium font-[Poppins] text-[16px] font-semibold",
+          "bg-sky-700 min-w-[7.75rem] h-[3rem] rounded-[0.375rem] cursor-pointer hover:bg-sky-600 hover:shadow-[0px_0.125rem_0.5rem_0px] hover:shadow-slate-800 transition-all duration-200 text-[1rem] text-slate-100 font-medium font-[Poppins] text-[1rem] font-semibold",
         outline:
-          "bg-transparent w-full h-[3rem] rounded-[6px] cursor-pointer hover:shadow-md hover:shadow-slate-200 transition-all duration-300 ease-in-out text-[1rem] text-slate-700 font-[Poppins] text-[16px] font-semibold",
+          "bg-transparent min-w-[7.75rem] h-[3rem] rounded-[0.375rem] border border-slate-700 cursor-pointer hover:shadow-md hover:shadow-slate-200 transition-all duration-300 ease-in-out text-[1rem] text-slate-700 font-[Poppins] text-[1rem] font-semibold",
         secondary:
-          "bg-slate-100 w-full h-[3rem] rounded-[6px] cursor-pointer hover:bg-slate-200 hover:shadow-[0px_2px_8px_0px] hover:shadow-slate-800 transition-all duration-200 text-[1rem] text-slate-700 font-[Poppins] text-[16px] font-semibold",
+          "bg-slate-100 min-w-[7.75rem] h-[3rem] rounded-[0.375rem] cursor-pointer hover:bg-slate-200 hover:shadow-[0px_0.125rem_0.5rem_0px] hover:shadow-slate-800 transition-all duration-200 text-[1rem] text-slate-700 font-[Poppins] text-[1rem] font-semibold",
         disabled:
-          "bg-sky-700 w-full h-[3rem] rounded-[6px] cursor-not-allowed text-[1rem] text-slate-100 font-[Poppins] text-[16px] font-semibold opacity-50",
+          "bg-sky-700 min-w-[7.75rem] h-[3rem] rounded-[0.375rem] cursor-not-allowed text-[1rem] text-slate-100 font-[Poppins] text-[1rem] font-semibold opacity-50",
         delete:
-          "bg-red-600 w-full h-[3rem] rounded-[6px] cursor-pointer hover:bg-red-700 hover:shadow-[0px_2px_8px_0px] hover:shadow-red-800 transition-all duration-200 text-[1rem] text-white font-[Poppins] text-[16px] font-semibold",
+          "bg-red-600 min-w-[7.75rem] h-[3rem] rounded-[0.375rem] cursor-pointer hover:bg-red-700 hover:shadow-[0px_0.125rem_0.5rem_0px] hover:shadow-red-800 transition-all duration-200 text-[1rem] text-white font-[Poppins] text-[1rem] font-semibold",
       },
       size: {
-        default: "",
-        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-9",
+        default: "min-w-[7.75rem] h-[3rem]", // Default: 124px x 48px
+        sm: "h-[2rem] min-w-[7.75rem]", // Small: 32px height
+        icon: "min-w-[4.5rem] h-[3rem]", // Icon: 72px width
       },
     },
     defaultVariants: {
