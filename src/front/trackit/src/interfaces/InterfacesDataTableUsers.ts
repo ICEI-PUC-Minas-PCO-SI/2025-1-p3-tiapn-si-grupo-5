@@ -5,6 +5,7 @@ export interface User {
     name: string;
     accessType: string;
     management: string;
+    ativo: number;
 }
 
 export interface DataTableProps<T> {

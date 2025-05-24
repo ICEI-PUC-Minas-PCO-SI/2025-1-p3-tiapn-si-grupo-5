@@ -1,12 +1,25 @@
-import type { ApiUser } from "@/interfaces/ApiUser";
+import type { InterfaceGetUser } from "../interfaces/InterfaceGetUser";
+import type { User } from "../interfaces/InterfacesDataTableUsers";
 
-export async function getAllUsers(): Promise<ApiUser[]> {
+export async function getAllUsers(): Promise<User[]> {
     try {
         const response = await fetch("http://localhost:3000/usuarios");
         if (!response.ok) {
             throw new Error("Erro ao buscar usuários");
         }
-        return await response.json();
+        const users: InterfaceGetUser[] = await response.json();
+        return users.map((user) => ({
+            id: user.idUsuario.toString(),
+            name: user.nomeUsuario,
+            accessType:
+                user.idTipoUsuario === 1
+                    ? "Gestor"
+                    : user.idTipoUsuario === 2
+                    ? "Analista"
+                    : "Usuário",
+            management: `Gerência ${user.idGerencia}`,
+            ativo: user.ativo,
+        }));
     } catch (error) {
         console.error("Erro ao buscar usuários:", error);
         throw error;

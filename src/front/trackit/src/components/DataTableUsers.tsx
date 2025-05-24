@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { User, ActionButton } from "./InterfacesDataTableUsers";
+import type { User, ActionButton } from "../interfaces/InterfacesDataTableUsers";
 
 export function DataTableUsers({
   data,
@@ -41,13 +41,12 @@ export function DataTableUsers({
         >
           Usuário
           <ArrowUpDown
-            className={`ml-2 ${
-              column.getIsSorted() === "asc"
-                ? "rotate-0"
-                : column.getIsSorted() === "desc"
+            className={`ml-2 ${column.getIsSorted() === "asc"
+              ? "rotate-0"
+              : column.getIsSorted() === "desc"
                 ? "rotate-180"
                 : ""
-            }`}
+              }`}
           />
         </Button>
       ),
@@ -64,13 +63,12 @@ export function DataTableUsers({
         >
           Tipo de Acesso
           <ArrowUpDown
-            className={`ml-2 ${
-              column.getIsSorted() === "asc"
-                ? "rotate-0"
-                : column.getIsSorted() === "desc"
+            className={`ml-2 ${column.getIsSorted() === "asc"
+              ? "rotate-0"
+              : column.getIsSorted() === "desc"
                 ? "rotate-180"
                 : ""
-            }`}
+              }`}
           />
         </Button>
       ),
@@ -89,18 +87,41 @@ export function DataTableUsers({
         >
           Gerência
           <ArrowUpDown
-            className={`ml-2 ${
-              column.getIsSorted() === "asc"
-                ? "rotate-0"
-                : column.getIsSorted() === "desc"
+            className={`ml-2 ${column.getIsSorted() === "asc"
+              ? "rotate-0"
+              : column.getIsSorted() === "desc"
                 ? "rotate-180"
                 : ""
-            }`}
+              }`}
           />
         </Button>
       ),
       cell: ({ row }: { row: Row<User> }) => (
         <span>{row.original.management}</span>
+      ),
+      enableHiding: true,
+    },
+    {
+      accessorKey: "ativo",
+      header: ({ column }: { column: Column<User, unknown> }) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Ativo
+          <ArrowUpDown
+            className={`ml-2 ${column.getIsSorted() === "asc"
+              ? "rotate-0"
+              : column.getIsSorted() === "desc"
+                ? "rotate-180"
+                : ""
+              }`}
+          />
+        </Button>
+      ),
+      cell: ({ row }: { row: Row<User> }) => (
+        <span>{row.original.ativo === 1 ? "Sim" : "Não"}</span>
       ),
       enableHiding: true,
     },
@@ -149,9 +170,9 @@ export function DataTableUsers({
                   {header.isPlaceholder
                     ? null
                     : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
                 </TableHead>
               ))}
             </TableRow>

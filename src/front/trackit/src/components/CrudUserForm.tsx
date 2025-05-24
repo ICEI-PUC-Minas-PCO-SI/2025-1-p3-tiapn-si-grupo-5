@@ -1,6 +1,4 @@
-{/*TODO EXIBIR TOAST*/ }
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -60,6 +58,14 @@ type CrudUserSchema = z.infer<typeof crudUserSchema>;
 export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+    useEffect(() => {
+        if (alert) {
+            const timer = setTimeout(() => setAlert(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [alert]);
+
     const {
         register,
         handleSubmit,

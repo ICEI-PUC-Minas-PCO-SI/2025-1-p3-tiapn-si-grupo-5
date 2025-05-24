@@ -9,7 +9,7 @@ import {
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import { CrudUserForm } from "@/components/CrudUserForm";
-import type { User, ActionButton } from "@/components/InterfacesDataTableUsers";
+import type { User, ActionButton } from "@/interfaces/InterfacesDataTableUsers";
 import { getAllUsers } from "@/api/users";
 
 export function ManagementUsers() {
@@ -22,23 +22,13 @@ export function ManagementUsers() {
     name: true,
     accessType: true,
     management: true,
+    ativo: true,
   });
 
   const fetchUsers = async () => {
     try {
-      const users = await getAllUsers();
-      const formattedUsers = users.map((user) => ({
-        id: user.idUsuario.toString(),
-        name: user.nomeUsuario,
-        accessType:
-          user.idTipoUsuario === 1
-            ? "Gestor"
-            : user.idTipoUsuario === 2
-              ? "Analista"
-              : "Usuário",
-        management: `Gerência ${user.idGerencia}`,
-      }));
-      setData(formattedUsers);
+      const users = await getAllUsers(); // Dados já processados
+      setData(users);
     } catch (error) {
       console.error("Erro ao processar usuários:", error);
     }
@@ -69,6 +59,7 @@ export function ManagementUsers() {
     { id: "name", label: "Usuário" },
     { id: "accessType", label: "Tipo de Acesso" },
     { id: "management", label: "Gerência" },
+    { id: "ativo", label: "Ativo" },
   ];
 
   const handleSearch = (query: string) => {
