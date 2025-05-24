@@ -100,19 +100,15 @@ export function RegisterUser() {
                 toast.error("Erro ao cadastrar!");
                 return;
             }
-
-            toast.success("Cadastro realizado com sucesso!");  
+            toast.success("Cadastro realizado com sucesso!");
             setTimeout(() => {
-            navigate(`/?email=${data.email}`);
+                navigate(`/?email=${data.email}`);
             }, 1200);
- 
-
         } catch (error) {
-            console.error("Erro ao cadastrar!");
+            console.error("Erro ao cadastrar! ", error);
             alert("Falha ao cadastrar. Verifique os dados e tente novamente.");
         }
     }
-
     return (
         <form
             onSubmit={handleSubmit(handleRegisterUser)}

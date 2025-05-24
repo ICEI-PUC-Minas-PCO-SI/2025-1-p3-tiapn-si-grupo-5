@@ -38,14 +38,14 @@ const crudUserSchema = z.object({
     accessType: z.enum(["1", "2", "3"], {
         errorMap: () => ({ message: "Selecione um tipo de acesso" }),
     }),
-    management: z.enum(["dcap", "gecea", "gesfo", "geted", "gevif"], {
+    management: z.enum(["dcap", "gecea", "gesfo", "geted"], {
         errorMap: () => ({ message: "Selecione uma gerência" }),
     }),
 });
 
 type CrudUserSchema = z.infer<typeof crudUserSchema>;
 
-export function CrudUserForm() {
+export function CrudUserForm({ onSubmit }: { onSubmit: (success: boolean) => void }) {
     const {
         register,
         handleSubmit,
@@ -55,12 +55,40 @@ export function CrudUserForm() {
         resolver: zodResolver(crudUserSchema),
     });
 
-    const handleFormSubmit = (data: CrudUserSchema) => {
-        const dataToSubmit = {
-            ...data,
-            password: "Trackit123#",
+    const handleFormSubmit = async (data: CrudUserSchema) => {
+        const input = data.matricula.toUpperCase();
+        const numericPart = input.slice(0, -1);
+        const verifier = input.slice(-1);
+        const paddedNumericPart = numericPart.padStart(14, "0");
+        const managementMapping: Record<string, number> = {
+            dcap: 1,
+            gecea: 2,
+            gesfo: 3,
+            geted: 4,
         };
-        console.log("Form Data Submitted:", dataToSubmit);
+        const fullRegistration = paddedNumericPart + verifier;
+        const payload = {
+            nomeUsuario: data.name,
+            matricula: fullRegistration,
+            ramal: data.ramal,
+            email: data.email,
+            senha: "Trackit123#",
+            gerencia: managementMapping[data.management],
+        };
+        console.log("Payload to be sent:", payload);
+        try {
+            const response = await fetch("http://localhost:3000/usuarios/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+            onSubmit(response.ok);
+        } catch (error) {
+            console.error("Erro ao criar usuário:", error);
+            onSubmit(false);
+        }
     };
 
     return (
@@ -175,7 +203,6 @@ export function CrudUserForm() {
                                     <SelectItem value="gecea">GECEA</SelectItem>
                                     <SelectItem value="gesfo">GESFO</SelectItem>
                                     <SelectItem value="geted">GETED</SelectItem>
-                                    <SelectItem value="gevif">GEVIF</SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
@@ -187,7 +214,7 @@ export function CrudUserForm() {
                     </span>
                 )}
             </div>
-            <Button type="submit">Salvar</Button>
+            <Button type="submit">Criar</Button>
         </form>
     );
 }
