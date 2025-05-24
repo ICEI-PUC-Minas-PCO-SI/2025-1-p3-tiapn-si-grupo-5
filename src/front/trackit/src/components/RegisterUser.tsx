@@ -95,7 +95,6 @@ export function RegisterUser() {
                     gerencia: data.administration,
                 }),
             });
-
             if (!response.ok) {
                 toast.error("Erro ao cadastrar!");
                 return;

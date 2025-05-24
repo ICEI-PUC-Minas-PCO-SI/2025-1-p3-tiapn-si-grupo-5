@@ -8,17 +8,9 @@ import {
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { CrudUserForm } from "@/components/CrudUserForm";
 import type { User, ActionButton } from "@/components/InterfacesDataTableUsers";
 import { getAllUsers } from "@/api/users";
-import { toast } from "sonner";
 
 export function ManagementUsers() {
   const [Data, setData] = useState<User[]>([]);
@@ -31,7 +23,6 @@ export function ManagementUsers() {
     accessType: true,
     management: true,
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const fetchUsers = async () => {
     try {
@@ -62,16 +53,6 @@ export function ManagementUsers() {
   useEffect(() => {
     setFilteredData(Data);
   }, [Data]);
-
-  const handleUserCreation = async (success: boolean) => {
-    setIsModalOpen(false);
-    if (success) {
-      toast.success("Usuário criado com sucesso!");
-      await fetchUsers();
-    } else {
-      toast.error("Erro ao criar usuário. Verifique os dados e tente novamente.");
-    }
-  };
 
   const actions: ActionButton[] = [
     {
@@ -113,17 +94,7 @@ export function ManagementUsers() {
       <div className="flex justify-between">
         <Searchbar onSearch={handleSearch} />
         <div className="flex gap-3">
-          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm">Criar</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Criar Usuário</DialogTitle>
-              </DialogHeader>
-              <CrudUserForm onSubmit={handleUserCreation} />
-            </DialogContent>
-          </Dialog>
+          <CrudUserForm onSuccess={fetchUsers} />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="outline">

@@ -1,3 +1,6 @@
+{/*TODO EXIBIR TOAST*/ }
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,6 +15,15 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { X } from "lucide-react"; // Import an icon library for the "X" icon
 
 const crudUserSchema = z.object({
     name: z
@@ -45,7 +57,9 @@ const crudUserSchema = z.object({
 
 type CrudUserSchema = z.infer<typeof crudUserSchema>;
 
-export function CrudUserForm({ onSubmit }: { onSubmit: (success: boolean) => void }) {
+export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const {
         register,
         handleSubmit,
@@ -75,7 +89,6 @@ export function CrudUserForm({ onSubmit }: { onSubmit: (success: boolean) => voi
             senha: "Trackit123#",
             gerencia: managementMapping[data.management],
         };
-        console.log("Payload to be sent:", payload);
         try {
             const response = await fetch("http://localhost:3000/usuarios/register", {
                 method: "POST",
@@ -84,137 +97,175 @@ export function CrudUserForm({ onSubmit }: { onSubmit: (success: boolean) => voi
                 },
                 body: JSON.stringify(payload),
             });
-            onSubmit(response.ok);
+            if (response.ok) {
+                setAlert({ type: "success", message: "Usuário criado com sucesso!" });
+                setIsModalOpen(false);
+                onSuccess();
+            } else {
+                setAlert({ type: "error", message: "Erro ao criar usuário. Verifique os dados e tente novamente." });
+            }
         } catch (error) {
             console.error("Erro ao criar usuário:", error);
-            onSubmit(false);
+            setAlert({ type: "error", message: "Erro ao criar usuário. Verifique os dados e tente novamente." });
         }
     };
 
     return (
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-            <div>
-                <label htmlFor="name" className="block text-sm font-medium">
-                    Nome
-                </label>
-                <Input
-                    type="text"
-                    id="name"
-                    {...register("name")}
-                    className="input"
-                    placeholder="Digite o nome completo"
-                />
-                {errors.name && (
-                    <span className="text-red-500 text-sm">{errors.name.message}</span>
-                )}
-            </div>
-            <div>
-                <label htmlFor="matricula" className="block text-sm font-medium">
-                    Matrícula
-                </label>
-                <Input
-                    type="text"
-                    id="matricula"
-                    {...register("matricula")}
-                    className="input"
-                    placeholder="Digite a matrícula"
-                />
-                {errors.matricula && (
-                    <span className="text-red-500 text-sm">
-                        {errors.matricula.message}
-                    </span>
-                )}
-            </div>
-            <div>
-                <label htmlFor="ramal" className="block text-sm font-medium">
-                    Ramal
-                </label>
-                <Input
-                    type="text"
-                    id="ramal"
-                    {...register("ramal")}
-                    className="input"
-                    placeholder="Digite o ramal"
-                />
-                {errors.ramal && (
-                    <span className="text-red-500 text-sm">{errors.ramal.message}</span>
-                )}
-            </div>
-            <div>
-                <label htmlFor="email" className="block text-sm font-medium">
-                    E-mail
-                </label>
-                <Input
-                    type="email"
-                    id="email"
-                    {...register("email")}
-                    className="input"
-                    placeholder="Digite o e-mail"
-                />
-                {errors.email && (
-                    <span className="text-red-500 text-sm">{errors.email.message}</span>
-                )}
-            </div>
-            <div>
-                <label htmlFor="accessType" className="block text-sm font-medium">
-                    Tipo de Acesso
-                </label>
-                <Controller
-                    name="accessType"
-                    control={control}
-                    render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Selecione o tipo de acesso" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Tipos de Acesso</SelectLabel>
-                                    <SelectItem value="1">Admin</SelectItem>
-                                    <SelectItem value="2">Analista</SelectItem>
-                                    <SelectItem value="3">Usuário</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    )}
-                />
-                {errors.accessType && (
-                    <span className="text-red-500 text-sm">
-                        {errors.accessType.message}
-                    </span>
-                )}
-            </div>
-            <div>
-                <label htmlFor="management" className="block text-sm font-medium">
-                    Gerência
-                </label>
-                <Controller
-                    name="management"
-                    control={control}
-                    render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Selecione a gerência" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Gerências</SelectLabel>
-                                    <SelectItem value="dcap">DCAP</SelectItem>
-                                    <SelectItem value="gecea">GECEA</SelectItem>
-                                    <SelectItem value="gesfo">GESFO</SelectItem>
-                                    <SelectItem value="geted">GETED</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    )}
-                />
-                {errors.management && (
-                    <span className="text-red-500 text-sm">
-                        {errors.management.message}
-                    </span>
-                )}
-            </div>
-            <Button type="submit">Criar</Button>
-        </form>
+        <>
+            {alert && (
+                <div className="fixed bottom-4 right-4 z-50">
+                    <Alert
+                        variant={alert.type === "success" ? "default" : "destructive"}
+                        className="flex items-center justify-between space-x-4"
+                    >
+                        <div>
+                            <AlertTitle>{alert.type === "success" ? "Sucesso" : "Erro"}</AlertTitle>
+                            <AlertDescription>{alert.message}</AlertDescription>
+                        </div>
+                        <button
+                            onClick={() => setAlert(null)}
+                            className="text-muted-foreground hover:text-foreground transition-colors"
+                            aria-label="Fechar alerta"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
+                    </Alert>
+                </div>
+            )}
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                <DialogTrigger asChild>
+                    <Button size="sm">Criar Usuário</Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Criar Usuário</DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+                        <div>
+                            <label htmlFor="name" className="block text-sm font-medium">
+                                Nome
+                            </label>
+                            <Input
+                                type="text"
+                                id="name"
+                                {...register("name")}
+                                className="input"
+                                placeholder="Digite o nome completo"
+                            />
+                            {errors.name && (
+                                <span className="text-red-500 text-sm">{errors.name.message}</span>
+                            )}
+                        </div>
+                        <div>
+                            <label htmlFor="matricula" className="block text-sm font-medium">
+                                Matrícula
+                            </label>
+                            <Input
+                                type="text"
+                                id="matricula"
+                                {...register("matricula")}
+                                className="input"
+                                placeholder="Digite a matrícula"
+                            />
+                            {errors.matricula && (
+                                <span className="text-red-500 text-sm">
+                                    {errors.matricula.message}
+                                </span>
+                            )}
+                        </div>
+                        <div>
+                            <label htmlFor="ramal" className="block text-sm font-medium">
+                                Ramal
+                            </label>
+                            <Input
+                                type="text"
+                                id="ramal"
+                                {...register("ramal")}
+                                className="input"
+                                placeholder="Digite o ramal"
+                            />
+                            {errors.ramal && (
+                                <span className="text-red-500 text-sm">{errors.ramal.message}</span>
+                            )}
+                        </div>
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium">
+                                E-mail
+                            </label>
+                            <Input
+                                type="email"
+                                id="email"
+                                {...register("email")}
+                                className="input"
+                                placeholder="Digite o e-mail"
+                            />
+                            {errors.email && (
+                                <span className="text-red-500 text-sm">{errors.email.message}</span>
+                            )}
+                        </div>
+                        <div>
+                            <label htmlFor="accessType" className="block text-sm font-medium">
+                                Tipo de Acesso
+                            </label>
+                            <Controller
+                                name="accessType"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select onValueChange={field.onChange} value={field.value}>
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Selecione o tipo de acesso" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Tipos de Acesso</SelectLabel>
+                                                <SelectItem value="1">Admin</SelectItem>
+                                                <SelectItem value="2">Analista</SelectItem>
+                                                <SelectItem value="3">Usuário</SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            />
+                            {errors.accessType && (
+                                <span className="text-red-500 text-sm">
+                                    {errors.accessType.message}
+                                </span>
+                            )}
+                        </div>
+                        <div>
+                            <label htmlFor="management" className="block text-sm font-medium">
+                                Gerência
+                            </label>
+                            <Controller
+                                name="management"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select onValueChange={field.onChange} value={field.value}>
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Selecione a gerência" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>Gerências</SelectLabel>
+                                                <SelectItem value="dcap">DCAP</SelectItem>
+                                                <SelectItem value="gecea">GECEA</SelectItem>
+                                                <SelectItem value="gesfo">GESFO</SelectItem>
+                                                <SelectItem value="geted">GETED</SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            />
+                            {errors.management && (
+                                <span className="text-red-500 text-sm">
+                                    {errors.management.message}
+                                </span>
+                            )}
+                        </div>
+                        <Button type="submit">Criar</Button>
+                    </form>
+                </DialogContent>
+            </Dialog>
+        </>
     );
 }
