@@ -1,4 +1,5 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
 
 export function Welcome() {
     return (
@@ -20,7 +21,7 @@ export function Welcome() {
                     <h2 className="title-h2 text-slate-700">Comece abrindo seu primeiro chamado ou explore o menu ao lado!</h2>
                 </div>
                 <div >
-                    <Button className="button-other p-0.75 1.5 w-[11.25rem] max-w-[11.25rem]">Abrir Chamado</Button>
+                    <Link to="/user/open-ticket"><Button className="button-other p-0.75 1.5 w-[11.25rem] max-w-[11.25rem]">Abrir Chamado</Button></Link>
                 </div>
             </footer>
 
