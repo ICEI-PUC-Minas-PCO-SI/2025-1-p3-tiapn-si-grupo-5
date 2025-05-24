@@ -9,64 +9,10 @@ import {
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import type { User, ActionButton } from "@/components/InterfacesDataTableUsers";
+import { getAllUsers } from "@/api/users";
 
 export function ManagementUsers() {
-  const [Data, setData] = useState<User[]>([
-    {
-      id: "1",
-      name: "Fulano",
-      accessType: "Cliente",
-      management: "Gerência X",
-    },
-    { id: "2", name: "Ciclano", accessType: "Analista", management: "ASTIN" },
-    {
-      id: "3",
-      name: "Beltrano",
-      accessType: "Supervisor",
-      management: "ASTIN",
-    },
-    {
-      id: "3",
-      name: "Beltrano",
-      accessType: "Supervisor",
-      management: "ASTIN",
-    },
-    {
-      id: "3",
-      name: "Beltrano",
-      accessType: "Supervisor",
-      management: "ASTIN",
-    },
-    {
-      id: "3",
-      name: "Beltrano",
-      accessType: "Supervisor",
-      management: "ASTIN",
-    },
-    {
-      id: "3",
-      name: "Beltrano",
-      accessType: "Supervisor",
-      management: "ASTIN",
-    },
-    {
-      id: "3",
-      name: "Beltrano",
-      accessType: "Supervisor",
-      management: "ASTIN",
-    },
-    {
-      id: "3",
-      name: "Beltrano",
-      accessType: "Supervisor",
-      management: "ASTIN",
-    },
-    { id: "3", name: "Lucas", accessType: "Supervisor", management: "ASTIN" },
-    { id: "3", name: "Lucas", accessType: "Supervisor", management: "ASTIN" },
-    { id: "3", name: "Lucas", accessType: "Supervisor", management: "ASTIN" },
-    { id: "3", name: "Lucas", accessType: "Supervisor", management: "ASTIN" },
-  ]);
-
+  const [Data, setData] = useState<User[]>([]);
   const [filteredData, setFilteredData] = useState<User[]>(Data);
   const [visibleColumns, setVisibleColumns] = useState<
     Record<keyof User, boolean>
@@ -76,6 +22,32 @@ export function ManagementUsers() {
     accessType: true,
     management: true,
   });
+
+  const fetchUsers = async () => {
+    try {
+      const users = await getAllUsers();
+      console.log("Dados retornados da API:", users);
+
+      const formattedUsers = users.map((user) => ({
+        id: user.idUsuario.toString(),
+        name: user.nomeUsuario,
+        accessType:
+          user.idTipoUsuario === 1
+            ? "Gestor"
+            : user.idTipoUsuario === 2
+            ? "Analista"
+            : "Usuário",
+        management: `Gerência ${user.idGerencia}`,
+      }));
+      setData(formattedUsers);
+    } catch (error) {
+      console.error("Erro ao processar usuários:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   useEffect(() => {
     setFilteredData(Data);

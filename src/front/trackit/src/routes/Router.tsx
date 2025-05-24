@@ -24,7 +24,7 @@ export function Router() {
                 */}
             </Route>
             <Route path="/admin" element={<DefaultLayoult />}>
-                <Route path="management-users" element={<ManagementUsers/>}></Route>
+                <Route path="management-users" element={<ManagementUsers/>}/>
             </Route>
         </Routes>
     );
