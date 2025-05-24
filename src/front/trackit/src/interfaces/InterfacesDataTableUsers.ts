@@ -4,7 +4,10 @@ export interface User {
     id: string;
     name: string;
     accessType: string;
-    management: string;
+    management: {
+        idGerencia: number;
+        nomeGerencia: string;
+    };
     ativo: number;
 }
 

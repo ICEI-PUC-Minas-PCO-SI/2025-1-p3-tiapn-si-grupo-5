@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { X } from "lucide-react";
+import { getAllActiveManagements } from "@/api/management";
 
 const crudUserSchema = z.object({
     name: z
@@ -58,6 +59,7 @@ type CrudUserSchema = z.infer<typeof crudUserSchema>;
 export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+    const [managements, setManagements] = useState<{ idGerencia: number; nomeGerencia: string }[]>([]);
 
     useEffect(() => {
         if (alert) {
@@ -65,6 +67,18 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
             return () => clearTimeout(timer);
         }
     }, [alert]);
+
+    useEffect(() => {
+        async function fetchManagements() {
+            try {
+                const data = await getAllActiveManagements();
+                setManagements(data);
+            } catch (error) {
+                console.error("Erro ao buscar gerências ativas:", error);
+            }
+        }
+        fetchManagements();
+    }, []);
 
     const {
         register,
@@ -80,20 +94,15 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
         const numericPart = input.slice(0, -1);
         const verifier = input.slice(-1);
         const paddedNumericPart = numericPart.padStart(14, "0");
-        const managementMapping: Record<string, number> = {
-            dcap: 1,
-            gecea: 2,
-            gesfo: 3,
-            geted: 4,
-        };
         const fullRegistration = paddedNumericPart + verifier;
+
         const payload = {
             nomeUsuario: data.name,
             matricula: fullRegistration,
             ramal: data.ramal,
             email: data.email,
             senha: "Trackit123#",
-            gerencia: managementMapping[data.management],
+            gerencia: Number(data.management),
         };
         try {
             const response = await fetch("http://localhost:3000/usuarios/register", {
@@ -253,10 +262,11 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
                                         <SelectContent>
                                             <SelectGroup>
                                                 <SelectLabel>Gerências</SelectLabel>
-                                                <SelectItem value="dcap">DCAP</SelectItem>
-                                                <SelectItem value="gecea">GECEA</SelectItem>
-                                                <SelectItem value="gesfo">GESFO</SelectItem>
-                                                <SelectItem value="geted">GETED</SelectItem>
+                                                {managements.map((management) => (
+                                                    <SelectItem key={management.idGerencia} value={String(management.idGerencia)}>
+                                                        {management.nomeGerencia}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectGroup>
                                         </SelectContent>
                                     </Select>

@@ -3,5 +3,6 @@ export interface InterfaceGetUser {
   nomeUsuario: string;
   idTipoUsuario?: number;
   idGerencia: number;
+  nomeGerencia: string;
   ativo: number;
 }

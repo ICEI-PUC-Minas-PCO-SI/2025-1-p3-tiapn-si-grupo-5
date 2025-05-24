@@ -97,7 +97,7 @@ export function DataTableUsers({
         </Button>
       ),
       cell: ({ row }: { row: Row<User> }) => (
-        <span>{row.original.management}</span>
+        <span>{row.original.management.nomeGerencia}</span>
       ),
       enableHiding: true,
     },

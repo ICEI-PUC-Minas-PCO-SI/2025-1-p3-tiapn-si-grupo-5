@@ -15,9 +15,12 @@ export async function getAllUsers(): Promise<User[]> {
                 user.idTipoUsuario === 1
                     ? "Gestor"
                     : user.idTipoUsuario === 2
-                    ? "Analista"
-                    : "Usuário",
-            management: `Gerência ${user.idGerencia}`,
+                        ? "Analista"
+                        : "Usuário",
+            management: {
+                idGerencia: user.idGerencia,
+                nomeGerencia: user.nomeGerencia,
+            },
             ativo: user.ativo,
         }));
     } catch (error) {

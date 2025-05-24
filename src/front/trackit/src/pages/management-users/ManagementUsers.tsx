@@ -27,7 +27,7 @@ export function ManagementUsers() {
 
   const fetchUsers = async () => {
     try {
-      const users = await getAllUsers(); // Dados já processados
+      const users = await getAllUsers();
       setData(users);
     } catch (error) {
       console.error("Erro ao processar usuários:", error);

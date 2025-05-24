@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from 'react-router-dom';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
+import { getAllActiveManagements } from "@/api/management";
 
 // Schema de validação com Zod
 const registerUserSchema = z.object({
@@ -60,6 +61,7 @@ type registerUserSchema = z.infer<typeof registerUserSchema>;
 export function RegisterUser() {
     const navigate = useNavigate();
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+    const [managements, setManagements] = useState<{ idGerencia: number; nomeGerencia: string }[]>([]);
 
     useEffect(() => {
         if (alert) {
@@ -67,6 +69,18 @@ export function RegisterUser() {
             return () => clearTimeout(timer);
         }
     }, [alert]);
+
+    useEffect(() => {
+        async function fetchManagements() {
+            try {
+                const data = await getAllActiveManagements();
+                setManagements(data);
+            } catch (error) {
+                console.error("Erro ao buscar gerências ativas:", error);
+            }
+        }
+        fetchManagements();
+    }, []);
 
     const [isShow, setIsShow] = useState(false);
     const handlePassword = () => setIsShow(!isShow);
@@ -86,21 +100,14 @@ export function RegisterUser() {
         const paddedNumericPart = numericPart.padStart(14, "0");
         const fullRegistration = paddedNumericPart + verifier;
 
-        const managementMapping: Record<string, number> = {
-            "1": 1, // ASTIN
-            "2": 2, // GETED
-            "3": 3, // GEVIF
-            "4": 4, // GESFO
-        };
-
         const payload = {
             nomeUsuario: data.name,
             matricula: fullRegistration,
             ramal: data.ramal,
             email: data.email,
             senha: data.password,
-            gerencia: managementMapping[data.administration],
-            idTipoUsuario: 3, // Usuário cliente
+            gerencia: Number(data.administration),
+            idTipoUsuario: 3,
         };
         try {
             const response = await fetch("http://localhost:3000/usuarios/register", {
@@ -201,10 +208,11 @@ export function RegisterUser() {
                                 <SelectContent>
                                     <SelectGroup>
                                         <SelectLabel>Gerências</SelectLabel>
-                                        <SelectItem value="1">Assessoria de Tecnologia da Informação (ASTIN)</SelectItem>
-                                        <SelectItem value="4">Gerência de Gestão da Folha de Pagamento (GESFO)</SelectItem>
-                                        <SelectItem value="2">Gerência de Gestão de Direitos e Benefícios (GETED)</SelectItem>
-                                        <SelectItem value="3">Gerência de Gestão de Ingresso e da Vida Funcional (GEVIF)</SelectItem>
+                                        {managements.map((management) => (
+                                            <SelectItem key={management.idGerencia} value={String(management.idGerencia)}>
+                                                {management.nomeGerencia}
+                                            </SelectItem>
+                                        ))}
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
