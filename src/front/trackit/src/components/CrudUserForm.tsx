@@ -23,7 +23,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { X } from "lucide-react"; // Import an icon library for the "X" icon
+import { X } from "lucide-react";
 
 const crudUserSchema = z.object({
     name: z
@@ -115,7 +115,7 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
             {alert && (
                 <div className="fixed bottom-4 right-4 z-50">
                     <Alert
-                        variant={alert.type === "success" ? "default" : "destructive"}
+                        variant={alert.type === "success" ? "success" : "destructive"}
                         className="flex items-center justify-between space-x-4"
                     >
                         <div>
