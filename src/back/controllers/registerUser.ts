@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 export async function registerUser(req: Request, res: Response) {
   try {
-    const { nomeUsuario, matricula, ramal, email, senha, gerencia } = req.body;
+    const { nomeUsuario, matricula, ramal, email, senha, gerencia, tipoUsuario } = req.body;
     const hashedSenha = await hashPassword(senha);
     const ramalNumber = Number(ramal);
     const gerenciaIdNumber = Number(gerencia);
@@ -17,6 +17,7 @@ export async function registerUser(req: Request, res: Response) {
         ramal: ramalNumber,
         email,
         senha: hashedSenha,
+        idTipoUsuario: tipoUsuario,
         gerencia: {
           connect: { idGerencia: gerenciaIdNumber },
         },
