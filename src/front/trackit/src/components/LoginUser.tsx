@@ -8,6 +8,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "react-router";
 import { toast } from "sonner";
+import { useNavigate } from 'react-router-dom';
 
 // Schema de validação com Zod
 const loginUserSchema = z.object({
@@ -25,7 +26,7 @@ type LoginUserSchema = z.infer<typeof loginUserSchema>;
 
 export function LoginUser() {
     const [searchParams] = useSearchParams();
-
+    const navigate = useNavigate();
     const [isShow, setIsShow] = useState(false);
     const handlePassword = () => setIsShow(!isShow);
 
@@ -59,7 +60,7 @@ export function LoginUser() {
                 return;
             }
 
-            toast.success("Cadastro realizado com sucesso!");
+            navigate("/user/welcome");
 
 
         } catch (error) {
