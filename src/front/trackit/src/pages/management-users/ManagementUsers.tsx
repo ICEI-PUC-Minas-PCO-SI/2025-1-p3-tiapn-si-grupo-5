@@ -27,8 +27,6 @@ export function ManagementUsers() {
   const fetchUsers = async () => {
     try {
       const users = await getAllUsers();
-      console.log("Dados retornados da API:", users);
-
       const formattedUsers = users.map((user) => ({
         id: user.idUsuario.toString(),
         name: user.nomeUsuario,

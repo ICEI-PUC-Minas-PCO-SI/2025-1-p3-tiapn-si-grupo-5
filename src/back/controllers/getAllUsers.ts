@@ -3,7 +3,7 @@ import { PrismaClient } from "../generated/prisma";
 
 const prisma = new PrismaClient();
 
-export async function getUsuarios(req: Request, res: Response) {
+export async function getAllUsers(req: Request, res: Response) {
   try {
     const clients = await prisma.usuario.findMany();
     res.json(clients);
