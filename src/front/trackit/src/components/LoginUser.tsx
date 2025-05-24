@@ -2,12 +2,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IoEyeOutline } from "react-icons/io5";
 import { IoEyeOffOutline } from "react-icons/io5";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "react-router";
-import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { X } from "lucide-react";
 
 // Schema de validação com Zod
 const loginUserSchema = z.object({
@@ -25,6 +26,14 @@ type LoginUserSchema = z.infer<typeof loginUserSchema>;
 
 export function LoginUser() {
     const [searchParams] = useSearchParams();
+    const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+    useEffect(() => {
+        if (alert) {
+            const timer = setTimeout(() => setAlert(null), 3000); // Fecha o toast automaticamente após 3 segundos
+            return () => clearTimeout(timer);
+        }
+    }, [alert]);
 
     const [isShow, setIsShow] = useState(false);
     const handlePassword = () => setIsShow(!isShow);
@@ -35,7 +44,7 @@ export function LoginUser() {
         formState: { errors },
     } = useForm<LoginUserSchema>({
         defaultValues: {
-            email: searchParams.get('email') ?? ''
+            email: searchParams.get("email") ?? "",
         },
         resolver: zodResolver(loginUserSchema),
     });
@@ -55,58 +64,79 @@ export function LoginUser() {
             });
 
             if (!response.ok) {
-                toast.error("Erro ao cadastrar!");
+                setAlert({ type: "error", message: "Erro ao fazer login!" });
                 return;
             }
 
-            toast.success("Cadastro realizado com sucesso!");
-
-
+            setAlert({ type: "success", message: "Login realizado com sucesso!" });
         } catch (error) {
             console.error("Erro ao fazer login:", error);
+            setAlert({ type: "error", message: "Falha ao fazer login. Tente novamente." });
         }
     }
 
     return (
-        <form
-            onSubmit={handleSubmit(handleLoginUser)}
-            className="flex flex-col w-full h-full justify-start gap-4 px-[3rem]"
-        >
-            <div className="">
-                <label className="label-layout">E-mail:</label>
-                <Input placeholder="Digite seu e-mail" {...register("email")} />
-                {errors.email && (
-                    <span className="text-red-500 text-sm font-'[Inter]'">{errors.email.message}</span>
-                )}
-            </div>
-            <div>
-                <label className="label-layout">Senha:</label>
-                <div className="relative w-full">
-                    <Input
-                        type={isShow ? "text" : "password"}
-                        placeholder="Senha"
-                        {...register("password")}
-                    />
-                    <button
-                        type="button"
-                        onClick={handlePassword}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                        aria-label={isShow ? "Ocultar senha" : "Mostrar senha"}
+        <>
+            {alert && (
+                <div className="fixed bottom-4 right-4 z-50">
+                    <Alert
+                        variant={alert.type === "success" ? "success" : "destructive"}
+                        className="flex items-center justify-between space-x-4"
                     >
-                        {isShow ? (
-                            <IoEyeOffOutline size={24} />
-                        ) : (
-                            <IoEyeOutline size={24} />
-                        )}
-                    </button>
+                        <div>
+                            <AlertTitle>{alert.type === "success" ? "Sucesso" : "Erro"}</AlertTitle>
+                            <AlertDescription>{alert.message}</AlertDescription>
+                        </div>
+                        <button
+                            onClick={() => setAlert(null)}
+                            className="text-muted-foreground hover:text-foreground transition-colors"
+                            aria-label="Fechar alerta"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
+                    </Alert>
                 </div>
-                {errors.password && (
-                    <span className="text-red-500 text-sm font-'[Inter]'">
-                        {errors.password.message}
-                    </span>
-                )}
-            </div>
-            <Button type="submit">Login</Button>
-        </form>
+            )}
+            <form
+                onSubmit={handleSubmit(handleLoginUser)}
+                className="flex flex-col w-full h-full justify-start gap-4 px-[3rem]"
+            >
+                <div className="">
+                    <label className="label-layout">E-mail:</label>
+                    <Input placeholder="Digite seu e-mail" {...register("email")} />
+                    {errors.email && (
+                        <span className="text-red-500 text-sm font-'[Inter]'">{errors.email.message}</span>
+                    )}
+                </div>
+                <div>
+                    <label className="label-layout">Senha:</label>
+                    <div className="relative w-full">
+                        <Input
+                            type={isShow ? "text" : "password"}
+                            placeholder="Senha"
+                            {...register("password")}
+                        />
+                        <button
+                            type="button"
+                            onClick={handlePassword}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                            aria-label={isShow ? "Ocultar senha" : "Mostrar senha"}
+                        >
+                            {isShow ? (
+                                <IoEyeOffOutline size={24} />
+                            ) : (
+                                <IoEyeOutline size={24} />
+                            )}
+                        </button>
+                    </div>
+                    {errors.password && (
+                        <span className="text-red-500 text-sm font-'[Inter]'">
+                            {errors.password.message}
+                        </span>
+                    )}
+                </div>
+                <Button type="submit">Login</Button>
+            </form>
+        </>
     );
 }
