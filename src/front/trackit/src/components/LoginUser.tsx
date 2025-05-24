@@ -1,28 +1,19 @@
+{/* TODO: FIX LOGIN */}
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IoEyeOutline } from "react-icons/io5";
 import { IoEyeOffOutline } from "react-icons/io5";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "react-router";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
 
-// Schema de validação com Zod
-const loginUserSchema = z.object({
-    email: z.string().email("E-mail inválido"),
-    password: z
-        .string()
-        .min(8, "A senha deve ter pelo menos 8 caracteres")
-        .regex(
-            /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/,
-            "A senha deve conter pelo menos uma letra e um número"
-        ),
-});
-
-type LoginUserSchema = z.infer<typeof loginUserSchema>;
+type LoginFormData = {
+    email: string;
+    password: string;
+};
 
 export function LoginUser() {
     const [searchParams] = useSearchParams();
@@ -30,7 +21,7 @@ export function LoginUser() {
 
     useEffect(() => {
         if (alert) {
-            const timer = setTimeout(() => setAlert(null), 3000); // Fecha o toast automaticamente após 3 segundos
+            const timer = setTimeout(() => setAlert(null), 3000);
             return () => clearTimeout(timer);
         }
     }, [alert]);
@@ -42,15 +33,20 @@ export function LoginUser() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<LoginUserSchema>({
+    } = useForm<LoginFormData>({
         defaultValues: {
             email: searchParams.get("email") ?? "",
+            password: "", // Ensure `password` is included in default values
         },
-        resolver: zodResolver(loginUserSchema),
     });
 
-    // Função que exibe os dados que o usuário digitou em ambos os inputs. Na integração com a API, essa função deve ser substituída pela chamada à API de login.
-    async function handleLoginUser(data: LoginUserSchema) {
+    async function handleLoginUser(data: LoginFormData) {
+        const { email, password } = data;
+        if (!email || !password) {
+            setAlert({ type: "error", message: "Preencha todos os campos!" });
+            return;
+        }
+
         try {
             const response = await fetch("http://localhost:3000/usuarios/login", {
                 method: "POST",
@@ -58,8 +54,8 @@ export function LoginUser() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    email: data.email,
-                    senha: data.password,
+                    email,
+                    senha: password,
                 }),
             });
 
@@ -114,7 +110,7 @@ export function LoginUser() {
                         <Input
                             type={isShow ? "text" : "password"}
                             placeholder="Senha"
-                            {...register("password")}
+                            {...register("password")} // Ensure `password` is registered
                         />
                         <button
                             type="button"

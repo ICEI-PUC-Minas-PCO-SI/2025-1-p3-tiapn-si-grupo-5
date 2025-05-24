@@ -49,8 +49,8 @@ const crudUserSchema = z.object({
     accessType: z.enum(["1", "2", "3"], {
         errorMap: () => ({ message: "Selecione um tipo de acesso" }),
     }),
-    management: z.enum(["dcap", "gecea", "gesfo", "geted"], {
-        errorMap: () => ({ message: "Selecione uma gerência" }),
+    management: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+        message: "Selecione uma gerência válida",
     }),
 });
 

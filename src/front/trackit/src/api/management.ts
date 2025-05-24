@@ -6,7 +6,9 @@ export async function getAllActiveManagements(): Promise<Management[]> {
         if (!response.ok) {
             throw new Error("Erro ao buscar gerências ativas");
         }
-        return await response.json();
+        const managements = await response.json();
+        console.log("Dados recebidos do backend (gerências):", managements);
+        return managements;
     } catch (error) {
         console.error("Erro ao buscar gerências ativas:", error);
         throw error;

@@ -9,7 +9,6 @@ export function Login() {
     return (
         <>
             <div className="flex w-full min-h-screen">
-
                 <div className="flex flex-col w-full min-h-screen p-9 items-start justify-start gap-[4rem]">
                     <div className="flex flex-col gap-4 items-start justify-start w-full h-full">
                         <img className="w-24 h-20" src={Logo} alt="Logo Track It" />

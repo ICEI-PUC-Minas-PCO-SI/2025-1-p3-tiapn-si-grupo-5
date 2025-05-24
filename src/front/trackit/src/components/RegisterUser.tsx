@@ -39,8 +39,8 @@ const registerUserSchema = z.object({
             message: "Ramal inválido. Deve conter exatamente 10 dígitos numéricos",
         },
         ),
-    administration: z.enum(["1", "2", "3", "4"], {
-        errorMap: () => ({ message: "Selecione uma gerência" })
+    administration: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+        message: "Selecione uma gerência válida",
     }),
     email: z.string().email("E-mail inválido"),
     password: z

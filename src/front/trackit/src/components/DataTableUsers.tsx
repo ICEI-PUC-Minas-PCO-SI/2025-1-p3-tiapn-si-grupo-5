@@ -100,6 +100,11 @@ export function DataTableUsers({
         <span>{row.original.management.nomeGerencia}</span>
       ),
       enableHiding: true,
+      sortingFn: (a: Row<User>, b: Row<User>) => {
+        const nameA = a.original.management.nomeGerencia.toLowerCase();
+        const nameB = b.original.management.nomeGerencia.toLowerCase();
+        return nameA.localeCompare(nameB);
+      },
     },
     {
       accessorKey: "ativo",
