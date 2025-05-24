@@ -8,6 +8,14 @@ import {
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { CrudUserForm } from "@/components/CrudUserForm";
 import type { User, ActionButton } from "@/components/InterfacesDataTableUsers";
 import { getAllUsers } from "@/api/users";
 
@@ -93,22 +101,17 @@ export function ManagementUsers() {
       <div className="flex justify-between">
         <Searchbar onSearch={handleSearch} />
         <div className="flex gap-3">
-          <Button
-            size="sm"
-            onClick={() =>
-              setData([
-                ...Data,
-                {
-                  id: `${Data.length + 1}`,
-                  name: "Novo Usuário",
-                  accessType: "Novo",
-                  management: "Nova Gerência",
-                },
-              ])
-            }
-          >
-            Criar
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button size="sm">Criar</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Criar Usuário</DialogTitle>
+              </DialogHeader>
+              <CrudUserForm />
+            </DialogContent>
+          </Dialog>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="outline">

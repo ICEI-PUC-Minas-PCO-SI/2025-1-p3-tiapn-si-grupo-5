@@ -12,3 +12,4 @@ export async function getUsuarios(req: Request, res: Response) {
     res.status(500).json({ error: "Erro ao buscar usuários" });
   }
 }
+

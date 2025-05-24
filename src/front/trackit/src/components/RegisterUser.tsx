@@ -81,8 +81,6 @@ export function RegisterUser() {
 
         const paddedNumericPart = numericPart.padStart(14, '0');
         const fullRegistration = paddedNumericPart + verifier;
-
-
         console.log("Matrícula formatada:", fullRegistration);
         console.log("Dados cadastrados:", {
             ...data,
@@ -162,7 +160,6 @@ export function RegisterUser() {
                     </span>
                 )}
             </div>
-
             <div>
                 <label>E-mail:</label>
                 <Input placeholder="Digite seu e-mail" {...register("email")} />
