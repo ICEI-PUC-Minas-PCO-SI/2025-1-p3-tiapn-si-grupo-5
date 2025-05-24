@@ -9,12 +9,15 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
 import { IoEyeOutline } from "react-icons/io5";
 import { IoEyeOffOutline } from "react-icons/io5";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from 'react-router-dom';
+
 
 // Schema de validação com Zod
 const registerUserSchema = z.object({
@@ -35,13 +38,7 @@ const registerUserSchema = z.object({
             message: "Ramal inválido. Deve conter exatamente 10 dígitos numéricos",
         },
         ),
-    administration: z.enum([
-        "dcap",
-        "gecea",
-        "gesfo",
-        "geted",
-        "gevif"
-    ], {
+    administration: z.enum(["1", "2", "3", "4"], {
         errorMap: () => ({ message: "Selecione uma gerência" })
     }),
     email: z.string().email("E-mail inválido"),
@@ -61,6 +58,7 @@ const registerUserSchema = z.object({
 type registerUserSchema = z.infer<typeof registerUserSchema>;
 
 export function RegisterUser() {
+    const navigate = useNavigate();
     const [isShow, setIsShow] = useState(false);
     const handlePassword = () => setIsShow(!isShow);
 
@@ -74,18 +72,45 @@ export function RegisterUser() {
     });
 
     // Função que exibe os dados que o usuário digitou em ambos os inputs. Na integração com a API, essa função deve ser substituída pela chamada à API de login.
-    function handleRegisterUser(data: registerUserSchema) {
+    async function handleRegisterUser(data: registerUserSchema) {
         const input = data.registration.toUpperCase();
         const numericPart = input.slice(0, -1);
         const verifier = input.slice(-1);
 
         const paddedNumericPart = numericPart.padStart(14, '0');
         const fullRegistration = paddedNumericPart + verifier;
-        console.log("Matrícula formatada:", fullRegistration);
-        console.log("Dados cadastrados:", {
-            ...data,
-            registration: fullRegistration
-        });
+
+        try {
+            const response = await fetch("http://localhost:3000/usuarios/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    nomeUsuario: data.name,
+                    matricula: fullRegistration,
+                    ramal: data.ramal,
+                    email: data.email,
+                    senha: data.password,
+                    gerencia: data.administration,
+                }),
+            });
+
+            if (!response.ok) {
+                toast.error("Erro ao cadastrar!");
+                return;
+            }
+
+            toast.success("Cadastro realizado com sucesso!");  
+            setTimeout(() => {
+            navigate(`/?email=${data.email}`);
+            }, 1200);
+ 
+
+        } catch (error) {
+            console.error("Erro ao cadastrar!");
+            alert("Falha ao cadastrar. Verifique os dados e tente novamente.");
+        }
     }
 
     return (
@@ -144,11 +169,10 @@ export function RegisterUser() {
                             <SelectContent>
                                 <SelectGroup>
                                     <SelectLabel>Gerências</SelectLabel>
-                                    <SelectItem value="dcap">Diretoria Central de Administração de Pessoa (DCAP)</SelectItem>
-                                    <SelectItem value="gecea">Gerência de Central de Atendimento (GECEA)</SelectItem>
-                                    <SelectItem value="gesfo">Gerência de Gestão da Folha de Pagamento (GESFO)</SelectItem>
-                                    <SelectItem value="geted">Gerência de Gestão de Direitos e Benefícios (GETED)</SelectItem>
-                                    <SelectItem value="gevif">Gerência de Gestão de Ingresso e da Vida Funcional (GEVIF)</SelectItem>
+                                    <SelectItem value="1">Assessoria de Tecnologia da Informação (ASTIN)</SelectItem>
+                                    <SelectItem value="4">Gerência de Gestão da Folha de Pagamento (GESFO)</SelectItem>
+                                    <SelectItem value="2">Gerência de Gestão de Direitos e Benefícios (GETED)</SelectItem>
+                                    <SelectItem value="3">Gerência de Gestão de Ingresso e da Vida Funcional (GEVIF)</SelectItem>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
@@ -200,10 +224,10 @@ export function RegisterUser() {
                     Confirmar senha:
                 </label>
                 <div className="relative w-full">
-                    <Input 
-                    type={isShow ? "text" : "password"} 
-                    placeholder="Digite novamente a senha" 
-                    {...register("confirmPassword")}/>
+                    <Input
+                        type={isShow ? "text" : "password"}
+                        placeholder="Digite novamente a senha"
+                        {...register("confirmPassword")} />
 
                     <button onClick={handlePassword} className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-500 focus: outline-0" >
                         {!isShow && <IoEyeOutline size={24} />}

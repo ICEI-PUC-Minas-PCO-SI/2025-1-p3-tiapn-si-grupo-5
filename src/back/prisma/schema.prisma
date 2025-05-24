@@ -119,7 +119,7 @@ model usuario {
   senha                                  String         @db.VarChar(255)
   dataCadastro                           DateTime       @default(now()) @db.DateTime(0)
   ativo                                  Int            @default(1) @db.TinyInt
-  ramal                                  Int?
+  ramal                                  Int
   fotoPerfil                             String?        @db.Text
   idGerencia                             Int?
   idTipoUsuario                          Int?
