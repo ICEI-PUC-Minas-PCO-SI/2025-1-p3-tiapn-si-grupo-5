@@ -96,10 +96,18 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
         register,
         handleSubmit,
         control,
+        reset,
         formState: { errors },
     } = useForm<CrudUserSchema>({
         resolver: zodResolver(crudUserSchema),
     });
+
+    const handleModalOpenChange = (isOpen: boolean) => {
+        setIsModalOpen(isOpen);
+        if (isOpen) {
+            reset();
+        }
+    };
 
     const handleFormSubmit = async (data: CrudUserSchema) => {
         const input = data.matricula.toUpperCase();
@@ -155,7 +163,7 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
                     </Alert>
                 </div>
             )}
-            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <Dialog open={isModalOpen} onOpenChange={handleModalOpenChange}>
                 <DialogTrigger asChild>
                     <Button size="sm">Criar Usuário</Button>
                 </DialogTrigger>
