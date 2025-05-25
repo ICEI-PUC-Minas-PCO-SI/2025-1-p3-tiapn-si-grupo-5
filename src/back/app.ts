@@ -1,15 +1,19 @@
 import express from "express";
-import userRoutes from "./routes/userRoutes";
-import managementRoutes from "./routes/managementRoutes";
-import typeUsersRoutes from "./routes/userTypesRoutes";
 import cors from "cors";
+import { UserRoutes } from "./routes/UserRoutes";
+import { ManagementRoutes } from "./routes/ManagementRoutes";
+import { UserTypeRoutes } from "./routes/UserTypesRoutes";
 
 const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("/usuarios", userRoutes);
-app.use("/gerencias", managementRoutes);
-app.use("/tipos-usuarios", typeUsersRoutes);
+const userRoutes = new UserRoutes();
+const managementRoutes = new ManagementRoutes();
+const userTypeRoutes = new UserTypeRoutes();
+
+app.use("/usuarios", userRoutes.getRouter());
+app.use("/gerencias", managementRoutes.getRouter());
+app.use("/tipos-usuarios", userTypeRoutes.getRouter());
 
 export default app;

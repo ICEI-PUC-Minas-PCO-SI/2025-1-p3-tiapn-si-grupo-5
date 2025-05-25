@@ -1,8 +1,21 @@
-import express from "express";
-import { getAllActiveManagement } from "../controllers/getAllActiveManagement";
+import { Router } from "express";
+import { ManagementController } from "../controllers/ManagementController";
 
-const router = express.Router();
+export class ManagementRoutes {
+    private router: Router;
+    private managementController: ManagementController;
 
-router.get("/active", getAllActiveManagement);
+    constructor() {
+        this.router = Router();
+        this.managementController = new ManagementController();
+        this.initializeRoutes();
+    }
 
-export default router;
+    private initializeRoutes() {
+        this.router.get("/active", this.managementController.getAllActiveManagement.bind(this.managementController));
+    }
+
+    public getRouter(): Router {
+        return this.router;
+    }
+}

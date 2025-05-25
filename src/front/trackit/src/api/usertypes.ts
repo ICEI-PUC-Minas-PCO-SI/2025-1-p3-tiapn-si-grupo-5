@@ -7,7 +7,6 @@ export async function getAllUserTypes(): Promise<UserType[]> {
             throw new Error("Erro ao buscar tipos de usuário");
         }
         const userTypes = await response.json();
-        console.log("Dados recebidos do backend (tipos de usuário):", userTypes);
         return userTypes;
     } catch (error) {
         console.error("Erro ao buscar tipos de usuário:", error);

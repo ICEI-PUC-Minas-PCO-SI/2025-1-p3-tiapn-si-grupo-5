@@ -1,12 +1,23 @@
-import express from "express";
-import { registerUser } from "../controllers/registerUser";
-import { loginUser } from "../controllers/loginUser";
-import { getAllUsers } from "../controllers/getAllUsers";
+import { Router } from "express";
+import { UserController } from "../controllers/UserController";
 
-const router = express.Router();
+export class UserRoutes {
+    private router: Router;
+    private userController: UserController;
 
-router.post("/register", registerUser);
-router.post("/login", loginUser);
-router.get("/", getAllUsers)
+    constructor() {
+        this.router = Router();
+        this.userController = new UserController();
+        this.initializeRoutes();
+    }
 
-export default router;
+    private initializeRoutes() {
+        this.router.post("/register", this.userController.registerUser.bind(this.userController));
+        this.router.post("/login", this.userController.loginUser.bind(this.userController));
+        this.router.get("/", this.userController.getAllUsers.bind(this.userController));
+    }
+
+    public getRouter(): Router {
+        return this.router;
+    }
+}

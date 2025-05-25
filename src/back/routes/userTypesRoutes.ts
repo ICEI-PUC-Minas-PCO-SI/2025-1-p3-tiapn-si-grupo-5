@@ -1,8 +1,21 @@
-import express from "express";
-import { getAllUserTypes } from "../controllers/getAllUserTypes";
+import { Router } from "express";
+import { UserTypeController } from "../controllers/UserTypeController";
 
-const router = express.Router();
+export class UserTypeRoutes {
+    private router: Router;
+    private userTypeController: UserTypeController;
 
-router.get("/", getAllUserTypes);
+    constructor() {
+        this.router = Router();
+        this.userTypeController = new UserTypeController();
+        this.initializeRoutes();
+    }
 
-export default router;
+    private initializeRoutes() {
+        this.router.get("/", this.userTypeController.getAllUserTypes.bind(this.userTypeController));
+    }
+
+    public getRouter(): Router {
+        return this.router;
+    }
+}
