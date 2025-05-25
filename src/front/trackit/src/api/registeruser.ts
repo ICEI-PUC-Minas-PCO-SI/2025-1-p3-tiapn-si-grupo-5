@@ -1,12 +1,4 @@
-export interface RegisterUserPayload {
-    nomeUsuario: string;
-    matricula: string;
-    ramal: string;
-    email: string;
-    senha: string;
-    gerencia: number;
-    tipoUsuario: number;
-}
+import type { RegisterUserPayload } from "../interfaces/InterfaceRegisterUser";
 
 export async function registerNewUser(payload: RegisterUserPayload): Promise<Response> {
     return fetch("http://localhost:3000/usuarios/register", {

@@ -78,4 +78,25 @@ export class UserController {
             res.status(500).json({ error: "Erro ao buscar usuários" });
         }
     }
+
+    async updateUser(req: Request, res: Response) {
+        try {
+            const { idUsuario } = req.params;
+            const { matricula, gerencia, tipoUsuario } = req.body;
+
+            const updatedUser = await prisma.usuario.update({
+                where: { idUsuario: Number(idUsuario) },
+                data: {
+                    matricula,
+                    idGerencia: gerencia ? Number(gerencia) : undefined,
+                    idTipoUsuario: tipoUsuario ? Number(tipoUsuario) : undefined,
+                },
+            });
+
+            res.status(200).json(updatedUser);
+        } catch (error) {
+            console.error("Erro ao atualizar usuário:", error);
+            res.status(500).json({ error: "Erro ao atualizar usuário" });
+        }
+    }
 }

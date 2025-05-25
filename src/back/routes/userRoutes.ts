@@ -15,6 +15,7 @@ export class UserRoutes {
         this.router.post("/register", this.userController.registerUser.bind(this.userController));
         this.router.post("/login", this.userController.loginUser.bind(this.userController));
         this.router.get("/", this.userController.getAllUsers.bind(this.userController));
+        this.router.put("/:idUsuario", this.userController.updateUser.bind(this.userController));
     }
 
     public getRouter(): Router {

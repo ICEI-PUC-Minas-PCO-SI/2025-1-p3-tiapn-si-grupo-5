@@ -49,8 +49,8 @@ export function ManagementUsers() {
       variant: "outline",
     },
     {
-      label: "Excluir",
-      onClick: (row) => console.log("Excluindo:", row),
+      label: "Desativar",
+      onClick: (row) => console.log("Desativando:", row),
       variant: "delete",
     },
   ];
