@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
 import { getAllActiveManagements } from "@/api/management";
-import { registerNewUser } from "@/api/registeruser";
+import { registerNewUser } from "@/api/users";
 
 // Schema de validação com Zod
 const registerUserSchema = z.object({

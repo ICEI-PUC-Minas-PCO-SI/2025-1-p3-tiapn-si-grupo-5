@@ -24,7 +24,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { X } from "lucide-react";
 import { getAllActiveManagements } from "@/api/management";
 import { getAllUserTypes } from "../api/usertypes";
-import { registerNewUser } from "@/api/registeruser";
+import { registerNewUser } from "@/api/users";
 
 const crudUserSchema = z.object({
     name: z
