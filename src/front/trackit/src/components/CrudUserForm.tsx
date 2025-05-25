@@ -24,6 +24,7 @@ import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { X } from "lucide-react";
 import { getAllActiveManagements } from "@/api/management";
 import { getAllUserTypes } from "../api/usertypes";
+import { registerNewUser } from "@/api/registeruser";
 
 const crudUserSchema = z.object({
     name: z
@@ -61,7 +62,7 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [managements, setManagements] = useState<{ idGerencia: number; nomeGerencia: string }[]>([]);
-    const [userTypes, setUserTypes] = useState<{ idTipoUsuario: number; tipoUsuario: string }[]>([]); // State for user types
+    const [userTypes, setUserTypes] = useState<{ idTipoUsuario: number; tipoUsuario: string }[]>([]);
 
     useEffect(() => {
         if (alert) {
@@ -79,7 +80,6 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
                 console.error("Erro ao buscar gerências ativas:", error);
             }
         }
-
         async function fetchUserTypes() {
             try {
                 const data = await getAllUserTypes();
@@ -88,9 +88,8 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
                 console.error("Erro ao buscar tipos de usuário:", error);
             }
         }
-
         fetchManagements();
-        fetchUserTypes(); // Fetch user types
+        fetchUserTypes();
     }, []);
 
     const {
@@ -114,19 +113,13 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
             matricula: fullRegistration,
             ramal: data.ramal,
             email: data.email,
-            senha: "Trackit123#",
+            senha: "Trackit123#", // senha padrão para novos usuários
             gerencia: Number(data.management),
             tipoUsuario: Number(data.accessType),
         };
         console.log("Payload enviado para o backend:", payload);
         try {
-            const response = await fetch("http://localhost:3000/usuarios/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-            });
+            const response = await registerNewUser(payload);
             if (response.ok) {
                 setAlert({ type: "success", message: "Usuário criado com sucesso!" });
                 setIsModalOpen(false);
