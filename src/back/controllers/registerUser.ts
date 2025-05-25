@@ -10,6 +10,7 @@ export async function registerUser(req: Request, res: Response) {
     const hashedSenha = await hashPassword(senha);
     const ramalNumber = Number(ramal);
     const gerenciaIdNumber = Number(gerencia);
+    const tipoUsuarioId = Number(tipoUsuario);
     const novoUsuario = await prisma.usuario.create({
       data: {
         nomeUsuario,
@@ -17,14 +18,13 @@ export async function registerUser(req: Request, res: Response) {
         ramal: ramalNumber,
         email,
         senha: hashedSenha,
-        idTipoUsuario: tipoUsuario,
-        gerencia: {
-          connect: { idGerencia: gerenciaIdNumber },
-        },
+        idTipoUsuario: tipoUsuarioId,
+        idGerencia: gerenciaIdNumber
       },
     });
     const { senha: _, ...usuarioSemSenha } = novoUsuario;
     res.status(201).json(usuarioSemSenha);
+    console.log(JSON.stringify(usuarioSemSenha));
   } catch (error) {
     console.error("Erro ao criar usuário:", error);
     res.status(500).json({ error: "Erro ao criar usuário" });

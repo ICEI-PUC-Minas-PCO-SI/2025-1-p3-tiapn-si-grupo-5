@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
 import { getAllActiveManagements } from "@/api/management";
+import { registerNewUser } from "@/api/registeruser";
 
 // Schema de validação com Zod
 const registerUserSchema = z.object({
@@ -107,16 +108,10 @@ export function RegisterUser() {
             email: data.email,
             senha: data.password,
             gerencia: Number(data.administration),
-            idTipoUsuario: 3,
+            tipoUsuario: 3,
         };
         try {
-            const response = await fetch("http://localhost:3000/usuarios/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-            });
+            const response = await registerNewUser(payload);
             if (!response.ok) {
                 setAlert({ type: "error", message: "Erro ao cadastrar!" });
                 return;
@@ -130,7 +125,6 @@ export function RegisterUser() {
             setAlert({ type: "error", message: "Falha ao cadastrar. Verifique os dados e tente novamente." });
         }
     }
-
     return (
         <>
             {alert && (
