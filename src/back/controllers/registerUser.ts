@@ -8,7 +8,7 @@ export async function registerUser(req: Request, res: Response) {
   try {
     const { nomeUsuario, matricula, ramal, email, senha, gerencia, tipoUsuario } = req.body;
     const hashedSenha = await hashPassword(senha);
-    const ramalNumber = Number(ramal);
+    const ramalNumber = String(ramal);
     const gerenciaIdNumber = Number(gerencia);
     const tipoUsuarioId = Number(tipoUsuario);
     const novoUsuario = await prisma.usuario.create({
