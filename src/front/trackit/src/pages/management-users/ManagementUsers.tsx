@@ -27,8 +27,10 @@ export function ManagementUsers() {
     management: true,
     ativo: true,
   });
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editModalState, setEditModalState] = useState<{
+    isOpen: boolean;
+    user: UpdateUser | null;
+  }>({ isOpen: false, user: null });
 
   const fetchUsers = async () => {
     try {
@@ -61,13 +63,21 @@ export function ManagementUsers() {
     };
   };
 
+  const openEditModal = (user: User) => {
+    setEditModalState({
+      isOpen: true,
+      user: mapUserToUpdateUser(user as User & { matricula?: string }),
+    });
+  };
+
+  const closeEditModal = () => {
+    setEditModalState({ isOpen: false, user: null });
+  };
+
   const actions: ActionButton[] = [
     {
       label: "Editar",
-      onClick: (row) => {
-        setSelectedUser(row);
-        setIsEditModalOpen(true);
-      },
+      onClick: (row) => openEditModal(row),
       variant: "outline",
     },
     {
@@ -134,16 +144,15 @@ export function ManagementUsers() {
         actions={actions}
         visibleColumns={visibleColumns}
       />
-      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-        {selectedUser && (
+      <Dialog open={editModalState.isOpen} onOpenChange={(isOpen) => !isOpen && closeEditModal()}>
+        {editModalState.user && (
           <PutUserForm
-            user={mapUserToUpdateUser(selectedUser as User & { matricula?: string })} // Explicitly map User to UpdateUser
+            user={editModalState.user}
             onSuccess={() => {
               fetchUsers();
-              setSelectedUser(null);
-              setIsEditModalOpen(false);
+              closeEditModal();
             }}
-            onClose={() => setIsEditModalOpen(false)}
+            onClose={closeEditModal}
           />
         )}
       </Dialog>

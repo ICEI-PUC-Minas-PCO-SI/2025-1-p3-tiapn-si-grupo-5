@@ -52,7 +52,7 @@ export function PutUserForm({
     onSuccess: () => void;
     onClose: () => void;
 }) {
-    const [isModalOpen, setIsModalOpen] = useState(true);
+    const [isModalOpen ] = useState(true);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [managements, setManagements] = useState<{ idGerencia: number; nomeGerencia: string }[]>([]);
     const [userTypes, setUserTypes] = useState<{ idTipoUsuario: number; tipoUsuario: string }[]>([]);
@@ -109,15 +109,11 @@ export function PutUserForm({
             tipoUsuario: Number(data.tipoUsuario),
         };
         try {
-            console.log("Submitting payload:", payload); // Debugging: Log payload
             const response = await updateUser(payload);
             if (response.ok) {
-                console.log("Update successful"); // Debugging: Log success
                 setAlert({ type: "success", message: "Usuário atualizado com sucesso!" });
-                setIsModalOpen(false); // Close modal
                 onSuccess();
             } else {
-                console.log("Update failed"); // Debugging: Log failure
                 setAlert({ type: "error", message: "Erro ao atualizar usuário. Verifique os dados e tente novamente." });
             }
         } catch (error) {
@@ -127,9 +123,8 @@ export function PutUserForm({
     };
 
     const handleModalOpenChange = (isOpen: boolean) => {
-        console.log("Modal open state changed:", isOpen); // Debugging: Log modal state
-        setIsModalOpen(isOpen);
         if (!isOpen) {
+            setAlert(null);
             onClose();
         }
     };
