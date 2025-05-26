@@ -110,6 +110,16 @@ export function PutUserForm({
             gerencia: Number(data.gerencia),
             tipoUsuario: Number(data.tipoUsuario),
         };
+
+        if (
+            payload.matricula === user.matricula &&
+            payload.gerencia === user.gerencia &&
+            payload.tipoUsuario === user.tipoUsuario
+        ) {
+            setAlert({ type: "error", message: "Os dados informados são os mesmos já registrados. Nenhuma alteração foi feita." });
+            return;
+        }
+
         try {
             const response = await updateUser(payload);
             if (response.ok) {
