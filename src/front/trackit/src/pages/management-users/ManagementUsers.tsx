@@ -9,7 +9,10 @@ import {
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import { CrudUserForm } from "@/components/CrudUserForm";
+import { PutUserForm } from "@/components/PutUserForm";
+import { Dialog } from "@/components/ui/dialog";
 import type { User, ActionButton } from "@/interfaces/InterfacesDataTableUsers";
+import type { UpdateUser } from "@/interfaces/InterfaceUpdateUser";
 import { getAllUsers } from "@/api/users";
 
 export function ManagementUsers() {
@@ -24,6 +27,8 @@ export function ManagementUsers() {
     management: true,
     ativo: true,
   });
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const fetchUsers = async () => {
     try {
@@ -42,10 +47,27 @@ export function ManagementUsers() {
     setFilteredData(Data);
   }, [Data]);
 
+  const mapUserToUpdateUser = (user: User & { matricula?: string }): UpdateUser => {
+    return {
+      idUsuario: Number(user.id),
+      matricula: user.matricula || "",
+      gerencia: user.management.idGerencia,
+      tipoUsuario:
+        user.accessType === "Gestor"
+          ? 1
+          : user.accessType === "Analista"
+            ? 2
+            : 3,
+    };
+  };
+
   const actions: ActionButton[] = [
     {
       label: "Editar",
-      onClick: (row) => console.log("Editando:", row),
+      onClick: (row) => {
+        setSelectedUser(row);
+        setIsEditModalOpen(true);
+      },
       variant: "outline",
     },
     {
@@ -112,6 +134,19 @@ export function ManagementUsers() {
         actions={actions}
         visibleColumns={visibleColumns}
       />
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        {selectedUser && (
+          <PutUserForm
+            user={mapUserToUpdateUser(selectedUser as User & { matricula?: string })} // Explicitly map User to UpdateUser
+            onSuccess={() => {
+              fetchUsers();
+              setSelectedUser(null);
+              setIsEditModalOpen(false);
+            }}
+            onClose={() => setIsEditModalOpen(false)}
+          />
+        )}
+      </Dialog>
     </div>
   );
 }

@@ -125,7 +125,6 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
             gerencia: Number(data.management),
             tipoUsuario: Number(data.accessType),
         };
-        console.log("Payload enviado para o backend:", payload);
         try {
             const response = await registerNewUser(payload);
             if (response.ok) {
