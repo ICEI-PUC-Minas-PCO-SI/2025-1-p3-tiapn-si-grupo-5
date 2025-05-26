@@ -5,9 +5,9 @@ import {
     AlertDialogFooter,
     AlertDialogTitle,
     AlertDialogDescription,
-    AlertDialogAction,
     AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import { updateUserStatus } from "@/api/users";
 import type { User } from "@/interfaces/InterfacesDataTableUsers";
 import { useState } from "react";
@@ -48,6 +48,8 @@ export function PutActiveUser({
         }
     };
 
+    const actionVariant = newStatus === 0 ? "delete" : "active";
+
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent>
@@ -62,9 +64,14 @@ export function PutActiveUser({
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel disabled={loading}>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleConfirm} disabled={loading}>
+                    <Button
+                        variant={actionVariant}
+                        onClick={handleConfirm}
+                        disabled={loading}
+                        type="button"
+                    >
                         {newStatus === 0 ? "Desativar" : "Ativar"}
-                    </AlertDialogAction>
+                    </Button>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
