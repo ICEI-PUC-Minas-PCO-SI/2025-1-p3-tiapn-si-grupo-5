@@ -99,4 +99,21 @@ export class UserController {
             res.status(500).json({ error: "Erro ao atualizar usuário" });
         }
     }
+
+    async changeUserStatus(req: Request, res: Response) {
+        try {
+            const { idUsuario } = req.params;
+            const { ativo } = req.body;
+
+            const updatedUser = await prisma.usuario.update({
+                where: { idUsuario: Number(idUsuario) },
+                data: { ativo: Number(ativo) },
+            });
+
+            res.status(200).json(updatedUser);
+        } catch (error) {
+            console.error("Erro ao mudar status do usuário:", error);
+            res.status(500).json({ error: "Erro ao mudar status do usuário" });
+        }
+    }
 }

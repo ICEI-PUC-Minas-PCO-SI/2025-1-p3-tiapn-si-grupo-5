@@ -16,6 +16,7 @@ export class UserRoutes {
         this.router.post("/login", this.userController.loginUser.bind(this.userController));
         this.router.get("/", this.userController.getAllUsers.bind(this.userController));
         this.router.put("/:idUsuario", this.userController.updateUser.bind(this.userController));
+        this.router.patch("/:idUsuario/status", this.userController.changeUserStatus.bind(this.userController));
     }
 
     public getRouter(): Router {
