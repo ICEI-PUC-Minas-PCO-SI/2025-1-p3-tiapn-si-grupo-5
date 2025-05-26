@@ -16,6 +16,7 @@ import type { UpdateUser } from "@/interfaces/InterfaceUpdateUser";
 import { getAllUsers } from "@/api/users";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
+import { PutActiveUser } from "@/components/PutActiveUser";
 
 export function ManagementUsers() {
   const [Data, setData] = useState<User[]>([]);
@@ -34,6 +35,11 @@ export function ManagementUsers() {
     user: UpdateUser | null;
   }>({ isOpen: false, user: null });
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [statusDialog, setStatusDialog] = useState<{
+    open: boolean;
+    user: User | null;
+    newStatus: number;
+  }>({ open: false, user: null, newStatus: 0 });
 
   const fetchUsers = async () => {
     try {
@@ -103,9 +109,14 @@ export function ManagementUsers() {
       variant: "outline",
     },
     {
-      label: "Desativar",
-      onClick: (row) => console.log("Desativando:", row),
-      variant: "delete",
+      label: (row: User) => row.ativo === 1 ? "Desativar" : "Ativar",
+      onClick: (row) =>
+        setStatusDialog({
+          open: true,
+          user: row,
+          newStatus: row.ativo === 1 ? 0 : 1,
+        }),
+      variant: (row: User) => row.ativo === 1 ? "delete" : "active",
     },
   ];
 
@@ -196,6 +207,27 @@ export function ManagementUsers() {
           />
         )}
       </Dialog>
+      {statusDialog.user && (
+        <PutActiveUser
+          user={statusDialog.user}
+          newStatus={statusDialog.newStatus}
+          open={statusDialog.open}
+          onOpenChange={(open) => setStatusDialog((prev) => ({ ...prev, open }))}
+          onSuccess={() => {
+            fetchUsers();
+            setAlert({
+              type: "success",
+              message: `Usuário ${statusDialog.newStatus === 0 ? "desativado" : "ativado"} com sucesso!`,
+            });
+          }}
+          onError={() => {
+            setAlert({
+              type: "error",
+              message: `Erro ao ${statusDialog.newStatus === 0 ? "desativar" : "ativar"} usuário.`,
+            });
+          }}
+        />
+      )}
     </div>
   );
 }

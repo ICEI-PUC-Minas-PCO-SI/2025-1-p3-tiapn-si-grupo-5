@@ -135,16 +135,26 @@ export function DataTableUsers({
       header: "Ações",
       cell: ({ row }: { row: Row<User> }) => (
         <div className="flex justify-center gap-2">
-          {actions.map((action, index) => (
-            <Button
-              key={index}
-              variant={action.variant || "default"}
-              size="sm"
-              onClick={() => action.onClick(row.original)}
-            >
-              {action.label}
-            </Button>
-          ))}
+          {actions.map((action, index) => {
+            const label =
+              typeof action.label === "function"
+                ? action.label(row.original)
+                : action.label;
+            const variant =
+              typeof action.variant === "function"
+                ? action.variant(row.original)
+                : action.variant;
+            return (
+              <Button
+                key={index}
+                variant={variant}
+                size="sm"
+                onClick={() => action.onClick(row.original)}
+              >
+                {label}
+              </Button>
+            );
+          })}
         </div>
       ),
     },

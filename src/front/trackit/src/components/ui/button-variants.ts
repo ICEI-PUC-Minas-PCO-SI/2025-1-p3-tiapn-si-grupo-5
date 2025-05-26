@@ -15,9 +15,9 @@ export const buttonVariants = cva(
         disabled:
           "bg-sky-700 text-slate-100 min-w-[7.75rem] h-[3rem] rounded-[0.375rem] cursor-not-allowed opacity-50",
         delete:
-          "bg-red-600 text-white min-w-[7.75rem] h-[3rem] rounded-[0.375rem] cursor-pointer hover:bg-red-700 hover:shadow-[0px_0.125rem_0.5rem_0px] hover:shadow-red-800 transition-all duration-200",
+          "bg-red-600 text-white min-w-[7.75rem] h-[3rem] rounded-[0.375rem] cursor-pointer hover:bg-red-500 hover:shadow-[0px_0.125rem_0.5rem_0px] hover:shadow-red-700 transition-all duration-200",
         active:
-          "bg-green-600 text-white min-w-[7.75rem] h-[3rem] rounded-[0.375rem] cursor-pointer hover:bg-green-700 hover:shadow-[0px_0.125rem_0.5rem_0px] hover:shadow-green-800 transition-all duration-200",
+          "bg-green-600 text-white min-w-[7.75rem] h-[3rem] rounded-[0.375rem] cursor-pointer hover:bg-green-500 hover:shadow-[0px_0.125rem_0.5rem_0px] hover:shadow-green-700 transition-all duration-200",
         ghost:
           "bg-transparent text-slate-700 min-w-[7.75rem] h-[3rem] rounded-[6px] cursor-pointer focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aux-1",
       },

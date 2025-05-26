@@ -17,7 +17,7 @@ export interface DataTableProps<T> {
 }
 
 export interface ActionButton {
-    label: string;
+    label: string | ((row: User) => string);
     onClick: (row: User) => void;
-    variant?: "default" | "outline" | "delete";
+    variant?: "default" | "outline" | "delete" | "active" | ((row: User) => "default" | "outline" | "delete" | "active");
 }
