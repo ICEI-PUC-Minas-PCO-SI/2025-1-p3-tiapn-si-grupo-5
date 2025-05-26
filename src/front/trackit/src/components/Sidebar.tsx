@@ -7,18 +7,61 @@ import {
     SidebarMenuButton,
     SidebarFooter,
     SidebarSeparator,
+    SidebarMenuSub,
+    SidebarMenuSubItem,
+    SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
-import { Home, Users } from "lucide-react";
+import {
+    Home,
+    Settings,
+    PlusCircle,
+    Ticket,
+    BarChart4,
+    ClipboardList,
+    Users,
+    SlidersHorizontal,
+    ChevronDown,
+    AlertTriangle,
+    Tags,
+    Building,
+    Clock
+} from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { UserProfileSection } from "./UserProfileSection";
+import { useState } from "react";
 
-export function Sidebar() {
+type UserRole = "admin" | "analyst" | "user";
+
+export function Sidebar({ userRole = "admin" as UserRole }) {
     const location = useLocation();
+    const [isParamsOpen, setIsParamsOpen] = useState(false);
 
     const handleLogout = () => {
-        // Implementar lógica de logout aqui
         console.log("Logout clicked");
     };
+
+    const userMock = {
+        admin: {
+            name: "Gestor TrackIt",
+            email: "gestor@trackit.com",
+            role: "admin" as const,
+            department: "Diretoria"
+        },
+        analyst: {
+            name: "Analista TrackIt",
+            email: "analista@trackit.com",
+            role: "analyst" as const,
+            department: "ASTIN"
+        },
+        user: {
+            name: "Usuário TrackIt",
+            email: "usuario@trackit.com",
+            role: "user" as const,
+            department: "DEVTI"
+        }
+    };
+
+    const currentUser = userMock[userRole];
 
     return (
         <UISidebar>
@@ -33,39 +76,250 @@ export function Sidebar() {
                     <SidebarMenuItem>
                         <SidebarMenuButton
                             asChild
-                            isActive={location.pathname === "/user/home"}
+                            isActive={location.pathname === "/home"}
                             variant="default"
                             size="default"
                         >
-                            <Link to="/user/home">
+                            <Link to="./">
                                 <Home className="mr-2" />
-                                <span>Início</span>
+                                <span>Home</span>
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton
-                            asChild
-                            isActive={location.pathname.startsWith("/admin/management-users")}
-                            variant="default"
-                            size="default"
-                        >
-                            <Link to="/admin/management-users">
-                                <Users className="mr-2" />
-                                <span>Usuários</span>
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
+
+                    {userRole === "user" && (
+                        <>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/user/new-ticket"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/user/new-ticket">
+                                        <PlusCircle className="mr-2" />
+                                        <span>Abrir Chamado</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/user/tickets"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/user/tickets">
+                                        <Ticket className="mr-2" />
+                                        <span>Ver Chamados</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/user/settings"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/user/settings">
+                                        <Settings className="mr-2" />
+                                        <span>Configurações</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </>
+                    )}
+
+                    {userRole === "analyst" && (
+                        <>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/analyst/assign-tickets"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/analyst/assign-tickets">
+                                        <ClipboardList className="mr-2" />
+                                        <span>Atribuir Chamados</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/analyst/performance"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/analyst/performance">
+                                        <BarChart4 className="mr-2" />
+                                        <span>Desempenho</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/analyst/settings"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/analyst/settings">
+                                        <Settings className="mr-2" />
+                                        <span>Configurações</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </>
+                    )}
+
+                    {userRole === "admin" && (
+                        <>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/admin/performance"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/admin/performance">
+                                        <BarChart4 className="mr-2" />
+                                        <span>Desempenho</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    aria-expanded={isParamsOpen}
+                                    onClick={() => setIsParamsOpen(!isParamsOpen)}
+                                    className="justify-between"
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <div className="flex items-center">
+                                        <SlidersHorizontal className="h-4 w-4 mr-4" />
+                                        <span>Parâmetros</span>
+                                    </div>
+                                    <ChevronDown
+                                        className={`h-4 w-4 shrink-0 transition-transform duration-200 ${isParamsOpen ? "rotate-180" : ""
+                                            }`}
+                                    />
+                                </SidebarMenuButton>
+                                {isParamsOpen && (
+                                    <SidebarMenuSub>
+                                        <SidebarMenuSubItem>
+                                            <SidebarMenuSubButton
+                                                asChild
+                                                isActive={location.pathname === "/admin/params/priority"}
+                                            >
+                                                <Link to="/admin/params/priority">
+                                                    <AlertTriangle className="h-4 w-4" />
+                                                    <span>Prioridade</span>
+                                                </Link>
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                        <SidebarMenuSubItem>
+                                            <SidebarMenuSubButton
+                                                asChild
+                                                isActive={location.pathname === "/admin/params/type"}
+                                            >
+                                                <Link to="/admin/params/type">
+                                                    <Tags className="h-4 w-4" />
+                                                    <span>Tipo</span>
+                                                </Link>
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                        <SidebarMenuSubItem>
+                                            <SidebarMenuSubButton
+                                                asChild
+                                                isActive={location.pathname === "/admin/params/status"}
+                                            >
+                                                <Link to="/admin/params/status">
+                                                    <Clock className="h-4 w-4" />
+                                                    <span>Status</span>
+                                                </Link>
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                        <SidebarMenuSubItem>
+                                            <SidebarMenuSubButton
+                                                asChild
+                                                isActive={location.pathname === "/admin/params/department"}
+                                            >
+                                                <Link to="/admin/params/department">
+                                                    <Building className="h-4 w-4" />
+                                                    <span>Gerência</span>
+                                                </Link>
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                    </SidebarMenuSub>
+                                )}
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/admin/users"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/admin/management-users">
+                                        <Users className="mr-2" />
+                                        <span>Usuários</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/admin/open-tickets"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/admin/open-tickets">
+                                        <Ticket className="mr-2" />
+                                        <span>Chamados em Aberto</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/admin/assigned-tickets"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/admin/assigned-tickets">
+                                        <ClipboardList className="mr-2" />
+                                        <span>Chamados Atribuídos</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/admin/settings"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/admin/settings">
+                                        <Settings className="mr-2" />
+                                        <span>Configurações</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </>
+                    )}
                 </SidebarMenu>
             </SidebarContent>
             <SidebarFooter>
                 <SidebarSeparator />
                 <div className="px-2 py-2">
                     <UserProfileSection
-                        name="Usuário Demo"
-                        email="usuario@trackit.com"
-                        role="admin"
-                        department="ASTIN"
+                        name={currentUser.name}
+                        email={currentUser.email}
+                        role={currentUser.role}
+                        department={currentUser.department}
                         onLogout={handleLogout}
                     />
                 </div>
