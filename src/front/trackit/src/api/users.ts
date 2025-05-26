@@ -63,3 +63,13 @@ export async function updateUser(payload: UpdateUser): Promise<Response> {
         }),
     });
 }
+
+export async function updateUserStatus(idUsuario: string, ativo: number): Promise<Response> {
+    return fetch(`http://localhost:3000/usuarios/${idUsuario}/status`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ativo }),
+    });
+}
