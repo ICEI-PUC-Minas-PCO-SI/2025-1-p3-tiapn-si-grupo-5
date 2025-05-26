@@ -14,6 +14,8 @@ import { Dialog } from "@/components/ui/dialog";
 import type { User, ActionButton } from "@/interfaces/InterfacesDataTableUsers";
 import type { UpdateUser } from "@/interfaces/InterfaceUpdateUser";
 import { getAllUsers } from "@/api/users";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { X } from "lucide-react";
 
 export function ManagementUsers() {
   const [Data, setData] = useState<User[]>([]);
@@ -31,6 +33,7 @@ export function ManagementUsers() {
     isOpen: boolean;
     user: UpdateUser | null;
   }>({ isOpen: false, user: null });
+  const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
   const fetchUsers = async () => {
     try {
@@ -48,6 +51,15 @@ export function ManagementUsers() {
   useEffect(() => {
     setFilteredData(Data);
   }, [Data]);
+
+  useEffect(() => {
+    if (alert) {
+      const timer = setTimeout(() => {
+        setAlert(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [alert]);
 
   const mapUserToUpdateUser = (user: User & { matricula?: string }): UpdateUser => {
     return {
@@ -72,6 +84,16 @@ export function ManagementUsers() {
 
   const closeEditModal = () => {
     setEditModalState({ isOpen: false, user: null });
+  };
+
+  const handleSuccess = () => {
+    fetchUsers();
+    setAlert({ type: "success", message: "Usuário atualizado com sucesso!" });
+    closeEditModal();
+  };
+
+  const handleError = () => {
+    setAlert({ type: "error", message: "Erro ao atualizar usuário. Verifique os dados e tente novamente." });
   };
 
   const actions: ActionButton[] = [
@@ -111,6 +133,26 @@ export function ManagementUsers() {
 
   return (
     <div className="space-y-4">
+      {alert && (
+        <div className="fixed bottom-4 right-4 z-50">
+          <Alert
+            variant={alert.type === "success" ? "success" : "destructive"}
+            className="flex items-center justify-between space-x-4"
+          >
+            <div>
+              <AlertTitle>{alert.type === "success" ? "Sucesso" : "Erro"}</AlertTitle>
+              <AlertDescription>{alert.message}</AlertDescription>
+            </div>
+            <button
+              onClick={() => setAlert(null)}
+              className="text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Fechar alerta"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </Alert>
+        </div>
+      )}
       <h1 className="title-h1">Gerenciar Usuários</h1>
       <div className="flex justify-between">
         <Searchbar onSearch={handleSearch} />
@@ -148,10 +190,8 @@ export function ManagementUsers() {
         {editModalState.user && (
           <PutUserForm
             user={editModalState.user}
-            onSuccess={() => {
-              fetchUsers();
-              closeEditModal();
-            }}
+            onSuccess={handleSuccess}
+            onError={handleError}
             onClose={closeEditModal}
           />
         )}

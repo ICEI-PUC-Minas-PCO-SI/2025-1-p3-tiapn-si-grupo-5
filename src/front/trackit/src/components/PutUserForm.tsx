@@ -46,13 +46,15 @@ type PutUserSchema = z.infer<typeof putUserSchema>;
 export function PutUserForm({
     user,
     onSuccess,
+    onError,
     onClose,
 }: {
     user: UpdateUser;
     onSuccess: () => void;
+    onError: () => void;
     onClose: () => void;
 }) {
-    const [isModalOpen ] = useState(true);
+    const [isModalOpen] = useState(true);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [managements, setManagements] = useState<{ idGerencia: number; nomeGerencia: string }[]>([]);
     const [userTypes, setUserTypes] = useState<{ idTipoUsuario: number; tipoUsuario: string }[]>([]);
@@ -111,14 +113,13 @@ export function PutUserForm({
         try {
             const response = await updateUser(payload);
             if (response.ok) {
-                setAlert({ type: "success", message: "Usuário atualizado com sucesso!" });
                 onSuccess();
             } else {
-                setAlert({ type: "error", message: "Erro ao atualizar usuário. Verifique os dados e tente novamente." });
+                onError();
             }
         } catch (error) {
             console.error("Erro ao atualizar usuário:", error);
-            setAlert({ type: "error", message: "Erro ao atualizar usuário. Verifique os dados e tente novamente." });
+            onError();
         }
     };
 
