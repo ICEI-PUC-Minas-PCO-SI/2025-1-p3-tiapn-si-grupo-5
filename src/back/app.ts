@@ -1,8 +1,10 @@
+{/*TODO Colocar variáveis de ambiente, como portas, etc, no .env*/}
+
 import express from "express";
 import cors from "cors";
-import { UserRoutes } from "./routes/UserRoutes";
-import { ManagementRoutes } from "./routes/ManagementRoutes";
-import { UserTypeRoutes } from "./routes/UserTypesRoutes";
+import { UserRoutes } from "./routes/userRoutes";
+import { ManagementRoutes } from "./routes/managementRoutes";
+import { UserTypeRoutes } from "./routes/userTypesRoutes";
 
 const app = express();
 app.use(express.json());

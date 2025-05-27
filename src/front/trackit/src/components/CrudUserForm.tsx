@@ -1,3 +1,5 @@
+{/*TODO Colocar senha no .env*/}
+
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -121,7 +123,7 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
             matricula: fullRegistration,
             ramal: data.ramal,
             email: data.email,
-            senha: "Trackit123#", // senha padrão para novos usuários
+            senha: "Trackit123#", // senha padrão para novos usuários 
             gerencia: Number(data.management),
             tipoUsuario: Number(data.accessType),
         };
