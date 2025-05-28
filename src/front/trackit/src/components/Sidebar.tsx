@@ -46,7 +46,6 @@ export function Sidebar() {
     }
     const handleLogout = () => {
         logout();
-        navigate("/");
     };
 
     return (

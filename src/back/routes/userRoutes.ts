@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { UserController } from "../controllers/UserController";
+import { autenticarToken } from "../middlewares/authJWT";
 
 export class UserRoutes {
     private router: Router;
@@ -17,6 +18,7 @@ export class UserRoutes {
         this.router.get("/", this.userController.getAllUsers.bind(this.userController));
         this.router.put("/:idUsuario", this.userController.updateUser.bind(this.userController));
         this.router.patch("/:idUsuario/status", this.userController.changeUserStatus.bind(this.userController));
+        this.router.get("/me", autenticarToken, this.userController.getMe.bind(this.userController));
     }
 
     public getRouter(): Router {

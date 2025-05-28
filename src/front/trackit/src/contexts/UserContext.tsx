@@ -1,28 +1,29 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
 type User = {
-    id: number;
-    nome: string;
-    email: string;
-    ramal?: string;
-    gerencia?: number;
-    tipo?: number;
-    ativo: number;
-    createdAt?: string;
+  id: number;
+  nome: string;
+  email: string;
+  ramal?: string;
+  gerencia?: number;
+  tipo?: number;
+  ativo: number;
+  createdAt?: string;
 };
 
 type UserContextType = {
   user: User | null;
   setUser: (user: User | null, token?: string) => void;
   logout: () => void;
+  loading: boolean;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUserState] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Busca usuário autenticado ao iniciar, se houver token
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -33,7 +34,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         .then(data => {
           if (data && data.usuario) setUserState(data.usuario);
           else logout();
-        });
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -54,7 +58,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <UserContext.Provider value={{ user, setUser, logout }}>
+    <UserContext.Provider value={{ user, setUser, logout, loading }}>
       {children}
     </UserContext.Provider>
   );

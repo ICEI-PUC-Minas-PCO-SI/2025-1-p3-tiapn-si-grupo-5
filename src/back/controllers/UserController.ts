@@ -66,6 +66,7 @@ export class UserController {
                             tipo: usuario.idTipoUsuario,
                             ativo: usuario.ativo,
                         },
+                        token
                     });
                 }
             }
@@ -121,6 +122,34 @@ export class UserController {
         } catch (error) {
             console.error("Erro ao mudar status do usuário:", error);
             res.status(500).json({ error: "Erro ao mudar status do usuário" });
+        }
+    }
+
+    async getMe(req: Request, res: Response) {
+        try {
+            // @ts-ignore
+            const usuarioId = req.usuario.id;
+            const usuario = await prisma.usuario.findUnique({
+                where: { idUsuario: usuarioId },
+            });
+            if (!usuario) {
+                res.status(404).json({ error: "Usuário não encontrado" });
+                return;
+            }
+            res.json({
+                usuario: {
+                    id: usuario.idUsuario,
+                    nome: usuario.nomeUsuario,
+                    email: usuario.email,
+                    ramal: usuario.ramal,
+                    gerencia: usuario.idGerencia,
+                    tipo: usuario.idTipoUsuario,
+                    ativo: usuario.ativo,
+                }
+            });
+        } catch (error) {
+            console.error("Erro ao buscar usuário autenticado:", error);
+            res.status(500).json({ error: "Erro ao buscar usuário autenticado" });
         }
     }
 }

@@ -84,10 +84,16 @@ export function LoginUser() {
             if (response.status === 200) {
                 const resData = await response.json();
                 setUser(resData.usuario, resData.token);
-                navigate("/user");
+                if (resData.usuario.tipo === 1) {
+                    navigate("/admin");
+                } else if (resData.usuario.tipo === 2) {
+                    navigate("/analyst");
+                } else {
+                    navigate("/user");
+                }
             }
 
-            
+
 
             setAlert({ type: "success", message: "Login realizado com sucesso!" });
 
