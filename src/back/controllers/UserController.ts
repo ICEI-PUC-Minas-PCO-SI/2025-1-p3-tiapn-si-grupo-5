@@ -58,8 +58,13 @@ export class UserController {
                     res.status(200).json({
                         message: "Login realizado com sucesso",
                         usuario: {
+                            id: usuario.idUsuario,
                             nome: usuario.nomeUsuario,
                             email: usuario.email,
+                            ramal: usuario.ramal,
+                            gerencia: usuario.idGerencia,
+                            tipo: usuario.idTipoUsuario,
+                            ativo: usuario.ativo,
                         },
                     });
                 }

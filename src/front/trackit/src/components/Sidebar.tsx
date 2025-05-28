@@ -30,40 +30,24 @@ import { Link, useLocation } from "react-router-dom";
 import { UserProfileSection } from "./UserProfileSection";
 import { useState } from "react";
 import { useUser } from "@/contexts/UserContext";
+import { useNavigate } from "react-router-dom";
 
-type UserRole = "admin" | "analyst" | "user";
-
-export function Sidebar({ userRole = "admin" as UserRole }) {
+export function Sidebar() {
     const location = useLocation();
     const [isParamsOpen, setIsParamsOpen] = useState(false);
-    const { user } = useUser();
-
+    const { user, logout } = useUser();
+    const navigate = useNavigate();
+    
+    let userRole: "admin" | "analyst" | "user" | undefined;
+    if (user) {
+        if (user.tipo === 1) userRole = "admin";
+        else if (user.tipo === 2) userRole = "analyst";
+        else if (user.tipo === 3) userRole = "user";
+    }
     const handleLogout = () => {
-        console.log("Logout clicked");
+        logout();
+        navigate("/");
     };
-
-    const userMock = {
-        admin: {
-            name: "Gestor TrackIt",
-            email: "gestor@trackit.com",
-            role: "admin" as const,
-            department: "Diretoria"
-        },
-        analyst: {
-            name: "Analista TrackIt",
-            email: "analista@trackit.com",
-            role: "analyst" as const,
-            department: "ASTIN"
-        },
-        user: {
-            name: "Usuário TrackIt",
-            email: "usuario@trackit.com",
-            role: "user" as const,
-            department: "DEVTI"
-        }
-    };
-
-    const currentUser = userMock[userRole];
 
     return (
         <UISidebar>
@@ -94,11 +78,11 @@ export function Sidebar({ userRole = "admin" as UserRole }) {
                             <SidebarMenuItem>
                                 <SidebarMenuButton
                                     asChild
-                                    isActive={location.pathname === "/user/new-ticket"}
+                                    isActive={location.pathname === "/user/open-ticket"}
                                     variant="default"
                                     size="default"
                                 >
-                                    <Link to="/user/new-ticket">
+                                    <Link to="/user/open-ticket">
                                         <PlusCircle className="mr-2" />
                                         <span>Abrir Chamado</span>
                                     </Link>
