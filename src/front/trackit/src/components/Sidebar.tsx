@@ -29,12 +29,14 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import { UserProfileSection } from "./UserProfileSection";
 import { useState } from "react";
+import { useUser } from "@/contexts/UserContext";
 
 type UserRole = "admin" | "analyst" | "user";
 
 export function Sidebar({ userRole = "admin" as UserRole }) {
     const location = useLocation();
     const [isParamsOpen, setIsParamsOpen] = useState(false);
+    const { user } = useUser();
 
     const handleLogout = () => {
         console.log("Logout clicked");
@@ -314,15 +316,15 @@ export function Sidebar({ userRole = "admin" as UserRole }) {
             </SidebarContent>
             <SidebarFooter>
                 <SidebarSeparator />
-                <div className="px-2 py-2">
+                {user && (
                     <UserProfileSection
-                        name={currentUser.name}
-                        email={currentUser.email}
-                        role={currentUser.role}
-                        department={currentUser.department}
+                        name={user.nome.split(" ").slice(0, 2).join(" ")}
+                        email={user.email}
+                        role={user.tipo === 1 ? "admin" : user.tipo === 2 ? "analyst" : "user"}
+                        department={user.gerencia ? String(user.gerencia) : ""}
                         onLogout={handleLogout}
                     />
-                </div>
+                )}
             </SidebarFooter>
         </UISidebar>
     );

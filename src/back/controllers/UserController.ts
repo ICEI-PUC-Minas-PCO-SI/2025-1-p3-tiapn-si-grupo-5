@@ -43,6 +43,8 @@ export class UserController {
 
             if (!usuario) {
                 res.status(401).json({ error: "Email ou senha inválidos" });
+            } else if (!usuario.ativo) {
+                res.status(403).json({ error: "Usuário inativo" });
             } else {
                 const senhaValida = await compareHashedPassword(senha, usuario.senha);
                 if (!senhaValida) {

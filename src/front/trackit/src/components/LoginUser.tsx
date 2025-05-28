@@ -1,4 +1,4 @@
-{/* TODO: FIX LOGIN */}
+{/* TODO: FIX LOGIN */ }
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,13 +9,30 @@ import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useUser } from "@/contexts/UserContext";
 
 type LoginFormData = {
     email: string;
     password: string;
 };
+const loginUserSchema = z.object({
+    email: z.string().email("E-mail inválido"),
+    password: z
+        .string()
+        .min(8, "A senha deve ter pelo menos 8 caracteres")
+        .regex(
+            /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,}$/,
+            "A senha deve conter pelo menos uma letra e um número"
+        ),
+});
+
+type LoginUserSchema = z.infer<typeof loginUserSchema>;
 
 export function LoginUser() {
+    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
@@ -33,12 +50,14 @@ export function LoginUser() {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm<LoginFormData>({
+    } = useForm<LoginUserSchema>({
         defaultValues: {
-            email: searchParams.get("email") ?? "",
-            password: "", // Ensure `password` is included in default values
+            email: searchParams.get('email') ?? ''
         },
+        resolver: zodResolver(loginUserSchema),
     });
+
+    const { setUser } = useUser();
 
     async function handleLoginUser(data: LoginFormData) {
         const { email, password } = data;
@@ -46,7 +65,6 @@ export function LoginUser() {
             setAlert({ type: "error", message: "Preencha todos os campos!" });
             return;
         }
-
         try {
             const response = await fetch("http://localhost:3000/usuarios/login", {
                 method: "POST",
@@ -63,12 +81,27 @@ export function LoginUser() {
                 setAlert({ type: "error", message: "Erro ao fazer login!" });
                 return;
             }
+            if (response.status === 200) {
+                const resData = await response.json();
+                setUser({
+                    id: resData.usuario.idUsuario,
+                    nome: resData.usuario.nome,
+                    email: resData.usuario.email,
+                    ativo: resData.usuario.ativo,
+                    token: resData.token,
+                });
+                navigate("/user");
+            }
+
+            
 
             setAlert({ type: "success", message: "Login realizado com sucesso!" });
+
         } catch (error) {
             console.error("Erro ao fazer login:", error);
             setAlert({ type: "error", message: "Falha ao fazer login. Tente novamente." });
         }
+
     }
 
     return (

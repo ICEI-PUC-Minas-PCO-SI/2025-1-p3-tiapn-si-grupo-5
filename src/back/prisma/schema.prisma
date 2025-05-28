@@ -85,21 +85,21 @@ model notificacao {
 }
 
 model prioridadechamado {
-  idPrioridade   Int       @id @default(autoincrement())
-  nomePrioridade String    @db.VarChar(50)
-  ativo          Int       @default(1) @db.TinyInt
-  hexCorPrimaria String    @db.VarChar(7)
-  hexCorSecundaria String   @db.VarChar(7)
-  chamado        chamado[]
+  idPrioridade     Int       @id @default(autoincrement())
+  nomePrioridade   String    @db.VarChar(50)
+  ativo            Int       @default(1) @db.TinyInt
+  hexCorPrimaria   String    @db.VarChar(7)
+  hexCorSecundaria String    @db.VarChar(7)
+  chamado          chamado[]
 }
 
 model statuschamado {
-  idStatus   Int       @id @default(autoincrement())
-  nomeStatus String    @db.VarChar(50)
-  ativo      Int       @default(1) @db.TinyInt
-  hexCorPrimaria String    @db.VarChar(7)
-  hexCorSecundaria String   @db.VarChar(7)
-  chamado    chamado[]
+  idStatus         Int       @id @default(autoincrement())
+  nomeStatus       String    @db.VarChar(50)
+  ativo            Int       @default(1) @db.TinyInt
+  hexCorPrimaria   String    @db.VarChar(7)
+  hexCorSecundaria String    @db.VarChar(7)
+  chamado          chamado[]
 }
 
 model tipochamado {
