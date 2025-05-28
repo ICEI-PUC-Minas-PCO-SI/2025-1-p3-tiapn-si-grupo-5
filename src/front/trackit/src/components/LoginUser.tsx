@@ -83,13 +83,7 @@ export function LoginUser() {
             }
             if (response.status === 200) {
                 const resData = await response.json();
-                setUser({
-                    id: resData.usuario.idUsuario,
-                    nome: resData.usuario.nome,
-                    email: resData.usuario.email,
-                    ativo: resData.usuario.ativo,
-                    token: resData.token,
-                });
+                setUser(resData.usuario, resData.token);
                 navigate("/user");
             }
 

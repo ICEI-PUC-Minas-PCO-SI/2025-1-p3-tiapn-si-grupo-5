@@ -8,13 +8,12 @@ type User = {
     gerencia?: number;
     tipo?: number;
     ativo: number;
-    token: string;
     createdAt?: string;
 };
 
 type UserContextType = {
   user: User | null;
-  setUser: (user: User | null) => void;
+  setUser: (user: User | null, token?: string) => void;
   logout: () => void;
 };
 
@@ -23,22 +22,35 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUserState] = useState<User | null>(null);
 
+  // Busca usuário autenticado ao iniciar, se houver token
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) setUserState(JSON.parse(storedUser));
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch("http://localhost:3000/usuarios/me", {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+        .then(res => res.ok ? res.json() : null)
+        .then(data => {
+          if (data && data.usuario) setUserState(data.usuario);
+          else logout();
+        });
+    }
   }, []);
 
-  function setUser(user: User | null) {
+  // Salva token no localStorage, mas não salva o user inteiro
+  function setUser(user: User | null, token?: string) {
     setUserState(user);
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+    if (!user) {
+      localStorage.removeItem("token");
     }
   }
 
   function logout() {
-    setUser(null);
+    setUserState(null);
+    localStorage.removeItem("token");
   }
 
   return (
