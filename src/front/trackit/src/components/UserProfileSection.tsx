@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
     DropdownMenu,
@@ -7,12 +8,14 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, User, Building } from "lucide-react";
+import { getAllActiveManagements } from "@/api/management";
+import { useUser } from "@/contexts/UserContext";
 
 type UserProfileSectionProps = {
     name: string;
     email: string;
     role: "admin" | "analyst" | "user";
-    department?: string; // Adicionado campo para gerência
+    department?: string; // Valor não mais utilizado
     avatarUrl?: string;
     onLogout?: () => void;
 };
@@ -21,15 +24,38 @@ export function UserProfileSection({
     name = "Usuário TrackIt",
     email = "usuario@trackit.com",
     role = "user",
-    department = "Tecnologia da Informação", // Valor padrão para gerência
     avatarUrl,
     onLogout = () => console.log("Logout clicked"),
 }: UserProfileSectionProps) {
     const roleLabels = {
-        admin: "Administrador",
+        admin: "Gerente",
         analyst: "Analista",
         user: "Usuário",
     };
+
+    const { user } = useUser();
+    const [managementName, setManagementName] = useState<string>("");
+
+    useEffect(() => {
+        async function fetchManagementName() {
+            if (user?.gerencia) {
+                try {
+                    const managements = await getAllActiveManagements();
+                    const found = managements.find(
+                        (m) => m.idGerencia === user.gerencia
+                    );
+                    setManagementName(
+                        found ? found.nomeGerencia : "Não informado"
+                    );
+                } catch {
+                    setManagementName("Erro ao buscar");
+                }
+            } else {
+                setManagementName("Não informado");
+            }
+        }
+        fetchManagementName();
+    }, [user?.gerencia]);
 
     return (
         <DropdownMenu>
@@ -48,7 +74,9 @@ export function UserProfileSection({
                     </Avatar>
                     <div className="flex-1 overflow-hidden">
                         <p className="text-sm font-medium truncate">{name}</p>
-                        <p className="text-xs text-muted-foreground truncate">{email}</p>
+                        <p className="text-xs text-muted-foreground truncate">
+                            {email}
+                        </p>
                     </div>
                 </div>
             </DropdownMenuTrigger>
@@ -77,7 +105,7 @@ export function UserProfileSection({
                 </DropdownMenuItem>
                 <DropdownMenuItem className="flex items-center gap-2 cursor-default">
                     <Building className="h-4 w-4 mr-2" />
-                    <span>Gerência: {department}</span>
+                    <span>Gerência: {managementName}</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
