@@ -127,7 +127,7 @@ export function LoginUser() {
                         <Input
                             type={isShow ? "text" : "password"}
                             placeholder="Senha"
-                            {...register("password")} // Ensure `password` is registered
+                            {...register("password")}
                         />
                         <button
                             type="button"

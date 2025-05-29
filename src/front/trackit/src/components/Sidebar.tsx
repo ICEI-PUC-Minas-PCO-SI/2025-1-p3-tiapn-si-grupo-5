@@ -30,13 +30,10 @@ import { Link, useLocation } from "react-router-dom";
 import { UserProfileSection } from "./UserProfileSection";
 import { useState } from "react";
 import { useUser } from "@/contexts/UserContext";
-import { useNavigate } from "react-router-dom";
-
 export function Sidebar() {
     const location = useLocation();
     const [isParamsOpen, setIsParamsOpen] = useState(false);
     const { user, logout } = useUser();
-    const navigate = useNavigate();
     
     let userRole: "admin" | "analyst" | "user" | undefined;
     if (user) {

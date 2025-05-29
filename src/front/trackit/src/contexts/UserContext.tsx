@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { DefaultSpinner } from "@/components/ui/spinner";
+import { getMe } from "@/api/auth";
 
 type User = {
   id: number;
@@ -16,6 +18,7 @@ type UserContextType = {
   setUser: (user: User | null, token?: string) => void;
   logout: () => void;
   loading: boolean;
+  logoutLoading: boolean;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -23,14 +26,12 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export function UserProvider({ children }: { children: React.ReactNode }) {
   const [user, setUserState] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [logoutLoading, setLogoutLoading] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      fetch("http://localhost:3000/usuarios/me", {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-        .then(res => res.ok ? res.json() : null)
+      getMe(token)
         .then(data => {
           if (data && data.usuario) setUserState(data.usuario);
           else logout();
@@ -41,7 +42,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Salva token no localStorage, mas não salva o user inteiro
   function setUser(user: User | null, token?: string) {
     setUserState(user);
     if (token) {
@@ -52,14 +52,17 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  function logout() {
+  async function logout() {
+    setLogoutLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 500));
     setUserState(null);
     localStorage.removeItem("token");
+    setLogoutLoading(false);
   }
 
   return (
-    <UserContext.Provider value={{ user, setUser, logout, loading }}>
-      {children}
+    <UserContext.Provider value={{ user, setUser, logout, loading, logoutLoading }}>
+      {(loading || logoutLoading) ? <DefaultSpinner /> : children}
     </UserContext.Provider>
   );
 }

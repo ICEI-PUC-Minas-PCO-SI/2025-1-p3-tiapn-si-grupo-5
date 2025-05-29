@@ -5,7 +5,7 @@ import { useUser } from "@/contexts/UserContext";
 export function Welcome() {
     const { user } = useUser();
 
-    let userRole: "gestor" | "analista" | "usuario" = "usuario"; // Default role
+    let userRole: "gestor" | "analista" | "usuario" = "usuario";
     if (user) {
         if (user.tipo === 1) userRole = "gestor";
         else if (user.tipo === 2) userRole = "analista";
@@ -15,8 +15,13 @@ export function Welcome() {
     return (
         <main className="flex flex-col items-start justify-start p-4 gap-[2rem]">
             <header className="">
-                <h1 className="title-h2">Olá, <span className="text-sky-700">{userRole}!</span></h1>
-                <h1 className="title-h1">Bem-vindo ao TrackIT —
+                <h1 className="title-h2">
+                    Olá,{" "}
+                    <span className="text-sky-700">
+                        {user?.nome || userRole}
+                    </span>!
+                </h1>
+                <h1 className="title-h3">Bem-vindo ao TrackIT —
                     {userRole === "usuario" && (
                         <> sua central de suporte técnico.</>
                     )}
