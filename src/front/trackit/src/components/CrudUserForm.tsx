@@ -1,4 +1,4 @@
-{/*TODO É preciso criar um arquivo .env na raiz do frontend (/trackit), com a variável DEFAULT_TRACKIT_PASSWORD, que é a senha padrão utilizada para a criação de usuários via gestor*/ }
+{/*É preciso criar um arquivo .env na raiz do frontend (/trackit), com a variável DEFAULT_TRACKIT_PASSWORD, que é a senha padrão utilizada para a criação de usuários via gestor*/ }
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
