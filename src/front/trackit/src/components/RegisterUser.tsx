@@ -21,7 +21,6 @@ import { X } from "lucide-react";
 import { getAllActiveManagements } from "@/api/management";
 import { registerNewUser } from "@/api/users";
 
-// Schema de validação com Zod
 const registerUserSchema = z.object({
     name: z.string()
         .min(3, "O nome deve ter pelo menos 3 caracteres")

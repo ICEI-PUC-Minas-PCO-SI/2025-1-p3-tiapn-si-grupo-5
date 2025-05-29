@@ -1,4 +1,4 @@
-{/*TODO Colocar senha no .env*/}
+{/*TODO É preciso criar um arquivo .env na raiz do frontend (/trackit), com a variável DEFAULT_TRACKIT_PASSWORD, que é a senha padrão utilizada para a criação de usuários via gestor*/}
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -123,7 +123,7 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
             matricula: fullRegistration,
             ramal: data.ramal,
             email: data.email,
-            senha: "Trackit123#", // senha padrão para novos usuários 
+            senha: String(process.env.DEFAULT_TRACKIT_PASSWORD), 
             gerencia: Number(data.management),
             tipoUsuario: Number(data.accessType),
         };
