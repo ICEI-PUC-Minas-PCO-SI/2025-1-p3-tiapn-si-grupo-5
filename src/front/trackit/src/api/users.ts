@@ -3,6 +3,7 @@ import type { User } from "../interfaces/InterfacesDataTableUsers";
 import { getAllActiveManagements } from "./management";
 import type { RegisterUserPayload } from "../interfaces/InterfaceRegisterUser";
 import type { UpdateUser } from "../interfaces/InterfaceUpdateUser";
+import type { LoginUserPayload } from "../interfaces/InterfaceLoginUser";
 
 export async function registerNewUser(payload: RegisterUserPayload): Promise<Response> {
     return fetch("http://localhost:3000/usuarios/register", {
@@ -71,5 +72,15 @@ export async function updateUserStatus(idUsuario: string, ativo: number): Promis
             "Content-Type": "application/json",
         },
         body: JSON.stringify({ ativo }),
+    });
+}
+
+export async function loginUser(payload: LoginUserPayload): Promise<Response> {
+    return fetch("http://localhost:3000/usuarios/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
     });
 }

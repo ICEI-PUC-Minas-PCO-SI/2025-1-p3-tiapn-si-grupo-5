@@ -1,5 +1,3 @@
-{/* TODO: FIX LOGIN */ }
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { IoEyeOutline } from "react-icons/io5";
@@ -13,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUser } from "@/contexts/UserContext";
+import { loginUser } from "@/api/users";
 
 type LoginFormData = {
     email: string;
@@ -66,17 +65,7 @@ export function LoginUser() {
             return;
         }
         try {
-            const response = await fetch("http://localhost:3000/usuarios/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    email,
-                    senha: password,
-                }),
-            });
-
+            const response = await loginUser({ email, senha: password });
             if (!response.ok) {
                 setAlert({ type: "error", message: "Erro ao fazer login!" });
                 return;
@@ -92,16 +81,11 @@ export function LoginUser() {
                     navigate("/user");
                 }
             }
-
-
-
             setAlert({ type: "success", message: "Login realizado com sucesso!" });
-
         } catch (error) {
             console.error("Erro ao fazer login:", error);
             setAlert({ type: "error", message: "Falha ao fazer login. Tente novamente." });
         }
-
     }
 
     return (
