@@ -15,22 +15,22 @@ export function Welcome() {
     return (
         <main className="flex flex-col items-start justify-start p-4 gap-[2rem]">
             <header className="">
-                <h1 className="title-h1">Olá, <span className="text-sky-700">{userRole}!</span></h1>
+                <h1 className="title-h2">Olá, <span className="text-sky-700">{userRole}!</span></h1>
                 <h1 className="title-h1">Bem-vindo ao TrackIT —
                     {userRole === "usuario" && (
-                        <>sua central de suporte técnico.</>
+                        <> sua central de suporte técnico.</>
                     )}
                     {userRole === "analista" && (
-                        <>sua central de atendimento técnico.</>
+                        <> sua central de atendimento técnico.</>
                     )}
                     {userRole === "gestor" && (
-                        <>sua central de controle e desempenho da equipe.</>
+                        <> sua central de controle e desempenho da equipe.</>
                     )}
                 </h1>
             </header>
             <div>
-                <label className="title-h2 text-slate-700">Aqui você pode:</label>
-                <ul className="title-h2 list-disc ml-6 text-slate-700">
+                <label className="title-h3 text-slate-700">Aqui você pode:</label>
+                <ul className="title-h3 list-disc ml-6 text-slate-700">
                     {userRole === "usuario" && (
                         <>
                             <li>Abrir novos chamados para suporte técnico.</li>
@@ -58,7 +58,7 @@ export function Welcome() {
             </div>
             <footer className="flex flex-col gap-[1.5rem]">
                 <div>
-                    <h2 className="title-h2 text-slate-700">
+                    <h2 className="title-h3 text-slate-700">
                         {userRole === "usuario" && (
                             <>
                                 Comece abrindo seu primeiro chamado ou explore o menu ao lado!
