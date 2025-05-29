@@ -3,9 +3,10 @@ import { Register } from "../pages/register/Register";
 import { Login } from "../pages/login/Login";
 import { ForgotPassword } from "../pages/reset-password/ForgotPassword";
 import { DefaultLayoult } from "../layoults/DefaultLayoult";
+import { ManagementUsers } from "../pages/management-users/ManagementUsers";
 import { Welcome } from "@/pages/welcome";
 import { OpenTicket } from "@/pages/openTicket";
-
+import { PrivateRoute } from "./PrivateRoute";
 
 export function Router() {
     return (
@@ -13,21 +14,36 @@ export function Router() {
             <Route path="/" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/user" element={<DefaultLayoult />}>
-                <Route path="welcome" element={<Welcome />}/>
-                <Route path="open-ticket" element={<OpenTicket />}/>
+            <Route path="/user" element={
+                <PrivateRoute allowedTypes={[3]}>
+                    <DefaultLayoult />
+                </PrivateRoute>
+            }>
+                <Route index element={<Welcome />} />
+                <Route path="open-ticket" element={<OpenTicket />} />
+
+                
             </Route>
-            <Route path="/analyst" element={<DefaultLayoult />}>
-                {/*
-                    As páginas de analista deverão ser renderizadas aqui
-                    e o layout padrão será aplicado a elas. Pra fazer isso, quando você criar a página de analista no diretório pages, crie uma route dentro daqui, o path deverá seguir um padrão coerente, e pra acessar você pode digitar no navegador localhost:5173:/user/ nome da sua página.
-                */}
+
+            <Route path="/analyst" element={
+                <PrivateRoute allowedTypes={[2]}>
+                    <DefaultLayoult />
+                </PrivateRoute>
+            }>
+                <Route index element={<Welcome />} />
+
+
             </Route>
-            <Route path="/admin" element={<DefaultLayoult />}>
-                {/*
-                    As páginas de gestor deverão ser renderizadas aqui
-                    e o layout padrão será aplicado a elas. Pra fazer isso, quando você criar a página de gestor no diretório pages, crie uma route dentro daqui, o path deverá seguir um padrão coerente, e pra acessar você pode digitar no navegador localhost:5173:/user/ nome da sua página.
-                */}
+
+            <Route path="/admin" element={
+                <PrivateRoute allowedTypes={[1]}>
+                    <DefaultLayoult />
+                </PrivateRoute>
+
+
+            }>
+                <Route index element={<Welcome />} />
+                <Route path="management-users" element={<ManagementUsers />} />
             </Route>
         </Routes>
     );

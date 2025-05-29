@@ -1,10 +1,27 @@
-import express from "express";
-import { registerUser } from "../controllers/registerUser";
-import { loginUser } from "../controllers/loginUser";
+import { Router } from "express";
+import { UserController } from "../controllers/UserController";
+import { autenticarToken } from "../middlewares/authJWT";
 
-const router = express.Router();
+export class UserRoutes {
+    private router: Router;
+    private userController: UserController;
 
-router.post("/register", registerUser);
-router.post("/login", loginUser)
+    constructor() {
+        this.router = Router();
+        this.userController = new UserController();
+        this.initializeRoutes();
+    }
 
-export default router;
+    private initializeRoutes() {
+        this.router.post("/register", this.userController.registerUser.bind(this.userController));
+        this.router.post("/login", this.userController.loginUser.bind(this.userController));
+        this.router.get("/", this.userController.getAllUsers.bind(this.userController));
+        this.router.put("/:idUsuario", this.userController.updateUser.bind(this.userController));
+        this.router.patch("/:idUsuario/status", this.userController.changeUserStatus.bind(this.userController));
+        this.router.get("/me", autenticarToken, this.userController.getMe.bind(this.userController));
+    }
+
+    public getRouter(): Router {
+        return this.router;
+    }
+}

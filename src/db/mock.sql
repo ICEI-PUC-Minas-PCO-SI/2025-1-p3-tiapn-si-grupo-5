@@ -11,9 +11,9 @@ SELECT * FROM Gerencia;
 -- 🔧 Tipos de Usuário
 INSERT INTO tipoUsuario (tipoUsuario)
 VALUES 
-('admin'),
-('analista'),
-('usuario');
+('Admin'),
+('Analista'),
+('Usuario');
 
 SELECT * FROM tipoUsuario;
 

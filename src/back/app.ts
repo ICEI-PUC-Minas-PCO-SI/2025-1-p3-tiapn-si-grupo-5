@@ -1,28 +1,24 @@
-import express from 'express';
-import userRoustes from './routes/userRoutes';
-import { PrismaClient } from "./generated/prisma";
-import cors from 'cors';
-import dotenv from 'dotenv';
+{/*TODO Colocar variáveis de ambiente, como portas, etc, no .env*/}
 
+import express from "express";
+import cors from "cors";
+import { UserRoutes } from "./routes/userRoutes";
+import { ManagementRoutes } from "./routes/managementRoutes";
+import { UserTypeRoutes } from "./routes/userTypesRoutes";
+import { TicketRoutes } from "./routes/ticketRoutes";
 
-dotenv.config();
-
-const app = express(); 
-app.use(cors());
+const app = express();
 app.use(express.json());
+app.use(cors());
 
-const prisma = new PrismaClient();
+const userRoutes = new UserRoutes();
+const managementRoutes = new ManagementRoutes();
+const userTypeRoutes = new UserTypeRoutes();
+const ticketRoutes = new TicketRoutes();
 
-// Rota GET /usuarios
-app.get('/usuarios', async (req, res) => {
-  try {
-    const clients = await prisma.usuario.findMany();
-    res.json(clients);
-  } catch (error) {
-    res.status(500).json({ error: "Erro ao buscar usuários" });
-  }
-});
-
-app.use("/usuarios", userRoustes);
+app.use("/usuarios", userRoutes.getRouter());
+app.use("/gerencias", managementRoutes.getRouter());
+app.use("/tipos-usuarios", userTypeRoutes.getRouter());
+app.use("/tickets", ticketRoutes.getRouter());
 
 export default app;

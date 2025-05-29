@@ -1,68 +1,311 @@
+import {
+    Sidebar as UISidebar,
+    SidebarContent,
+    SidebarHeader,
+    SidebarMenu,
+    SidebarMenuItem,
+    SidebarMenuButton,
+    SidebarFooter,
+    SidebarSeparator,
+    SidebarMenuSub,
+    SidebarMenuSubItem,
+    SidebarMenuSubButton,
+} from "@/components/ui/sidebar";
+import {
+    Home,
+    Settings,
+    PlusCircle,
+    Ticket,
+    BarChart4,
+    ClipboardList,
+    Users,
+    SlidersHorizontal,
+    ChevronDown,
+    AlertTriangle,
+    Tags,
+    Building,
+    Clock
+} from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { UserProfileSection } from "./UserProfileSection";
 import { useState } from "react";
-import { FaUserCircle } from "react-icons/fa";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { SidebarVariant } from "./SidebarVariant";
-
-{
-  /*Variáveis que serão consumidos da API*/
-}
-
-const userPicture = null;
-const userName = "usuário";
-const userManagement = "gerência";
-const userType = 1;
-
+import { useUser } from "@/contexts/UserContext";
 export function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false);
-  return (
-    <div
-      className={`flex-col gap-6 py-5.5 min-h-screen bg-slate-200 inline-flex justify-start items-start transition-all duration-400 relative ${collapsed ? "w-22" : "w-44 px-4"
-        }`}
-    >
-      <button
-        className="absolute left-full top-6 -translate-x-1/2 z-10 flex items-center justify-center rounded-full bg-sky-700 shadow-lg cursor-pointer"
-        style={{ width: "1.2rem", height: "1.2rem" }}
-        onClick={() => setCollapsed((prev) => !prev)}
-        aria-label={collapsed ? "Expandir sidebar" : "Retrair sidebar"}
-        type="button"
-      >
-        {collapsed ? (
-          <FaChevronRight size="0.8rem" className="text-slate-100" />
-        ) : (
-          <FaChevronLeft size="0.8rem" className="text-slate-100" />
-        )}
-      </button>
-      <div className="w-full flex items-center justify-center">
-          <span className="text-center button-base text-2xl font-bold tracking-wide w-full">
-            TrackIT
-          </span>
-      </div>
-      <div className="w-full flex justify-center items-center transition-all duration-300">
-        {collapsed ? (
-          <span className="w-[36px] h-[36px] rounded-full overflow-hidden flex items-center justify-center">
-            {userPicture ? (
-              <img src={userPicture} />
-            ) : (
-              <FaUserCircle size={36} />
-            )}
-          </span>
-        ) : (
-          <div className="inline-flex self-stretch justify-evenly gap-2.5 w-full">
-            <span className="w-[36px] h-[36px] rounded-full overflow-hidden flex items-center justify-center">
-              {userPicture ? (
-                <img src={userPicture} />
-              ) : (
-                <FaUserCircle size={36} />
-              )}
-            </span>
-            <div>
-              <p className="menu-2">{userName}</p>
-              <p className="menu-2">{userManagement}</p>
-            </div>
-          </div>
-        )}
-      </div>
-      <SidebarVariant userType={userType} isCollapsed={collapsed} />
-    </div>
-  );
+    const location = useLocation();
+    const [isParamsOpen, setIsParamsOpen] = useState(false);
+    const { user, logout } = useUser();
+    
+    let userRole: "admin" | "analyst" | "user" | undefined;
+    if (user) {
+        if (user.tipo === 1) userRole = "admin";
+        else if (user.tipo === 2) userRole = "analyst";
+        else if (user.tipo === 3) userRole = "user";
+    }
+    const handleLogout = () => {
+        logout();
+    };
+
+    return (
+        <UISidebar>
+            <SidebarHeader>
+                <div className="flex items-center gap-2 px-2">
+                    <span className="font-bold text-lg">TrackIt</span>
+                </div>
+            </SidebarHeader>
+            <SidebarSeparator />
+            <SidebarContent>
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton
+                            asChild
+                            isActive={location.pathname === "/home"}
+                            variant="default"
+                            size="default"
+                        >
+                            <Link to="./">
+                                <Home className="mr-2" />
+                                <span>Home</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+
+                    {userRole === "user" && (
+                        <>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/user/open-ticket"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/user/open-ticket">
+                                        <PlusCircle className="mr-2" />
+                                        <span>Abrir Chamado</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/user/tickets"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/user/tickets">
+                                        <Ticket className="mr-2" />
+                                        <span>Ver Chamados</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/user/settings"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/user/settings">
+                                        <Settings className="mr-2" />
+                                        <span>Configurações</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </>
+                    )}
+
+                    {userRole === "analyst" && (
+                        <>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/analyst/assign-tickets"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/analyst/assign-tickets">
+                                        <ClipboardList className="mr-2" />
+                                        <span>Atribuir Chamados</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/analyst/performance"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/analyst/performance">
+                                        <BarChart4 className="mr-2" />
+                                        <span>Desempenho</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/analyst/settings"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/analyst/settings">
+                                        <Settings className="mr-2" />
+                                        <span>Configurações</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </>
+                    )}
+
+                    {userRole === "admin" && (
+                        <>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/admin/performance"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/admin/performance">
+                                        <BarChart4 className="mr-2" />
+                                        <span>Desempenho</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    aria-expanded={isParamsOpen}
+                                    onClick={() => setIsParamsOpen(!isParamsOpen)}
+                                    className="justify-between"
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <div className="flex items-center">
+                                        <SlidersHorizontal className="h-4 w-4 mr-4" />
+                                        <span>Parâmetros</span>
+                                    </div>
+                                    <ChevronDown
+                                        className={`h-4 w-4 shrink-0 transition-transform duration-200 ${isParamsOpen ? "rotate-180" : ""
+                                            }`}
+                                    />
+                                </SidebarMenuButton>
+                                {isParamsOpen && (
+                                    <SidebarMenuSub>
+                                        <SidebarMenuSubItem>
+                                            <SidebarMenuSubButton
+                                                asChild
+                                                isActive={location.pathname === "/admin/params/priority"}
+                                            >
+                                                <Link to="/admin/params/priority">
+                                                    <AlertTriangle className="h-4 w-4" />
+                                                    <span>Prioridade</span>
+                                                </Link>
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                        <SidebarMenuSubItem>
+                                            <SidebarMenuSubButton
+                                                asChild
+                                                isActive={location.pathname === "/admin/params/type"}
+                                            >
+                                                <Link to="/admin/params/type">
+                                                    <Tags className="h-4 w-4" />
+                                                    <span>Tipo</span>
+                                                </Link>
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                        <SidebarMenuSubItem>
+                                            <SidebarMenuSubButton
+                                                asChild
+                                                isActive={location.pathname === "/admin/params/status"}
+                                            >
+                                                <Link to="/admin/params/status">
+                                                    <Clock className="h-4 w-4" />
+                                                    <span>Status</span>
+                                                </Link>
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                        <SidebarMenuSubItem>
+                                            <SidebarMenuSubButton
+                                                asChild
+                                                isActive={location.pathname === "/admin/params/department"}
+                                            >
+                                                <Link to="/admin/params/department">
+                                                    <Building className="h-4 w-4" />
+                                                    <span>Gerência</span>
+                                                </Link>
+                                            </SidebarMenuSubButton>
+                                        </SidebarMenuSubItem>
+                                    </SidebarMenuSub>
+                                )}
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/admin/users"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/admin/management-users">
+                                        <Users className="mr-2" />
+                                        <span>Usuários</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/admin/open-tickets"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/admin/open-tickets">
+                                        <Ticket className="mr-2" />
+                                        <span>Chamados em Aberto</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/admin/assigned-tickets"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/admin/assigned-tickets">
+                                        <ClipboardList className="mr-2" />
+                                        <span>Chamados Atribuídos</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={location.pathname === "/admin/settings"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/admin/settings">
+                                        <Settings className="mr-2" />
+                                        <span>Configurações</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        </>
+                    )}
+                </SidebarMenu>
+            </SidebarContent>
+            <SidebarFooter>
+                <SidebarSeparator />
+                {user && (
+                    <UserProfileSection
+                        name={user.nome.split(" ").slice(0, 2).join(" ")}
+                        email={user.email}
+                        role={user.tipo === 1 ? "admin" : user.tipo === 2 ? "analyst" : "user"}
+                        department={user.gerencia ? String(user.gerencia) : ""}
+                        onLogout={handleLogout}
+                    />
+                )}
+            </SidebarFooter>
+        </UISidebar>
+    );
 }
