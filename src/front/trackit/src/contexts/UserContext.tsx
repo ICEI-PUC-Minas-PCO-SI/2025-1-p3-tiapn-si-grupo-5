@@ -1,16 +1,20 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { DefaultSpinner } from "@/components/ui/spinner";
 import { getMe } from "@/api/auth";
+import { getAllActiveManagements } from "@/api/management";
+import type { Management } from "../interfaces/InterfaceManagement";
 
 type User = {
   id: number;
   nome: string;
   email: string;
   ramal?: string;
+  matricula?: string;
   gerencia?: number;
   tipo?: number;
   ativo: number;
   createdAt?: string;
+  nomeGerencia?: string;
 };
 
 type UserContextType = {
@@ -30,16 +34,36 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      getMe(token)
-        .then(data => {
-          if (data && data.usuario) setUserState(data.usuario);
-          else logout();
-        })
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
+    async function fetchUserAndManagement() {
+      if (token) {
+        try {
+          const data = await getMe(token);
+          if (data && data.usuario) {
+            const usuario = data.usuario;
+            let nomeGerencia: string | undefined = undefined;
+            if (usuario.gerencia) {
+              try {
+                const managements: Management[] = await getAllActiveManagements();
+                const found = managements.find(
+                  (g) => g.idGerencia === usuario.gerencia
+                );
+                nomeGerencia = found?.nomeGerencia;
+              } catch {
+                nomeGerencia = undefined;
+              }
+            }
+            setUserState({ ...usuario, nomeGerencia });
+          } else {
+            logout();
+          }
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
     }
+    fetchUserAndManagement();
   }, []);
 
   function setUser(user: User | null, token?: string) {

@@ -173,7 +173,6 @@ export function RegisterUser() {
                         </span>
                     )}
                 </div>
-
                 <div>
                     <label>
                         Ramal:

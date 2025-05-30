@@ -127,7 +127,7 @@ export class UserController {
 
     async getMe(req: Request, res: Response) {
         try {
-            // @ts-ignore
+            // @ts-expect-error req.usuario is set by the authentication middleware
             const usuarioId = req.usuario.id;
             const usuario = await prisma.usuario.findUnique({
                 where: { idUsuario: usuarioId },
@@ -142,6 +142,7 @@ export class UserController {
                     nome: usuario.nomeUsuario,
                     email: usuario.email,
                     ramal: usuario.ramal,
+                    matricula: usuario.matricula,
                     gerencia: usuario.idGerencia,
                     tipo: usuario.idTipoUsuario,
                     ativo: usuario.ativo,

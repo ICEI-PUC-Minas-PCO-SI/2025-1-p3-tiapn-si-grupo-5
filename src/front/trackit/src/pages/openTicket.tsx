@@ -39,7 +39,7 @@ export function OpenTicket() {
     } = useForm<openTicket>({
         resolver: zodResolver(openTicket),
     });
-    
+
     async function handleOpenTicket(data: openTicket) {
         console.log("Chamado aberto com sucesso!", data);
     }
@@ -149,15 +149,14 @@ export function OpenTicket() {
                     {/* Anexar arquivo a ser implementado */}
 
                     <footer className="flex justify-start gap-[4rem]">
-                        <Button type="submit" className="button-other w-[11.25rem] max-w-[11.25rem]">
+                        <Button type="submit"
+                        size="fit">
                             Abrir chamado
                         </Button>
-                        <Button 
-                        className="text-slate-950 w-[11.25rem] max-w-[11.25rem] 
-                        shadow-[0px_2px_8px_0px_rgba(0,0,0,0.25)] hover:text-slate-700 
-                        hover:shadow-[0px_4px_16px_0px_rgba(0,0,0,0.30)] transition-all duration-200" variant={"outline"}
-                        type="button"
-                        onClick={handleCancel}
+                        <Button variant="outline"
+                            size="fit"
+                            type="button"
+                            onClick={handleCancel}
                         >
                             Cancelar
                         </Button>
