@@ -87,14 +87,13 @@ export async function loginUser(payload: LoginUserPayload): Promise<Response> {
 }
 
 export async function updateProfileUser(
-    payload: UpdateProfileUserPayload,
-    token: string
+    userId: number,
+    payload: UpdateProfileUserPayload
 ): Promise<Response> {
-    return fetch("http://localhost:3000/usuarios/profile", {
+    return fetch(`http://localhost:3000/usuarios/profile/${userId}`, {
         method: "PUT",
         headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(payload),
     });

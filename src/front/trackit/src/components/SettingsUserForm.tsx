@@ -16,8 +16,7 @@ const settingsSchema = z.object({
             message: "Informe o nome completo",
         }),
     email: z.string().email("E-mail inválido"),
-    ramal: z.string()
-        .regex(/^\d{4,10}$/, {
+    ramal: z.string().regex(/^\d{10}$/, {
             message: "Ramal inválido. Deve conter entre 4 e 10 dígitos numéricos",
         }),
 });
@@ -29,7 +28,7 @@ type SettingsUserFormProps = {
 };
 
 export function SettingsUserForm({ onFeedback }: SettingsUserFormProps) {
-    const { user } = useUser();
+    const { user, setUser } = useUser();
 
     const {
         register,
@@ -70,17 +69,28 @@ export function SettingsUserForm({ onFeedback }: SettingsUserFormProps) {
             return;
         }
         try {
-            const token = localStorage.getItem("token") || "";
             const response = await updateProfileUser(
-                { nome: data.name, email: data.email, ramal: data.ramal },
-                token
+                user.id,
+                { nome: data.name, email: data.email, ramal: data.ramal }
             );
+
             if (!response.ok) {
-                onFeedback("error", "Erro ao atualizar usuário!");
+                const errorData = await response.json().catch(() => ({}));
+                onFeedback("error", errorData.error || "Erro ao atualizar usuário!");
                 return;
             }
+
+            const updatedUserData = await response.json();
+            setUser({
+                ...user,
+                nome: updatedUserData.nome || data.name,
+                email: updatedUserData.email || data.email,
+                ramal: updatedUserData.ramal || data.ramal
+            });
+
             onFeedback("success", "Dados atualizados com sucesso!");
-        } catch {
+        } catch (error) {
+            console.error("Erro na atualização:", error);
             onFeedback("error", "Erro ao atualizar usuário!");
         }
     }
@@ -96,12 +106,12 @@ export function SettingsUserForm({ onFeedback }: SettingsUserFormProps) {
                     <Input
                         type="text"
                         {...register("name")}
-                        placeholder="usuário"
+                        placeholder="Nome Completo"
                         autoComplete="off"
                         inputMode="text"
                     />
                     {errors.name && (
-                        <span className="text-red-500 text-xs">{errors.name.message}</span>
+                        <span className="text-red-500 text-sm">{errors.name.message}</span>
                     )}
                 </div>
                 <div className="flex-1">
@@ -125,7 +135,7 @@ export function SettingsUserForm({ onFeedback }: SettingsUserFormProps) {
                     inputMode="email"
                 />
                 {errors.email && (
-                    <span className="text-red-500 text-xs">{errors.email.message}</span>
+                    <span className="text-red-500 text-sm">{errors.email.message}</span>
                 )}
             </div>
             <div className="flex gap-4">
@@ -134,12 +144,12 @@ export function SettingsUserForm({ onFeedback }: SettingsUserFormProps) {
                     <Input
                         type="text"
                         {...register("ramal")}
-                        placeholder="XXXX-YYYY"
+                        placeholder="31XXXXYYYY"
                         autoComplete="off"
                         inputMode="numeric"
                     />
                     {errors.ramal && (
-                        <span className="text-red-500 text-xs">{errors.ramal.message}</span>
+                        <span className="text-red-500 text-sm">{errors.ramal.message}</span>
                     )}
                 </div>
                 <div className="flex-1">
@@ -169,7 +179,7 @@ export function SettingsUserForm({ onFeedback }: SettingsUserFormProps) {
                     className="w-40"
                     disabled={isSubmitting || !isChanged || hasErrors}
                 >
-                    {isSubmitting ? "Salvando..." : "Salvar"}
+                    Salvar
                 </Button>
                 <Button variant="outline"
                     size="fit"

@@ -183,14 +183,23 @@ export class UserController {
 
     async updateProfileUser(req: Request, res: Response) {
         try {
-            // @ts-expect-error req.usuario is set by the authentication middleware
-            const usuarioId = req.usuario.id;
+            const usuarioId = Number(req.params.idUsuario);
             const { nome, email, ramal } = req.body;
 
             if (!nome || !email || !ramal) {
                 res.status(400).json({ error: "Todos os campos são obrigatórios." });
                 return;
             }
+
+            const existingUser = await prisma.usuario.findUnique({
+                where: { idUsuario: usuarioId }
+            });
+
+            if (!existingUser) {
+                res.status(404).json({ error: "Usuário não encontrado." });
+                return;
+            }
+
             const updatedUser = await prisma.usuario.update({
                 where: { idUsuario: usuarioId },
                 data: {
