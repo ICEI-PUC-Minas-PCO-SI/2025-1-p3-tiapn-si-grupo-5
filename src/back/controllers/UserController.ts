@@ -24,6 +24,7 @@ export class UserController {
                     idGerencia: gerenciaIdNumber
                 },
             });
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { senha: _, ...usuarioSemSenha } = novoUsuario;
             res.status(201).json(usuarioSemSenha);
             console.log(JSON.stringify(usuarioSemSenha));
@@ -177,6 +178,44 @@ export class UserController {
         } catch (error) {
             console.error("Erro ao buscar usuário autenticado:", error);
             res.status(500).json({ error: "Erro ao buscar usuário autenticado" });
+        }
+    }
+
+    async updateProfileUser(req: Request, res: Response) {
+        try {
+            // @ts-expect-error req.usuario is set by the authentication middleware
+            const usuarioId = req.usuario.id;
+            const { nome, email, ramal } = req.body;
+
+            if (!nome || !email || !ramal) {
+                res.status(400).json({ error: "Todos os campos são obrigatórios." });
+                return;
+            }
+            const updatedUser = await prisma.usuario.update({
+                where: { idUsuario: usuarioId },
+                data: {
+                    nomeUsuario: nome,
+                    email,
+                    ramal,
+                },
+            });
+
+            res.status(200).json({
+                id: updatedUser.idUsuario,
+                nome: updatedUser.nomeUsuario,
+                email: updatedUser.email,
+                ramal: updatedUser.ramal,
+                matricula: updatedUser.matricula,
+                gerencia: updatedUser.idGerencia,
+                tipo: updatedUser.idTipoUsuario,
+                ativo: updatedUser.ativo,
+                fotoPerfil: updatedUser.fotoPerfil,
+            });
+            return;
+        } catch (error) {
+            console.error("Erro ao atualizar perfil do usuário:", error);
+            res.status(500).json({ error: "Erro ao atualizar perfil do usuário" });
+            return;
         }
     }
 }

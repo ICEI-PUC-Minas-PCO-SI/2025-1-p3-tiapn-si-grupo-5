@@ -4,6 +4,7 @@ import { getAllActiveManagements } from "./management";
 import type { RegisterUserPayload } from "../interfaces/InterfaceRegisterUser";
 import type { UpdateUser } from "../interfaces/InterfaceUpdateUser";
 import type { LoginUserPayload } from "../interfaces/InterfaceLoginUser";
+import type { UpdateProfileUserPayload } from "../interfaces/InterfaceUpdateUserProfile";
 
 export async function registerNewUser(payload: RegisterUserPayload): Promise<Response> {
     return fetch("http://localhost:3000/usuarios/register", {
@@ -80,6 +81,20 @@ export async function loginUser(payload: LoginUserPayload): Promise<Response> {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+    });
+}
+
+export async function updateProfileUser(
+    payload: UpdateProfileUserPayload,
+    token: string
+): Promise<Response> {
+    return fetch("http://localhost:3000/usuarios/profile", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
     });
