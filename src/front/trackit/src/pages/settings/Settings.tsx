@@ -28,7 +28,7 @@ type SettingsSchema = z.infer<typeof settingsSchema>;
 export function Settings() {
     const { user } = useUser();
     const name = user?.nome || "Usuário";
-    const avatarUrl = undefined;
+    const avatarUrl = user?.fotoPerfil || undefined;
 
     const {
         register,
@@ -68,15 +68,18 @@ export function Settings() {
             </div>
             <header className="flex items-center gap-4">
                 <Avatar className="h-24 w-24">
-                    <AvatarImage src={avatarUrl} alt={name} />
-                    <AvatarFallback>
-                        {name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .toUpperCase()
-                            .slice(0, 2)}
-                    </AvatarFallback>
+                    {avatarUrl ? (
+                        <AvatarImage src={avatarUrl} alt={name} />
+                    ) : (
+                        <AvatarFallback>
+                            {name
+                                .split(" ")
+                                .map((n: string) => n[0])
+                                .join("")
+                                .toUpperCase()
+                                .slice(0, 2)}
+                        </AvatarFallback>
+                    )}
                 </Avatar>
                 <div className="flex flex-col gap-4">
                     <UploadButton size="fit">

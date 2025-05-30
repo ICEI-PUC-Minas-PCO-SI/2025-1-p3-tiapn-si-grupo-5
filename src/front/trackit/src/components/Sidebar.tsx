@@ -303,6 +303,7 @@ export function Sidebar() {
                         role={user.tipo === 1 ? "admin" : user.tipo === 2 ? "analyst" : "user"}
                         department={user.nomeGerencia || ""}
                         onLogout={handleLogout}
+                        avatarUrl={user.fotoPerfil}
                     />
                 )}
             </SidebarFooter>

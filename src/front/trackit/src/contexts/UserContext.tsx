@@ -15,6 +15,7 @@ type User = {
   ativo: number;
   createdAt?: string;
   nomeGerencia?: string;
+  fotoPerfil?: string;
 };
 
 type UserContextType = {
@@ -52,7 +53,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
                 nomeGerencia = undefined;
               }
             }
-            setUserState({ ...usuario, nomeGerencia });
+            setUserState({ ...usuario, nomeGerencia, fotoPerfil: usuario.fotoPerfil });
           } else {
             logout();
           }
