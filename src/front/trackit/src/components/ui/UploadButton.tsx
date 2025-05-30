@@ -1,18 +1,22 @@
 import * as React from "react";
 import { buttonVariants } from "./button-variants";
 import { cn } from "@/lib/utils";
+import type { VariantProps } from "class-variance-authority";
 
-type UploadButtonProps = React.InputHTMLAttributes<HTMLInputElement> & {
-    children?: React.ReactNode;
-    className?: string;
-};
+type ButtonSize = "default" | "sm" | "icon" | "fit";
+type UploadButtonProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size"> &
+    VariantProps<typeof buttonVariants> & {
+        children?: React.ReactNode;
+        className?: string;
+        size?: ButtonSize;
+    };
 
 export const UploadButton = React.forwardRef<HTMLInputElement, UploadButtonProps>(
-    ({ children, className, ...props }, ref) => {
+    ({ children, className, size = "default", ...props }, ref) => {
         return (
             <label
                 className={cn(
-                    buttonVariants({ variant: "outline" }),
+                    buttonVariants({ variant: "outline", size }),
                     "cursor-pointer flex items-center gap-2",
                     className
                 )}

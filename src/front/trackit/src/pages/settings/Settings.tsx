@@ -1,7 +1,9 @@
 import { useUser } from "@/contexts/UserContext"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ImagePlus } from "lucide-react";
+import { ImagePlus, CircleCheckBig } from "lucide-react";
 import { UploadButton } from "@/components/ui/UploadButton";
+
+{/* TODO: UPLOAD DE IMG */}
 
 export function Settings() {
     const { user } = useUser();
@@ -22,9 +24,8 @@ export function Settings() {
                             .slice(0, 2)}
                     </AvatarFallback>
                 </Avatar>
-                <div className="flex flex-col">
-                    <UploadButton>
-                        {/*TODO: AJUSTAR COMPORTAMENTO DO BOTÃO*/}
+                <div className="flex flex-col gap-4">
+                    <UploadButton size="fit">
                         <ImagePlus className="mr-2" />
                         Enviar foto
                     </UploadButton>
@@ -35,6 +36,23 @@ export function Settings() {
                 </div>
             </header>
             <main>
+                <div className="flex gap-3 items-center">
+                    {user!.tipo === 1 ? (
+                        <>
+                            <CircleCheckBig className="inline-block text-green-600" />
+                            <p className="menu-2 text-green-600">
+                                Gestor da Astin
+                            </p>
+                        </>
+                    ) : user!.tipo === 2 ? (
+                        <>
+                            <CircleCheckBig className="inline-block text-green-600" />
+                            <p className="menu-2 text-green-600">
+                                Analista da Astin
+                            </p>
+                        </>
+                    ) : null}
+                </div>
             </main>
         </div>
     )

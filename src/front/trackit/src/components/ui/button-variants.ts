@@ -25,6 +25,7 @@ export const buttonVariants = cva(
         default: "min-w-[7.75rem] h-[3rem]",
         sm: "h-[2.5rem] min-w-[7.75rem]",
         icon: "min-w-[4.5rem] h-[3rem]",
+        fit: "w-[10rem] h-[2.5rem]",
       },
     },
     defaultVariants: {
