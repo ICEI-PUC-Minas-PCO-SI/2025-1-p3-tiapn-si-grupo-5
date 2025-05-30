@@ -24,6 +24,7 @@ export class UserController {
                     idGerencia: gerenciaIdNumber
                 },
             });
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { senha: _, ...usuarioSemSenha } = novoUsuario;
             res.status(201).json(usuarioSemSenha);
             console.log(JSON.stringify(usuarioSemSenha));
@@ -36,9 +37,19 @@ export class UserController {
     async loginUser(req: Request, res: Response) {
         try {
             const { email, senha } = req.body;
-
             const usuario = await prisma.usuario.findUnique({
                 where: { email },
+                select: {
+                    idUsuario: true,
+                    nomeUsuario: true,
+                    email: true,
+                    ramal: true,
+                    matricula: true,
+                    idGerencia: true,
+                    idTipoUsuario: true,
+                    ativo: true,
+                    fotoPerfil: true
+                }
             });
 
             if (!usuario) {
@@ -46,7 +57,19 @@ export class UserController {
             } else if (!usuario.ativo) {
                 res.status(403).json({ error: "Usuário inativo" });
             } else {
-                const senhaValida = await compareHashedPassword(senha, usuario.senha);
+                let nomeGerencia: string | undefined = undefined;
+                if (usuario.idGerencia) {
+                    const gerencia = await prisma.gerencia.findUnique({
+                        where: { idGerencia: usuario.idGerencia }
+                    });
+                    nomeGerencia = gerencia?.nomeGerencia;
+                }
+                const usuarioSenha = await prisma.usuario.findUnique({
+                    where: { email },
+                    select: { senha: true }
+                });
+                const senhaValida = usuarioSenha && await compareHashedPassword(senha, usuarioSenha.senha);
+
                 if (!senhaValida) {
                     res.status(401).json({ error: "Email ou senha inválidos" });
                 } else {
@@ -62,9 +85,12 @@ export class UserController {
                             nome: usuario.nomeUsuario,
                             email: usuario.email,
                             ramal: usuario.ramal,
+                            matricula: usuario.matricula,
                             gerencia: usuario.idGerencia,
                             tipo: usuario.idTipoUsuario,
                             ativo: usuario.ativo,
+                            fotoPerfil: usuario.fotoPerfil,
+                            nomeGerencia
                         },
                         token
                     });
@@ -127,7 +153,7 @@ export class UserController {
 
     async getMe(req: Request, res: Response) {
         try {
-            // @ts-ignore
+            // @ts-expect-error none
             const usuarioId = req.usuario.id;
             const usuario = await prisma.usuario.findUnique({
                 where: { idUsuario: usuarioId },
@@ -142,14 +168,63 @@ export class UserController {
                     nome: usuario.nomeUsuario,
                     email: usuario.email,
                     ramal: usuario.ramal,
+                    matricula: usuario.matricula,
                     gerencia: usuario.idGerencia,
                     tipo: usuario.idTipoUsuario,
                     ativo: usuario.ativo,
+                    fotoPerfil: usuario.fotoPerfil
                 }
             });
         } catch (error) {
             console.error("Erro ao buscar usuário autenticado:", error);
             res.status(500).json({ error: "Erro ao buscar usuário autenticado" });
+        }
+    }
+
+    async updateProfileUser(req: Request, res: Response) {
+        try {
+            const usuarioId = Number(req.params.idUsuario);
+            const { nome, email, ramal } = req.body;
+
+            if (!nome || !email || !ramal) {
+                res.status(400).json({ error: "Todos os campos são obrigatórios." });
+                return;
+            }
+
+            const existingUser = await prisma.usuario.findUnique({
+                where: { idUsuario: usuarioId }
+            });
+
+            if (!existingUser) {
+                res.status(404).json({ error: "Usuário não encontrado." });
+                return;
+            }
+
+            const updatedUser = await prisma.usuario.update({
+                where: { idUsuario: usuarioId },
+                data: {
+                    nomeUsuario: nome,
+                    email,
+                    ramal,
+                },
+            });
+
+            res.status(200).json({
+                id: updatedUser.idUsuario,
+                nome: updatedUser.nomeUsuario,
+                email: updatedUser.email,
+                ramal: updatedUser.ramal,
+                matricula: updatedUser.matricula,
+                gerencia: updatedUser.idGerencia,
+                tipo: updatedUser.idTipoUsuario,
+                ativo: updatedUser.ativo,
+                fotoPerfil: updatedUser.fotoPerfil,
+            });
+            return;
+        } catch (error) {
+            console.error("Erro ao atualizar perfil do usuário:", error);
+            res.status(500).json({ error: "Erro ao atualizar perfil do usuário" });
+            return;
         }
     }
 }

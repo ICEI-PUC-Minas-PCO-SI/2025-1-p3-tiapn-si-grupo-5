@@ -1,6 +1,9 @@
 export interface UpdateUser {
     idUsuario: number;
-    matricula: string;
-    gerencia: number;
-    tipoUsuario: number;
+    nomeUsuario: string;
+    email: string;
+    ramal: string;
+    matricula?: string;
+    gerencia?: number;
+    tipoUsuario?: number;
 }

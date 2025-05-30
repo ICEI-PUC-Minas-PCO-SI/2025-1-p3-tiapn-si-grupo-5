@@ -7,6 +7,7 @@ import { ManagementUsers } from "../pages/management-users/ManagementUsers";
 import { Welcome } from "@/pages/welcome";
 import { OpenTicket } from "@/pages/openTicket";
 import { PrivateRoute } from "./PrivateRoute";
+import { Settings } from "@/pages/settings/Settings";
 
 export function Router() {
     return (
@@ -21,29 +22,24 @@ export function Router() {
             }>
                 <Route index element={<Welcome />} />
                 <Route path="open-ticket" element={<OpenTicket />} />
-
-                
+                <Route path="settings" element={< Settings />} />
             </Route>
-
             <Route path="/analyst" element={
                 <PrivateRoute allowedTypes={[2]}>
                     <DefaultLayoult />
                 </PrivateRoute>
             }>
                 <Route index element={<Welcome />} />
-
-
+                <Route path="settings" element={< Settings />} />
             </Route>
-
             <Route path="/admin" element={
                 <PrivateRoute allowedTypes={[1]}>
                     <DefaultLayoult />
                 </PrivateRoute>
-
-
             }>
                 <Route index element={<Welcome />} />
                 <Route path="management-users" element={<ManagementUsers />} />
+                <Route path="settings" element={< Settings />} />
             </Route>
         </Routes>
     );

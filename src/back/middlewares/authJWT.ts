@@ -12,6 +12,7 @@ export function autenticarToken(req: Request, res: Response, next: NextFunction)
       if (err) {
         res.status(403).json({ error: 'Token inválido ou expirado' });
       } else {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         req.usuario = usuario;
         next();

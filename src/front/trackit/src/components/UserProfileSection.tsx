@@ -12,29 +12,26 @@ import { getAllActiveManagements } from "@/api/management";
 import { useUser } from "@/contexts/UserContext";
 
 type UserProfileSectionProps = {
-    name: string;
-    email: string;
-    role: "admin" | "analyst" | "user";
-    department?: string; // Valor não mais utilizado
-    avatarUrl?: string;
     onLogout?: () => void;
 };
 
 export function UserProfileSection({
-    name = "Usuário TrackIt",
-    email = "usuario@trackit.com",
-    role = "user",
-    avatarUrl,
-    onLogout = () => console.log("Logout clicked"),
+    onLogout = () => { },
 }: UserProfileSectionProps) {
-    const roleLabels = {
-        admin: "Gerente",
-        analyst: "Analista",
-        user: "Usuário",
+    const roleLabels: Record<number, string> = {
+        1: "Gerente",
+        2: "Analista",
+        3: "Usuário",
     };
 
     const { user } = useUser();
+
     const [managementName, setManagementName] = useState<string>("");
+
+    const avatarUrl = user?.fotoPerfil;
+    const displayName = user?.nome || "Usuário TrackIt";
+    const displayEmail = user?.email || "usuario@trackit.com";
+    const displayRole = user?.tipo ? roleLabels[user.tipo] || "Usuário" : "Usuário";
 
     useEffect(() => {
         async function fetchManagementName() {
@@ -42,7 +39,7 @@ export function UserProfileSection({
                 try {
                     const managements = await getAllActiveManagements();
                     const found = managements.find(
-                        (m) => m.idGerencia === user.gerencia
+                        (m: { idGerencia: number; nomeGerencia: string }) => m.idGerencia === user.gerencia
                     );
                     setManagementName(
                         found ? found.nomeGerencia : "Não informado"
@@ -57,25 +54,32 @@ export function UserProfileSection({
         fetchManagementName();
     }, [user?.gerencia]);
 
+    function getInitials(name: string): string {
+        return name
+            .split(" ")
+            .map((n: string) => n[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+    }
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <div className="flex items-center gap-3 p-2 rounded-md cursor-pointer hover:bg-sidebar-accent transition-colors">
                     <Avatar className="h-8 w-8">
-                        <AvatarImage src={avatarUrl} alt={name} />
-                        <AvatarFallback>
-                            {name
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")
-                                .toUpperCase()
-                                .slice(0, 2)}
-                        </AvatarFallback>
+                        {avatarUrl ? (
+                            <AvatarImage src={avatarUrl} alt={displayName} />
+                        ) : (
+                            <AvatarFallback>
+                                {getInitials(displayName)}
+                            </AvatarFallback>
+                        )}
                     </Avatar>
                     <div className="flex-1 overflow-hidden">
-                        <p className="text-sm font-medium truncate">{name}</p>
+                        <p className="text-sm font-medium truncate">{displayName}</p>
                         <p className="text-xs text-muted-foreground truncate">
-                            {email}
+                            {displayEmail}
                         </p>
                     </div>
                 </div>
@@ -83,25 +87,23 @@ export function UserProfileSection({
             <DropdownMenuContent align="start" sideOffset={5} className="w-64">
                 <div className="flex items-center gap-3 p-2">
                     <Avatar className="h-10 w-10">
-                        <AvatarImage src={avatarUrl} alt={name} />
-                        <AvatarFallback>
-                            {name
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")
-                                .toUpperCase()
-                                .slice(0, 2)}
-                        </AvatarFallback>
+                        {avatarUrl ? (
+                            <AvatarImage src={avatarUrl} alt={displayName} />
+                        ) : (
+                            <AvatarFallback>
+                                {getInitials(displayName)}
+                            </AvatarFallback>
+                        )}
                     </Avatar>
                     <div>
-                        <p className="font-medium">{name}</p>
-                        <p className="text-xs text-muted-foreground">{email}</p>
+                        <p className="font-medium">{displayName}</p>
+                        <p className="text-xs text-muted-foreground">{displayEmail}</p>
                     </div>
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="flex items-center gap-2 cursor-default">
                     <User className="h-4 w-4 mr-2" />
-                    <span>Função: {roleLabels[role]}</span>
+                    <span>Função: {displayRole}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="flex items-center gap-2 cursor-default">
                     <Building className="h-4 w-4 mr-2" />
@@ -110,7 +112,7 @@ export function UserProfileSection({
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                     className="text-destructive focus:text-destructive flex items-center gap-2 cursor-pointer"
-                    onClick={onLogout}
+                    onClick={() => onLogout()}
                 >
                     <LogOut className="h-4 w-4 mr-2" />
                     <span>Sair</span>

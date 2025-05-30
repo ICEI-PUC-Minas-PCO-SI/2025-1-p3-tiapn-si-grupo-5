@@ -1,5 +1,3 @@
-{/*TODO Colocar variáveis de ambiente, como portas, etc, no .env*/}
-
 import express from "express";
 import cors from "cors";
 import { UserRoutes } from "./routes/userRoutes";

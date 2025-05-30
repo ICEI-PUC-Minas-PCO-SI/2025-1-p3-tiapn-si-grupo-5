@@ -48,6 +48,7 @@ export function OpenTicket() {
         resolver: zodResolver(openTicket),
     });
 
+
     async function handleOpenTicket(data: openTicket) {
         if (!user) {
             setAlert({ type: "error", message: "Usuário não autenticado!" });
@@ -220,7 +221,8 @@ export function OpenTicket() {
                     {/* Anexar arquivo a ser implementado */}
 
                     <footer className="flex justify-start gap-[4rem]">
-                        <Button type="submit" className="button-other w-[11.25rem] max-w-[11.25rem]">
+                        <Button type="submit"
+                        size="fit">
                             Abrir chamado
                         </Button>
                         <Button

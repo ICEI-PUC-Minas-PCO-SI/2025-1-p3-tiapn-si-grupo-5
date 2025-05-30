@@ -19,6 +19,7 @@ export class UserRoutes {
         this.router.put("/:idUsuario", this.userController.updateUser.bind(this.userController));
         this.router.patch("/:idUsuario/status", this.userController.changeUserStatus.bind(this.userController));
         this.router.get("/me", autenticarToken, this.userController.getMe.bind(this.userController));
+        this.router.put("/profile/:idUsuario", this.userController.updateProfileUser.bind(this.userController));
     }
 
     public getRouter(): Router {
