@@ -220,7 +220,7 @@ export function OpenTicket() {
 
                     {/* Anexar arquivo a ser implementado */}
 
-                    <footer className="flex justify-start gap-[4rem]">
+                    <footer className="flex justify-start gap-4">
                         <Button type="submit"
                         size="fit">
                             Abrir chamado
