@@ -1,11 +1,13 @@
 import { useUser } from "@/contexts/UserContext"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ImagePlus, CircleCheckBig } from "lucide-react";
-import { UploadButton } from "@/components/ui/UploadButton";
+{/* import { UploadButton } from "@/components/ui/UploadButton";
+ */}
 import { SettingsUserForm } from "@/components/SettingsUserForm";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 export function Settings() {
     const { user } = useUser();
@@ -63,10 +65,14 @@ export function Settings() {
                     )}
                 </Avatar>
                 <div className="flex flex-col gap-4">
-                    <UploadButton size="fit">
+                    {/*<UploadButton size="fit" variant="outlineDisabled">
                         <ImagePlus className="mr-2" />
                         Enviar foto
-                    </UploadButton>
+                    </UploadButton>*/}
+                    <Button size="fit" variant="outlineDisabled">
+                        <ImagePlus className="mr-2" />
+                        Enviar foto
+                    </Button>
                     <div className="flex gap-3 items-center">
                         {user?.tipo === 1 ? (
                             <>

@@ -123,7 +123,7 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
             matricula: fullRegistration,
             ramal: data.ramal,
             email: data.email,
-            senha: String(import.meta.env.VITE_DEFAULT_TRACKIT_PASSWORD),
+            senha: String(import.meta.env.DEFAULT_TRACKIT_PASSWORD),
             gerencia: Number(data.management),
             tipoUsuario: Number(data.accessType),
         };

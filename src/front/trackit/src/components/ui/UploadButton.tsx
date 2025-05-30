@@ -9,14 +9,15 @@ type UploadButtonProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size
         children?: React.ReactNode;
         className?: string;
         size?: ButtonSize;
+        variant?: "outlineDisabled" | "outline" | "default";
     };
 
 export const UploadButton = React.forwardRef<HTMLInputElement, UploadButtonProps>(
-    ({ children, className, size = "default", ...props }, ref) => {
+    ({ children, className, size = "default", variant = "outline", ...props }, ref) => {
         return (
             <label
                 className={cn(
-                    buttonVariants({ variant: "outline", size }),
+                    buttonVariants({ variant, size }),
                     "cursor-pointer flex items-center gap-2",
                     className
                 )}
