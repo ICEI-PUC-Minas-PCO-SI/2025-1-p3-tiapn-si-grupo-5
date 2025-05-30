@@ -29,7 +29,8 @@ export function Settings() {
     const { user } = useUser();
     const name = user?.nome || "Usuário";
     const avatarUrl = user?.fotoPerfil || undefined;
-
+    const matricula = user?.matricula || "Não informado";
+    const nomeGerencia = user?.nomeGerencia || "Não informado";
     const {
         register,
         handleSubmit,
@@ -44,7 +45,6 @@ export function Settings() {
         },
     });
 
-    // Sincroniza o formulário com o userContext sempre que user mudar
     useEffect(() => {
         reset({
             name: user?.nome || "",
@@ -56,8 +56,6 @@ export function Settings() {
     function onSubmit(data: SettingsSchema) {
         // TODO: Chamar API para salvar alterações
         // Exibir feedback de sucesso
-        // Você pode implementar a lógica de atualização aqui
-        // Exemplo: updateUser(data)
     }
 
     return (
@@ -86,30 +84,26 @@ export function Settings() {
                         <ImagePlus className="mr-2" />
                         Enviar foto
                     </UploadButton>
-                    <p className="menu-2 text-slate-700">
-                        Você pode fazer upload de uma imagem para usar de foto de perfil
-                        de até X mb.
-                    </p>
+                    <div className="flex gap-3 items-center">
+                        {user?.tipo === 1 ? (
+                            <>
+                                <CircleCheckBig className="inline-block text-green-600" />
+                                <p className="menu-2 text-green-600">
+                                    Gestor da Astin
+                                </p>
+                            </>
+                        ) : user?.tipo === 2 ? (
+                            <>
+                                <CircleCheckBig className="inline-block text-green-600" />
+                                <p className="menu-2 text-green-600">
+                                    Analista da Astin
+                                </p>
+                            </>
+                        ) : null}
+                    </div>
                 </div>
             </header>
-            <main className="flex flex-col gap-6">
-                <div className="flex gap-3 items-center">
-                    {user?.tipo === 1 ? (
-                        <>
-                            <CircleCheckBig className="inline-block text-green-600" />
-                            <p className="menu-2 text-green-600">
-                                Gestor da Astin
-                            </p>
-                        </>
-                    ) : user?.tipo === 2 ? (
-                        <>
-                            <CircleCheckBig className="inline-block text-green-600" />
-                            <p className="menu-2 text-green-600">
-                                Analista da Astin
-                            </p>
-                        </>
-                    ) : null}
-                </div>
+            <main className="flex flex-col">
                 <form
                     className="flex flex-col gap-6 max-w-xl"
                     onSubmit={handleSubmit(onSubmit)}
@@ -132,7 +126,7 @@ export function Settings() {
                             <label>Matrícula:</label>
                             <Input
                                 type="text"
-                                value={user?.matricula || "Não Encontrado"}
+                                value={matricula}
                                 disabled
                                 className="bg-slate-100 cursor-not-allowed"
                                 placeholder="XXXXXXXX-Y"
@@ -170,7 +164,7 @@ export function Settings() {
                             <label>Gerência:</label>
                             <Input
                                 type="text"
-                                value={user?.nomeGerencia || "Não Encontrado"}
+                                value={nomeGerencia}
                                 disabled
                                 className="bg-slate-100 cursor-not-allowed"
                                 placeholder="ASTIN"

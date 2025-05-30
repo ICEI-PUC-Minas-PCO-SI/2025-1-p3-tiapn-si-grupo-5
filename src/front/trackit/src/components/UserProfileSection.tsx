@@ -25,9 +25,9 @@ export function UserProfileSection({
     };
 
     const { user } = useUser();
+
     const [managementName, setManagementName] = useState<string>("");
 
-    // Todas as informações vêm do contexto
     const avatarUrl = user?.fotoPerfil;
     const displayName = user?.nome || "Usuário TrackIt";
     const displayEmail = user?.email || "usuario@trackit.com";

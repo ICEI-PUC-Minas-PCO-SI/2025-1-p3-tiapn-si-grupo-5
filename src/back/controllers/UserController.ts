@@ -36,9 +36,19 @@ export class UserController {
     async loginUser(req: Request, res: Response) {
         try {
             const { email, senha } = req.body;
-
             const usuario = await prisma.usuario.findUnique({
                 where: { email },
+                select: {
+                    idUsuario: true,
+                    nomeUsuario: true,
+                    email: true,
+                    ramal: true,
+                    matricula: true,
+                    idGerencia: true,
+                    idTipoUsuario: true,
+                    ativo: true,
+                    fotoPerfil: true
+                }
             });
 
             if (!usuario) {
@@ -46,7 +56,19 @@ export class UserController {
             } else if (!usuario.ativo) {
                 res.status(403).json({ error: "Usuário inativo" });
             } else {
-                const senhaValida = await compareHashedPassword(senha, usuario.senha);
+                let nomeGerencia: string | undefined = undefined;
+                if (usuario.idGerencia) {
+                    const gerencia = await prisma.gerencia.findUnique({
+                        where: { idGerencia: usuario.idGerencia }
+                    });
+                    nomeGerencia = gerencia?.nomeGerencia;
+                }
+                const usuarioSenha = await prisma.usuario.findUnique({
+                    where: { email },
+                    select: { senha: true }
+                });
+                const senhaValida = usuarioSenha && await compareHashedPassword(senha, usuarioSenha.senha);
+
                 if (!senhaValida) {
                     res.status(401).json({ error: "Email ou senha inválidos" });
                 } else {
@@ -62,9 +84,12 @@ export class UserController {
                             nome: usuario.nomeUsuario,
                             email: usuario.email,
                             ramal: usuario.ramal,
+                            matricula: usuario.matricula,
                             gerencia: usuario.idGerencia,
                             tipo: usuario.idTipoUsuario,
                             ativo: usuario.ativo,
+                            fotoPerfil: usuario.fotoPerfil,
+                            nomeGerencia
                         },
                         token
                     });
@@ -127,7 +152,7 @@ export class UserController {
 
     async getMe(req: Request, res: Response) {
         try {
-            // @ts-expect-error req.usuario is set by the authentication middleware
+            // @ts-expect-error none
             const usuarioId = req.usuario.id;
             const usuario = await prisma.usuario.findUnique({
                 where: { idUsuario: usuarioId },
