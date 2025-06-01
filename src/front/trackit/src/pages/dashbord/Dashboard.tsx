@@ -2,6 +2,7 @@ import { KpiCard } from "@/components/KpiCard"
 import { ChartBar } from "@/components/ui/ChartBar"
 import { ChartPie } from "@/components/ui/ChartPie"
 import { ChartLine } from "@/components/ui/ChartLine"
+import { DashboardDataTable } from "@/components/DashboardDataTable"
 
 export function Dashboard() {
     return (
@@ -149,6 +150,10 @@ export function Dashboard() {
                     trendInfo="Tendência de aumento nas demandas de hardware e software"
                     footerInfo="Dados acumulados de 2024"
                 />
+            </div>
+            <div className="flex flex-col gap-4">
+                <h2 className="title-h2 text-slate-950">Analistas e Demandas</h2>
+                <DashboardDataTable />
             </div>
         </div>
     )
