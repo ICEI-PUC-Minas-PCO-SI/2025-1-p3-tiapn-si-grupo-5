@@ -23,7 +23,7 @@ export const description = "A bar chart"
 
 interface ChartData {
     month: string
-    desktop: number
+    quantity: number
 }
 
 interface ChartBarProps {
@@ -44,7 +44,7 @@ export function ChartBar({
     footerInfo,
 }: ChartBarProps) {
     return (
-        <Card className="w-128 h-109">
+        <Card className="w-128 h-112">
             <CardHeader>
                 <CardTitle>{cardTitle}</CardTitle>
                 <CardDescription>{cardDescription}</CardDescription>
@@ -64,7 +64,11 @@ export function ChartBar({
                             cursor={false}
                             content={<ChartTooltipContent hideLabel />}
                         />
-                        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} />
+                        <Bar
+                            dataKey="quantity"
+                            fill={chartConfig.desktop.color}
+                            radius={8}
+                        />
                     </BarChart>
                 </ChartContainer>
             </CardContent>

@@ -1,6 +1,7 @@
 import { KpiCard } from "@/components/KpiCard"
 import { ChartBar } from "@/components/ui/ChartBar"
-import { ChartPie } from "@/components/ui/PieChart"
+import { ChartPie } from "@/components/ui/ChartPie"
+import { ChartLine } from "@/components/ui/ChartLine"
 
 export function Dashboard() {
     return (
@@ -39,18 +40,18 @@ export function Dashboard() {
             <div className="flex flex-wrap gap-8 items-center">
                 <ChartBar
                     chartData={[
-                        { month: "January", desktop: 320 },
-                        { month: "February", desktop: 250 },
-                        { month: "March", desktop: 180 },
-                        { month: "April", desktop: 300 },
-                        { month: "May", desktop: 220 },
-                        { month: "June", desktop: 250 },
-                        { month: "July", desktop: 300 },
-                        { month: "August", desktop: 280 },
-                        { month: "September", desktop: 310 },
-                        { month: "October", desktop: 330 },
-                        { month: "November", desktop: 250 },
-                        { month: "December", desktop: 400 },
+                        { month: "January", quantity: 320 },
+                        { month: "February", quantity: 250 },
+                        { month: "March", quantity: 180 },
+                        { month: "April", quantity: 300 },
+                        { month: "May", quantity: 220 },
+                        { month: "June", quantity: 250 },
+                        { month: "July", quantity: 300 },
+                        { month: "August", quantity: 280 },
+                        { month: "September", quantity: 310 },
+                        { month: "October", quantity: 330 },
+                        { month: "November", quantity: 250 },
+                        { month: "December", quantity: 400 },
                     ]}
                     chartConfig={{
                         desktop: {
@@ -65,13 +66,13 @@ export function Dashboard() {
                 />
                 <ChartPie
                     chartData={[
-                        { tipochamado: "Resolvidos", quantidade: 150, fill: "var(--chart-6)" },
-                        { tipochamado: "Em aberto", quantidade: 150, fill: "var(--chart-7)" },
-                        { tipochamado: "Aguardando resposta", quantidade: 150, fill: "var(--chart-8)" },
-                        { tipochamado: "Em análise", quantidade: 150, fill: "var(--chart-9)" },
+                        { tipochamado: "Resolvidos", quantity: 150, fill: "var(--chart-6)" },
+                        { tipochamado: "Em aberto", quantity: 150, fill: "var(--chart-7)" },
+                        { tipochamado: "Aguardando resposta", quantity: 150, fill: "var(--chart-8)" },
+                        { tipochamado: "Em análise", quantity: 150, fill: "var(--chart-9)" },
                     ]}
                     chartConfig={{
-                        quantidade: {
+                        quantity: {
                             label: "Chamados",
                         },
                         resolvidos: {
@@ -98,12 +99,12 @@ export function Dashboard() {
                 />
                 <ChartPie
                     chartData={[
-                        { tipochamado: "Alta", quantidade: 120, fill: "var(--chart-10)" },
-                        { tipochamado: "Média", quantidade: 200, fill: "var(--chart-7)" },
-                        { tipochamado: "Baixa", quantidade: 80, fill: "var(--chart-6)" },
+                        { tipochamado: "Alta", quantity: 120, fill: "var(--chart-10)" },
+                        { tipochamado: "Média", quantity: 200, fill: "var(--chart-7)" },
+                        { tipochamado: "Baixa", quantity: 80, fill: "var(--chart-6)" },
                     ]}
                     chartConfig={{
-                        quantidade: {
+                        quantity: {
                             label: "Demandas",
                         },
                         alta: {
@@ -122,6 +123,30 @@ export function Dashboard() {
                     cardTitle="Demandas por Nível de Prioridade"
                     cardDescription="Gráfico de pizza mostrando as demandas por nível de prioridade"
                     trendInfo="Alta prioridade representa maior parte das demandas"
+                    footerInfo="Dados acumulados de 2024"
+                />
+                <ChartLine
+                    chartData={[
+                        { month: "January", hardware: 50, software: 70, network: 40, security: 30, training: 20, consulting: 60, quantity: 10 },
+                        { month: "February", hardware: 60, software: 80, network: 50, security: 40, training: 30, consulting: 70, quantity: 20 },
+                        { month: "March", hardware: 70, software: 90, network: 60, security: 50, training: 40, consulting: 80, quantity: 30 },
+                        { month: "April", hardware: 80, software: 100, network: 70, security: 60, training: 50, consulting: 90, quantity: 40 },
+                        { month: "May", hardware: 90, software: 110, network: 80, security: 70, training: 60, consulting: 100, quantity: 50 },
+                        { month: "June", hardware: 100, software: 120, network: 90, security: 80, training: 70, consulting: 110, quantity: 60 },
+                        { month: "July", hardware: 110, software: 130, network: 100, security: 90, training: 80, consulting: 120, quantity: 70 },
+                    ]}
+                    chartConfig={{
+                        hardware: { label: "Hardware", color: "var(--chart-1)" },
+                        software: { label: "Software", color: "var(--chart-2)" },
+                        network: { label: "Network", color: "var(--chart-3)" },
+                        security: { label: "Security", color: "var(--chart-4)" },
+                        training: { label: "Training", color: "var(--chart-5)" },
+                        consulting: { label: "Consulting", color: "var(--chart-6)" },
+                        quantity: { label: "Other", color: "var(--chart-7)" },
+                    }}
+                    cardTitle="Demandas por Tipo de Helpdesk"
+                    cardDescription="Gráfico de linhas mostrando demandas típicas de helpdesk ao longo dos monthes"
+                    trendInfo="Tendência de aumento nas demandas de hardware e software"
                     footerInfo="Dados acumulados de 2024"
                 />
             </div>

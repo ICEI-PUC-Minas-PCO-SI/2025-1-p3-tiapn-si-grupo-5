@@ -24,7 +24,7 @@ export const description = "A simple pie chart"
 
 interface ChartData {
     tipochamado: string
-    quantidade: number
+    quantity: number
     fill: string
 }
 
@@ -46,11 +46,11 @@ export function ChartPie({
     footerInfo,
 }: ChartPieProps) {
     const totalQuantity = React.useMemo(() => {
-        return chartData.reduce((acc, curr) => acc + curr.quantidade, 0)
+        return chartData.reduce((acc, curr) => acc + curr.quantity, 0)
     }, [chartData])
 
     return (
-        <Card className="flex flex-col w-128 h-109">
+        <Card className="flex flex-col w-128 h-112">
             <CardHeader className="items-center pb-0">
                 <CardTitle>{cardTitle}</CardTitle>
                 <CardDescription>{cardDescription}</CardDescription>
@@ -67,7 +67,7 @@ export function ChartPie({
                         />
                         <Pie
                             data={chartData}
-                            dataKey="quantidade"
+                            dataKey="quantity"
                             nameKey="tipochamado"
                             innerRadius={60}
                             strokeWidth={5}
