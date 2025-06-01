@@ -97,7 +97,7 @@ export function Welcome() {
                         </Link>
                     )}
                     {userRole === "gestor" && (
-                        <Link to="/admin/performance">
+                        <Link to="/admin/dashboard">
                             <Button className="button-other p-0.75 1.5 w-[14rem] max-w-[14rem]">
                                 Ver dashboard
                             </Button>
