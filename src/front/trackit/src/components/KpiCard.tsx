@@ -7,7 +7,7 @@ export function KpiCard({ kpiTitle, kpiValue, kpiLink, kpiColor }: {
     kpiColor?: string;
 }) {
     return (
-        <div className="w-[32rem] flex items-center justify-start gap-4 p-4 bg-white rounded-lg shadow-md border border-slate-200 relative">
+        <div className="w-[32rem] flex items-center justify-start gap-4 p-4 bg-white rounded-lg shadow-sm border border-slate-200 relative">
             <span
                 className="w-2 absolute top-0 left-0 bottom-0 rounded-l-md"
                 style={{ backgroundColor: kpiColor }}

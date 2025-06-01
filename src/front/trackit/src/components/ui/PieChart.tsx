@@ -1,7 +1,7 @@
 "use client"
 
 import { TrendingUp } from "lucide-react"
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Pie, PieChart } from "recharts"
 
 import {
     Card,
@@ -19,14 +19,15 @@ import {
 
 import type { ChartConfig } from "@/components/ui/chart"
 
-export const description = "A bar chart"
+export const description = "A simple pie chart"
 
 interface ChartData {
-    month: string
-    desktop: number
+    tipochamado: string
+    quantidade: number
+    fill: string
 }
 
-interface ChartBarProps {
+interface ChartPieProps {
     chartData: ChartData[]
     chartConfig: ChartConfig
     cardTitle: string
@@ -35,41 +36,36 @@ interface ChartBarProps {
     footerInfo: string
 }
 
-export function ChartBar({
+export function ChartPie({
     chartData,
     chartConfig,
     cardTitle,
     cardDescription,
     trendInfo,
     footerInfo,
-}: ChartBarProps) {
+}: ChartPieProps) {
     return (
-        <Card className="w-128 h-109">
-            <CardHeader>
+        <Card className="flex flex-col w-128 h-109">
+            <CardHeader className="items-center pb-0">
                 <CardTitle>{cardTitle}</CardTitle>
                 <CardDescription>{cardDescription}</CardDescription>
             </CardHeader>
-            <CardContent>
-                <ChartContainer config={chartConfig}>
-                    <BarChart accessibilityLayer data={chartData}>
-                        <CartesianGrid vertical={false} />
-                        <XAxis
-                            dataKey="month"
-                            tickLine={false}
-                            tickMargin={10}
-                            axisLine={false}
-                            tickFormatter={(value) => value.slice(0, 3)}
-                        />
+            <CardContent className="flex-1 pb-0">
+                <ChartContainer
+                    config={chartConfig}
+                    className="mx-auto aspect-square max-h-[250px]"
+                >
+                    <PieChart>
                         <ChartTooltip
                             cursor={false}
                             content={<ChartTooltipContent hideLabel />}
                         />
-                        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} />
-                    </BarChart>
+                        <Pie data={chartData} dataKey="quantidade" nameKey="tipochamado" />
+                    </PieChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col items-start gap-2 text-sm">
-                <div className="flex gap-2 leading-none font-medium">
+            <CardFooter className="flex-col gap-2 text-sm">
+                <div className="flex items-center gap-2 leading-none font-medium">
                     {trendInfo} <TrendingUp className="h-4 w-4" />
                 </div>
                 <div className="text-muted-foreground leading-none">

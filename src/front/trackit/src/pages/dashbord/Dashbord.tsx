@@ -1,5 +1,6 @@
 import { KpiCard } from "@/components/KpiCard"
 import { ChartBar } from "@/components/ui/ChartBar"
+import { ChartPie } from "@/components/ui/PieChart"
 
 export function Dashboard() {
     return (
@@ -54,12 +55,45 @@ export function Dashboard() {
                     chartConfig={{
                         desktop: {
                             label: "Resolvidos",
-                            color: "var(--chart-2)",
+                            color: "var(--chart-6)",
                         },
                     }}
                     cardTitle="Chamados Resolvidos por Mês"
                     cardDescription="Gráfico de barras dos chamados resolvidos ao longo do ano"
                     trendInfo="Tendência de crescimento ao longo do ano"
+                    footerInfo="Dados acumulados de 2024"
+                />
+                <ChartPie
+                    chartData={[
+                        { tipochamado: "Resolvidos", quantidade: 150, fill: "var(--chart-6)" },
+                        { tipochamado: "Em aberto", quantidade: 150, fill: "var(--chart-7)" },
+                        { tipochamado: "Aguardando resposta", quantidade: 150, fill: "var(--chart-8)" },
+                        { tipochamado: "Em análise", quantidade: 150, fill: "var(--chart-9)" },
+                    ]}
+                    chartConfig={{
+                        quantidade: {
+                            label: "Chamados",
+                        },
+                        resolvidos: {
+                            label: "Resolvidos",
+                            color: "var(--chart-6)",
+                        },
+                        emAberto: {
+                            label: "Em aberto",
+                            color: "var(--chart-7)",
+                        },
+                        aguardandoResposta: {
+                            label: "Aguardando resposta",
+                            color: "var(--chart-8)",
+                        },
+                        emAnalise: {
+                            label: "Em análise",
+                            color: "var(--chart-9)",
+                        },
+                    }}
+                    cardTitle="Distribuição de Chamados"
+                    cardDescription="Gráfico de pizza mostrando a distribuição dos chamados"
+                    trendInfo="Distribuição uniforme entre os tipos de chamados"
                     footerInfo="Dados acumulados de 2024"
                 />
             </div>
