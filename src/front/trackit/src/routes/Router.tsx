@@ -8,7 +8,7 @@ import { Welcome } from "@/pages/welcome";
 import { OpenTicket } from "@/pages/openTicket";
 import { PrivateRoute } from "./PrivateRoute";
 import { Settings } from "@/pages/settings/Settings";
-import { Dashboard } from "../pages/dashbord/Dashbord";
+import { Dashboard } from "../pages/dashbord/Dashboard";
 
 export function Router() {
     return (

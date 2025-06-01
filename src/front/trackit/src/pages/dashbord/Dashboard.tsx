@@ -4,13 +4,13 @@ import { ChartPie } from "@/components/ui/PieChart"
 
 export function Dashboard() {
     return (
-        <div className="flex flex-col w-full h-full gap-y-8">
+        <div className="flex flex-col h-full gap-8 w-fit">
             <div className="flex gap-4 justify-between">
                 <h1 className="title-h1 text-slate-950">
                     Dashboard
                 </h1>
             </div>
-            <div className="flex flex-wrap gap-8 items-center">
+            <div className="flex flex-wrap gap-8 items-center w-[66rem]">
                 <KpiCard
                     kpiTitle="Chamados resolvidos"
                     kpiValue="150"
@@ -94,6 +94,34 @@ export function Dashboard() {
                     cardTitle="Distribuição de Chamados"
                     cardDescription="Gráfico de pizza mostrando a distribuição dos chamados"
                     trendInfo="Distribuição uniforme entre os tipos de chamados"
+                    footerInfo="Dados acumulados de 2024"
+                />
+                <ChartPie
+                    chartData={[
+                        { tipochamado: "Alta", quantidade: 120, fill: "var(--chart-10)" },
+                        { tipochamado: "Média", quantidade: 200, fill: "var(--chart-7)" },
+                        { tipochamado: "Baixa", quantidade: 80, fill: "var(--chart-6)" },
+                    ]}
+                    chartConfig={{
+                        quantidade: {
+                            label: "Demandas",
+                        },
+                        alta: {
+                            label: "Alta",
+                            color: "var(--chart-6)",
+                        },
+                        media: {
+                            label: "Média",
+                            color: "var(--chart-7)",
+                        },
+                        baixa: {
+                            label: "Baixa",
+                            color: "var(--chart-8)",
+                        },
+                    }}
+                    cardTitle="Demandas por Nível de Prioridade"
+                    cardDescription="Gráfico de pizza mostrando as demandas por nível de prioridade"
+                    trendInfo="Alta prioridade representa maior parte das demandas"
                     footerInfo="Dados acumulados de 2024"
                 />
             </div>
