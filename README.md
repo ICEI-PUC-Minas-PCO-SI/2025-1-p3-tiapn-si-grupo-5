@@ -1,6 +1,6 @@
 # Track IT
 
-![Diagrama de casos de uso](docs/images/trackit-logo.png)
+<img src="./docs/images/trackit-logo.png" width="200px"/>
 
 `CURSO: Sistemas de Informação`
 
