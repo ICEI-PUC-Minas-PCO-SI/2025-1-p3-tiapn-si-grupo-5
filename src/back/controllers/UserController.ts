@@ -51,11 +51,12 @@ export class UserController {
                     fotoPerfil: true
                 }
             });
-
             if (!usuario) {
                 res.status(401).json({ error: "Email ou senha inválidos" });
+                console.error("Usuário não encontrado.");
             } else if (!usuario.ativo) {
                 res.status(403).json({ error: "Usuário inativo" });
+                console.error("Usuário inativo.");
             } else {
                 let nomeGerencia: string | undefined = undefined;
                 if (usuario.idGerencia) {
@@ -69,9 +70,9 @@ export class UserController {
                     select: { senha: true }
                 });
                 const senhaValida = usuarioSenha && await compareHashedPassword(senha, usuarioSenha.senha);
-
                 if (!senhaValida) {
                     res.status(401).json({ error: "Email ou senha inválidos" });
+                    console.error("Senha inválida.");
                 } else {
                     const token = jwt.sign(
                         { id: usuario.idUsuario, email: usuario.email },
@@ -96,7 +97,6 @@ export class UserController {
                     });
                 }
             }
-
         } catch (error) {
             console.error("Erro no login:", error);
             res.status(500).json({ error: "Erro no servidor" });
