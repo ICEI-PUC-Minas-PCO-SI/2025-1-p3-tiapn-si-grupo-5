@@ -1,6 +1,5 @@
 import {
     AlertDialog,
-    AlertDialogTrigger,
     AlertDialogContent,
     AlertDialogHeader,
     AlertDialogFooter,
@@ -9,7 +8,6 @@ import {
     AlertDialogAction,
     AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { updateUserStatus } from "@/api/users";
 import type { User } from "@/interfaces/InterfacesDataTableUsers";
 import { useState } from "react";

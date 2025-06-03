@@ -13,6 +13,12 @@ import { useUser } from "@/contexts/UserContext";
 
 type UserProfileSectionProps = {
     onLogout?: () => void;
+    name: string;
+    email: string;
+    role: string;
+    department: string;
+    avatarUrl?: string;
+
 };
 
 export function UserProfileSection({
@@ -77,9 +83,11 @@ export function UserProfileSection({
                         )}
                     </Avatar>
                     <div className="flex-1 overflow-hidden">
-                        <p className="text-sm font-medium truncate">{displayName}</p>
-                        <p className="text-xs text-muted-foreground truncate">
-                            {displayEmail}
+                        <p className="text-sm font-medium truncate" title={displayName}>
+                            {displayName.length > 20 ? `${displayName.slice(0, 20)}...` : displayName}
+                        </p>
+                        <p className="text-xs text-muted-foreground truncate" title={displayEmail}>
+                            {displayEmail.length > 30 ? `${displayEmail.slice(0, 25)}...` : displayEmail}
                         </p>
                     </div>
                 </div>
@@ -96,8 +104,12 @@ export function UserProfileSection({
                         )}
                     </Avatar>
                     <div>
-                        <p className="font-medium">{displayName}</p>
-                        <p className="text-xs text-muted-foreground">{displayEmail}</p>
+                        <p className="font-medium truncate" title={displayName}>
+                            {displayName.length > 20 ? `${displayName.slice(0, 20)}...` : displayName}
+                        </p>
+                        <p className="text-xs text-muted-foreground truncate" title={displayEmail}>
+                            {displayEmail.length > 30 ? `${displayEmail.slice(0, 28)}...` : displayEmail}
+                        </p>
                     </div>
                 </div>
                 <DropdownMenuSeparator />
