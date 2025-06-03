@@ -11,7 +11,7 @@ export function DetailsStatus() {
       <div className="border-2 p-4 rounded mb-6">
         <div className="flex justify-between">
           <h2 className="title-h2 text-slate-700">
-            Editar gerências
+            Editar status
           </h2>
           <Button className="w-38 mr-6"
             onClick={() => setIsAdding(true)} // Controla o estado de adição
