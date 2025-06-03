@@ -17,6 +17,7 @@ import { getAllUsers } from "@/api/users";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
 import { PutActiveUser } from "@/components/PutActiveUser";
+import { useUser } from "@/contexts/UserContext";
 
 export function ManagementUsers() {
   const [Data, setData] = useState<User[]>([]);
@@ -29,6 +30,9 @@ export function ManagementUsers() {
     accessType: true,
     management: true,
     ativo: true,
+    nomeUsuario: true,
+    email: true,
+    ramal: true,
   });
   const [editModalState, setEditModalState] = useState<{
     isOpen: boolean;
@@ -40,6 +44,8 @@ export function ManagementUsers() {
     user: User | null;
     newStatus: number;
   }>({ open: false, user: null, newStatus: 0 });
+
+  const { user: loggedInUser } = useUser();
 
   const fetchUsers = async () => {
     try {
@@ -78,6 +84,9 @@ export function ManagementUsers() {
           : user.accessType === "Analista"
             ? 2
             : 3,
+      nomeUsuario: user.nomeUsuario,
+      email: user.email,
+      ramal: user.ramal,
     };
   };
 
@@ -110,12 +119,20 @@ export function ManagementUsers() {
     },
     {
       label: (row: User) => row.ativo === 1 ? "Desativar" : "Ativar",
-      onClick: (row) =>
+      onClick: (row) => {
+        if (row.id === String(loggedInUser?.id)) {
+          setAlert({
+            type: "error",
+            message: "Você não pode desativar seu próprio usuário enquanto estiver logado.",
+          });
+          return;
+        }
         setStatusDialog({
           open: true,
           user: row,
           newStatus: row.ativo === 1 ? 0 : 1,
-        }),
+        });
+      },
       variant: (row: User) => row.ativo === 1 ? "delete" : "active",
     },
   ];

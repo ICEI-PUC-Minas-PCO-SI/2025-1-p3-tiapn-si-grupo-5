@@ -25,6 +25,7 @@ import { getAllActiveManagements } from "@/api/management";
 import { getAllUserTypes } from "@/api/usertypes";
 import { updateUser } from "@/api/users";
 import type { UpdateUser } from "@/interfaces/InterfaceUpdateUser";
+import { useUser } from "@/contexts/UserContext";
 
 const putUserSchema = z.object({
     matricula: z
@@ -54,6 +55,7 @@ export function PutUserForm({
     onError: () => void;
     onClose: () => void;
 }) {
+    const { user: loggedInUser, logout } = useUser();
     const [isModalOpen] = useState(true);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [managements, setManagements] = useState<{ idGerencia: number; nomeGerencia: string }[]>([]);
@@ -109,6 +111,9 @@ export function PutUserForm({
             matricula: data.matricula,
             gerencia: Number(data.gerencia),
             tipoUsuario: Number(data.tipoUsuario),
+            nomeUsuario: user.nomeUsuario,
+            email: user.email,
+            ramal: user.ramal,
         };
 
         if (
@@ -123,6 +128,10 @@ export function PutUserForm({
         try {
             const response = await updateUser(payload);
             if (response.ok) {
+                if (payload.idUsuario === loggedInUser?.id && payload.tipoUsuario !== loggedInUser.tipo) {
+                    logout();
+                    return;
+                }
                 onSuccess();
             } else {
                 onError();

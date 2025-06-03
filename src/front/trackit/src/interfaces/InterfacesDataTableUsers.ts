@@ -9,6 +9,9 @@ export interface User {
         nomeGerencia: string;
     };
     ativo: number;
+    nomeUsuario: string;
+    email: string;
+    ramal: string;
 }
 
 export interface DataTableProps<T> {
