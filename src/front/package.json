@@ -1,0 +1,12 @@
+{
+  "name": "front",
+  "version": "1.0.0",
+  "description": "Frontend do projeto TrackIt",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd trackit && npm run dev",
+    "build": "cd trackit && npm run build"
+  },
+  "author": "",
+  "license": "ISC"
+}
