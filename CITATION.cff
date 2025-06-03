@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: Please cite this software using these metadata.
+title: Track IT
+authors:
+  - family-names: Henrique Costa Leandro
+    given-names: Allef 
+  - family-names: Marques Araujo Pena
+    given-names: Arthur
+  - family-names: Xavier Santos Frota
+    given-names: Bruno
+  - family-names: Versiani de Melo Penna
+    given-names: Eduardo
+  - family-names: de Freitas Marçal
+    given-names: João Pedro
+  - family-names: Fernandes Nascimento
+    given-names: Lucas
+  - name-suffix: Professora
+    affiliation: PUC Minas
+    family-names: Soares Vieira de Vasconcelos
+    given-names: Amália
+keywords:
+    - Track IT
+    - Gestão de demandas de TI
+repository-code: https://github.com/ICEI-PUC-Minas-PCO-SI/2025-1-p3-tiapn-si-grupo-5
+license: CC-BY-4.0
+version: 1.0.0
+date-released: 2025-06-27
