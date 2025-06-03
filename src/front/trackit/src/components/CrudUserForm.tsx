@@ -123,10 +123,11 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
             matricula: fullRegistration,
             ramal: data.ramal,
             email: data.email,
-            senha: String(import.meta.env.DEFAULT_TRACKIT_PASSWORD),
+            senha: String(import.meta.env.VITE_DEFAULT_TRACKIT_PASSWORD),
             gerencia: Number(data.management),
             tipoUsuario: Number(data.accessType),
         };
+        console.log(payload.senha)
         try {
             const response = await registerNewUser(payload);
             if (response.ok) {

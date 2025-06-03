@@ -3,6 +3,8 @@ import { Pencil, Trash2 } from "lucide-react";
 import type { Status } from "@/interfaces/InterfaceStatus";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface StatusParamsProps {
   isAdding: boolean;
@@ -165,7 +167,7 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
   };
 
   return (
-    <div className="p-6 bg-white">
+    <div className="p-6">
       {alert && (
         <div className="fixed bottom-4 right-4 z-50">
           <Alert
@@ -194,59 +196,47 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
           >
             <div className="flex items-center gap-2">
               <span
-                className="w-5 h-5 rounded-md"
+                className="w-5 h-5 rounded-full"
                 style={{ backgroundColor: status.hexCorPrimaria || "transparent" }}
               ></span>
-              <span>{status.nomeStatus}</span>
+              <span className="paragraph text-slate-700">{status.nomeStatus}</span>
             </div>
-            <div className="flex gap-2 ml-auto">
-              <button
-                onClick={() => handleDeleteStatus(status.idStatus)}
-                className="text-gray-300 items-center w-20 h-10 flex justify-center rounded hover:bg-red-500 hover:shadow-lg transition duration-300 cursor-pointer"
-              >
+            <div className="flex gap-2">
+              <Button variant="delete" size="icon" onClick={() => handleDeleteStatus(status.idStatus)}>
                 <Trash2 />
-              </button>
-              <button
-                onClick={() => handleEditStatus(status.idStatus)}
-                className="text-gray-100 bg-blue-500 items-center w-20 h-10 flex justify-center rounded hover:bg-blue-300 hover:shadow-lg transition duration-300 cursor-pointer"
-              >
+              </Button>
+              <Button size="icon" onClick={() => handleEditStatus(status.idStatus)}>
                 <Pencil />
-              </button>
+              </Button>
             </div>
           </li>
         ))}
       </ul>
       {isAdding && (
         <div className="mt-4 flex gap-2 items-center">
-          <input
+          <Input
             type="text"
             placeholder="Nome do status"
             value={newStatusName}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewStatusName(e.target.value)}
-            className="border rounded px-2 py-1 flex-1"
           />
-          <input
+          <Input
             type="color"
             value={newStatusColor}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewStatusColor(e.target.value)}
-            className="w-12 h-10 border rounded"
+            className="w-12 h-10"
           />
-          <button
-            onClick={handleSaveStatus}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-300 hover:shadow-lg transition duration-300 cursor-pointer"
-          >
-            Salvar
-          </button>
-          <button
+          <Button onClick={handleSaveStatus}>Salvar</Button>
+          <Button
             onClick={() => {
               setIsAdding(false);
               setNewStatusName("");
-              setNewStatusColor("");
+              setNewStatusColor("#000000");
             }}
-            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-300 hover:shadow-lg transition duration-300 cursor-pointer"
+            variant="outline"
           >
             Cancelar
-          </button>
+          </Button>
         </div>
       )}
     </div>

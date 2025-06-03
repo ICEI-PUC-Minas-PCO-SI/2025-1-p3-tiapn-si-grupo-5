@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 import { Pencil, Trash2 } from "lucide-react";
 import type { Gerencia } from "@/interfaces/InterfaceManagement";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -130,7 +132,6 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
   const handleDeleteMangement = async (idGerencia: number) => {
     try {
       console.log("Tentando excluir a gerência com id:", idGerencia);
-
       const response = await fetch(
         "http://localhost:3000/gerencias/department",
         {
@@ -141,25 +142,22 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
           body: JSON.stringify({ idGerencia }),
         }
       );
-
       if (!response.ok) {
         const errorData = await response.json();
         setAlert({ type: "error", message: errorData.error || "Erro ao excluir a gerência." });
         throw new Error("Erro ao excluir o status.");
       }
-
       setManagementList((prevList: Gerencia[]) =>
         prevList.filter((gerencia: Gerencia) => gerencia.idGerencia !== idGerencia)
       );
       setAlert({ type: "success", message: "Gerência excluída com sucesso!" });
     } catch (error) {
       console.error("Erro ao excluir a gerência no frontend:", error);
-      setAlert({ type: "error", message: "gerência associada a um usuário existente." });
+      setAlert({ type: "error", message: "Gerência associada a um usuário existente." });
     }
   };
-
   return (
-    <div className="p-6 bg-white">
+    <div className="p-6">
       {alert && (
         <div className="fixed bottom-4 right-4 z-50">
           <Alert
@@ -187,49 +185,45 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
             className="flex justify-between items-center py-2"
           >
             <div className="flex items-center gap-2">
-              <span>{gerencia.nomeGerencia}</span>
+              <span className="paragraph text-slate-700">{gerencia.nomeGerencia}</span>
             </div>
-            <div className="flex gap-2 ml-auto">
-              <button
+            <div className="flex gap-2 ">
+              <Button variant="delete" size="icon"
                 onClick={() => handleDeleteMangement(gerencia.idGerencia)}
-                className="text-gray-300 items-center w-20 h-10 flex justify-center rounded hover:bg-red-500 hover:shadow-lg transition duration-300 cursor-pointer"
               >
                 <Trash2 />
-              </button>
-              <button
+              </Button>
+              <Button size="icon"
                 onClick={() => handleEditManagement(gerencia.idGerencia)}
-                className="text-gray-100 bg-blue-500 items-center w-20 h-10 flex justify-center rounded hover:bg-blue-300 hover:shadow-lg transition duration-300 cursor-pointer"
               >
                 <Pencil />
-              </button>
+              </Button>
             </div>
           </li>
         ))}
       </ul>
       {isAdding && (
         <div className="mt-4 flex gap-2 items-center">
-          <input
+          <Input
             type="text"
             placeholder="Nome do status"
             value={newManagementName}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewManagementName(e.target.value)}
-            className="border rounded px-2 py-1 flex-1"
           />
-          <button
+          <Button
             onClick={handleSaveManagement}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-300 hover:shadow-lg transition duration-300 cursor-pointer"
           >
             Salvar
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => {
               setIsAdding(false);
               setNewManagementName("");
             }}
-            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-300 hover:shadow-lg transition duration-300 cursor-pointer"
+            variant="outline"
           >
             Cancelar
-          </button>
+          </Button>
         </div>
       )}
     </div>

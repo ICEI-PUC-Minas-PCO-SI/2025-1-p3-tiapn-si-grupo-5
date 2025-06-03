@@ -1,21 +1,23 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { StatusParams } from "../../components/StatusParams";
 
 export function DetailsStatus() {
   const [isAdding, setIsAdding] = useState(false); // Estado para controlar o modo de adição
 
   return (
-    <div className="p-6 bg-white">
-      <h1 className="text-2xl font-bold mb-4">Gerenciar Parâmetros</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="title-h1 text-slate-950">Gerenciar Paramêtros</h1>
       <div className="border-2 p-4 rounded mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold mb-4">Status</h2>
-          <button
+        <div className="flex justify-between">
+          <h2 className="title-h2 text-slate-700">
+            Editar gerências
+          </h2>
+          <Button className="w-38 mr-6"
             onClick={() => setIsAdding(true)} // Controla o estado de adição
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 hover:shadow-lg transition duration-300 cursor-pointer"
           >
             + Adicionar
-          </button>
+          </Button>
         </div>
         {/* Passa o estado e a função para o componente StatusParams */}
         <StatusParams isAdding={isAdding} setIsAdding={setIsAdding} />
