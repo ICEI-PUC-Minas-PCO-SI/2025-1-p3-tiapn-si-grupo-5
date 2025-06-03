@@ -89,9 +89,10 @@ export function RegisterUser() {
         register,
         handleSubmit,
         control,
-        formState: { errors },
+        formState: { errors, isValid },
     } = useForm<registerUserSchema>({
         resolver: zodResolver(registerUserSchema),
+        mode: "onChange",
     });
     async function handleRegisterUser(data: registerUserSchema) {
         const input = data.registration.toUpperCase();
@@ -272,7 +273,10 @@ export function RegisterUser() {
                         </span>
                     )}
                 </div>
-                <Button type="submit">Cadastre-se</Button>
+                {/*TODO: TOOLTIP UX*/}
+                <Button type="submit" disabled={!isValid}>
+                    Cadastre-se
+                </Button>
             </form>
         </>
     );

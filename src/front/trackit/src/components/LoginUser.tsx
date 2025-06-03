@@ -48,12 +48,13 @@ export function LoginUser() {
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isValid },
     } = useForm<LoginUserSchema>({
         defaultValues: {
             email: searchParams.get('email') ?? ''
         },
         resolver: zodResolver(loginUserSchema),
+        mode: "onChange",
     });
 
     const { setUser } = useUser();
@@ -81,7 +82,6 @@ export function LoginUser() {
                     navigate("/user");
                 }
             }
-            setAlert({ type: "success", message: "Login realizado com sucesso!" });
         } catch (error) {
             console.error("Erro ao fazer login:", error);
             setAlert({ type: "error", message: "Falha ao fazer login. Tente novamente." });
@@ -148,7 +148,9 @@ export function LoginUser() {
                         </span>
                     )}
                 </div>
-                <Button type="submit">Login</Button>
+                <Button type="submit" disabled={!isValid}>
+                    Login
+                </Button>
             </form>
         </>
     );

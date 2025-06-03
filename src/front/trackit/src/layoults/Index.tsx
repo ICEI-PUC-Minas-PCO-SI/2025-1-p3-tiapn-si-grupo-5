@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { useUser } from "@/contexts/UserContext";
 
-export function Welcome() {
+export function Index() {
     const { user } = useUser();
 
     let userRole: "gestor" | "analista" | "usuario" = "usuario";

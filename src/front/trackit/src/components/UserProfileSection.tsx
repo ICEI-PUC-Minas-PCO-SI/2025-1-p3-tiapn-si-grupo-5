@@ -115,7 +115,7 @@ export function UserProfileSection({
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="flex items-center gap-2 cursor-default">
                     <User className="h-4 w-4 mr-2" />
-                    <span>Função: {displayRole}</span>
+                    <span>Acesso: {displayRole}</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="flex items-center gap-2 cursor-default">
                     <Building className="h-4 w-4 mr-2" />

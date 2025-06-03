@@ -4,7 +4,7 @@ import { Login } from "../pages/login/Login";
 import { ForgotPassword } from "../pages/reset-password/ForgotPassword";
 import { DefaultLayoult } from "../layoults/DefaultLayoult";
 import { ManagementUsers } from "../pages/management-users/ManagementUsers";
-import { Welcome } from "@/pages/welcome";
+import { Index } from "@/layoults/Index";
 import { OpenTicket } from "@/pages/openTicket";
 import { PrivateRoute } from "./PrivateRoute";
 import { Settings } from "@/pages/settings/Settings";
@@ -22,7 +22,7 @@ export function Router() {
                     <DefaultLayoult />
                 </PrivateRoute>
             }>
-                <Route index element={<Welcome />} />
+                <Route index element={<Index />} />
                 <Route path="open-ticket" element={<OpenTicket />} />
                 <Route path="settings" element={< Settings />} />
             </Route>
@@ -31,7 +31,7 @@ export function Router() {
                     <DefaultLayoult />
                 </PrivateRoute>
             }>
-                <Route index element={<Welcome />} />
+                <Route index element={<Index />} />
                 <Route path="settings" element={< Settings />} />
             </Route>
             <Route path="/admin" element={
@@ -39,7 +39,7 @@ export function Router() {
                     <DefaultLayoult />
                 </PrivateRoute>
             }>
-                <Route index element={<Welcome />} />
+                <Route index element={<Index />} />
                 <Route path="management-users" element={<ManagementUsers />} />
                 <Route path="settings" element={< Settings />} />
                 <Route path="params/status" element={<DetailsStatus />} />

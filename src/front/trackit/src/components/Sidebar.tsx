@@ -131,11 +131,11 @@ export function Sidebar() {
                             <SidebarMenuItem>
                                 <SidebarMenuButton
                                     asChild
-                                    isActive={location.pathname === "/analyst/performance"}
+                                    isActive={location.pathname === "/analyst/dashboard"}
                                     variant="default"
                                     size="default"
                                 >
-                                    <Link to="/analyst/performance">
+                                    <Link to="/analyst/dashboard">
                                         <BarChart4 className="mr-2" />
                                         <span>Desempenho</span>
                                     </Link>
@@ -162,11 +162,11 @@ export function Sidebar() {
                             <SidebarMenuItem>
                                 <SidebarMenuButton
                                     asChild
-                                    isActive={location.pathname === "/admin/performance"}
+                                    isActive={location.pathname === "/admin/dashboard"}
                                     variant="default"
                                     size="default"
                                 >
-                                    <Link to="/admin/performance">
+                                    <Link to="/admin/dashboard">
                                         <BarChart4 className="mr-2" />
                                         <span>Desempenho</span>
                                     </Link>
