@@ -1,25 +1,82 @@
-## Configurando o Back-End:
+# Visão Geral do Back-End
 
-Para instalar as dependências do projeto automaticamente, basta rodar, no diretório `./src/back/`:
+Este projeto implementa o back-end da aplicação TrackIT utilizando Node.js, Express, TypeScript e Prisma ORM. O objetivo é fornecer uma API RESTful organizada, escalável e de fácil manutenção, seguindo boas práticas de arquitetura e desenvolvimento.
+
+## Instalação
+
+No diretório `./src/back/`, execute:
 
 ```bash
-npm i
+npm install
 ```
 
-Crie um arquivo .env que contenha a variável DATABASE_URL, ela será lida pelo Prisma e estabelecerá a conexçao com o banco, conteúdo do .env na raiz do projeto:
+## Configuração do Prisma ORM
 
-````bash
-DATABASE_URL="mysql://[seu usuário do MySQL]:[sua senha do MySQL, evite caracteres especiais]@localhost:3306/db_trackit?schema=public"```
+1. **Variáveis de Ambiente:**  
+   Crie um arquivo `.env` na raiz do projeto com a variável `DATABASE_URL` para conexão com o banco de dados e uma `PORT` para configurar a porta que o backend irá rodar. Exemplo:
+   ```
+   DATABASE_URL="mysql://[usuario]:[senha]@localhost:3306/db_trackit?schema=public"
+   PORT=[porta de sua preferência]
+   ```
 
-Gerar os objetos do Prisma:
+2. **Gerar Cliente Prisma:**  
+   Gere os arquivos necessários do Prisma com:
+   ```bash
+   npx prisma generate
+   ```
+
+3. **Migrações:**  
+   Para atualizar o banco de dados, utilize:
+   ```bash
+   npx prisma migrate dev
+   ```
+
+## Funcionamento Geral
+
+- **Estrutura Modular:**  
+  O código está organizado em pastas para controllers, services, middlewares, rotas, utilitários e testes.
+- **Controllers:** Recebem requisições e delegam a lógica para os services.
+- **Services:** Centralizam a lógica de negócio e interagem com o banco via Prisma.
+- **Middlewares:** Realizam autenticação, validação e tratamento de erros.
+- **Rotas:** Seguem padrão RESTful, agrupadas por recurso.
+
+### Inicialização
+
+Para rodar a aplicação:
 
 ```bash
-npx prisma generate
-````
+npm run dev
+```
 
-- Caso ele não crie o arquivo .env, você deverá ser criado.
+O servidor estará disponível em `http://localhost:3000` (ou porta definida em `PORT`).
 
-### Estrutura de pastas
+## Script para Usuário Padrão
+
+Existe um script para criar um usuário padrão no banco de dados, útil para testes iniciais ou acesso administrativo:
+
+- **Arquivo:** `src/back/scripts/createDefaultUser.ts`
+- **Como executar:**  
+  No diretório `src/back`, rode:
+  ```bash
+  npx ts-node scripts/createDefaultUser.ts
+  ```
+- O usuário criado terá senha `Trackit123` (já hasheada), e você pode ajustar os dados no próprio script conforme necessário.
+
+## Testes de API
+
+Você pode testar os endpoints utilizando ferramentas como **Postman** ou **Insomnia**.  
+Basta importar as rotas e realizar requisições HTTP conforme a documentação das rotas.
+
+
+## Testes Automatizados
+
+- Os testes unitários e de integração estão localizados na pasta `tests/`.
+- Execute todos os testes com:
+  ```bash
+  npm run test
+  ```
+
+## Estrutura de Pastas
 
 back/  
 ├── controllers/ # Lógica de controle das rotas  
@@ -30,56 +87,12 @@ back/
 ├── services/ # Lógica de negócio e integração com o banco  
 ├── tests/ # Arquivos de teste (Jest)  
 ├── utils/ # Funções utilitárias e auxiliares  
+├── scripts/ # Scripts utilitários (ex: criação de usuário padrão)  
 ├── .env # Variáveis de ambiente  
 ├── app.ts # Arquivo principal da aplicação  
 ├── server.ts # Inicialização do servidor  
 └── README.md # Documentação
 
-## Explicando sobre as dependências
+## // TODO
 
-### Express
-
-O [Express](https://expressjs.com/) é um framework web para Node.js, utilizado para criar a API REST do TrackIT. Ele oferece recursos para lidar com rotas, requisições, respostas e middleware. A estrutura inicial é apenas para teste e demonstrativo, as implementações devem modificá-las de acordo com a necessidade.
-
-### Prisma
-
-O [Prisma](https://www.prisma.io/docs) é um ORM (Object-Relational Mapping) utilizado para interagir com o banco de dados. Ele facilita a manipulação das tabelas usando modelos definidos no arquivo `schema.prisma`. As operações e maiores detalhes podem ser lidas na documentação, no `app.ts` tem um pequeno demonstrativo. O Prisma já está totalmente configurado com a estrutura do banco de dados presente em `src/db/createDBbtrackIT`.
-
-### Jest
-
-O [Jest](https://jestjs.io/pt-BR/docs/getting-started) é um framework de testes para JavaScript e TypeScript, utilizado para garantir a qualidade do código. Os testes são criados na pasta tests/ e seguem a convenção de arquivo `*.test.ts`.
-
-### Rodar a aplicação:
-
-Execute o comando, isso com a aplicação de demonstração que foi desenvolvida:
-
-```bash
-npm run start
-```
-
-## Guia de Desenvolvimento - Back-End
-
-### Boas Práticas
-
-- Utilize a estrutura do Express para modularização das rotas, controllers e middlewares.
-- Use o Prisma para assegurar consistência na manipulação dos dados.
-- Implemente testes unitários e de integração com o Jest.
-- Documente cada endpoint e lógica de negócio.
-
-### Estrutura de Código
-
-- Organize o código separando controllers, middlewares, serviços e utilitários.
-- Utilize TypeScript para tipagem forte e melhor manutenibilidade.
-- Implemente tratamento de erros centralizado com middlewares.
-
-### Testes e Debug
-
-- Utilize o Jest para criar testes que garantam a confiabilidade dos endpoints.
-- Rode testes com `npm run test` sempre que alterar lógicas críticas.
-- Configure logs para facilitar a identificação e solução de problemas.
-
-### Versionamento e Pull Requests
-
-- Faça commits com mensagens claras e significativas.
-- Use branches de feature para desenvolvimento e realize code reviews antes do merge.
-- Mantenha a branch principal protegida.
+- Documentação automática dos endpoints com Swagger/OpenAPI.
