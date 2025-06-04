@@ -1,3 +1,5 @@
+/*TODO: Padronizar Rotas*/
+
 import { Router } from "express";
 import { UserController } from "../controllers/UserController";
 import { autenticarToken } from "../middlewares/authJWT";

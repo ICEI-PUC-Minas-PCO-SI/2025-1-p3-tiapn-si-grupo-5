@@ -2,7 +2,7 @@ import type { Gerencia } from "../interfaces/InterfaceManagement";
 
 export async function getAllActiveManagements(): Promise<Gerencia[]> {
     try {
-        const response = await fetch("http://localhost:3000/gerencias/department");
+        const response = await fetch("http://localhost:3000/department");
         if (!response.ok) {
             throw new Error("Erro ao buscar gerências ativas");
         }

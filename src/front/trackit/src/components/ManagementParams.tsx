@@ -19,7 +19,7 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
 
   const fetchManagement = async () => {
     try {
-      const response = await fetch("http://localhost:3000/gerencias/department");
+      const response = await fetch("http://localhost:3000/department");
       if (!response.ok) {
         throw new Error("Erro ao buscar as gerências.");
       }
@@ -47,7 +47,7 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
   }) => {
     try {
       const response = await fetch(
-        "http://localhost:3000/gerencias/department",
+        "http://localhost:3000/department",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -88,7 +88,7 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
     if (editingManagementId !== null) {
       try {
         const response = await fetch(
-          `http://localhost:3000/gerencias/department`,
+          `http://localhost:3000/department`,
           {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -133,7 +133,7 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
     try {
       console.log("Tentando excluir a gerência com id:", idGerencia);
       const response = await fetch(
-        "http://localhost:3000/gerencias/department",
+        "http://localhost:3000/department",
         {
           method: "DELETE",
           headers: {

@@ -16,13 +16,13 @@ const managementRoutes = new ManagementRoutes();
 const userTypeRoutes = new UserTypeRoutes();
 const ticketRoutes = new TicketRoutes();
 const statusRoutes = new StatusRoutes();
-const ticketTypeRoutes = new TicketTypeRoutes(); // adicionado
+const ticketTypeRoutes = new TicketTypeRoutes();
 
 app.use("/usuarios", userRoutes.getRouter());
-app.use("/gerencias", managementRoutes.getRouter());
-app.use("/tipos-usuarios", userTypeRoutes.getRouter());
-app.use("/tickets", ticketRoutes.getRouter());
+app.use("/", managementRoutes.getRouter());
+app.use("/", userTypeRoutes.getRouter());
+app.use("/", ticketRoutes.getRouter());
 app.use("/", statusRoutes.getRouter());
-app.use("/", ticketTypeRoutes.getRouter()); // adicionado
+app.use("/", ticketTypeRoutes.getRouter());
 
 export default app;

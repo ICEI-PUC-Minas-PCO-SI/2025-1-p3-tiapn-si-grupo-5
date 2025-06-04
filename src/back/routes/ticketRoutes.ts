@@ -12,7 +12,7 @@ export class TicketRoutes {
     }
 
     private initializeRoutes() {
-        this.router.post("/", this.ticketController.createTicket.bind(this.ticketController));
+        this.router.post("/tickets", this.ticketController.createTicket.bind(this.ticketController));
     }
 
     public getRouter(): Router {

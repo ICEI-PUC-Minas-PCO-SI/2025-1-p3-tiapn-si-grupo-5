@@ -166,7 +166,7 @@ export function SettingsUserForm({ onFeedback }: SettingsUserFormProps) {
             <div className="flex gap-4 items-center">
                 <Button
                     type="button"
-                    variant="outline"
+                    variant="outlineDisabled"
                     size="fit"
                 >
                     <Shield />
