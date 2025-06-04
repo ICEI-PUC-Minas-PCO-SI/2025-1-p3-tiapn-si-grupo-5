@@ -6,9 +6,8 @@ const prisma = new PrismaClient();
 export class TicketController {
     async createTicket(req: Request, res: Response) {
         try {
-            const { assunto, descricao, idSolicitante } = req.body;
+            const { assunto, descricao, idSolicitante, idTipoChamado } = req.body;
             const dataAbertura = new Date();
-
             const ticket = await prisma.chamado.create({
                 data: {
                     protocolo: "", // temporário
@@ -16,6 +15,7 @@ export class TicketController {
                     descricao,
                     dataAbertura,
                     idSolicitante,
+                    idTipoChamado,
                     idStatus: null,      // Futuramente obrigatório
                     idPrioridade: null,  // Futuramente obrigatório
                 },
@@ -24,12 +24,10 @@ export class TicketController {
             const idZero = ticket.idChamado.toString().padStart(6, "0");
             const protocolo = `${idZero}${ano}`;
 
-            // Atualiza o chamado com o protocolo correto
             const ticketAtualizado = await prisma.chamado.update({
                 where: { idChamado: ticket.idChamado },
                 data: { protocolo }
             });
-
             res.status(201).json(ticketAtualizado);
         } catch (error) {
             console.error("Erro ao criar chamado:", error);

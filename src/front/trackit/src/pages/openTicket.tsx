@@ -68,16 +68,15 @@ export function OpenTicket() {
             setAlert({ type: "error", message: "Usuário não autenticado!" });
             return;
         }
-
+        const payload = {
+            assunto: data.subject,
+            descricao: data.description,
+            idSolicitante: user.id,
+            idPrioridade: Number(data.priority),
+            idTipoChamado: Number(data.type)
+        };
         try {
-            const response = await sendTicket({
-                assunto: data.subject,
-                descricao: data.description,
-                idSolicitante: user.id,
-                idPrioridade: Number(data.priority),
-                idTipoChamado: Number(data.type)
-            });
-
+            const response = await sendTicket(payload);
             if (!response.ok) {
                 setAlert({ type: "error", message: "Erro ao abrir chamado!" });
                 return;
