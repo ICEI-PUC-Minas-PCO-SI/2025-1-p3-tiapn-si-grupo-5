@@ -1,10 +1,10 @@
 import type { InterfaceGetUser } from "../interfaces/InterfaceGetUser";
-import type { User } from "../interfaces/InterfacesDataTableUsers";
 import { getAllActiveManagements } from "./management";
 import type { RegisterUserPayload } from "../interfaces/InterfaceRegisterUser";
 import type { UpdateUser } from "../interfaces/InterfaceUpdateUser";
 import type { LoginUserPayload } from "../interfaces/InterfaceLoginUser";
 import type { UpdateProfileUserPayload } from "../interfaces/InterfaceUpdateUserProfile";
+import type { UserListItem } from "../interfaces/UserListItem";
 
 export async function registerNewUser(payload: RegisterUserPayload): Promise<Response> {
     return fetch("http://localhost:3000/usuarios/register", {
@@ -16,19 +16,20 @@ export async function registerNewUser(payload: RegisterUserPayload): Promise<Res
     });
 }
 
-export async function getAllUsers(): Promise<User[]> {
+
+export async function getAllUsers(): Promise<UserListItem[]> {
     try {
         const response = await fetch("http://localhost:3000/usuarios");
         if (!response.ok) {
             throw new Error("Erro ao buscar usuários");
         }
         const users: InterfaceGetUser[] = await response.json();
+        console.log(users)
         const managements = await getAllActiveManagements();
         return users.map((user) => {
             const matchedManagement = managements.find(
                 (management) => management.idGerencia === user.idGerencia
             );
-
             return {
                 id: user.idUsuario.toString(),
                 name: user.nomeUsuario,
