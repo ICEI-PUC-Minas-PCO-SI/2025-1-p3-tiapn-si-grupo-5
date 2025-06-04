@@ -12,10 +12,10 @@ export class TicketTypeRoutes {
     }
 
     private initializeRoutes() {
-        this.router.get('/tipo-chamado', this.ticketTypeController.getTicketTypes.bind(this.ticketTypeController));
-        this.router.post('/tipo-chamado', this.ticketTypeController.createTicketType.bind(this.ticketTypeController));
-        this.router.put('/tipo-chamado', this.ticketTypeController.updateTicketType.bind(this.ticketTypeController));
-        this.router.delete('/tipo-chamado', this.ticketTypeController.deleteTicketType.bind(this.ticketTypeController));
+        this.router.get('/ticket-types', this.ticketTypeController.getTicketTypes.bind(this.ticketTypeController));
+        this.router.post('/ticket-types', this.ticketTypeController.createTicketType.bind(this.ticketTypeController));
+        this.router.put('/ticket-types/:id', this.ticketTypeController.updateTicketType.bind(this.ticketTypeController));
+        this.router.delete('/ticket-types/:id', this.ticketTypeController.deleteTicketType.bind(this.ticketTypeController));
     }
 
     public getRouter(): Router {

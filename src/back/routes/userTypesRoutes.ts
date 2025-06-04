@@ -12,7 +12,7 @@ export class UserTypeRoutes {
     }
 
     private initializeRoutes() {
-        this.router.get("/tipos-usuarios", this.userTypeController.getAllUserTypes.bind(this.userTypeController));
+        this.router.get("/user-types", this.userTypeController.getAllUserTypes.bind(this.userTypeController));
     }
 
     public getRouter(): Router {

@@ -12,10 +12,10 @@ export class StatusRoutes {
     }
 
     private initializeRoutes() {
-        this.router.get('/status', this.statusController.getStatus.bind(this.statusController));
-        this.router.post('/status', this.statusController.createStatus.bind(this.statusController));
-        this.router.put('/status', this.statusController.updateStatus.bind(this.statusController));
-        this.router.delete('/status', this.statusController.deleteStatus.bind(this.statusController));
+        this.router.get('/statuses', this.statusController.getStatus.bind(this.statusController));
+        this.router.post('/statuses', this.statusController.createStatus.bind(this.statusController));
+        this.router.put('/statuses/:id', this.statusController.updateStatus.bind(this.statusController));
+        this.router.delete('/statuses/:id', this.statusController.deleteStatus.bind(this.statusController));
     }
 
     public getRouter(): Router {
