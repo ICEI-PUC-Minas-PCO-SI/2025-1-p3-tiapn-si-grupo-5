@@ -1,3 +1,10 @@
+/*
+  Esse é o script inicial para a criação do banco de dados TrackIT.
+  Ele cria as tabelas necessárias e define as relações entre elas.
+  Atualmente, o banco de dados passou por atualizações feitas via migrations do PRISMA ORM.
+  A atualização do banco de dados é feita através do comando `npx prisma migrate dev`.
+*/
+
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
