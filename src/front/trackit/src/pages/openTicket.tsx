@@ -13,11 +13,12 @@ import {
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { sendTicket } from "@/api/ticket";
 import { useUser } from "@/contexts/UserContext";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
+import { getAllTicketTypes } from "@/api/tickettype";
 
 const openTicket = z.object({
     subject: z.string().min(1, {
@@ -36,6 +37,7 @@ export function OpenTicket() {
     const { user } = useUser();
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [descLength, setDescLength] = useState(0);
+    const [ticketTypes, setTicketTypes] = useState<{ idTipoChamado: number; nomeTipo: string }[]>([]);
 
 
     const {
@@ -47,6 +49,18 @@ export function OpenTicket() {
     } = useForm<openTicket>({
         resolver: zodResolver(openTicket),
     });
+
+    useEffect(() => {
+        async function fetchTypes() {
+            try {
+                const types = await getAllTicketTypes();
+                setTicketTypes(types);
+            } catch {
+                setTicketTypes([]);
+            }
+        }
+        fetchTypes();
+    }, []);
 
 
     async function handleOpenTicket(data: openTicket) {
@@ -177,9 +191,11 @@ export function OpenTicket() {
                                     <SelectContent>
                                         <SelectGroup>
                                             <SelectLabel>Selecione o tipo da demanda</SelectLabel>
-                                            <SelectItem value="a">Mouse</SelectItem>
-                                            <SelectItem value="f">teclado</SelectItem>
-                                            <SelectItem value="h">asdads</SelectItem>
+                                            {ticketTypes.map((type) => (
+                                                <SelectItem key={type.idTipoChamado} value={String(type.idTipoChamado)}>
+                                                    {type.nomeTipo}
+                                                </SelectItem>
+                                            ))}
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>
@@ -214,7 +230,7 @@ export function OpenTicket() {
                             <div className="text-xs text-slate-500 text-right mt-1">
                                 {descLength}/1500 caracteres
                             </div>
-                            
+
                         </div>
                     </div>
 
@@ -222,7 +238,7 @@ export function OpenTicket() {
 
                     <footer className="flex justify-start gap-4">
                         <Button type="submit"
-                        size="fit">
+                            size="fit">
                             Abrir chamado
                         </Button>
                         <Button
