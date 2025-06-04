@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "../generated/prisma";
+import { TicketTypeService } from "../services/TicketTypeService";
 
-const prisma = new PrismaClient();
+const ticketTypeService = new TicketTypeService();
 
 export class TicketTypeController {
     async getTicketTypes(req: Request, res: Response) {
         try {
-            const tipos = await prisma.tipochamado.findMany();
+            const tipos = await ticketTypeService.getTicketTypes();
             res.json(tipos);
             console.log("Tipos de chamado:", JSON.stringify(tipos));
         } catch (error) {
@@ -18,12 +18,7 @@ export class TicketTypeController {
     async createTicketType(req: Request, res: Response) {
         try {
             const { nomeTipo } = req.body;
-            const novoTipo = await prisma.tipochamado.create({
-                data: {
-                    nomeTipo,
-                    ativo: 1
-                }
-            });
+            const novoTipo = await ticketTypeService.createTicketType(nomeTipo);
             res.status(201).json(novoTipo);
         } catch (error) {
             console.error("Erro ao criar tipo de chamado:", error);
@@ -34,10 +29,7 @@ export class TicketTypeController {
     async updateTicketType(req: Request, res: Response) {
         try {
             const { idTipoChamado, nomeTipo } = req.body;
-            const tipoAtualizado = await prisma.tipochamado.update({
-                where: { idTipoChamado: Number(idTipoChamado) },
-                data: { nomeTipo }
-            });
+            const tipoAtualizado = await ticketTypeService.updateTicketType(idTipoChamado, nomeTipo);
             res.json(tipoAtualizado);
         } catch (error) {
             console.error("Erro ao atualizar tipo de chamado:", error);
@@ -48,7 +40,7 @@ export class TicketTypeController {
     async deleteTicketType(req: Request, res: Response) {
         try {
             const { idTipoChamado } = req.body;
-            await prisma.tipochamado.delete({ where: { idTipoChamado: Number(idTipoChamado) } });
+            await ticketTypeService.deleteTicketType(idTipoChamado);
             res.status(204).send();
         } catch (error) {
             console.error("Erro ao deletar tipo de chamado:", error);

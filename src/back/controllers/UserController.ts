@@ -1,5 +1,5 @@
 import { PrismaClient } from "../generated/prisma";
-import { hashPassword, compareHashedPassword } from "../services/hashedPassword";
+import { hashPassword, compareHashedPassword } from "../services/HashPasswordService";
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 

@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "../generated/prisma";
+import { ManagementService } from "../services/ManagementService";
 
-const prisma = new PrismaClient();
+const managementService = new ManagementService();
 
 export class ManagementController {
     async getAllActiveManagement(req: Request, res: Response) {
         try {
-            const activeManagements = await prisma.gerencia.findMany();
+            const activeManagements = await managementService.getAllActiveManagement();
             res.json(activeManagements);
             console.log("Gerências ativas:", JSON.stringify(activeManagements));
         } catch (error) {
@@ -15,46 +15,36 @@ export class ManagementController {
         }
     }
 
-     async createManagement(req: Request, res: Response) {
-            try {
-                const { nomeGerencia } = req.body;
-                const novaGerencia = await prisma.gerencia.create({
-                    data: {
-                        nomeGerencia,
-                        ativo: 1,
-                    }
-                });
-                res.status(201).json(novaGerencia);
-            } catch (error) {
-                console.error("Erro ao criar gerência:", error);
-                res.status(500).json({ error: "Erro ao criar gerência" });
-            }
+    async createManagement(req: Request, res: Response) {
+        try {
+            const { nomeGerencia } = req.body;
+            const novaGerencia = await managementService.createManagement(nomeGerencia);
+            res.status(201).json(novaGerencia);
+        } catch (error) {
+            console.error("Erro ao criar gerência:", error);
+            res.status(500).json({ error: "Erro ao criar gerência" });
         }
-    
-        async updateManagement(req: Request, res: Response) {
-            try {
-                const { idGerencia, nomeGerencia } = req.body;
-                const gerenciaAtualizada = await prisma.gerencia.update({
-                    where: { idGerencia: Number(idGerencia) },
-                    data: {
-                        nomeGerencia,
-                    }
-                });
-                res.json(gerenciaAtualizada);
-            } catch (error) {
-                console.error("Erro ao atualizar gerência:", error);
-                res.status(500).json({ error: "Erro ao atualizar gerência" });
-            }
+    }
+
+    async updateManagement(req: Request, res: Response) {
+        try {
+            const { idGerencia, nomeGerencia } = req.body;
+            const gerenciaAtualizada = await managementService.updateManagement(idGerencia, nomeGerencia);
+            res.json(gerenciaAtualizada);
+        } catch (error) {
+            console.error("Erro ao atualizar gerência:", error);
+            res.status(500).json({ error: "Erro ao atualizar gerência" });
         }
-    
-        async deleteManagement(req: Request, res: Response) {
-            try {
-                const { idGerencia } = req.body;
-                await prisma.gerencia.delete({ where: { idGerencia } });
-                res.status(204).send();
-            } catch (error) {
-                console.error("Erro ao deletar status:", error);
-                res.status(500).json({ error: "Erro ao deletar status" });
-            }
+    }
+
+    async deleteManagement(req: Request, res: Response) {
+        try {
+            const { idGerencia } = req.body;
+            await managementService.deleteManagement(idGerencia);
+            res.status(204).send();
+        } catch (error) {
+            console.error("Erro ao deletar status:", error);
+            res.status(500).json({ error: "Erro ao deletar status" });
         }
+    }
 }

@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "../generated/prisma";
+import { StatusService } from "../services/StatusService";
 
-const prisma = new PrismaClient();
+const statusService = new StatusService();
 
 export class StatusController {
     async getStatus(req: Request, res: Response) {
         try {
-            const status = await prisma.statuschamado.findMany();
+            const status = await statusService.getStatus();
             res.json(status);
             console.log("Status ativos:", JSON.stringify(status));
         } catch (error) {
@@ -18,14 +18,7 @@ export class StatusController {
     async createStatus(req: Request, res: Response) {
         try {
             const { nomeStatus, color } = req.body;
-            const novoStatus = await prisma.statuschamado.create({
-                data: {
-                    nomeStatus,
-                    hexCorPrimaria: color,
-                    hexCorSecundaria: color, // valor padrão igual à primária
-                    ativo: 1
-                }
-            });
+            const novoStatus = await statusService.createStatus(nomeStatus, color);
             res.status(201).json(novoStatus);
         } catch (error) {
             console.error("Erro ao criar status:", error);
@@ -36,14 +29,7 @@ export class StatusController {
     async updateStatus(req: Request, res: Response) {
         try {
             const { idStatus, nomeStatus, color } = req.body;
-            const statusAtualizado = await prisma.statuschamado.update({
-                where: { idStatus: Number(idStatus) },
-                data: {
-                    nomeStatus,
-                    hexCorPrimaria: color,
-                    hexCorSecundaria: color // mantém igual à primária
-                }
-            });
+            const statusAtualizado = await statusService.updateStatus(idStatus, nomeStatus, color);
             res.json(statusAtualizado);
         } catch (error) {
             console.error("Erro ao atualizar status:", error);
@@ -54,7 +40,7 @@ export class StatusController {
     async deleteStatus(req: Request, res: Response) {
         try {
             const { idStatus } = req.body;
-            await prisma.statuschamado.delete({ where: { idStatus } });
+            await statusService.deleteStatus(idStatus);
             res.status(204).send();
         } catch (error) {
             console.error("Erro ao deletar status:", error);

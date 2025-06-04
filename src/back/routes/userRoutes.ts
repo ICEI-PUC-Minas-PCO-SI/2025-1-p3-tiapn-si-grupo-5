@@ -2,7 +2,7 @@
 
 import { Router } from "express";
 import { UserController } from "../controllers/UserController";
-import { autenticarToken } from "../middlewares/authJWT";
+import { autenticarToken } from "../middlewares/auth-jwt";
 
 export class UserRoutes {
     private router: Router;
