@@ -10,6 +10,7 @@ import { PrivateRoute } from "./PrivateRoute";
 import { Settings } from "@/pages/settings/Settings";
 import { DetailsStatus } from "@/pages/params/Status";
 import { DetailsManagement } from "@/pages/params/Management";
+import { TicketType } from "@/pages/params/TicketType";
 
 export function Router() {
     return (
@@ -44,6 +45,7 @@ export function Router() {
                 <Route path="settings" element={< Settings />} />
                 <Route path="params/status" element={<DetailsStatus />} />
                 <Route path="params/department" element={<DetailsManagement />} />
+                <Route path="params/type" element={<TicketType />} />
             </Route>
         </Routes>
     );
