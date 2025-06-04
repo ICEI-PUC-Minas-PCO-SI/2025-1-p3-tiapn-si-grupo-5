@@ -1,8 +1,11 @@
-import type { UserType } from "../interfaces/InterfaceUserTypes";
+export interface UserType {
+    idTipoUsuario: number;
+    tipoUsuario: string;
+}
 
 export async function getAllUserTypes(): Promise<UserType[]> {
     try {
-        const response = await fetch("http://localhost:3000/tipos-usuarios");
+        const response = await fetch("http://localhost:3000/user-types");
         if (!response.ok) {
             throw new Error("Erro ao buscar tipos de usuário");
         }

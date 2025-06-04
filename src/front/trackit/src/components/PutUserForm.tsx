@@ -21,9 +21,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { X } from "lucide-react";
-import { getAllActiveManagements } from "@/api/management";
-import { getAllUserTypes } from "@/api/usertypes";
-import { updateUser } from "@/api/users";
+import { getAllActiveManagements } from "@/api/Management";
+import { getAllUserTypes } from "@/api/UserTypes";
+import { updateUser } from "@/api/Users";
 import type { UpdateUser } from "@/interfaces/InterfaceUpdateUser";
 import { useUser } from "@/contexts/UserContext";
 

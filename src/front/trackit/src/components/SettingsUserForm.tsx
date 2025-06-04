@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import { updateProfileUser } from "@/api/users";
+import { updateProfileUser } from "@/api/Users";
 
 const settingsSchema = z.object({
     name: z.string()
@@ -17,8 +17,8 @@ const settingsSchema = z.object({
         }),
     email: z.string().email("E-mail inválido"),
     ramal: z.string().regex(/^\d{10}$/, {
-            message: "Ramal inválido. Deve conter entre 4 e 10 dígitos numéricos",
-        }),
+        message: "Ramal inválido. Deve conter entre 4 e 10 dígitos numéricos",
+    }),
 });
 
 type SettingsSchema = z.infer<typeof settingsSchema>;

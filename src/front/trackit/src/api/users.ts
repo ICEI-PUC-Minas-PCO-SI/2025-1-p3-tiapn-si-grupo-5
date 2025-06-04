@@ -1,13 +1,60 @@
-import type { InterfaceGetUser } from "../interfaces/InterfaceGetUser";
-import { getAllActiveManagements } from "./management";
-import type { RegisterUserPayload } from "../interfaces/InterfaceRegisterUser";
-import type { UpdateUser } from "../interfaces/InterfaceUpdateUser";
-import type { LoginUserPayload } from "../interfaces/InterfaceLoginUser";
-import type { UpdateProfileUserPayload } from "../interfaces/InterfaceUpdateUserProfile";
-import type { UserListItem } from "../interfaces/UserListItem";
+import { getAllActiveManagements } from "./Management";
 
-export async function registerNewUser(payload: RegisterUserPayload): Promise<Response> {
-    return fetch("http://localhost:3000/usuarios/register", {
+export interface IUpdateProfileUserPayload {
+    nome: string;
+    email: string;
+    ramal: string;
+}
+
+export interface IUserListItem {
+    id: string;
+    name: string;
+    matricula: string;
+    accessType: "Gestor" | "Analista" | "Usuário";
+    management: {
+        idGerencia: number;
+        nomeGerencia: string;
+    };
+    ativo: number;
+}
+
+export interface ILoginUserPayload {
+    email: string;
+    senha: string;
+}
+
+export interface IUpdateUser {
+    idUsuario: number;
+    nomeUsuario: string;
+    email: string;
+    ramal: string;
+    matricula?: string;
+    gerencia?: number;
+    tipoUsuario?: number;
+}
+
+export interface IRegisterUserPayload {
+    nomeUsuario: string;
+    matricula: string;
+    ramal: string;
+    email: string;
+    senha: string;
+    gerencia: number;
+    tipoUsuario: number;
+}
+
+export interface IGetUser {
+    idUsuario: number;
+    nomeUsuario: string;
+    matricula: string;
+    idTipoUsuario?: number;
+    idGerencia: number;
+    nomeGerencia: string;
+    ativo: number;
+}
+
+export async function registerNewUser(payload: IRegisterUserPayload): Promise<Response> {
+    return fetch("http://localhost:3000/users/register", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -16,14 +63,13 @@ export async function registerNewUser(payload: RegisterUserPayload): Promise<Res
     });
 }
 
-
-export async function getAllUsers(): Promise<UserListItem[]> {
+export async function getAllUsers(): Promise<IUserListItem[]> {
     try {
-        const response = await fetch("http://localhost:3000/usuarios");
+        const response = await fetch("http://localhost:3000/users");
         if (!response.ok) {
             throw new Error("Erro ao buscar usuários");
         }
-        const users: InterfaceGetUser[] = await response.json();
+        const users: IGetUser[] = await response.json();
         console.log(users)
         const managements = await getAllActiveManagements();
         return users.map((user) => {
@@ -53,8 +99,8 @@ export async function getAllUsers(): Promise<UserListItem[]> {
     }
 }
 
-export async function updateUser(payload: UpdateUser): Promise<Response> {
-    return fetch(`http://localhost:3000/usuarios/${payload.idUsuario}`, {
+export async function updateUser(payload: IUpdateUser): Promise<Response> {
+    return fetch(`http://localhost:3000/users/${payload.idUsuario}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -68,7 +114,7 @@ export async function updateUser(payload: UpdateUser): Promise<Response> {
 }
 
 export async function updateUserStatus(idUsuario: string, ativo: number): Promise<Response> {
-    return fetch(`http://localhost:3000/usuarios/${idUsuario}/status`, {
+    return fetch(`http://localhost:3000/users/${idUsuario}/status`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
@@ -77,8 +123,8 @@ export async function updateUserStatus(idUsuario: string, ativo: number): Promis
     });
 }
 
-export async function loginUser(payload: LoginUserPayload): Promise<Response> {
-    return fetch("http://localhost:3000/usuarios/login", {
+export async function loginUser(payload: ILoginUserPayload): Promise<Response> {
+    return fetch("http://localhost:3000/users/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -89,9 +135,9 @@ export async function loginUser(payload: LoginUserPayload): Promise<Response> {
 
 export async function updateProfileUser(
     userId: number,
-    payload: UpdateProfileUserPayload
+    payload: IUpdateProfileUserPayload
 ): Promise<Response> {
-    return fetch(`http://localhost:3000/usuarios/profile/${userId}`, {
+    return fetch(`http://localhost:3000/users/profile/${userId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"

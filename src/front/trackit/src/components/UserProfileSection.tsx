@@ -8,7 +8,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, User, Building } from "lucide-react";
-import { getAllActiveManagements } from "@/api/management";
+import { getAllActiveManagements } from "@/api/Management";
 import { useUser } from "@/contexts/UserContext";
 
 type UserProfileSectionProps = {

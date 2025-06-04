@@ -13,7 +13,7 @@ import { PutUserForm } from "@/components/PutUserForm";
 import { Dialog } from "@/components/ui/dialog";
 import type { User, ActionButton } from "@/interfaces/InterfacesDataTableUsers";
 import type { UpdateUser } from "@/interfaces/InterfaceUpdateUser";
-import { getAllUsers } from "@/api/users";
+import { getAllUsers } from "@/api/Users";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
 import { PutActiveUser } from "@/components/PutActiveUser";

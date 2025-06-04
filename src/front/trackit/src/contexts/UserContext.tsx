@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { DefaultSpinner } from "@/components/ui/spinner";
-import { getMe } from "@/api/auth";
-import { getAllActiveManagements } from "@/api/management";
+import { getMe } from "@/api/Auth";
+import { getAllActiveManagements } from "@/api/Management";
 import type { Management } from "../interfaces/InterfaceManagement";
 
 type User = {

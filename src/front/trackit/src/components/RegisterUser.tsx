@@ -18,8 +18,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from 'react-router-dom';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
-import { getAllActiveManagements } from "@/api/management";
-import { registerNewUser } from "@/api/users";
+import { getAllActiveManagements } from "@/api/Management";
+import { registerNewUser } from "@/api/Users";
 
 const registerUserSchema = z.object({
     name: z.string()

@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Pencil, Trash2, X } from "lucide-react";
 import type { TicketType } from "@/interfaces/InterfaceTicketType";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import {
     createTicketType,
     updateTicketType,
     deleteTicketType,
-} from "@/api/tickettype";
+} from "@/api/TicketType";
 
 interface TicketTypeParamsProps {
     isAdding: boolean;

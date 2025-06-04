@@ -14,11 +14,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { useState, useEffect } from "react";
-import { sendTicket } from "@/api/ticket";
+import { sendTicket } from "@/api/Ticket";
 import { useUser } from "@/contexts/UserContext";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
-import { getAllTicketTypes } from "@/api/tickettype";
+import { getAllTicketTypes } from "@/api/TicketType";
 
 const openTicket = z.object({
     subject: z.string().min(1, {

@@ -24,9 +24,9 @@ import {
 } from "@/components/ui/dialog";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { X } from "lucide-react";
-import { getAllActiveManagements } from "@/api/management";
-import { getAllUserTypes } from "../api/usertypes";
-import { registerNewUser } from "@/api/users";
+import { getAllActiveManagements } from "@/api/Management";
+import { getAllUserTypes } from "../api/UserTypes";
+import { registerNewUser } from "@/api/Users";
 
 const crudUserSchema = z.object({
     name: z

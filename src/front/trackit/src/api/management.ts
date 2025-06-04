@@ -1,8 +1,12 @@
-import type { Gerencia } from "../interfaces/InterfaceManagement";
+export interface IManagement {
+    idGerencia: number;
+    nomeGerencia: string;
+    ativo: number;
+}
 
-export async function getAllActiveManagements(): Promise<Gerencia[]> {
+export async function getAllActiveManagements(): Promise<IManagement[]> {
     try {
-        const response = await fetch("http://localhost:3000/department");
+        const response = await fetch("http://localhost:3000/departments");
         if (!response.ok) {
             throw new Error("Erro ao buscar gerências ativas");
         }

@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUser } from "@/contexts/UserContext";
-import { loginUser } from "@/api/users";
+import { loginUser } from "@/api/Users";
 
 type LoginFormData = {
     email: string;

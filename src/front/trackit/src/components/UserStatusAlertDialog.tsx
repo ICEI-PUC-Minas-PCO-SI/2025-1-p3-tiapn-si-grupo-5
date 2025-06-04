@@ -8,7 +8,7 @@ import {
     AlertDialogAction,
     AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
-import { updateUserStatus } from "@/api/users";
+import { updateUserStatus } from "@/api/Users";
 import type { User } from "@/interfaces/InterfacesDataTableUsers";
 import { useState } from "react";
 
