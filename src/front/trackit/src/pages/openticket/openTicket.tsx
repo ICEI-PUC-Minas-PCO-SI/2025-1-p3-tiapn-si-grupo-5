@@ -1,10 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { OpenTicketForm } from "@/components/openticket/OpenTicketForm";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
 
 export function OpenTicket() {
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+    useEffect(() => {
+        if (alert) {
+            const timer = setTimeout(() => setAlert(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [alert]);
 
     return (
         <div className="flex flex-col gap-[2rem]">

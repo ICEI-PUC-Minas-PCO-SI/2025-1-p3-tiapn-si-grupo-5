@@ -17,8 +17,8 @@ export interface INewTicket {
     assunto: string;
     descricao: string;
     idSolicitante: number;
-    idPrioridade?: number | null;
-    idTipoChamado?: number | null;
+    idPrioridade: number;
+    idTipoChamado: number;
 }
 
 export async function sendTicket(payload: INewTicket): Promise<Response> {

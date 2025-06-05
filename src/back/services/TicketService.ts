@@ -6,7 +6,8 @@ export class TicketService {
         assunto: string,
         descricao: string,
         idSolicitante: number,
-        idTipoChamado: number
+        idTipoChamado: number,
+        idPrioridade: number
     ) {
         const dataAbertura = new Date();
         const ticket = await prisma.chamado.create({
@@ -17,8 +18,8 @@ export class TicketService {
                 dataAbertura,
                 idSolicitante,
                 idTipoChamado,
+                idPrioridade, // Corrija aqui para salvar corretamente
                 idStatus: null,
-                idPrioridade: null,
             },
         });
         const ano = dataAbertura.getFullYear().toString().slice(-2);

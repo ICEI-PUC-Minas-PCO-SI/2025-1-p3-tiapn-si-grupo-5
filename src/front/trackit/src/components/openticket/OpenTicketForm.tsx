@@ -14,9 +14,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { useState, useEffect } from "react";
-import { sendTicket } from "@/api/Ticket";
+import { sendTicket } from "@/api/ticket";
 import { useUser } from "@/contexts/UserContext";
-import { getAllTicketTypes } from "@/api/TicketType";
+import { getAllTicketTypes } from "@/api/tickettype";
+import { getAllPriorities } from "@/api/priority";
+import type { IPriority } from "@/api/priority";
 
 const openTicket = z.object({
     subject: z.string().min(1, {
@@ -35,6 +37,7 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
     const { user } = useUser();
     const [descLength, setDescLength] = useState(0);
     const [ticketTypes, setTicketTypes] = useState<{ idTipoChamado: number; nomeTipo: string }[]>([]);
+    const [priorities, setPriorities] = useState<IPriority[]>([]);
 
     const {
         register,
@@ -47,15 +50,21 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
     });
 
     useEffect(() => {
-        async function fetchTypes() {
+        async function fetchTypesAndPriorities() {
             try {
                 const types = await getAllTicketTypes();
                 setTicketTypes(types);
             } catch {
                 setTicketTypes([]);
             }
+            try {
+                const prioritiesData = await getAllPriorities();
+                setPriorities(prioritiesData);
+            } catch {
+                setPriorities([]);
+            }
         }
-        fetchTypes();
+        fetchTypesAndPriorities();
     }, []);
 
     useEffect(() => {
@@ -70,13 +79,22 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
             setAlert({ type: "error", message: "Usuário não autenticado!" });
             return;
         }
+        const idPrioridade = Number(data.priority);
+        const idTipoChamado = Number(data.type);
+
+        if (!idPrioridade || !idTipoChamado) {
+            setAlert({ type: "error", message: "Prioridade e tipo são obrigatórios." });
+            return;
+        }
+
         const payload = {
             assunto: data.subject,
             descricao: data.description,
             idSolicitante: user.id,
-            idPrioridade: Number(data.priority),
-            idTipoChamado: Number(data.type)
+            idPrioridade,
+            idTipoChamado
         };
+
         try {
             const response = await sendTicket(payload);
             if (!response.ok) {
@@ -128,18 +146,11 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                             <SelectContent>
                                 <SelectGroup>
                                     <SelectLabel>Selecione a prioridade da demanda</SelectLabel>
-                                    <SelectItem value="1">
-                                        <div className="w-[16px] h-[16px] rounded-[6px] bg-green-600"></div>
-                                        Baixa
-                                    </SelectItem>
-                                    <SelectItem value="2">
-                                        <div className="w-[16px] h-[16px] rounded-[6px] bg-yellow-400"></div>
-                                        Média
-                                    </SelectItem>
-                                    <SelectItem value="3">
-                                        <div className="w-[16px] h-[16px] rounded-[6px] bg-red-600"></div>
-                                        Alta
-                                    </SelectItem>
+                                    {priorities.map((priority) => (
+                                        <SelectItem key={priority.idPrioridade} value={String(priority.idPrioridade)}>
+                                            {priority.nomePrioridade}
+                                        </SelectItem>
+                                    ))}
                                 </SelectGroup>
                             </SelectContent>
                         </Select>

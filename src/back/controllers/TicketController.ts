@@ -6,8 +6,8 @@ const ticketService = new TicketService();
 export class TicketController {
     async createTicket(req: Request, res: Response) {
         try {
-            const { assunto, descricao, idSolicitante, idTipoChamado } = req.body;
-            const ticket = await ticketService.createTicket(assunto, descricao, idSolicitante, idTipoChamado);
+            const { assunto, descricao, idSolicitante, idTipoChamado, idPrioridade } = req.body;
+            const ticket = await ticketService.createTicket(assunto, descricao, idSolicitante, idTipoChamado, idPrioridade);
             res.status(201).json(ticket);
         } catch (error) {
             console.error("Erro ao criar chamado:", error);
