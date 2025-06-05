@@ -149,6 +149,9 @@ export function PutUserForm({
         }
     };
 
+    useEffect(() => {
+    }, [user.matricula]);
+
     return (
         <>
             {alert && (
@@ -187,6 +190,8 @@ export function PutUserForm({
                                 {...register("matricula")}
                                 className="input"
                                 placeholder="Digite a matrícula"
+                                disabled // trava o campo para edição
+                                value={user.matricula}
                             />
                             {errors.matricula && (
                                 <span className="text-red-500 text-sm">{errors.matricula.message}</span>

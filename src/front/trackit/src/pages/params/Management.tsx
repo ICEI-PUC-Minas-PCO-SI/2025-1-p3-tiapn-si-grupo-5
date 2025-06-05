@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ManagementParams } from "@/components/ManagementParams"; 
+import { ManagementParams } from "@/components/params/ManagementParams"; 
 import { Button } from "@/components/ui/button";
 
 export function DetailsManagement() {

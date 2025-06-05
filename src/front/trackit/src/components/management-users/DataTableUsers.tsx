@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { User, ActionButton } from "../interfaces/InterfacesDataTableUsers";
+import type { User, ActionButton } from "../../interfaces/InterfacesDataTableUsers";
 
 export function DataTableUsers({
   data,

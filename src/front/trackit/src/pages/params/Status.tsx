@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { StatusParams } from "../../components/StatusParams";
+import { StatusParams } from "../../components/params/StatusParams";
 
 export function DetailsStatus() {
   const [isAdding, setIsAdding] = useState(false); // Estado para controlar o modo de adição

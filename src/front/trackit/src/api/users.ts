@@ -70,28 +70,27 @@ export async function getAllUsers(): Promise<IUserListItem[]> {
             throw new Error("Erro ao buscar usuários");
         }
         const users: IGetUser[] = await response.json();
-        console.log(users)
         const managements = await getAllActiveManagements();
         return users.map((user) => {
             const matchedManagement = managements.find(
                 (management) => management.idGerencia === user.idGerencia
             );
-            return {
+            let accessType: "Gestor" | "Analista" | "Usuário";
+            if (user.idTipoUsuario === 1) accessType = "Gestor";
+            else if (user.idTipoUsuario === 2) accessType = "Analista";
+            else accessType = "Usuário";
+            const mapped: IUserListItem = {
                 id: user.idUsuario.toString(),
                 name: user.nomeUsuario,
                 matricula: user.matricula,
-                accessType:
-                    user.idTipoUsuario === 1
-                        ? "Gestor"
-                        : user.idTipoUsuario === 2
-                            ? "Analista"
-                            : "Usuário",
+                accessType,
                 management: {
                     idGerencia: user.idGerencia,
                     nomeGerencia: matchedManagement?.nomeGerencia || "Não informado",
                 },
                 ativo: user.ativo,
             };
+            return mapped;
         });
     } catch (error) {
         console.error("Erro ao buscar usuários:", error);

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { TicketTypeParams } from "@/components/TicketTypeParams";
+import { TicketTypeParams } from "@/components/params/TicketTypeParams";
 
 export function TicketType() {
     const [isAdding, setIsAdding] = useState(false);
