@@ -7,6 +7,8 @@ import { ManagementUsers } from "../pages/management-users/ManagementUsers";
 import { Welcome } from "@/pages/welcome";
 import { OpenTicket } from "@/pages/openTicket";
 import { PrivateRoute } from "./PrivateRoute";
+import { AssignTickets } from "@/pages/assign-tickets/AssignTickets";
+import { MyTickets } from "@/pages/my-tickets/MyTickets";
 
 export function Router() {
     return (
@@ -25,14 +27,10 @@ export function Router() {
                 
             </Route>
 
-            <Route path="/analyst" element={
-                <PrivateRoute allowedTypes={[2]}>
-                    <DefaultLayoult />
-                </PrivateRoute>
-            }>
+            <Route path="/analyst/*" element={<DefaultLayoult />}> 
                 <Route index element={<Welcome />} />
-
-
+                <Route path="assign-tickets" element={<AssignTickets />} />
+                <Route path="my-tickets" element={<MyTickets />} />
             </Route>
 
             <Route path="/admin" element={
