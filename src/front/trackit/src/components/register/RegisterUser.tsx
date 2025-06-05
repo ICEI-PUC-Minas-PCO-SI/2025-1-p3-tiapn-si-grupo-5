@@ -112,7 +112,16 @@ export function RegisterUser() {
         try {
             const response = await registerNewUser(payload);
             if (!response.ok) {
-                setAlert({ type: "error", message: "Erro ao cadastrar!" });
+                let msg = "Erro ao cadastrar!";
+                try {
+                    const errorData = await response.json();
+                    if (typeof errorData?.error === "string") {
+                        msg = errorData.error;
+                    }
+                } catch {
+                    // ignore
+                }
+                setAlert({ type: "error", message: msg });
                 return;
             }
             setAlert({ type: "success", message: "Cadastro realizado com sucesso!" });

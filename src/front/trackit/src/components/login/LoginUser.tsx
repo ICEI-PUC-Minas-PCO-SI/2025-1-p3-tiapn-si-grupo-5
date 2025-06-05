@@ -67,7 +67,16 @@ export function LoginUser() {
         try {
             const response = await loginUser({ email, senha: password });
             if (!response.ok) {
-                setAlert({ type: "error", message: "Erro ao fazer login!" });
+                let msg = "Erro ao fazer login!";
+                try {
+                    const errorData = await response.json();
+                    if (typeof errorData?.error === "string") {
+                        msg = errorData.error;
+                    }
+                } catch {
+                    // ignore
+                }
+                setAlert({ type: "error", message: msg });
                 return;
             }
             if (response.status === 200) {

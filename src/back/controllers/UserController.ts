@@ -8,6 +8,21 @@ export class UserController {
     async registerUser(req: Request, res: Response) {
         try {
             const { nomeUsuario, matricula, ramal, email, senha, gerencia, tipoUsuario } = req.body;
+
+            // Verifica matrícula duplicada
+            const existingMatricula = await userService.findUserByMatricula(matricula);
+            if (existingMatricula) {
+                res.status(400).json({ error: "Já existe um usuário cadastrado com esta matrícula." });
+                return;
+            }
+
+            // Verifica email duplicado
+            const existingEmail = await userService.findUserByEmail(email);
+            if (existingEmail) {
+                res.status(400).json({ error: "Já existe um usuário cadastrado com este e-mail." });
+                return;
+            }
+
             const novoUsuario = await userService.registerUser({
                 nomeUsuario, matricula, ramal, email, senha, gerencia, tipoUsuario
             });
@@ -31,14 +46,12 @@ export class UserController {
                 return;
             }
             if (!usuario.ativo) {
-                res.status(403).json({ error: "Usuário inativo" });
+                res.status(403).json({ error: "Sua conta está desativada. Entre em contato com o administrador." });
                 console.error("Usuário inativo.");
                 return;
             }
             let nomeGerencia: string | undefined = undefined;
             if (usuario.idGerencia) {
-                // Você pode criar um método no service para buscar o nome da gerência se quiser desacoplar mais
-                // Aqui mantido para simplicidade
                 nomeGerencia = undefined;
             }
             const token = jwt.sign(
@@ -136,6 +149,11 @@ export class UserController {
             const { nome, email, ramal } = req.body;
             if (!nome || !email || !ramal) {
                 res.status(400).json({ error: "Todos os campos são obrigatórios." });
+                return;
+            }
+            const existingUser = await userService.findUserByEmail(email);
+            if (existingUser && existingUser.idUsuario !== usuarioId) {
+                res.status(400).json({ error: "Este e-mail já está em uso por outro usuário." });
                 return;
             }
             const updatedUser = await userService.updateProfileUser(usuarioId, { nome, email, ramal });

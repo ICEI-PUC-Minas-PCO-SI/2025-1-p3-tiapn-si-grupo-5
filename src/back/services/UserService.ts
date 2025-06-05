@@ -93,4 +93,16 @@ export class UserService {
             },
         });
     }
+
+    async findUserByEmail(email: string) {
+        return prisma.usuario.findFirst({
+            where: { email }
+        });
+    }
+
+    async findUserByMatricula(matricula: string) {
+        return prisma.usuario.findFirst({
+            where: { matricula }
+        });
+    }
 }
