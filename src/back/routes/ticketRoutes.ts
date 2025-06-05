@@ -13,6 +13,7 @@ export class TicketRoutes {
 
     private initializeRoutes() {
         this.router.post("/tickets", this.ticketController.createTicket.bind(this.ticketController));
+        this.router.get("/tickets", this.ticketController.getAllTickets.bind(this.ticketController));
     }
 
     public getRouter(): Router {

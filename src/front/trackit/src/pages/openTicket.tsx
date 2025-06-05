@@ -62,6 +62,12 @@ export function OpenTicket() {
         fetchTypes();
     }, []);
 
+    useEffect(() => {
+        if (alert) {
+            const timer = setTimeout(() => setAlert(null), 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [alert]);
 
     async function handleOpenTicket(data: openTicket) {
         if (!user) {
@@ -88,8 +94,6 @@ export function OpenTicket() {
             setAlert({ type: "error", message: "Falha ao abrir chamado. Tente novamente." });
             console.error(error);
         }
-
-
     }
     async function handleCancel(e: React.MouseEvent) {
         e.preventDefault();

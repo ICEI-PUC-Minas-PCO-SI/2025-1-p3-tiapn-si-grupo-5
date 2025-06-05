@@ -14,4 +14,14 @@ export class TicketController {
             res.status(500).json({ error: "Erro ao criar chamado" });
         }
     }
+
+    async getAllTickets(req: Request, res: Response) {
+        try {
+            const tickets = await ticketService.getAllTickets();
+            res.json(tickets);
+        } catch (error) {
+            console.error("Erro ao buscar chamados:", error);
+            res.status(500).json({ error: "Erro ao buscar chamados" });
+        }
+    }
 }

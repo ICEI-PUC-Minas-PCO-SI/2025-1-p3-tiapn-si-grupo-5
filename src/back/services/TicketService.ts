@@ -30,4 +30,8 @@ export class TicketService {
             data: { protocolo }
         });
     }
+
+    async getAllTickets() {
+        return prisma.chamado.findMany();
+    }
 }
