@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { DataTableUsers } from "@/components/DataTableUsers";
-import { Searchbar } from "@/components/SearchBar";
+import { DataTableUsers } from "@/components/management-users/DataTableUsers";
+import { Searchbar } from "@/components/ui/SearchBar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,15 +8,15 @@ import {
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
-import { CrudUserForm } from "@/components/CrudUserForm";
-import { PutUserForm } from "@/components/PutUserForm";
+import { CrudUserForm } from "@/components/management-users/CrudUserForm";
+import { PutUserForm } from "@/components/management-users/PutUserForm";
 import { Dialog } from "@/components/ui/dialog";
 import type { User, ActionButton } from "@/interfaces/InterfacesDataTableUsers";
-import type { UpdateUser } from "@/interfaces/InterfaceUpdateUser";
-import { getAllUsers } from "@/api/users";
+import type { IUpdateUser } from "@/api/Users";
+import { getAllUsers } from "@/api/Users";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
-import { PutActiveUser } from "@/components/PutActiveUser";
+import { PutActiveUser } from "@/components/management-users/PutActiveUser";
 import { useUser } from "@/contexts/UserContext";
 
 export function ManagementUsers() {
@@ -36,7 +36,7 @@ export function ManagementUsers() {
   });
   const [editModalState, setEditModalState] = useState<{
     isOpen: boolean;
-    user: UpdateUser | null;
+    user: IUpdateUser | null;
   }>({ isOpen: false, user: null });
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [statusDialog, setStatusDialog] = useState<{
@@ -50,7 +50,20 @@ export function ManagementUsers() {
   const fetchUsers = async () => {
     try {
       const users = await getAllUsers();
-      setData(users);
+      const mappedUsers: User[] = users.map((u) => {
+        return {
+          id: u.id,
+          name: u.name,
+          accessType: u.accessType,
+          management: u.management,
+          ativo: u.ativo,
+          nomeUsuario: u.name,
+          email: "",
+          ramal: "",
+          matricula: u.matricula,
+        };
+      });
+      setData(mappedUsers);
     } catch (error) {
       console.error("Erro ao processar usuários:", error);
     }
@@ -73,7 +86,7 @@ export function ManagementUsers() {
     }
   }, [alert]);
 
-  const mapUserToUpdateUser = (user: User & { matricula?: string }): UpdateUser => {
+  const mapUserToUpdateUser = (user: User & { matricula?: string }): IUpdateUser => {
     return {
       idUsuario: Number(user.id),
       matricula: user.matricula || "",
@@ -189,7 +202,7 @@ export function ManagementUsers() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="outline">
-                Colunas
+                Filtrar
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

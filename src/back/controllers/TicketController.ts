@@ -1,37 +1,32 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "../generated/prisma";
-const prisma = new PrismaClient();
+import { TicketService } from "../services/TicketService";
 
+const ticketService = new TicketService();
 
 export class TicketController {
     async createTicket(req: Request, res: Response) {
         try {
-            const { assunto, descricao, idSolicitante, idTipoChamado } = req.body;
-            const dataAbertura = new Date();
-            const ticket = await prisma.chamado.create({
-                data: {
-                    protocolo: "", // temporário
-                    assunto,
-                    descricao,
-                    dataAbertura,
-                    idSolicitante,
-                    idTipoChamado,
-                    idStatus: null,      // Futuramente obrigatório
-                    idPrioridade: null,  // Futuramente obrigatório
-                },
-            });
-            const ano = dataAbertura.getFullYear().toString().slice(-2);
-            const idZero = ticket.idChamado.toString().padStart(6, "0");
-            const protocolo = `${idZero}${ano}`;
-
-            const ticketAtualizado = await prisma.chamado.update({
-                where: { idChamado: ticket.idChamado },
-                data: { protocolo }
-            });
-            res.status(201).json(ticketAtualizado);
+            const { assunto, descricao, idSolicitante, idTipoChamado, idPrioridade } = req.body;
+            const ticket = await ticketService.createTicket(assunto, descricao, idSolicitante, idTipoChamado, idPrioridade);
+            res.status(201).json(ticket);
         } catch (error) {
+            const err = error as { code?: string; message?: string };
             console.error("Erro ao criar chamado:", error);
-            res.status(500).json({ error: "Erro ao criar chamado" });
+            if (err.code === "ASSOCIATED_TICKETS") {
+                res.status(400).json({ error: "Não é possível criar chamado associado a parâmetros inválidos." });
+            } else {
+                res.status(500).json({ error: "Erro ao criar chamado" });
+            }
+        }
+    }
+
+    async getAllTickets(req: Request, res: Response) {
+        try {
+            const tickets = await ticketService.getAllTickets();
+            res.json(tickets);
+        } catch (error) {
+            console.error("Erro ao buscar chamados:", error);
+            res.status(500).json({ error: "Erro ao buscar chamados" });
         }
     }
 }

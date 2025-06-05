@@ -1,28 +1,30 @@
-import { PrismaClient } from "../generated/prisma";
-import { hashPassword, compareHashedPassword } from "../services/hashedPassword";
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
+import { UserService } from "../services/UserService";
 
-const prisma = new PrismaClient();
+const userService = new UserService();
 
 export class UserController {
     async registerUser(req: Request, res: Response) {
         try {
             const { nomeUsuario, matricula, ramal, email, senha, gerencia, tipoUsuario } = req.body;
-            const hashedSenha = await hashPassword(senha);
-            const ramalNumber = String(ramal);
-            const gerenciaIdNumber = Number(gerencia);
-            const tipoUsuarioId = Number(tipoUsuario);
-            const novoUsuario = await prisma.usuario.create({
-                data: {
-                    nomeUsuario,
-                    matricula,
-                    ramal: ramalNumber,
-                    email,
-                    senha: hashedSenha,
-                    idTipoUsuario: tipoUsuarioId,
-                    idGerencia: gerenciaIdNumber
-                },
+
+            // Verifica matrícula duplicada
+            const existingMatricula = await userService.findUserByMatricula(matricula);
+            if (existingMatricula) {
+                res.status(400).json({ error: "Já existe um usuário cadastrado com esta matrícula." });
+                return;
+            }
+
+            // Verifica email duplicado
+            const existingEmail = await userService.findUserByEmail(email);
+            if (existingEmail) {
+                res.status(400).json({ error: "Já existe um usuário cadastrado com este e-mail." });
+                return;
+            }
+
+            const novoUsuario = await userService.registerUser({
+                nomeUsuario, matricula, ramal, email, senha, gerencia, tipoUsuario
             });
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { senha: _, ...usuarioSemSenha } = novoUsuario;
@@ -37,66 +39,42 @@ export class UserController {
     async loginUser(req: Request, res: Response) {
         try {
             const { email, senha } = req.body;
-            const usuario = await prisma.usuario.findUnique({
-                where: { email },
-                select: {
-                    idUsuario: true,
-                    nomeUsuario: true,
-                    email: true,
-                    ramal: true,
-                    matricula: true,
-                    idGerencia: true,
-                    idTipoUsuario: true,
-                    ativo: true,
-                    fotoPerfil: true
-                }
-            });
+            const { error, usuario } = await userService.loginUser(email, senha);
             if (!usuario) {
-                res.status(401).json({ error: "Email ou senha inválidos" });
-                console.error("Usuário não encontrado.");
-            } else if (!usuario.ativo) {
-                res.status(403).json({ error: "Usuário inativo" });
-                console.error("Usuário inativo.");
-            } else {
-                let nomeGerencia: string | undefined = undefined;
-                if (usuario.idGerencia) {
-                    const gerencia = await prisma.gerencia.findUnique({
-                        where: { idGerencia: usuario.idGerencia }
-                    });
-                    nomeGerencia = gerencia?.nomeGerencia;
-                }
-                const usuarioSenha = await prisma.usuario.findUnique({
-                    where: { email },
-                    select: { senha: true }
-                });
-                const senhaValida = usuarioSenha && await compareHashedPassword(senha, usuarioSenha.senha);
-                if (!senhaValida) {
-                    res.status(401).json({ error: "Email ou senha inválidos" });
-                    console.error("Senha inválida.");
-                } else {
-                    const token = jwt.sign(
-                        { id: usuario.idUsuario, email: usuario.email },
-                        process.env.JWT_SECRET as string,
-                        { expiresIn: '30m' }
-                    );
-                    res.status(200).json({
-                        message: "Login realizado com sucesso",
-                        usuario: {
-                            id: usuario.idUsuario,
-                            nome: usuario.nomeUsuario,
-                            email: usuario.email,
-                            ramal: usuario.ramal,
-                            matricula: usuario.matricula,
-                            gerencia: usuario.idGerencia,
-                            tipo: usuario.idTipoUsuario,
-                            ativo: usuario.ativo,
-                            fotoPerfil: usuario.fotoPerfil,
-                            nomeGerencia
-                        },
-                        token
-                    });
-                }
+                res.status(401).json({ error: error || "Email ou senha inválidos" });
+                console.error(error || "Usuário não encontrado.");
+                return;
             }
+            if (!usuario.ativo) {
+                res.status(403).json({ error: "Sua conta está desativada. Entre em contato com o administrador." });
+                console.error("Usuário inativo.");
+                return;
+            }
+            let nomeGerencia: string | undefined = undefined;
+            if (usuario.idGerencia) {
+                nomeGerencia = undefined;
+            }
+            const token = jwt.sign(
+                { id: usuario.idUsuario, email: usuario.email },
+                process.env.JWT_SECRET as string,
+                { expiresIn: '30m' }
+            );
+            res.status(200).json({
+                message: "Login realizado com sucesso",
+                usuario: {
+                    id: usuario.idUsuario,
+                    nome: usuario.nomeUsuario,
+                    email: usuario.email,
+                    ramal: usuario.ramal,
+                    matricula: usuario.matricula,
+                    gerencia: usuario.idGerencia,
+                    tipo: usuario.idTipoUsuario,
+                    ativo: usuario.ativo,
+                    fotoPerfil: usuario.fotoPerfil,
+                    nomeGerencia
+                },
+                token
+            });
         } catch (error) {
             console.error("Erro no login:", error);
             res.status(500).json({ error: "Erro no servidor" });
@@ -105,7 +83,7 @@ export class UserController {
 
     async getAllUsers(req: Request, res: Response) {
         try {
-            const clients = await prisma.usuario.findMany();
+            const clients = await userService.getAllUsers();
             res.json(clients);
         } catch (error) {
             console.error("Erro ao buscar usuários:", error);
@@ -117,16 +95,7 @@ export class UserController {
         try {
             const { idUsuario } = req.params;
             const { matricula, gerencia, tipoUsuario } = req.body;
-
-            const updatedUser = await prisma.usuario.update({
-                where: { idUsuario: Number(idUsuario) },
-                data: {
-                    matricula,
-                    idGerencia: gerencia ? Number(gerencia) : undefined,
-                    idTipoUsuario: tipoUsuario ? Number(tipoUsuario) : undefined,
-                },
-            });
-
+            const updatedUser = await userService.updateUser(Number(idUsuario), { matricula, gerencia, tipoUsuario });
             res.status(200).json(updatedUser);
         } catch (error) {
             console.error("Erro ao atualizar usuário:", error);
@@ -138,12 +107,7 @@ export class UserController {
         try {
             const { idUsuario } = req.params;
             const { ativo } = req.body;
-
-            const updatedUser = await prisma.usuario.update({
-                where: { idUsuario: Number(idUsuario) },
-                data: { ativo: Number(ativo) },
-            });
-
+            const updatedUser = await userService.changeUserStatus(Number(idUsuario), ativo);
             res.status(200).json(updatedUser);
         } catch (error) {
             console.error("Erro ao mudar status do usuário:", error);
@@ -155,9 +119,7 @@ export class UserController {
         try {
             // @ts-expect-error none
             const usuarioId = req.usuario.id;
-            const usuario = await prisma.usuario.findUnique({
-                where: { idUsuario: usuarioId },
-            });
+            const usuario = await userService.getMe(usuarioId);
             if (!usuario) {
                 res.status(404).json({ error: "Usuário não encontrado" });
                 return;
@@ -185,30 +147,16 @@ export class UserController {
         try {
             const usuarioId = Number(req.params.idUsuario);
             const { nome, email, ramal } = req.body;
-
             if (!nome || !email || !ramal) {
                 res.status(400).json({ error: "Todos os campos são obrigatórios." });
                 return;
             }
-
-            const existingUser = await prisma.usuario.findUnique({
-                where: { idUsuario: usuarioId }
-            });
-
-            if (!existingUser) {
-                res.status(404).json({ error: "Usuário não encontrado." });
+            const existingUser = await userService.findUserByEmail(email);
+            if (existingUser && existingUser.idUsuario !== usuarioId) {
+                res.status(400).json({ error: "Este e-mail já está em uso por outro usuário." });
                 return;
             }
-
-            const updatedUser = await prisma.usuario.update({
-                where: { idUsuario: usuarioId },
-                data: {
-                    nomeUsuario: nome,
-                    email,
-                    ramal,
-                },
-            });
-
+            const updatedUser = await userService.updateProfileUser(usuarioId, { nome, email, ramal });
             res.status(200).json({
                 id: updatedUser.idUsuario,
                 nome: updatedUser.nomeUsuario,

@@ -2,15 +2,16 @@ import { Routes, Route } from "react-router-dom";
 import { Register } from "../pages/register/Register";
 import { Login } from "../pages/login/Login";
 import { ForgotPassword } from "../pages/reset-password/ForgotPassword";
-import { DefaultLayoult } from "../layoults/DefaultLayoult";
+import { DefaultLayoult } from "../layouts/DefaultLayoult";
 import { ManagementUsers } from "../pages/management-users/ManagementUsers";
-import { Index } from "@/layoults/Index";
-import { OpenTicket } from "@/pages/openTicket";
+import { Index } from "@/layouts/Index";
+import { OpenTicket } from "@/pages/openticket/OpenTicket";
 import { PrivateRoute } from "./PrivateRoute";
 import { Settings } from "@/pages/settings/Settings";
 import { DetailsStatus } from "@/pages/params/Status";
 import { DetailsManagement } from "@/pages/params/Management";
 import { TicketType } from "@/pages/params/TicketType";
+import { Priority } from "@/pages/params/Priority";
 
 export function Router() {
     return (
@@ -42,10 +43,11 @@ export function Router() {
             }>
                 <Route index element={<Index />} />
                 <Route path="management-users" element={<ManagementUsers />} />
-                <Route path="settings" element={< Settings />} />
+                <Route path="settings" element={<Settings />} />
                 <Route path="params/status" element={<DetailsStatus />} />
                 <Route path="params/department" element={<DetailsManagement />} />
                 <Route path="params/type" element={<TicketType />} />
+                <Route path="params/priority" element={<Priority />} />
             </Route>
         </Routes>
     );

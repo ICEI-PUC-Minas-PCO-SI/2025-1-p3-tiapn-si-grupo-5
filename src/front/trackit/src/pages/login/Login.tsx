@@ -1,7 +1,7 @@
 import Logo from "../../assets/TrackIt_Logo.svg";
 import Suport from "../../assets/Suporte_solucao.svg";
 import { Link } from "react-router";
-import { LoginUser } from "@/components/LoginUser";
+import { LoginUser } from "@/components/login/LoginUser";
 import { Toaster } from "sonner";
 
 export function Login() {

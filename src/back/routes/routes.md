@@ -1,11 +1,19 @@
 # Rotas
 
-São responsáveis por definir os caminhos (endpoints) que a aplicação irá expor para receber requisições dos clientes. Elas mapeiam URLs e métodos HTTP (GET, POST, PUT, DELETE, etc.) para funções específicas nos controllers.
+As rotas do projeto seguem o padrão RESTful, agrupadas por recurso e utilizando prefixos claros para cada domínio. Isso facilita a manutenção, entendimento e expansão da API.
 
-Na prática, as rotas deverão ser usadas para:
+## Organização das Rotas
 
-- Definir quais endpoints a aplicação oferece.
-- Associar cada endpoint ao controller correspondente.
-- Organizar e agrupar endpoints relacionados por funcionalidade.
+- **Agrupamento por recurso:** Cada conjunto de rotas está relacionado a um recurso do sistema (ex: usuários, departamentos, tipos de chamados).
+- **Prefixos padronizados:** Os endpoints seguem o padrão `/resource` ou `/resource/:id` para operações sobre coleções e itens individuais.
+- **Nomenclatura em inglês:** Os arquivos de rotas utilizam nomes em inglês e padrão camel-case, por exemplo: `userRoutes.ts`, `ticketTypeRoutes.ts`.
+- **Separação de domínios:** Não há mistura de rotas de diferentes domínios na raiz (`/`). Cada recurso possui seu próprio prefixo.
+
+### Exemplos de Endpoints
+
+- `/users` - Operações relacionadas a usuários
+- `/departments` - Operações relacionadas a departamentos
+- `/ticket-types` - Operações relacionadas a tipos de chamados
+- `/statuses` - Operações relacionadas a status de chamados
 
 Dessa forma, as rotas ajudam a estruturar a API, facilitando o entendimento, manutenção e expansão dos pontos de acesso da aplicação.

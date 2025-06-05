@@ -12,10 +12,10 @@ export class ManagementRoutes {
     }
 
     private initializeRoutes() {
-        this.router.get("/department", this.managementController.getAllActiveManagement.bind(this.managementController));
-        this.router.post('/department', this.managementController.createManagement.bind(this.managementController));
-        this.router.put('/department', this.managementController.updateManagement.bind(this.managementController));
-        this.router.delete('/department', this.managementController.deleteManagement.bind(this.managementController));
+        this.router.get("/departments", this.managementController.getAllActiveManagement.bind(this.managementController));
+        this.router.post("/departments", this.managementController.createManagement.bind(this.managementController));
+        this.router.put("/departments/:id", this.managementController.updateManagement.bind(this.managementController));
+        this.router.delete("/departments/:id", this.managementController.deleteManagement.bind(this.managementController));
     }
 
     public getRouter(): Router {
