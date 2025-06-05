@@ -39,7 +39,11 @@ export async function updateStatus(idStatus: number, nomeStatus: string, color: 
     const response = await fetch(`${API_BASE_URL}/statuses/${idStatus}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nomeStatus, color }),
+        body: JSON.stringify({
+            idStatus,
+            nomeStatus,
+            color
+        }),
     });
     if (!response.ok) {
         const errorData = await response.json();

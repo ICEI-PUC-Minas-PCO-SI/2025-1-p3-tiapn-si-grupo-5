@@ -29,7 +29,6 @@ export class StatusService {
     }
 
     async deleteStatus(idStatus: number): Promise<unknown> {
-        // Verifica se existe chamado associado
         const chamadoCount = await prisma.chamado.count({
             where: { idStatus: Number(idStatus) }
         });

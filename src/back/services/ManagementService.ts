@@ -23,7 +23,6 @@ export class ManagementService {
     }
 
     async deleteManagement(idGerencia: number): Promise<unknown> {
-        // Verifica se existe usuário associado
         const userCount = await prisma.usuario.count({
             where: { idGerencia: Number(idGerencia) }
         });

@@ -31,7 +31,11 @@ export async function updatePriority(idPrioridade: number, nomePrioridade: strin
     const response = await fetch(`${API_BASE_URL}/priorities/${idPrioridade}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nomePrioridade, color }),
+        body: JSON.stringify({
+            idPrioridade,
+            nomePrioridade,
+            color
+        }),
     });
     if (!response.ok) {
         const errorData = await response.json();

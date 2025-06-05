@@ -26,7 +26,10 @@ export async function updateTicketType(idTipoChamado: number, nomeTipo: string):
     const response = await fetch(`${API_BASE_URL}/ticket-types/${idTipoChamado}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nomeTipo }),
+        body: JSON.stringify({
+            idTipoChamado,
+            nomeTipo
+        }),
     });
     if (!response.ok) throw new Error("Erro ao atualizar tipo de chamado");
     return response.json();

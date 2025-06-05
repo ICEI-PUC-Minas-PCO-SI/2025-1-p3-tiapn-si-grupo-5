@@ -23,7 +23,6 @@ export class TicketTypeService {
     }
 
     async deleteTicketType(idTipoChamado: number): Promise<unknown> {
-        // Verifica se existe chamado associado
         const chamadoCount = await prisma.chamado.count({
             where: { idTipoChamado: Number(idTipoChamado) }
         });

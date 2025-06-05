@@ -7,7 +7,7 @@ import { TicketRoutes } from "./routes/TicketRoutes";
 import { StatusRoutes } from "./routes/StatusRoutes";
 import { TicketTypeRoutes } from "./routes/TicketTypeRoutes";
 import { errorHandler } from "./middlewares/error-handler";
-import { PriorityRoutes } from "./routes/PriorityRoutes";
+import { PriorityRoutes } from "./routes/priorityRoutes";
 
 const app = express();
 app.use(express.json());

@@ -37,7 +37,10 @@ export async function updateManagement(idGerencia: number, nomeGerencia: string)
     const response = await fetch(`${API_BASE_URL}/departments/${idGerencia}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nomeGerencia }),
+        body: JSON.stringify({
+            idGerencia,
+            nomeGerencia
+        }),
     });
     if (!response.ok) {
         const errorData = await response.json();

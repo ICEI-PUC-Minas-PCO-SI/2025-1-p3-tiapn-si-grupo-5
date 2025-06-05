@@ -29,7 +29,6 @@ export class PriorityService {
     }
 
     async deletePriority(idPrioridade: number): Promise<unknown> {
-        // Verifica se existe chamado associado
         const chamadoCount = await prisma.chamado.count({
             where: { idPrioridade: Number(idPrioridade) }
         });
