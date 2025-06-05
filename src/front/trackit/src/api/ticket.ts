@@ -40,3 +40,37 @@ export async function getAllTickets(): Promise<ITicket[]> {
     if (!response.ok) throw new Error("Erro ao buscar chamados");
     return response.json();
 }
+
+export async function getUnassignedTickets(): Promise<ITicket[]> {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_BASE_URL}/tickets/unassigned`, {
+        headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+    });
+    if (!response.ok) throw new Error("Erro ao buscar chamados não atribuídos");
+    return response.json();
+}
+
+export async function getMyTickets(): Promise<ITicket[]> {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_BASE_URL}/tickets/my`, {
+        headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+    });
+    if (!response.ok) throw new Error("Erro ao buscar meus chamados");
+    return response.json();
+}
+
+export async function assignTicket(idChamado: number): Promise<void> {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}/assign`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+    });
+    if (!response.ok) throw new Error("Erro ao assumir chamado");
+}

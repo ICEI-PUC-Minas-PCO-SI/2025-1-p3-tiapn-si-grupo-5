@@ -23,7 +23,7 @@ function getErrorMessage(error: unknown): string {
     return "Erro desconhecido";
 }
 
-const priorityNameSchema = z.string().min(8, "O nome deve ter pelo menos 8 caracteres");
+const priorityNameSchema = z.string().min(4, "O nome deve ter pelo menos 4 caracteres");
 
 export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
     const [priorityList, setPriorityList] = useState<IPriority[]>([]);

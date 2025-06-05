@@ -35,4 +35,23 @@ export class TicketService {
     async getAllTickets() {
         return prisma.chamado.findMany();
     }
+
+    async getUnassignedTickets() {
+        return prisma.chamado.findMany({
+            where: { idAnalista: null }
+        });
+    }
+
+    async getTicketsByAnalyst(idAnalista: number) {
+        return prisma.chamado.findMany({
+            where: { idAnalista }
+        });
+    }
+
+    async assignTicket(idChamado: number, idAnalista: number) {
+        return prisma.chamado.update({
+            where: { idChamado },
+            data: { idAnalista }
+        });
+    }
 }

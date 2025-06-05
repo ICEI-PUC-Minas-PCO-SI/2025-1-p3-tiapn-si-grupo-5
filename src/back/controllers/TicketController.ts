@@ -29,4 +29,39 @@ export class TicketController {
             res.status(500).json({ error: "Erro ao buscar chamados" });
         }
     }
+
+    async getUnassignedTickets(req: Request, res: Response) {
+        try {
+            const tickets = await ticketService.getUnassignedTickets();
+            res.json(tickets);
+        } catch (error) {
+            console.error("Erro ao buscar chamados não atribuídos:", error);
+            res.status(500).json({ error: "Erro ao buscar chamados não atribuídos" });
+        }
+    }
+
+    async getMyTickets(req: Request, res: Response) {
+        try {
+            // @ts-expect-error usuario injetado pelo middleware de autenticação
+            const idAnalista = req.usuario.id;
+            const tickets = await ticketService.getTicketsByAnalyst(idAnalista);
+            res.json(tickets);
+        } catch (error) {
+            console.error("Erro ao buscar meus chamados:", error);
+            res.status(500).json({ error: "Erro ao buscar meus chamados" });
+        }
+    }
+
+    async assignTicket(req: Request, res: Response) {
+        try {
+            const idChamado = Number(req.params.idChamado);
+            // @ts-expect-error usuario injetado pelo middleware de autenticação
+            const idAnalista = req.usuario.id;
+            const ticket = await ticketService.assignTicket(idChamado, idAnalista);
+            res.status(200).json(ticket);
+        } catch (error) {
+            console.error("Erro ao assumir chamado:", error);
+            res.status(500).json({ error: "Erro ao assumir chamado" });
+        }
+    }
 }

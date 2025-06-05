@@ -12,6 +12,8 @@ import { DetailsStatus } from "@/pages/params/Status";
 import { DetailsManagement } from "@/pages/params/Management";
 import { TicketType } from "@/pages/params/TicketType";
 import { Priority } from "@/pages/params/Priority";
+import { AssignTickets } from "@/pages/assign-tickets/AssignTickets";
+import { MyTickets } from "@/pages/my-tickets/MyTickets";
 
 export function Router() {
     return (
@@ -35,6 +37,8 @@ export function Router() {
             }>
                 <Route index element={<Index />} />
                 <Route path="settings" element={< Settings />} />
+                <Route path="assign-tickets" element={<AssignTickets />} />
+                <Route path="my-tickets" element={<MyTickets />} />
             </Route>
             <Route path="/admin" element={
                 <PrivateRoute allowedTypes={[1]}>
