@@ -10,11 +10,9 @@ import {
   updateManagement,
   deleteManagement,
 } from "../../api/management";
+import { z } from "zod";
 
-interface ManagementParamsProps {
-  isAdding: boolean;
-  setIsAdding: (isAdding: boolean) => void;
-}
+const managementNameSchema = z.string().min(4, "O nome deve ter pelo menos 4 caracteres");
 
 // Tipagem para erros desconhecidos
 function getErrorMessage(error: unknown): string {
@@ -23,11 +21,17 @@ function getErrorMessage(error: unknown): string {
   return "Erro desconhecido";
 }
 
+interface ManagementParamsProps {
+  isAdding: boolean;
+  setIsAdding: (isAdding: boolean) => void;
+}
+
 export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProps) {
   const [managementList, setManagementList] = useState<IManagement[]>([]);
   const [newManagementName, setNewManagementName] = useState("");
   const [editingManagementId, setEditingManagementId] = useState<number | null>(null);
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   const fetchManagement = async () => {
     try {
@@ -50,9 +54,20 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
     }
   }, [alert]);
 
+  useEffect(() => {
+    if (!isAdding) {
+      setNameError(null);
+      return;
+    }
+    const result = managementNameSchema.safeParse(newManagementName);
+    setNameError(result.success ? null : result.error.issues[0].message);
+  }, [newManagementName, isAdding]);
+
   const handleAddOrEditManagement = async () => {
-    if (!newManagementName) {
-      setAlert({ type: "error", message: "Preencha o nome." });
+    const result = managementNameSchema.safeParse(newManagementName);
+    if (!result.success) {
+      setNameError(result.success ? null : result.error.issues[0].message);
+      setAlert({ type: "error", message: "Preencha o nome (mín. 8 caracteres)." });
       return;
     }
     try {
@@ -92,6 +107,8 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
       setAlert({ type: "error", message: getErrorMessage(error) || "Gerência associada a um usuário existente." });
     }
   };
+
+  const isSaveDisabled = !newManagementName || !!nameError;
 
   return (
     <div className="p-6">
@@ -136,6 +153,8 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
           />
           <Button
             onClick={handleAddOrEditManagement}
+            variant={isSaveDisabled ? "disabled" : "default"}
+            disabled={isSaveDisabled}
           >
             Salvar
           </Button>
@@ -149,6 +168,9 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
           >
             Cancelar
           </Button>
+          {nameError && (
+            <span className="text-red-500 text-sm">{nameError}</span>
+          )}
         </div>
       )}
     </div>

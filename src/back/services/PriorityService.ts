@@ -28,7 +28,16 @@ export class PriorityService {
         });
     }
 
-    async deletePriority(idPrioridade: number) {
+    async deletePriority(idPrioridade: number): Promise<unknown> {
+        // Verifica se existe chamado associado
+        const chamadoCount = await prisma.chamado.count({
+            where: { idPrioridade: Number(idPrioridade) }
+        });
+        if (chamadoCount > 0) {
+            const error = new Error("Não é possível excluir uma prioridade associada a chamados.") as Error & { code?: string };
+            error.code = "ASSOCIATED_TICKETS";
+            throw error;
+        }
         return prisma.prioridadechamado.delete({
             where: { idPrioridade: Number(idPrioridade) }
         });

@@ -43,8 +43,13 @@ export class TicketTypeController {
             await ticketTypeService.deleteTicketType(idTipoChamado);
             res.status(204).send();
         } catch (error) {
+            const err = error as { code?: string; message?: string };
             console.error("Erro ao deletar tipo de chamado:", error);
-            res.status(500).json({ error: "Erro ao deletar tipo de chamado" });
+            if (err.code === "ASSOCIATED_TICKETS") {
+                res.status(400).json({ error: "Não é possível excluir um tipo de chamado associado a chamados." });
+            } else {
+                res.status(500).json({ error: "Erro ao deletar tipo de chamado" });
+            }
         }
     }
 }

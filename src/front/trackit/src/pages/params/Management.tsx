@@ -7,7 +7,7 @@ export function DetailsManagement() {
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="title-h1 text-slate-950">Gerenciar Paramêtros</h1>
+      <h1 className="title-h1 text-slate-950">Gerenciar Parâmetros</h1>
       <div className="border-2 p-4 rounded mb-6">
         <div className="flex justify-between">
           <h2 className="title-h2 text-slate-700">

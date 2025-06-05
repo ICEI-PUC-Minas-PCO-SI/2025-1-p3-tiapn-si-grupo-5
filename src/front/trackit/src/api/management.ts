@@ -50,6 +50,7 @@ export async function deleteManagement(idGerencia: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/departments/${idGerencia}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idGerencia }),
     });
     if (!response.ok) {
         const errorData = await response.json();

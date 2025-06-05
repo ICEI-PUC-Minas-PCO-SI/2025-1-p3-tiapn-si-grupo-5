@@ -52,6 +52,7 @@ export async function deleteStatus(idStatus: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/statuses/${idStatus}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idStatus }),
     });
     if (!response.ok) {
         const errorData = await response.json();

@@ -10,6 +10,7 @@ import {
   updateStatus,
   deleteStatus,
 } from "@/api/status";
+import { z } from "zod";
 
 interface StatusParamsProps {
   isAdding: boolean;
@@ -23,12 +24,15 @@ function getErrorMessage(error: unknown): string {
   return "Erro desconhecido";
 }
 
+const statusNameSchema = z.string().min(8, "O nome deve ter pelo menos 8 caracteres");
+
 export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
   const [statusList, setStatusList] = useState<IStatus[]>([]);
   const [newStatusName, setNewStatusName] = useState("");
   const [newStatusColor, setNewStatusColor] = useState("#000000"); // Cor padrão
   const [editingStatusId, setEditingStatusId] = useState<number | null>(null);
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   const fetchStatuses = async () => {
     try {
@@ -51,9 +55,20 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
     }
   }, [alert]);
 
+  useEffect(() => {
+    if (!isAdding) {
+      setNameError(null);
+      return;
+    }
+    const result = statusNameSchema.safeParse(newStatusName);
+    setNameError(result.success ? null : result.error.issues[0].message);
+  }, [newStatusName, isAdding]);
+
   const handleAddOrEditStatus = async () => {
-    if (!newStatusName || !newStatusColor) {
-      setAlert({ type: "error", message: "Preencha o nome e a cor do status." });
+    const result = statusNameSchema.safeParse(newStatusName);
+    if (!result.success || !newStatusColor) {
+      setNameError(result.success ? null : result.error.issues[0].message);
+      setAlert({ type: "error", message: "Preencha o nome (mín. 8 caracteres) e a cor do status." });
       return;
     }
     try {
@@ -95,6 +110,8 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
       setAlert({ type: "error", message: getErrorMessage(error) || "Status associado a um chamado existente." });
     }
   };
+
+  const isSaveDisabled = !newStatusName || !!nameError;
 
   return (
     <div className="p-6">
@@ -143,7 +160,13 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewStatusColor(e.target.value)}
             className="w-12 h-10"
           />
-          <Button onClick={handleAddOrEditStatus}>Salvar</Button>
+          <Button
+            onClick={handleAddOrEditStatus}
+            variant={isSaveDisabled ? "disabled" : "default"}
+            disabled={isSaveDisabled}
+          >
+            Salvar
+          </Button>
           <Button
             onClick={() => {
               setIsAdding(false);
@@ -155,6 +178,9 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
           >
             Cancelar
           </Button>
+          {nameError && (
+            <span className="text-red-500 text-sm">{nameError}</span>
+          )}
         </div>
       )}
     </div>

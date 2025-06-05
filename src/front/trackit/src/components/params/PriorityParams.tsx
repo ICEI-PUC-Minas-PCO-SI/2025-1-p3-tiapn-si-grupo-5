@@ -10,6 +10,7 @@ import {
     updatePriority,
     deletePriority,
 } from "@/api/priority";
+import { z } from "zod";
 
 interface PriorityParamsProps {
     isAdding: boolean;
@@ -22,12 +23,15 @@ function getErrorMessage(error: unknown): string {
     return "Erro desconhecido";
 }
 
+const priorityNameSchema = z.string().min(8, "O nome deve ter pelo menos 8 caracteres");
+
 export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
     const [priorityList, setPriorityList] = useState<IPriority[]>([]);
     const [newPriorityName, setNewPriorityName] = useState("");
     const [newPriorityColor, setNewPriorityColor] = useState("#000000");
     const [editingPriorityId, setEditingPriorityId] = useState<number | null>(null);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+    const [nameError, setNameError] = useState<string | null>(null);
 
     const fetchPriorities = async () => {
         try {
@@ -49,9 +53,20 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
         }
     }, [alert]);
 
+    useEffect(() => {
+        if (!isAdding) {
+            setNameError(null);
+            return;
+        }
+        const result = priorityNameSchema.safeParse(newPriorityName);
+        setNameError(result.success ? null : result.error.issues[0].message);
+    }, [newPriorityName, isAdding]);
+
     const handleAddOrEditPriority = async () => {
-        if (!newPriorityName || !newPriorityColor) {
-            setAlert({ type: "error", message: "Preencha o nome e a cor da prioridade." });
+        const result = priorityNameSchema.safeParse(newPriorityName);
+        if (!result.success || !newPriorityColor) {
+            setNameError(result.success ? null : result.error.issues[0].message);
+            setAlert({ type: "error", message: "Preencha o nome (mín. 8 caracteres) e a cor da prioridade." });
             return;
         }
         try {
@@ -93,6 +108,8 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
             setAlert({ type: "error", message: getErrorMessage(error) || "Prioridade associada a um chamado existente." });
         }
     };
+
+    const isSaveDisabled = !newPriorityName || !!nameError;
 
     return (
         <div className="p-6">
@@ -141,7 +158,13 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPriorityColor(e.target.value)}
                         className="w-12 h-10"
                     />
-                    <Button onClick={handleAddOrEditPriority}>Salvar</Button>
+                    <Button
+                        onClick={handleAddOrEditPriority}
+                        variant={isSaveDisabled ? "disabled" : "default"}
+                        disabled={isSaveDisabled}
+                    >
+                        Salvar
+                    </Button>
                     <Button
                         onClick={() => {
                             setIsAdding(false);
@@ -153,6 +176,9 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
                     >
                         Cancelar
                     </Button>
+                    {nameError && (
+                        <span className="text-red-500 text-sm">{nameError}</span>
+                    )}
                 </div>
             )}
         </div>

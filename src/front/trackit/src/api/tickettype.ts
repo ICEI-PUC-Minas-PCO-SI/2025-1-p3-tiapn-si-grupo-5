@@ -35,7 +35,11 @@ export async function updateTicketType(idTipoChamado: number, nomeTipo: string):
 export async function deleteTicketType(idTipoChamado: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/ticket-types/${idTipoChamado}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idTipoChamado }),
     });
-    if (!response.ok) throw new Error("Erro ao deletar tipo de chamado");
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erro ao deletar tipo de chamado");
+    }
 }

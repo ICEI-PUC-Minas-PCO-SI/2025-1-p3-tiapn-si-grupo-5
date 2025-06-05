@@ -28,7 +28,16 @@ export class StatusService {
         });
     }
 
-    async deleteStatus(idStatus: number) {
+    async deleteStatus(idStatus: number): Promise<unknown> {
+        // Verifica se existe chamado associado
+        const chamadoCount = await prisma.chamado.count({
+            where: { idStatus: Number(idStatus) }
+        });
+        if (chamadoCount > 0) {
+            const error = new Error("Não é possível excluir um status associado a chamados.") as Error & { code?: string };
+            error.code = "ASSOCIATED_TICKETS";
+            throw error;
+        }
         return prisma.statuschamado.delete({
             where: { idStatus: Number(idStatus) }
         });

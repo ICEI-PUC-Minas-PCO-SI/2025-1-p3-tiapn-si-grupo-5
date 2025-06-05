@@ -43,8 +43,13 @@ export class ManagementController {
             await managementService.deleteManagement(idGerencia);
             res.status(204).send();
         } catch (error) {
-            console.error("Erro ao deletar status:", error);
-            res.status(500).json({ error: "Erro ao deletar status" });
+            const err = error as { code?: string; message?: string };
+            console.error("Erro ao deletar gerência:", error);
+            if (err.code === "ASSOCIATED_USERS") {
+                res.status(400).json({ error: "Não é possível excluir uma gerência associada a usuários." });
+            } else {
+                res.status(500).json({ error: "Erro ao deletar gerência" });
+            }
         }
     }
 }

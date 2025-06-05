@@ -10,6 +10,9 @@ import {
     updateTicketType,
     deleteTicketType,
 } from "@/api/tickettype";
+import { z } from "zod";
+
+const ticketTypeNameSchema = z.string().min(8, "O nome deve ter pelo menos 8 caracteres");
 
 interface TicketTypeParamsProps {
     isAdding: boolean;
@@ -21,6 +24,7 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
     const [newName, setNewName] = useState("");
     const [editingId, setEditingId] = useState<number | null>(null);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+    const [nameError, setNameError] = useState<string | null>(null);
 
     const fetchTicketTypes = async () => {
         try {
@@ -42,9 +46,20 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
         }
     }, [alert]);
 
+    useEffect(() => {
+        if (!isAdding) {
+            setNameError(null);
+            return;
+        }
+        const result = ticketTypeNameSchema.safeParse(newName);
+        setNameError(result.success ? null : result.error.issues[0].message);
+    }, [newName, isAdding]);
+
     const handleAddOrEdit = async () => {
-        if (!newName) {
-            setAlert({ type: "error", message: "Preencha o nome do tipo de demanda." });
+        const result = ticketTypeNameSchema.safeParse(newName);
+        if (!result.success) {
+            setNameError(result.success ? null : result.error.issues[0].message);
+            setAlert({ type: "error", message: "Preencha o nome do tipo de demanda (mín. 8 caracteres)." });
             return;
         }
         try {
@@ -83,6 +98,8 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
         }
     };
 
+    const isSaveDisabled = !newName || !!nameError;
+
     return (
         <div className="p-6">
             {alert && (
@@ -115,7 +132,13 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
                     />
-                    <Button onClick={handleAddOrEdit}>Salvar</Button>
+                    <Button
+                        onClick={handleAddOrEdit}
+                        variant={isSaveDisabled ? "disabled" : "default"}
+                        disabled={isSaveDisabled}
+                    >
+                        Salvar
+                    </Button>
                     <Button
                         onClick={() => {
                             setIsAdding(false);
@@ -126,6 +149,9 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
                     >
                         Cancelar
                     </Button>
+                    {nameError && (
+                        <span className="text-red-500 text-sm">{nameError}</span>
+                    )}
                 </div>
             )}
         </div>

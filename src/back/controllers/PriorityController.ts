@@ -42,8 +42,14 @@ export class PriorityController {
             await priorityService.deletePriority(idPrioridade);
             res.status(204).send();
         } catch (error) {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            const err = error as { code?: string; message?: string };
             console.error("Erro ao deletar prioridade:", error);
-            res.status(500).json({ error: "Erro ao deletar prioridade" });
+            if (err.code === "ASSOCIATED_TICKETS") {
+                res.status(400).json({ error: "Não é possível excluir uma prioridade associada a chamados." });
+            } else {
+                res.status(500).json({ error: "Erro ao deletar prioridade" });
+            }
         }
     }
 }

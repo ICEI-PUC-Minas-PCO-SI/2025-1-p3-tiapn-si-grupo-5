@@ -44,6 +44,7 @@ export async function deletePriority(idPrioridade: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/priorities/${idPrioridade}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ idPrioridade }),
     });
     if (!response.ok) {
         const errorData = await response.json();
