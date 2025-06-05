@@ -5,7 +5,7 @@ import { ForgotPassword } from "../pages/reset-password/ForgotPassword";
 import { DefaultLayoult } from "../layouts/DefaultLayoult";
 import { ManagementUsers } from "../pages/management-users/ManagementUsers";
 import { Index } from "@/layouts/Index";
-import { OpenTicket } from "@/pages/openticket/OpenTicket";
+import { OpenTicket } from "@/pages/openticket/openTicket";
 import { PrivateRoute } from "./PrivateRoute";
 import { Settings } from "@/pages/settings/Settings";
 import { DetailsStatus } from "@/pages/params/Status";
