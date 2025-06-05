@@ -1,18 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { Pencil, Trash2 } from "lucide-react";
-import type { Status } from "@/interfaces/InterfaceStatus";
+import type { IStatus } from "@/api/Status";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  getAllStatus,
+  addStatus,
+  updateStatus,
+  deleteStatus,
+} from "@/api/Status";
 
 interface StatusParamsProps {
   isAdding: boolean;
   setIsAdding: (isAdding: boolean) => void;
 }
 
+// Tipagem para erros desconhecidos
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  if (typeof error === "string") return error;
+  return "Erro desconhecido";
+}
+
 export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
-  const [statusList, setStatusList] = useState<Status[]>([]);
+  const [statusList, setStatusList] = useState<IStatus[]>([]);
   const [newStatusName, setNewStatusName] = useState("");
   const [newStatusColor, setNewStatusColor] = useState("#000000"); // Cor padrão
   const [editingStatusId, setEditingStatusId] = useState<number | null>(null);
@@ -20,11 +33,7 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
 
   const fetchStatuses = async () => {
     try {
-      const response = await fetch("http://localhost:3000/status");
-      if (!response.ok) {
-        throw new Error("Erro ao buscar os status.");
-      }
-      const data = await response.json();
+      const data = await getAllStatus();
       setStatusList(data);
     } catch (error) {
       console.error(error);
@@ -43,126 +52,48 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
     }
   }, [alert]);
 
-  const handleAddStatus = async (newStatus: {
-    nomeStatus: string;
-    color: string;
-  }) => {
-    try {
-      const response = await fetch(
-        "http://localhost:3000/status",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(newStatus),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        setAlert({ type: "error", message: errorData.error || "Erro ao adicionar status." });
-        throw new Error("Erro ao adicionar status.");
-      }
-
-      const createdStatus = await response.json();
-      setStatusList((prevList: Status[]) => [...prevList, createdStatus]);
-      setAlert({ type: "success", message: "Status adicionado com sucesso!" });
-    } catch (error) {
-      console.error("Erro ao adicionar status no frontend:", error);
-      setAlert({ type: "error", message: "Erro ao adicionar o status." });
-    }
-  };
-
-  const handleEditStatus = (idStatus: number) => {
-    const statusToEdit = statusList.find((status: Status) => status.idStatus === idStatus);
-    if (!statusToEdit) return;
-
-    setNewStatusName(statusToEdit.nomeStatus);
-    setNewStatusColor(statusToEdit.hexCorPrimaria || "#000000"); // Usa a cor primária ou um padrão
-    setEditingStatusId(idStatus); // Define o ID do status em edição
-    setIsAdding(true); // Abre o formulário de edição
-  };
-
-  const handleSaveStatus = async () => {
+  const handleAddOrEditStatus = async () => {
     if (!newStatusName || !newStatusColor) {
       setAlert({ type: "error", message: "Preencha o nome e a cor do status." });
       return;
     }
-
-    if (editingStatusId !== null) {
-      try {
-        const response = await fetch(
-          `http://localhost:3000/status`,
-          {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              idStatus: editingStatusId,
-              nomeStatus: newStatusName,
-              color: newStatusColor,
-            }),
-          }
-        );
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          setAlert({ type: "error", message: errorData.error || "Erro ao atualizar status." });
-          throw new Error("Erro ao atualizar status.");
-        }
-
-        const updatedStatus = await response.json();
-        setStatusList((prevList: Status[]) =>
-          prevList.map((status: Status) =>
-            status.idStatus === editingStatusId ? updatedStatus : status
-          )
+    try {
+      if (editingStatusId !== null) {
+        const updated = await updateStatus(editingStatusId, newStatusName, newStatusColor);
+        setStatusList((prev) =>
+          prev.map((s) => (s.idStatus === editingStatusId ? updated : s))
         );
         setAlert({ type: "success", message: "Status atualizado com sucesso!" });
-      } catch (error) {
-        console.error("Erro ao atualizar status no frontend:", error);
-        setAlert({ type: "error", message: "Erro ao atualizar o status." });
+      } else {
+        const created = await addStatus(newStatusName, newStatusColor);
+        setStatusList((prev) => [...prev, created]);
+        setAlert({ type: "success", message: "Status adicionado com sucesso!" });
       }
-    } else {
-      // Adicionar novo status
-      handleAddStatus({
-        nomeStatus: newStatusName,
-        color: newStatusColor,
-      });
+    } catch (error) {
+      setAlert({ type: "error", message: getErrorMessage(error) || "Erro ao salvar status." });
     }
-
-    // Resetar o formulário
     setNewStatusName("");
     setNewStatusColor("#000000");
     setEditingStatusId(null);
     setIsAdding(false);
   };
 
+  const handleEditStatus = (idStatus: number) => {
+    const statusToEdit = statusList.find((status) => status.idStatus === idStatus);
+    if (!statusToEdit) return;
+    setNewStatusName(statusToEdit.nomeStatus);
+    setNewStatusColor(statusToEdit.hexCorPrimaria || "#000000");
+    setEditingStatusId(idStatus);
+    setIsAdding(true);
+  };
+
   const handleDeleteStatus = async (idStatus: number) => {
     try {
-      console.log("Tentando excluir o status com id:", idStatus);
-
-      const response = await fetch(
-        "http://localhost:3000/status",
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ idStatus }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        setAlert({ type: "error", message: errorData.error || "Erro ao excluir o status." });
-        throw new Error("Erro ao excluir o status.");
-      }
-
-      setStatusList((prevList: Status[]) =>
-        prevList.filter((status: Status) => status.idStatus !== idStatus)
-      );
+      await deleteStatus(idStatus);
+      setStatusList((prev) => prev.filter((s) => s.idStatus !== idStatus));
       setAlert({ type: "success", message: "Status excluído com sucesso!" });
     } catch (error) {
-      console.error("Erro ao excluir o status no frontend:", error);
-      setAlert({ type: "error", message: "Status associado a um chamado existente." });
+      setAlert({ type: "error", message: getErrorMessage(error) || "Status associado a um chamado existente." });
     }
   };
 
@@ -189,7 +120,7 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
         </div>
       )}
       <ul className="divide-y divide-gray-200">
-        {statusList.map((status: Status) => (
+        {statusList.map((status) => (
           <li
             key={status.idStatus}
             className="flex justify-between items-center py-2"
@@ -226,12 +157,13 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewStatusColor(e.target.value)}
             className="w-12 h-10"
           />
-          <Button onClick={handleSaveStatus}>Salvar</Button>
+          <Button onClick={handleAddOrEditStatus}>Salvar</Button>
           <Button
             onClick={() => {
               setIsAdding(false);
               setNewStatusName("");
               setNewStatusColor("#000000");
+              setEditingStatusId(null);
             }}
             variant="outline"
           >

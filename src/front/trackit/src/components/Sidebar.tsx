@@ -131,6 +131,19 @@ export function Sidebar() {
                             <SidebarMenuItem>
                                 <SidebarMenuButton
                                     asChild
+                                    isActive={location.pathname === "/analyst/my-tickets"}
+                                    variant="default"
+                                    size="default"
+                                >
+                                    <Link to="/analyst/my-tickets">
+                                        <Ticket className="mr-2" />
+                                        <span>Meus Chamados</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                            <SidebarMenuItem>
+                                <SidebarMenuButton
+                                    asChild
                                     isActive={location.pathname === "/analyst/dashboard"}
                                     variant="default"
                                     size="default"
@@ -298,7 +311,7 @@ export function Sidebar() {
                 <SidebarSeparator />
                 {user && (
                     <UserProfileSection
-                        
+
                         name={user.nome.split(" ").slice(0, 2).join(" ")}
                         email={user.email}
                         role={user.tipo === 1 ? "admin" : user.tipo === 2 ? "analyst" : "user"}

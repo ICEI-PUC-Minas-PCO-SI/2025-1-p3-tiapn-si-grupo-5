@@ -19,3 +19,40 @@ export async function getAllStatus(): Promise<IStatus[]> {
         throw error;
     }
 }
+
+export async function addStatus(nomeStatus: string, color: string): Promise<IStatus> {
+    const response = await fetch("http://localhost:3000/statuses", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nomeStatus, color }),
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erro ao adicionar status.");
+    }
+    return response.json();
+}
+
+export async function updateStatus(idStatus: number, nomeStatus: string, color: string): Promise<IStatus> {
+    const response = await fetch(`http://localhost:3000/statuses/${idStatus}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nomeStatus, color }),
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erro ao atualizar status.");
+    }
+    return response.json();
+}
+
+export async function deleteStatus(idStatus: number): Promise<void> {
+    const response = await fetch(`http://localhost:3000/statuses/${idStatus}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Erro ao excluir o status.");
+    }
+}

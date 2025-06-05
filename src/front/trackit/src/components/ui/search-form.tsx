@@ -8,7 +8,7 @@ export function SearchForm({ ...props }: React.ComponentProps<"form">) {
     <form {...props}>
       <div className="relative">
         <Label htmlFor="search" className="sr-only">
-          Search
+          Pesquisar
         </Label>
         <SidebarInput
           id="search"

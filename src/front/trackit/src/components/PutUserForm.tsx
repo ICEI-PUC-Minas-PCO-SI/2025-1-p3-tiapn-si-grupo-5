@@ -24,7 +24,7 @@ import { X } from "lucide-react";
 import { getAllActiveManagements } from "@/api/Management";
 import { getAllUserTypes } from "@/api/UserTypes";
 import { updateUser } from "@/api/Users";
-import type { UpdateUser } from "@/interfaces/InterfaceUpdateUser";
+import type { IUpdateUser } from "@/api/Users";
 import { useUser } from "@/contexts/UserContext";
 
 const putUserSchema = z.object({
@@ -50,7 +50,7 @@ export function PutUserForm({
     onError,
     onClose,
 }: {
-    user: UpdateUser;
+    user: IUpdateUser;
     onSuccess: () => void;
     onError: () => void;
     onClose: () => void;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Pencil, Trash2, X } from "lucide-react";
-import type { TicketType } from "@/interfaces/InterfaceTicketType";
+import type { ITicketType } from "@/api/TicketType";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -17,7 +17,7 @@ interface TicketTypeParamsProps {
 }
 
 export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProps) {
-    const [ticketTypes, setTicketTypes] = useState<TicketType[]>([]);
+    const [ticketTypes, setTicketTypes] = useState<ITicketType[]>([]);
     const [newName, setNewName] = useState("");
     const [editingId, setEditingId] = useState<number | null>(null);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
