@@ -39,7 +39,7 @@ export class TicketTypeController {
 
     async deleteTicketType(req: Request, res: Response) {
         try {
-            const { idTipoChamado } = req.body;
+            const idTipoChamado = Number(req.params.id);
             await ticketTypeService.deleteTicketType(idTipoChamado);
             res.status(204).send();
         } catch (error) {

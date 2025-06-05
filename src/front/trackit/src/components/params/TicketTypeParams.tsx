@@ -93,8 +93,13 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
             await deleteTicketType(id);
             setTicketTypes((prev) => prev.filter((t) => t.idTipoChamado !== id));
             setAlert({ type: "success", message: "Tipo de demanda excluído!" });
-        } catch {
-            setAlert({ type: "error", message: "Erro ao excluir tipo de demanda." });
+        } catch (error) {
+            const err = error as Error;
+            const msg =
+                typeof err.message === "string" && err.message !== "Erro ao deletar tipo de chamado"
+                    ? err.message
+                    : "Erro ao excluir tipo de demanda.";
+            setAlert({ type: "error", message: msg });
         }
     };
 

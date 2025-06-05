@@ -43,7 +43,6 @@ export class StatusController {
             await statusService.deleteStatus(idStatus);
             res.status(204).send();
         } catch (error) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
             const err = error as { code?: string; message?: string };
             console.error("Erro ao deletar status:", error);
             if (err.code === "ASSOCIATED_TICKETS") {
