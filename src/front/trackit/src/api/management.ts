@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./config";
+
 export interface IManagement {
     idGerencia: number;
     nomeGerencia: string;
@@ -6,7 +8,7 @@ export interface IManagement {
 
 export async function getAllActiveManagements(): Promise<IManagement[]> {
     try {
-        const response = await fetch("http://localhost:3000/departments");
+        const response = await fetch(`${API_BASE_URL}/departments`);
         if (!response.ok) {
             throw new Error("Erro ao buscar gerências ativas");
         }
@@ -19,7 +21,7 @@ export async function getAllActiveManagements(): Promise<IManagement[]> {
 }
 
 export async function addManagement(nomeGerencia: string): Promise<IManagement> {
-    const response = await fetch("http://localhost:3000/departments", {
+    const response = await fetch(`${API_BASE_URL}/departments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nomeGerencia }),
@@ -32,7 +34,7 @@ export async function addManagement(nomeGerencia: string): Promise<IManagement> 
 }
 
 export async function updateManagement(idGerencia: number, nomeGerencia: string): Promise<IManagement> {
-    const response = await fetch(`http://localhost:3000/departments/${idGerencia}`, {
+    const response = await fetch(`${API_BASE_URL}/departments/${idGerencia}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nomeGerencia }),
@@ -45,7 +47,7 @@ export async function updateManagement(idGerencia: number, nomeGerencia: string)
 }
 
 export async function deleteManagement(idGerencia: number): Promise<void> {
-    const response = await fetch(`http://localhost:3000/departments/${idGerencia}`, {
+    const response = await fetch(`${API_BASE_URL}/departments/${idGerencia}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
     });

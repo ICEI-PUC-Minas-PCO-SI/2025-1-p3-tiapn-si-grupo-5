@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./config";
+
 export interface ITicket {
     idChamado: number;
     protocolo: string;
@@ -23,7 +25,7 @@ export interface INewTicket {
 
 export async function sendTicket(payload: INewTicket): Promise<Response> {
     const token = localStorage.getItem("token");
-    return fetch("http://localhost:3000/tickets", {
+    return fetch(`${API_BASE_URL}/tickets`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -34,7 +36,7 @@ export async function sendTicket(payload: INewTicket): Promise<Response> {
 }
 
 export async function getAllTickets(): Promise<ITicket[]> {
-    const response = await fetch("http://localhost:3000/tickets");
+    const response = await fetch(`${API_BASE_URL}/tickets`);
     if (!response.ok) throw new Error("Erro ao buscar chamados");
     return response.json();
 }

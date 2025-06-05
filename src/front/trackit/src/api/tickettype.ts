@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./config";
+
 export interface ITicketType {
     idTipoChamado: number;
     nomeTipo: string;
@@ -5,13 +7,13 @@ export interface ITicketType {
 }
 
 export async function getAllTicketTypes(): Promise<ITicketType[]> {
-    const response = await fetch("http://localhost:3000/ticket-types");
+    const response = await fetch(`${API_BASE_URL}/ticket-types`);
     if (!response.ok) throw new Error("Erro ao buscar tipos de chamado");
     return response.json();
 }
 
 export async function createTicketType(nomeTipo: string): Promise<ITicketType> {
-    const response = await fetch("http://localhost:3000/ticket-types", {
+    const response = await fetch(`${API_BASE_URL}/ticket-types`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nomeTipo }),
@@ -21,7 +23,7 @@ export async function createTicketType(nomeTipo: string): Promise<ITicketType> {
 }
 
 export async function updateTicketType(idTipoChamado: number, nomeTipo: string): Promise<ITicketType> {
-    const response = await fetch(`http://localhost:3000/ticket-types/${idTipoChamado}`, {
+    const response = await fetch(`${API_BASE_URL}/ticket-types/${idTipoChamado}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nomeTipo }),
@@ -31,7 +33,7 @@ export async function updateTicketType(idTipoChamado: number, nomeTipo: string):
 }
 
 export async function deleteTicketType(idTipoChamado: number): Promise<void> {
-    const response = await fetch(`http://localhost:3000/ticket-types/${idTipoChamado}`, {
+    const response = await fetch(`${API_BASE_URL}/ticket-types/${idTipoChamado}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" }
     });

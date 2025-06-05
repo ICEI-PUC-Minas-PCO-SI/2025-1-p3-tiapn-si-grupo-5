@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./config";
+
 export interface UserType {
     idTipoUsuario: number;
     tipoUsuario: string;
@@ -5,7 +7,7 @@ export interface UserType {
 
 export async function getAllUserTypes(): Promise<UserType[]> {
     try {
-        const response = await fetch("http://localhost:3000/user-types");
+        const response = await fetch(`${API_BASE_URL}/user-types`);
         if (!response.ok) {
             throw new Error("Erro ao buscar tipos de usuário");
         }

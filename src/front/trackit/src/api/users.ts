@@ -1,4 +1,5 @@
 import { getAllActiveManagements } from "./Management";
+import { API_BASE_URL } from "./config";
 
 export interface IUpdateProfileUserPayload {
     nome: string;
@@ -54,7 +55,7 @@ export interface IGetUser {
 }
 
 export async function registerNewUser(payload: IRegisterUserPayload): Promise<Response> {
-    return fetch("http://localhost:3000/users/register", {
+    return fetch(`${API_BASE_URL}/users/register`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -65,7 +66,7 @@ export async function registerNewUser(payload: IRegisterUserPayload): Promise<Re
 
 export async function getAllUsers(): Promise<IUserListItem[]> {
     try {
-        const response = await fetch("http://localhost:3000/users");
+        const response = await fetch(`${API_BASE_URL}/users`);
         if (!response.ok) {
             throw new Error("Erro ao buscar usuários");
         }
@@ -99,7 +100,7 @@ export async function getAllUsers(): Promise<IUserListItem[]> {
 }
 
 export async function updateUser(payload: IUpdateUser): Promise<Response> {
-    return fetch(`http://localhost:3000/users/${payload.idUsuario}`, {
+    return fetch(`${API_BASE_URL}/users/${payload.idUsuario}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json",
@@ -113,7 +114,7 @@ export async function updateUser(payload: IUpdateUser): Promise<Response> {
 }
 
 export async function updateUserStatus(idUsuario: string, ativo: number): Promise<Response> {
-    return fetch(`http://localhost:3000/users/${idUsuario}/status`, {
+    return fetch(`${API_BASE_URL}/users/${idUsuario}/status`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
@@ -123,7 +124,7 @@ export async function updateUserStatus(idUsuario: string, ativo: number): Promis
 }
 
 export async function loginUser(payload: ILoginUserPayload): Promise<Response> {
-    return fetch("http://localhost:3000/users/login", {
+    return fetch(`${API_BASE_URL}/users/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -136,7 +137,7 @@ export async function updateProfileUser(
     userId: number,
     payload: IUpdateProfileUserPayload
 ): Promise<Response> {
-    return fetch(`http://localhost:3000/users/profile/${userId}`, {
+    return fetch(`${API_BASE_URL}/users/profile/${userId}`, {
         method: "PUT",
         headers: {
             "Content-Type": "application/json"

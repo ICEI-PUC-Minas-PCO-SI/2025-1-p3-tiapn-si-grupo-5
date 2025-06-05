@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./config";
+
 export interface IStatus {
     idStatus: number;
     nomeStatus: string;
@@ -8,7 +10,7 @@ export interface IStatus {
 
 export async function getAllStatus(): Promise<IStatus[]> {
     try {
-        const response = await fetch("http://localhost:3000/statuses");
+        const response = await fetch(`${API_BASE_URL}/statuses`);
         if (!response.ok) {
             throw new Error("Erro ao buscar status");
         }
@@ -21,7 +23,7 @@ export async function getAllStatus(): Promise<IStatus[]> {
 }
 
 export async function addStatus(nomeStatus: string, color: string): Promise<IStatus> {
-    const response = await fetch("http://localhost:3000/statuses", {
+    const response = await fetch(`${API_BASE_URL}/statuses`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nomeStatus, color }),
@@ -34,7 +36,7 @@ export async function addStatus(nomeStatus: string, color: string): Promise<ISta
 }
 
 export async function updateStatus(idStatus: number, nomeStatus: string, color: string): Promise<IStatus> {
-    const response = await fetch(`http://localhost:3000/statuses/${idStatus}`, {
+    const response = await fetch(`${API_BASE_URL}/statuses/${idStatus}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nomeStatus, color }),
@@ -47,7 +49,7 @@ export async function updateStatus(idStatus: number, nomeStatus: string, color: 
 }
 
 export async function deleteStatus(idStatus: number): Promise<void> {
-    const response = await fetch(`http://localhost:3000/statuses/${idStatus}`, {
+    const response = await fetch(`${API_BASE_URL}/statuses/${idStatus}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
     });
