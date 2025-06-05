@@ -9,7 +9,7 @@ import {
     type Row,
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, Eye, ClipboardList } from "lucide-react";
+import { ArrowUpDown, Eye, ClipboardList, ChevronRight, ChevronLeft } from "lucide-react";
 
 export interface AssignTicketTableRow {
     idChamado: number;
@@ -238,20 +238,20 @@ export function DataTableAssignTickets({
                 </span>
                 <div className="flex gap-3">
                     <Button
-                        size="sm"
+                        size="icon"
                         variant="outline"
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
                     >
-                        Anterior
+                        <ChevronLeft className="w-4 h-4"/>
                     </Button>
                     <Button
-                        size="sm"
+                        size="icon"
                         variant="outline"
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
                     >
-                        Próxima
+                        <ChevronRight className="w-4 h-4"/>
                     </Button>
                 </div>
             </div>

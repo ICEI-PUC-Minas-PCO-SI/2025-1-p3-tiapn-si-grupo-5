@@ -10,7 +10,7 @@ import {
   type Row,
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -216,20 +216,20 @@ export function DataTableUsers({
         </span>
         <div className="flex gap-3">
           <Button
-            size="sm"
+            size="icon"
             variant="outline"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Anterior
+            <ChevronLeft className="w-4 h-4" />
           </Button>
           <Button
-            size="sm"
+            size="icon"
             variant="outline"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Próxima
+            <ChevronRight className="w-4 h-4" />
           </Button>
         </div>
       </div>

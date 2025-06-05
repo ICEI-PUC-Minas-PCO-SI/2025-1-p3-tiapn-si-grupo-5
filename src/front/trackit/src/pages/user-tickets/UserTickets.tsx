@@ -18,7 +18,7 @@ import {
     DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import { Filter } from "lucide-react";
-import { DataTableUserTickets } from "./DataTableUserTickets";
+import { DataTableUserTickets } from "../../components/user-tickets/DataTableUserTickets";
 
 export interface UserTicketTableRow {
     idChamado: number;
