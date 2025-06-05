@@ -10,7 +10,7 @@ import {
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Eye } from "lucide-react";
-import type { AssignTicketTableRow } from "../assign-tickets/DataTableAssignTickets";
+import type { AssignTicketTableRow } from "../assing-tickets/DataTableAssignTickets";
 
 interface DataTableMyTicketsProps {
     data: AssignTicketTableRow[];

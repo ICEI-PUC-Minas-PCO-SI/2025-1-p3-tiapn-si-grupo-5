@@ -38,13 +38,14 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
     const [descLength, setDescLength] = useState(0);
     const [ticketTypes, setTicketTypes] = useState<{ idTipoChamado: number; nomeTipo: string }[]>([]);
     const [priorities, setPriorities] = useState<IPriority[]>([]);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const {
         register,
         handleSubmit,
         control,
         formState: { errors },
-        reset,
+        // removido reset
     } = useForm<openTicket>({
         resolver: zodResolver(openTicket),
     });
@@ -79,11 +80,13 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
             setAlert({ type: "error", message: "Usuário não autenticado!" });
             return;
         }
+        setIsSubmitting(true);
         const idPrioridade = Number(data.priority);
         const idTipoChamado = Number(data.type);
 
         if (!idPrioridade || !idTipoChamado) {
             setAlert({ type: "error", message: "Prioridade e tipo são obrigatórios." });
+            setIsSubmitting(false);
             return;
         }
 
@@ -99,19 +102,21 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
             const response = await sendTicket(payload);
             if (!response.ok) {
                 setAlert({ type: "error", message: "Erro ao abrir chamado!" });
+                setIsSubmitting(false);
                 return;
             }
             setAlert({ type: "success", message: "Chamado aberto com sucesso!" });
-            reset();
+            // Não faz reset(); apenas bloqueia os campos até redirecionar
         } catch (error) {
             setAlert({ type: "error", message: "Falha ao abrir chamado. Tente novamente." });
+            setIsSubmitting(false);
             console.error(error);
         }
     }
 
     async function handleCancel(e: React.MouseEvent) {
         e.preventDefault();
-        reset();
+        // Não faz reset
     }
 
     return (
@@ -125,6 +130,7 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                     type="text"
                     placeholder="Digite o assunto da demanda"
                     {...register("subject")}
+                    disabled={isSubmitting}
                 />
                 {errors.subject && (
                     <span className="text-red-500 text-sm font-'[Inter]'">
@@ -139,7 +145,7 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
+                        <Select onValueChange={field.onChange} value={field.value} disabled={isSubmitting}>
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Selecione a prioridade da demanda" />
                             </SelectTrigger>
@@ -169,7 +175,7 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}>
+                        <Select onValueChange={field.onChange} value={field.value} disabled={isSubmitting}>
                             <SelectTrigger className="w-full">
                                 <SelectValue placeholder="Selecione o tipo da demanda" />
                             </SelectTrigger>
@@ -203,6 +209,7 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                         setDescLength(e.target.value.length);
                         register("description").onChange(e);
                     }}
+                    disabled={isSubmitting}
                 />
                 <div className="flex justify-between items-end">
                     <div>
@@ -219,7 +226,7 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
             </div>
             {/* Anexar arquivo a ser implementado */}
             <footer className="flex justify-start gap-4">
-                <Button type="submit" size="fit">
+                <Button type="submit" size="fit" disabled={isSubmitting}>
                     Abrir chamado
                 </Button>
                 <Button
@@ -229,6 +236,7 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                     variant={"outline"}
                     type="button"
                     onClick={handleCancel}
+                    disabled={isSubmitting}
                 >
                     Cancelar
                 </Button>

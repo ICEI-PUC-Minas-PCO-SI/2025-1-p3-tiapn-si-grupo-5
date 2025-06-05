@@ -5,7 +5,7 @@ import { ForgotPassword } from "../pages/reset-password/ForgotPassword";
 import { DefaultLayoult } from "../layouts/DefaultLayoult";
 import { ManagementUsers } from "../pages/management-users/ManagementUsers";
 import { Index } from "@/layouts/Index";
-import { OpenTicket } from "@/pages/openticket/openTicket";
+import { OpenTicket } from "@/pages/open-ticket/openTicket";
 import { PrivateRoute } from "./PrivateRoute";
 import { Settings } from "@/pages/settings/Settings";
 import { DetailsStatus } from "@/pages/params/Status";
@@ -13,7 +13,8 @@ import { DetailsManagement } from "@/pages/params/Management";
 import { TicketType } from "@/pages/params/TicketType";
 import { Priority } from "@/pages/params/Priority";
 import { AssignTickets } from "@/pages/assign-tickets/AssignTickets";
-import { MyTickets } from "@/pages/my-tickets/MyTickets";
+import { AnalystTickets } from "@/pages/analyst-tickets/AnalystTickets";
+import { UserTickets } from "@/pages/user-tickets/UserTickets";
 
 export function Router() {
     return (
@@ -28,6 +29,7 @@ export function Router() {
             }>
                 <Route index element={<Index />} />
                 <Route path="open-ticket" element={<OpenTicket />} />
+                <Route path="my-tickets" element={<UserTickets />} />
                 <Route path="settings" element={< Settings />} />
             </Route>
             <Route path="/analyst" element={
@@ -38,7 +40,7 @@ export function Router() {
                 <Route index element={<Index />} />
                 <Route path="settings" element={< Settings />} />
                 <Route path="assign-tickets" element={<AssignTickets />} />
-                <Route path="my-tickets" element={<MyTickets />} />
+                <Route path="my-tickets" element={<AnalystTickets />} />
             </Route>
             <Route path="/admin" element={
                 <PrivateRoute allowedTypes={[1]}>

@@ -12,8 +12,8 @@ import {
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
-import { DataTableAssignTickets } from "./DataTableAssignTickets";
-import type { AssignTicketTableRow } from "./DataTableAssignTickets";
+import { DataTableAssignTickets } from "@/components/assing-tickets/DataTableAssignTickets";
+import type { AssignTicketTableRow } from "@/components/assing-tickets/DataTableAssignTickets";
 import { Filter } from "lucide-react";
 
 export function AssignTickets() {

@@ -10,13 +10,13 @@ import {
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
-import { DataTableMyTickets } from "./DataTableMyTickets";
-import type { AssignTicketTableRow } from "../assign-tickets/DataTableAssignTickets";
+import { DataTableMyTickets } from "@/components/analyst-tickets/DataTableMyTickets";
+import type { AssignTicketTableRow } from "@/components/assing-tickets/DataTableAssignTickets";
 import { Filter } from "lucide-react";
 import { getAllPriorities } from "@/api/priority";
 import type { IPriority } from "@/api/priority";
 
-export function MyTickets() {
+export function AnalystTickets() {
   const [tickets, setTickets] = useState<AssignTicketTableRow[]>([]);
   const [filteredData, setFilteredData] = useState<AssignTicketTableRow[]>([]);
   const [search, setSearch] = useState("");

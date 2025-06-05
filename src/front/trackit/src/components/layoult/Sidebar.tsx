@@ -91,7 +91,7 @@ export function Sidebar() {
                                     variant="default"
                                     size="default"
                                 >
-                                    <Link to="/user/tickets">
+                                    <Link to="/user/my-tickets">
                                         <Ticket className="mr-2" />
                                         <span>Ver Chamados</span>
                                     </Link>

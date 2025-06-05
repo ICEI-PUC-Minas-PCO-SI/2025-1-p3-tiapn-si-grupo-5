@@ -1,16 +1,25 @@
 import { useState, useEffect } from "react";
-import { OpenTicketForm } from "@/components/openticket/OpenTicketForm";
+import { OpenTicketForm } from "@/components/open-ticket/OpenTicketForm";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
+import { useNavigate } from "react-router-dom";
 
 export function OpenTicket() {
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
+        if (alert?.type === "success") {
+            const timer = setTimeout(() => {
+                setAlert(null);
+                navigate("/user/my-tickets");
+            }, 1200);
+            return () => clearTimeout(timer);
+        }
         if (alert) {
             const timer = setTimeout(() => setAlert(null), 3000);
             return () => clearTimeout(timer);
         }
-    }, [alert]);
+    }, [alert, navigate]);
 
     return (
         <div className="flex flex-col gap-[2rem]">
