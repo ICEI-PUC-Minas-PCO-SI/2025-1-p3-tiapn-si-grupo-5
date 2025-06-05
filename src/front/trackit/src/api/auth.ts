@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "./config";
+import { API_BASE_URL } from "@/api/config";
 
 export async function getMe(token: string) {
     const response = await fetch(`${API_BASE_URL}/users/me`, {

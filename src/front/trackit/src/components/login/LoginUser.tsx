@@ -5,13 +5,12 @@ import { IoEyeOffOutline } from "react-icons/io5";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { X } from "lucide-react";
+import { GlobalAlert } from "@/components/ui/GlobalAlert";
 import { useNavigate } from 'react-router-dom';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUser } from "@/contexts/UserContext";
-import { loginUser } from "@/api/Users";
+import { loginUser } from "@/api/users";
 
 type LoginFormData = {
     email: string;
@@ -91,24 +90,11 @@ export function LoginUser() {
     return (
         <>
             {alert && (
-                <div className="fixed bottom-4 right-4 z-50">
-                    <Alert
-                        variant={alert.type === "success" ? "success" : "destructive"}
-                        className="flex items-center justify-between space-x-4"
-                    >
-                        <div>
-                            <AlertTitle>{alert.type === "success" ? "Sucesso" : "Erro"}</AlertTitle>
-                            <AlertDescription>{alert.message}</AlertDescription>
-                        </div>
-                        <button
-                            onClick={() => setAlert(null)}
-                            className="text-muted-foreground hover:text-foreground transition-colors"
-                            aria-label="Fechar alerta"
-                        >
-                            <X className="w-4 h-4" />
-                        </button>
-                    </Alert>
-                </div>
+                <GlobalAlert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
             )}
             <form
                 onSubmit={handleSubmit(handleLoginUser)}

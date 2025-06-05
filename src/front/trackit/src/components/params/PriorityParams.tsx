@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import type { IPriority } from "@/api/priority";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { X } from "lucide-react";
+import { GlobalAlert } from "@/components/ui/GlobalAlert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -98,24 +97,11 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
     return (
         <div className="p-6">
             {alert && (
-                <div className="fixed bottom-4 right-4 z-50">
-                    <Alert
-                        variant={alert.type === "success" ? "success" : "destructive"}
-                        className="flex items-center justify-between space-x-4"
-                    >
-                        <div>
-                            <AlertTitle>{alert.type === "success" ? "Sucesso" : "Erro"}</AlertTitle>
-                            <AlertDescription>{alert.message}</AlertDescription>
-                        </div>
-                        <button
-                            onClick={() => setAlert(null)}
-                            className="text-muted-foreground hover:text-foreground transition-colors"
-                            aria-label="Fechar alerta"
-                        >
-                            <X className="w-4 h-4" />
-                        </button>
-                    </Alert>
-                </div>
+                <GlobalAlert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
             )}
             <ul className="divide-y divide-gray-200">
                 {priorityList.map((priority) => (

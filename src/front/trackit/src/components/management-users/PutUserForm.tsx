@@ -19,13 +19,12 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { X } from "lucide-react";
-import { getAllActiveManagements } from "@/api/Management";
-import { getAllUserTypes } from "@/api/UserTypes";
-import { updateUser } from "@/api/Users";
-import type { IUpdateUser } from "@/api/Users";
+import { getAllActiveManagements } from "@/api/management";
+import { getAllUserTypes } from "@/api/usertypes";
+import { updateUser } from "@/api/users";
+import type { IUpdateUser } from "@/api/users";
 import { useUser } from "@/contexts/UserContext";
+import { GlobalAlert } from "@/components/ui/GlobalAlert";
 
 const putUserSchema = z.object({
     matricula: z
@@ -155,24 +154,11 @@ export function PutUserForm({
     return (
         <>
             {alert && (
-                <div className="fixed bottom-4 right-4 z-50">
-                    <Alert
-                        variant={alert.type === "success" ? "success" : "destructive"}
-                        className="flex items-center justify-between space-x-4"
-                    >
-                        <div>
-                            <AlertTitle>{alert.type === "success" ? "Sucesso" : "Erro"}</AlertTitle>
-                            <AlertDescription>{alert.message}</AlertDescription>
-                        </div>
-                        <button
-                            onClick={() => setAlert(null)}
-                            className="text-muted-foreground hover:text-foreground transition-colors"
-                            aria-label="Fechar alerta"
-                        >
-                            <X className="w-4 h-4" />
-                        </button>
-                    </Alert>
-                </div>
+                <GlobalAlert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
             )}
             <Dialog open={isModalOpen} onOpenChange={handleModalOpenChange}>
                 <DialogContent>

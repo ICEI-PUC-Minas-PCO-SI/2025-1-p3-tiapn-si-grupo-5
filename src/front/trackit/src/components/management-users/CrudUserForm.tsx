@@ -22,11 +22,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { X } from "lucide-react";
-import { getAllActiveManagements } from "@/api/Management";
-import { getAllUserTypes } from "../../api/UserTypes";
-import { registerNewUser } from "@/api/Users";
+import { getAllActiveManagements } from "@/api/management";
+import { getAllUserTypes } from "../../api/usertypes";
+import { registerNewUser } from "@/api/users";
+import { GlobalAlert } from "@/components/ui/GlobalAlert";
 
 const crudUserSchema = z.object({
     name: z
@@ -146,24 +145,11 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
     return (
         <>
             {alert && (
-                <div className="fixed bottom-4 right-4 z-50">
-                    <Alert
-                        variant={alert.type === "success" ? "success" : "destructive"}
-                        className="flex items-center justify-between space-x-4"
-                    >
-                        <div>
-                            <AlertTitle>{alert.type === "success" ? "Sucesso" : "Erro"}</AlertTitle>
-                            <AlertDescription>{alert.message}</AlertDescription>
-                        </div>
-                        <button
-                            onClick={() => setAlert(null)}
-                            className="text-muted-foreground hover:text-foreground transition-colors"
-                            aria-label="Fechar alerta"
-                        >
-                            <X className="w-4 h-4" />
-                        </button>
-                    </Alert>
-                </div>
+                <GlobalAlert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
             )}
             <Dialog open={isModalOpen} onOpenChange={handleModalOpenChange}>
                 <DialogTrigger asChild>

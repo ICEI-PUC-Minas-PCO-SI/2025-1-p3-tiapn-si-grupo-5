@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "./config";
+import { API_BASE_URL } from "@/api/config";
 
 export interface ITicket {
     idChamado: number;
@@ -10,9 +10,9 @@ export interface ITicket {
     dataFechamento?: string | null;
     idSolicitante: number
     idAnalista?: number | null;
-    idTipoChamado?: number | null; // Alterar depois para Obrigatório
-    idStatus?: number | null; // Alterar depois para Obrigatório
-    idPrioridade?: number | null; // Alterar depois para Obrigatório
+    idTipoChamado: number;
+    idStatus?: number | null;
+    idPrioridade: number;
 }
 
 export interface INewTicket {

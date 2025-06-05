@@ -16,10 +16,9 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from 'react-router-dom';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { X } from "lucide-react";
-import { getAllActiveManagements } from "@/api/Management";
-import { registerNewUser } from "@/api/Users";
+import { getAllActiveManagements } from "@/api/management";
+import { registerNewUser } from "@/api/users";
+import { GlobalAlert } from "@/components/ui/GlobalAlert";
 
 const registerUserSchema = z.object({
     name: z.string()
@@ -128,24 +127,11 @@ export function RegisterUser() {
     return (
         <>
             {alert && (
-                <div className="fixed bottom-4 right-4 z-50">
-                    <Alert
-                        variant={alert.type === "success" ? "success" : "destructive"}
-                        className="flex items-center justify-between space-x-4"
-                    >
-                        <div>
-                            <AlertTitle>{alert.type === "success" ? "Sucesso" : "Erro"}</AlertTitle>
-                            <AlertDescription>{alert.message}</AlertDescription>
-                        </div>
-                        <button
-                            onClick={() => setAlert(null)}
-                            className="text-muted-foreground hover:text-foreground transition-colors"
-                            aria-label="Fechar alerta"
-                        >
-                            <X className="w-4 h-4" />
-                        </button>
-                    </Alert>
-                </div>
+                <GlobalAlert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                />
             )}
             <form
                 onSubmit={handleSubmit(handleRegisterUser)}

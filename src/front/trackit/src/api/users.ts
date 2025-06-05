@@ -1,5 +1,5 @@
-import { getAllActiveManagements } from "./Management";
-import { API_BASE_URL } from "./config";
+import { getAllActiveManagements } from "@/api/management";
+import { API_BASE_URL } from "@/api/config";
 
 export interface IUpdateProfileUserPayload {
     nome: string;

@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import { updateProfileUser } from "@/api/Users";
+import { updateProfileUser } from "@/api/users";
 
 const settingsSchema = z.object({
     name: z.string()
