@@ -273,7 +273,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "C:\\Users\\Marques\\Desktop\\2025-1-p3-tiapn-si-grupo-5\\src\\back\\generated\\prisma",
+      "value": "C:\\Users\\lucas\\Desktop\\workspace\\code\\3_periodo\\tiapn\\2025-1-p3-tiapn-si-grupo-5\\src\\back\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -287,11 +287,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "C:\\Users\\Marques\\Desktop\\2025-1-p3-tiapn-si-grupo-5\\src\\back\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\lucas\\Desktop\\workspace\\code\\3_periodo\\tiapn\\2025-1-p3-tiapn-si-grupo-5\\src\\back\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
+    "rootEnvPath": "../../.env",
     "schemaEnvPath": "../../.env"
   },
   "relativePath": "../../prisma",
@@ -301,6 +301,7 @@ const config = {
     "db"
   ],
   "activeProvider": "mysql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
