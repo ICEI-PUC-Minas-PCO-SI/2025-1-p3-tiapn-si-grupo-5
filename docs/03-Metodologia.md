@@ -91,7 +91,7 @@ Atualizado em: 08/05/2025
 
 #### Sprint 4
 
-Atualizado em: 02/06/2025
+Atualizado em: 05/06/2025
 
 - _Scrum master_: Lucas Fernandes Nascimento
 - A divisão dos papéis pode ser verificada nas issues do Github Projects do repositório (SPRINT 4 - TRACKIT)
@@ -101,6 +101,8 @@ Atualizado em: 02/06/2025
 | Lucas Fernandes Nascimento | Setup Front e Backend | 02/05/2025 | 17/05/2025 | ✔️    | 17/05/2025      |
 | Lucas Fernandes Nascimento | Crud Usuários | 17/05/2025 | 01/05/2025 | ✔️    | 24/05/2025      |
 | Lucas Fernandes Nascimento | Editar Perfil | 24/05/2025 | 01/05/2025 | ✔️    | 29/05/2025      |
+| Lucas Fernandes Nascimento | Crud Prioridade | 05/06/2025 | 05/06/2025 | ✔️    | 05/06/2025      |
+| Lucas Fernandes Nascimento | Crud Tipo de demanda | 03/06/2025 | 05/06/2025 | ✔️    | 03/06/2025      |
 
 ### Processo
 
@@ -122,5 +124,5 @@ Exemplo: os artefatos do projeto são desenvolvidos a partir de diversas platafo
 | Documentos do projeto               | GitHub                             | [Documentação](https://github.com/ICEI-PUC-Minas-PCO-SI/2025-1-p3-tiapn-si-grupo-5/tree/main/docs)                           |
 | Projeto de interface                | Figma                              | [Figma](https://www.figma.com/design/mQ01IKXNd8l9l0xQwxCgcQ/wireframe-trackit?node-id=0-1&t=P2jZDK4UVQqXLUjh-1)                           |
 | Modelagem de Processos                         | Lucid.app                             | [Processos](https://lucid.app/lucidchart/4c140509-cd82-42cc-b4e3-0c3382ea2737/edit?viewport_loc=104%2C161%2C2217%2C1076%2C0_0&invitationId=inv_94730dbe-5f9c-4e6f-8a68-ee316f7e33b5)                         |
-| Slides de Apresentação         | Canva                             | [Slides](https://www.canva.com/design/DAGg-JQH1tc/SFLiuPJI_AGmRgNFB_OHkg/edit?utm_content=DAGg-JQH1tc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)                           |
+| Slides de Apresentação         | Canva                             | [Slides](https://www.canva.com/design/DAGpbZ6vfsg/3Zl6leQHTdQPockn0YNW8Q/edit?utm_content=DAGpbZ6vfsg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)                           |
 | Gerenciamento do projeto            | GitHub Projects                    | [Projects](https://github.com/orgs/ICEI-PUC-Minas-PCO-SI/projects/130)                          |
