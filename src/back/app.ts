@@ -7,6 +7,7 @@ import { TicketRoutes } from "./routes/TicketRoutes";
 import { StatusRoutes } from "./routes/StatusRoutes";
 import { TicketTypeRoutes } from "./routes/TicketTypeRoutes";
 import { errorHandler } from "./middlewares/error-handler";
+import { PriorityRoutes } from "./routes/PriorityRoutes";
 
 const app = express();
 app.use(express.json());
@@ -18,6 +19,7 @@ const userTypeRoutes = new UserTypeRoutes();
 const ticketRoutes = new TicketRoutes();
 const statusRoutes = new StatusRoutes();
 const ticketTypeRoutes = new TicketTypeRoutes();
+const priorityRoutes = new PriorityRoutes();
 
 // Rotas agrupadas por recurso
 app.use("/", userRoutes.getRouter());
@@ -26,6 +28,7 @@ app.use("/", userTypeRoutes.getRouter());
 app.use("/", ticketRoutes.getRouter());
 app.use("/", statusRoutes.getRouter());
 app.use("/", ticketTypeRoutes.getRouter());
+app.use("/", priorityRoutes.getRouter());
 
 // Middleware global de tratamento de erros
 app.use(errorHandler);
