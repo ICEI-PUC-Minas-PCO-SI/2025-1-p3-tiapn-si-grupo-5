@@ -1,11 +1,11 @@
 import express from "express";
 import cors from "cors";
-import { UserRoutes } from "./routes/UserRoutes";
-import { ManagementRoutes } from "./routes/ManagementRoutes";
-import { UserTypeRoutes } from "./routes/UserTypesRoutes";
-import { TicketRoutes } from "./routes/TicketRoutes";
-import { StatusRoutes } from "./routes/StatusRoutes";
-import { TicketTypeRoutes } from "./routes/TicketTypeRoutes";
+import { UserRoutes } from "./routes/userRoutes";
+import { ManagementRoutes } from "./routes/managementRoutes";
+import { UserTypeRoutes } from "./routes/userTypesRoutes";
+import { TicketRoutes } from "./routes/ticketRoutes";
+import { StatusRoutes } from "./routes/statusRoutes";
+import { TicketTypeRoutes } from "./routes/ticketTypeRoutes";
 import { errorHandler } from "./middlewares/error-handler";
 import { PriorityRoutes } from "./routes/priorityRoutes";
 

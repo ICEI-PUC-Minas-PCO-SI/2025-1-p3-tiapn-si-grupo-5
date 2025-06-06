@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
-import { UserService } from "../services/UserService";
+import { UserService } from "../services/userService";
 
 const userService = new UserService();
 

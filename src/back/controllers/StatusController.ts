@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { StatusService } from "../services/StatusService";
+import { StatusService } from "../services/statusService";
 
 const statusService = new StatusService();
 
