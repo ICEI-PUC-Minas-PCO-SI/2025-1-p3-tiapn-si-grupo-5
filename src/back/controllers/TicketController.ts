@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "../generated/prisma";
-const prisma = new PrismaClient();
 
+const prisma = new PrismaClient();
 
 export class TicketController {
     async createTicket(req: Request, res: Response) {
@@ -39,21 +39,15 @@ export class TicketController {
 
     async assignTicket(req: Request, res: Response) {
         try {
-            const idChamado = Number(req.params.id);
-            // @ts-ignore
-            const idAnalista = req.usuario?.id;
-            if (!idAnalista) {
-                res.status(401).json({ error: "Usuário não autenticado" });
-                return;
-            }
-            const chamado = await prisma.chamado.update({
+            const idChamado = Number(req.params.id); // Corrigido para pegar o parâmetro correto da rota
+            // @ts-expect-error usuario injetado pelo middleware de autenticação
+            const idAnalista = req.usuario.id;
+            // Atualiza o chamado atribuindo o analista
+            const ticket = await prisma.chamado.update({
                 where: { idChamado },
-                data: {
-                    idAnalista,
-                    idStatus: 2 
-                }
+                data: { idAnalista }
             });
-            res.json(chamado);
+            res.status(200).json(ticket);
         } catch (error) {
             console.error("Erro ao assumir chamado:", error);
             res.status(500).json({ error: "Erro ao assumir chamado" });

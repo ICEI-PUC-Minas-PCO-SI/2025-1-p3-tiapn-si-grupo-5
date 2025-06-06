@@ -46,12 +46,31 @@ export function AssignTickets() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Funções auxiliares para normalização
+  function normalizePriority(priority?: string) {
+    if (!priority) return "";
+    const p = priority.trim().toLowerCase();
+    if (["alta"].includes(p)) return "Alta";
+    if (["médio", "media", "média"].includes(p)) return "Médio";
+    if (["baixo", "baixa"].includes(p)) return "Baixo";
+    return priority;
+  }
+  function normalizeStatus(status?: string) {
+    if (!status) return "Aguardando";
+    const s = status.trim().toLowerCase();
+    if (["aguardando"].includes(s)) return "Aguardando";
+    if (["em aberto", "aberto"].includes(s)) return "Em aberto";
+    if (["em análise", "em analise", "analise", "análise"].includes(s)) return "Em análise";
+    if (["resolvido", "resolvida"].includes(s)) return "Resolvido";
+    return status;
+  }
+
   let filteredTickets = tickets.filter((ticket: Ticket) =>
     ticket.assunto.toLowerCase().includes(search.toLowerCase()) ||
     ticket.idChamado.toString().includes(search)
   );
-  if (priorityFilter) filteredTickets = filteredTickets.filter(t => t.prioridade === priorityFilter);
-  if (statusFilter) filteredTickets = filteredTickets.filter(t => (t.status || "Aguardando") === statusFilter);
+  if (priorityFilter) filteredTickets = filteredTickets.filter(t => normalizePriority(t.prioridade) === normalizePriority(priorityFilter));
+  if (statusFilter) filteredTickets = filteredTickets.filter(t => normalizeStatus(t.status) === normalizeStatus(statusFilter));
 
   // Ordenação
   filteredTickets = filteredTickets.slice().sort((a, b) => {
@@ -94,7 +113,10 @@ export function AssignTickets() {
           <Search className="absolute left-2 top-2.5 w-5 h-5 text-gray-400" />
         </div>
         <div className="relative">
-          <Button variant="outline" className="flex items-center gap-2" onClick={() => setFilterOpen(v => !v)}>
+          <Button variant="outline" className="flex items-center gap-2" onClick={() => {
+            setFilterOpen(v => !v);
+            setOrderOpen(false); // Fecha o menu de ordenação ao abrir filtro
+          }}>
             <Filter className="w-4 h-4" />Filtrar <ChevronDown className="w-4 h-4" />
           </Button>
           {filterOpen && (
@@ -118,7 +140,10 @@ export function AssignTickets() {
           )}
         </div>
         <div className="relative">
-          <Button variant="outline" className="flex items-center gap-2" onClick={() => setOrderOpen(v => !v)}>
+          <Button variant="outline" className="flex items-center gap-2" onClick={() => {
+            setOrderOpen(v => !v);
+            setFilterOpen(false); // Fecha o menu de filtro ao abrir ordenação
+          }}>
             <SortAsc className="w-4 h-4" />Ordenar <ChevronDown className="w-4 h-4" />
           </Button>
           {orderOpen && (
@@ -157,9 +182,10 @@ export function AssignTickets() {
                   const data = ticket.dataAbertura ? new Date(ticket.dataAbertura) : null;
                   const dataFormatada = data ? data.toLocaleDateString('pt-BR') : "";
                   let prioridadeBadge = null;
-                  if (ticket.prioridade === "Alta") prioridadeBadge = <span className="px-5 py-1 rounded bg-red-600 text-white font-bold text-base">Alto</span>;
-                  else if (ticket.prioridade === "Médio" || ticket.prioridade === "Media" || ticket.prioridade === "Média") prioridadeBadge = <span className="px-5 py-1 rounded bg-yellow-400 text-black font-bold text-base">Médio</span>;
-                  else if (ticket.prioridade === "Baixo" || ticket.prioridade === "Baixa") prioridadeBadge = <span className="px-5 py-1 rounded bg-green-600 text-white font-bold text-base">Baixo</span>;
+                  // Badge de prioridade
+                  if (normalizePriority(ticket.prioridade) === "Alta") prioridadeBadge = <span className="px-5 py-1 rounded bg-red-600 text-white font-bold text-base">Alto</span>;
+                  else if (normalizePriority(ticket.prioridade) === "Médio") prioridadeBadge = <span className="px-5 py-1 rounded bg-yellow-400 text-black font-bold text-base">Médio</span>;
+                  else if (normalizePriority(ticket.prioridade) === "Baixo") prioridadeBadge = <span className="px-5 py-1 rounded bg-green-600 text-white font-bold text-base">Baixo</span>;
                   else prioridadeBadge = <span className="px-5 py-1 rounded bg-gray-200 text-gray-700 font-bold text-base">-</span>;
                   return (
                     <tr key={ticket.idChamado} className="border-t hover:bg-gray-50">
@@ -168,9 +194,9 @@ export function AssignTickets() {
                       <td className="px-4 py-2">{dataFormatada}</td>
                       <td className="px-4 py-2">{prioridadeBadge}</td>
                       <td className="px-4 py-2">
-                        <span className={`inline-flex items-center px-3 py-1 rounded text-sm font-medium ${STATUS_CONFIG[ticket.status || "Aguardando"].color}`}>
-                          {STATUS_CONFIG[ticket.status || "Aguardando"].icon}
-                          {STATUS_CONFIG[ticket.status || "Aguardando"].label}
+                        <span className={`inline-flex items-center px-3 py-1 rounded text-sm font-medium ${STATUS_CONFIG[normalizeStatus(ticket.status)].color}`}>
+                          {STATUS_CONFIG[normalizeStatus(ticket.status)].icon}
+                          {STATUS_CONFIG[normalizeStatus(ticket.status)].label}
                         </span>
                       </td>
                       <td className="px-4 py-2">
