@@ -11,6 +11,7 @@ import {
 import { CrudUserForm } from "@/components/management-users/CrudUserForm";
 import { PutUserForm } from "@/components/management-users/PutUserForm";
 import { Dialog } from "@/components/ui/dialog";
+import { Filter } from "lucide-react";
 import type { User, ActionButton } from "@/interfaces/InterfacesDataTableUsers";
 import type { IUpdateUser } from "@/api/users";
 import { getAllUsers } from "@/api/users";
@@ -18,6 +19,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
 import { PutActiveUser } from "@/components/management-users/PutActiveUser";
 import { useUser } from "@/contexts/UserContext";
+
 
 export function ManagementUsers() {
   const [Data, setData] = useState<User[]>([]);
@@ -202,6 +204,7 @@ export function ManagementUsers() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="outline">
+                <Filter className="w-4 h-4 mr-1" />
                 Filtrar
               </Button>
             </DropdownMenuTrigger>

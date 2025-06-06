@@ -11,14 +11,6 @@ import {
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import type { User, ActionButton } from "../../interfaces/InterfacesDataTableUsers";
 
 export function DataTableUsers({
@@ -172,12 +164,12 @@ export function DataTableUsers({
 
   return (
     <div className="w-full">
-      <Table>
-        <TableHeader>
+      <table className="w-full border rounded bg-white">
+        <thead>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <tr key={headerGroup.id} className="bg-gray-100 text-gray-700">
               {headerGroup.headers.map((header) => (
-                <TableHead
+                <th
                   key={header.id}
                   className="text-center px-4 py-2"
                   style={{ width: `${100 / columns.length}%` }}
@@ -188,31 +180,36 @@ export function DataTableUsers({
                       header.column.columnDef.header,
                       header.getContext()
                     )}
-                </TableHead>
+                </th>
               ))}
-            </TableRow>
+            </tr>
           ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell
-                  key={cell.id}
-                  className="text-center px-4 py-2"
-                  style={{ width: `${100 / columns.length}%` }}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.length === 0 ? (
+            <tr>
+              <td colSpan={columns.length} className="text-center py-6">Nenhum usuário encontrado</td>
+            </tr>
+          ) : (
+            table.getRowModel().rows.map((row) => (
+              <tr key={row.id} className="border-t hover:bg-gray-50">
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className="text-center px-4 py-2"
+                    style={{ width: `${100 / columns.length}%` }}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
       <div className="flex items-center justify-between py-4">
         <span className="text-sm text-muted-foreground">
-          Página {table.getState().pagination.pageIndex + 1} de{" "}
-          {table.getPageCount()}
+          Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
         </span>
         <div className="flex gap-3">
           <Button

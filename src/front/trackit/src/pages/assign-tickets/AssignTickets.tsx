@@ -147,7 +147,6 @@ export function AssignTickets() {
     setPriorityFilterOpen(false);
   };
 
-  // Só mostra prioridades que estão presentes nos tickets em aberto
   const prioritiesInTickets = Array.from(
     new Set(tickets.map((t) => t.prioridade.idPrioridade))
   );
