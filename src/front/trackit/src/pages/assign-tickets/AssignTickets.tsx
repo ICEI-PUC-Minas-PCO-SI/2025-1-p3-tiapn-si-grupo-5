@@ -15,6 +15,7 @@ import {
 import { DataTableAssignTickets } from "@/components/assing-tickets/DataTableAssignTickets";
 import type { AssignTicketTableRow } from "@/components/assing-tickets/DataTableAssignTickets";
 import { Filter } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export function AssignTickets() {
   const [tickets, setTickets] = useState<AssignTicketTableRow[]>([]);
@@ -31,6 +32,7 @@ export function AssignTickets() {
   const [allPriorities, setAllPriorities] = useState<IPriority[]>([]);
   const [priorityFilterOpen, setPriorityFilterOpen] = useState(false);
   const [selectedPriorities, setSelectedPriorities] = useState<number[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     Promise.all([getUnassignedTickets(), getAllPriorities()])
@@ -77,11 +79,18 @@ export function AssignTickets() {
   }, []);
 
   useEffect(() => {
+    if (alert?.type === "success") {
+      const timer = setTimeout(() => {
+        setAlert(null);
+        navigate("/analyst/my-tickets");
+      }, 1200);
+      return () => clearTimeout(timer);
+    }
     if (alert) {
       const timer = setTimeout(() => setAlert(null), 3000);
       return () => clearTimeout(timer);
     }
-  }, [alert]);
+  }, [alert, navigate]);
 
   useEffect(() => {
     let data = tickets;
@@ -208,7 +217,8 @@ export function AssignTickets() {
                     {priority.nomePrioridade}
                   </DropdownMenuCheckboxItem>
                 ))
-              )}
+              )
+              }
               <div className="flex justify-end p-2">
                 <Button
                   size="sm"
