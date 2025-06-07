@@ -24,10 +24,9 @@ const registerUserSchema = z.object({
     name: z.string()
         .min(3, "O nome deve ter pelo menos 3 caracteres")
         .regex(/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/, "O nome deve conter apenas letras e espaços")
-        .refine((val) => val.trim().split(" ").length >= 2, {
+        .refine((val: string) => val.trim().split(" ").length >= 2, {
             message: "Informe o nome completo",
         }),
-
     registration: z.string()
         .min(4, "A matrícula deve ter pelo menos 4 dígitos")
         .regex(/^[0-9]{1,14}[0-9Xx]{1}$/, {
@@ -36,11 +35,13 @@ const registerUserSchema = z.object({
     ramal: z.string()
         .regex(/^\d{10}$/, {
             message: "Ramal inválido. Deve conter exatamente 10 dígitos numéricos",
-        },
-        ),
-    administration: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-        message: "Selecione uma gerência válida",
-    }),
+        }),
+    administration: z
+        .string()
+        .refine((val: unknown) => typeof val === "string" && val.length > 0, { message: "Selecione uma gerência válida" })
+        .refine((val: string) => !isNaN(Number(val)) && Number(val) > 0, {
+            message: "Selecione uma gerência válida",
+        }),
     email: z.string().email("E-mail inválido"),
     password: z
         .string()
@@ -53,7 +54,7 @@ const registerUserSchema = z.object({
 }).refine((data) => data.password === data.confirmPassword, {
     message: "As senhas não correspodem",
     path: ["confirmPassword"],
-})
+});
 
 type registerUserSchema = z.infer<typeof registerUserSchema>;
 
@@ -92,6 +93,15 @@ export function RegisterUser() {
     } = useForm<registerUserSchema>({
         resolver: zodResolver(registerUserSchema),
         mode: "onChange",
+        defaultValues: {
+            name: "",
+            registration: "",
+            ramal: "",
+            administration: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+        }
     });
     async function handleRegisterUser(data: registerUserSchema) {
         const input = data.registration.toUpperCase();
