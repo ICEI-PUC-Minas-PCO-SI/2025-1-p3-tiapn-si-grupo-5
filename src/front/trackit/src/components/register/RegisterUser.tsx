@@ -82,8 +82,11 @@ export function RegisterUser() {
         fetchManagements();
     }, []);
 
-    const [isShow, setIsShow] = useState(false);
-    const handlePassword = () => setIsShow(!isShow);
+    const [isShowPassword, setIsShowPassword] = useState(false);
+    const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);
+
+    const handlePassword = () => setIsShowPassword((prev) => !prev);
+    const handleConfirmPassword = () => setIsShowConfirmPassword((prev) => !prev);
 
     const {
         register,
@@ -234,7 +237,7 @@ export function RegisterUser() {
                     <label>Senha:</label>
                     <div className="relative w-full">
                         <Input
-                            type={isShow ? "text" : "password"}
+                            type={isShowPassword ? "text" : "password"}
                             placeholder="Senha"
                             {...register("password")}
                         />
@@ -242,9 +245,10 @@ export function RegisterUser() {
                             type="button"
                             onClick={handlePassword}
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-                            aria-label={isShow ? "Ocultar senha" : "Mostrar senha"}
+                            aria-label={isShowPassword ? "Ocultar senha" : "Mostrar senha"}
+                            tabIndex={-1}
                         >
-                            {isShow ? (
+                            {isShowPassword ? (
                                 <IoEyeOffOutline size={24} />
                             ) : (
                                 <IoEyeOutline size={24} />
@@ -263,13 +267,17 @@ export function RegisterUser() {
                     </label>
                     <div className="relative w-full">
                         <Input
-                            type={isShow ? "text" : "password"}
+                            type={isShowConfirmPassword ? "text" : "password"}
                             placeholder="Digite novamente a senha"
                             {...register("confirmPassword")} />
-
-                        <button onClick={handlePassword} className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-500 focus: outline-0" >
-                            {!isShow && <IoEyeOutline size={24} />}
-                            {isShow && <IoEyeOffOutline size={24} />}
+                        <button
+                            type="button"
+                            onClick={handleConfirmPassword}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                            aria-label={isShowConfirmPassword ? "Ocultar senha" : "Mostrar senha"}
+                            tabIndex={-1}
+                        >
+                            {isShowConfirmPassword ? <IoEyeOffOutline size={24} /> : <IoEyeOutline size={24} />}
                         </button>
                     </div>
                     {errors.confirmPassword && (
