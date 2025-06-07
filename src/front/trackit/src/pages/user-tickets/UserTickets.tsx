@@ -15,10 +15,18 @@ import {
     DropdownMenu,
     DropdownMenuTrigger,
     DropdownMenuContent,
-    DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import { Filter } from "lucide-react";
+import { XCircle } from "lucide-react";
 import { DataTableUserTickets } from "../../components/user-tickets/DataTableUserTickets";
+import {
+    Select,
+    SelectTrigger,
+    SelectValue,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+} from "@/components/ui/select";
 
 export interface UserTicketTableRow {
     idChamado: number;
@@ -44,18 +52,9 @@ export function UserTickets() {
     const [filteredData, setFilteredData] = useState<UserTicketTableRow[]>([]);
     const [search, setSearch] = useState("");
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
-    const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>({
-        protocolo: true,
-        assunto: true,
-        dataAbertura: true,
-        prioridade: true,
-        status: true,
-        analista: true,
-        actions: true,
-    });
     const [allPriorities, setAllPriorities] = useState<IPriority[]>([]);
     const [priorityFilterOpen, setPriorityFilterOpen] = useState(false);
-    const [selectedPriorities, setSelectedPriorities] = useState<number[]>([]);
+    const [priorityFilter, setPriorityFilter] = useState<string>("__all__");
 
     useEffect(() => {
         Promise.all([getAllTickets(), getAllPriorities(), getAllStatus(), getAllUsers()])
@@ -137,49 +136,27 @@ export function UserTickets() {
                     (ticket.protocolo ?? "").toLowerCase().includes(lowerCaseQuery)
             );
         }
-        if (selectedPriorities.length > 0) {
+        if (priorityFilter && priorityFilter !== "__all__") {
             data = data.filter((ticket) =>
-                selectedPriorities.includes(ticket.prioridade.idPrioridade)
+                String(ticket.prioridade.idPrioridade) === priorityFilter
             );
         }
         setFilteredData(data);
-    }, [search, tickets, selectedPriorities]);
+    }, [search, tickets, priorityFilter]);
 
-    const columnsList = [
-        { id: "protocolo", label: "Protocolo" },
-        { id: "assunto", label: "Assunto" },
-        { id: "dataAbertura", label: "Aberto em" },
-        { id: "prioridade", label: "Prioridade" },
-        { id: "status", label: "Status" },
-        { id: "analista", label: "Analista" },
-    ];
-
-    const toggleColumnVisibility = (columnId: string) => {
-        setVisibleColumns((prev) => ({
-            ...prev,
-            [columnId]: !prev[columnId],
-        }));
-    };
-
-    const handlePriorityToggle = (idPrioridade: number) => {
-        setSelectedPriorities((prev) =>
-            prev.includes(idPrioridade)
-                ? prev.filter((id) => id !== idPrioridade)
-                : [...prev, idPrioridade]
-        );
-    };
-
-    const clearPriorityFilter = () => {
-        setSelectedPriorities([]);
-        setPriorityFilterOpen(false);
-    };
-
+    // Prioridades presentes nos chamados
     const prioritiesInTickets = Array.from(
         new Set(tickets.map((t) => t.prioridade.idPrioridade))
     );
     const prioritiesToShow = allPriorities.filter((p) =>
         prioritiesInTickets.includes(p.idPrioridade)
     );
+
+    // Limpar filtro de prioridade e fechar modal
+    const clearPriorityFilter = () => {
+        setPriorityFilter("__all__");
+        setPriorityFilterOpen(false);
+    };
 
     return (
         <div className="space-y-4">
@@ -196,63 +173,40 @@ export function UserTickets() {
             <div className="flex justify-between">
                 <Searchbar onSearch={setSearch} />
                 <div className="flex gap-3">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant="outline">
-                                Colunas
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            {columnsList.map((column) => (
-                                <DropdownMenuCheckboxItem
-                                    key={column.id}
-                                    className="capitalize"
-                                    checked={visibleColumns[column.id]}
-                                    onCheckedChange={() =>
-                                        toggleColumnVisibility(column.id)
-                                    }
-                                >
-                                    {column.label}
-                                </DropdownMenuCheckboxItem>
-                            ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
                     <DropdownMenu open={priorityFilterOpen} onOpenChange={setPriorityFilterOpen}>
                         <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant="outline">
+                            <Button size="icon" variant="outline">
                                 <Filter className="w-4 h-4 mr-1" />
-                                Filtrar
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="min-w-[220px]">
                             <div className="px-4 py-2 font-semibold text-sm text-gray-700">Prioridade</div>
-                            {prioritiesToShow.length === 0 ? (
-                                <span className="block px-4 py-2 text-gray-500">Nenhuma prioridade encontrada</span>
-                            ) : (
-                                prioritiesToShow.map((priority) => (
-                                    <DropdownMenuCheckboxItem
-                                        key={priority.idPrioridade}
-                                        checked={selectedPriorities.includes(priority.idPrioridade)}
-                                        onCheckedChange={() => handlePriorityToggle(priority.idPrioridade)}
-                                        className="flex items-center gap-2"
-                                    >
-                                        <span
-                                            className="inline-block w-4 h-4 rounded-full mr-2"
-                                            style={{ backgroundColor: priority.hexCorPrimaria }}
-                                        />
-                                        {priority.nomePrioridade}
-                                    </DropdownMenuCheckboxItem>
-                                ))
-                            )
-                            }
-                            <div className="flex justify-end p-2">
+                            <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+                                <SelectTrigger className="w-full mb-2">
+                                    <SelectValue placeholder="Todas" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="__all__">Todas</SelectItem>
+                                        {prioritiesToShow.map(priority => (
+                                            <SelectItem key={priority.idPrioridade} value={String(priority.idPrioridade)}>
+                                                <span className="inline-block w-4 h-4 rounded-full mr-2" style={{ backgroundColor: priority.hexCorPrimaria }} />
+                                                {priority.nomePrioridade}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                            <div className="flex justify-center px-2 pb-2">
                                 <Button
                                     size="sm"
                                     variant="ghost"
                                     onClick={clearPriorityFilter}
-                                    disabled={selectedPriorities.length === 0}
+                                    className="flex items-center gap-1"
+                                    disabled={priorityFilter === "__all__"}
                                 >
-                                    Limpar filtro
+                                    <XCircle className="w-4 h-4" />
+                                    Limpar filtros
                                 </Button>
                             </div>
                         </DropdownMenuContent>
@@ -261,7 +215,15 @@ export function UserTickets() {
             </div>
             <DataTableUserTickets
                 data={filteredData}
-                visibleColumns={visibleColumns}
+                visibleColumns={{
+                    protocolo: true,
+                    assunto: true,
+                    dataAbertura: true,
+                    prioridade: true,
+                    status: true,
+                    analista: true,
+                    actions: true,
+                }}
             />
         </div>
     );

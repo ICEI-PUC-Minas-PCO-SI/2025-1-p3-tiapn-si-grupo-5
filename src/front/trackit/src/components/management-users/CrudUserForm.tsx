@@ -26,6 +26,7 @@ import { getAllActiveManagements } from "@/api/management";
 import { getAllUserTypes } from "../../api/usertypes";
 import { registerNewUser } from "@/api/users";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
+import { Plus } from "lucide-react";
 
 const crudUserSchema = z.object({
     name: z
@@ -171,7 +172,9 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
             )}
             <Dialog open={isModalOpen} onOpenChange={handleModalOpenChange}>
                 <DialogTrigger asChild>
-                    <Button size="sm">Criar</Button>
+                    <Button size="icon">
+                        <Plus className="w-4 h-4"/>
+                    </Button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>

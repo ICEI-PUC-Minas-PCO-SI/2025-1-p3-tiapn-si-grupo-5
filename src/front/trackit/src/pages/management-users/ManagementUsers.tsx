@@ -6,7 +6,6 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import { CrudUserForm } from "@/components/management-users/CrudUserForm";
 import { PutUserForm } from "@/components/management-users/PutUserForm";
@@ -19,22 +18,19 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
 import { PutActiveUser } from "@/components/management-users/PutActiveUser";
 import { useUser } from "@/contexts/UserContext";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+} from "@/components/ui/select";
+import { XCircle } from "lucide-react";
 
 export function ManagementUsers() {
   const [Data, setData] = useState<User[]>([]);
-  const [filteredData, setFilteredData] = useState<User[]>(Data);
-  const [visibleColumns, setVisibleColumns] = useState<
-    Record<keyof User, boolean>
-  >({
-    id: true,
-    name: true,
-    accessType: true,
-    management: true,
-    ativo: true,
-    nomeUsuario: true,
-    email: true,
-    ramal: true,
-  });
+  const [filteredData, setFilteredData] = useState<User[]>([]);
   const [accessTypeFilter, setAccessTypeFilter] = useState<string>("");
   const [managementFilter, setManagementFilter] = useState<string>("");
   const [ativoFilter, setAtivoFilter] = useState<string>("");
@@ -49,6 +45,7 @@ export function ManagementUsers() {
     user: User | null;
     newStatus: number;
   }>({ open: false, user: null, newStatus: 0 });
+  const [filterMenuOpen, setFilterMenuOpen] = useState(false);
 
   const { user: loggedInUser } = useUser();
 
@@ -78,19 +75,16 @@ export function ManagementUsers() {
     fetchUsers();
   }, []);
 
+  // Filtros
   useEffect(() => {
-    setFilteredData(Data);
-  }, [Data]);
-
-  useEffect(() => {
-    let data = Data;
-    if (accessTypeFilter) {
+    let data = [...Data];
+    if (accessTypeFilter && accessTypeFilter !== "__all__") {
       data = data.filter((user) => user.accessType === accessTypeFilter);
     }
-    if (managementFilter) {
+    if (managementFilter && managementFilter !== "__all__") {
       data = data.filter((user) => String(user.management.idGerencia) === managementFilter);
     }
-    if (ativoFilter) {
+    if (ativoFilter && ativoFilter !== "__all__") {
       data = data.filter((user) => String(user.ativo) === ativoFilter);
     }
     setFilteredData(data);
@@ -169,13 +163,6 @@ export function ManagementUsers() {
     },
   ];
 
-  const columns = [
-    { id: "name", label: "Usuário" },
-    { id: "accessType", label: "Tipo de Acesso" },
-    { id: "management", label: "Gerência" },
-    { id: "ativo", label: "Ativo" },
-  ];
-
   const handleSearch = (query: string) => {
     const lowerCaseQuery = query.toLowerCase();
     const filtered = Data.filter((user) =>
@@ -184,17 +171,24 @@ export function ManagementUsers() {
     setFilteredData(filtered);
   };
 
-  const toggleColumnVisibility = (columnId: keyof User) => {
-    setVisibleColumns((prev) => ({
-      ...prev,
-      [columnId]: !prev[columnId],
-    }));
-  };
-
-  const accessTypes = Array.from(new Set(Data.map(u => u.accessType)));
+  // Filtros para selects
+  const accessTypes = Array.from(new Set(Data.map(u => u.accessType))).filter(Boolean);
   const managements = Array.from(
     new Map(Data.map(u => [u.management.idGerencia, u.management.nomeGerencia])).entries()
   ).map(([idGerencia, nomeGerencia]) => ({ idGerencia, nomeGerencia }));
+
+  // Função para limpar todos os filtros e fechar o modal
+  const clearFilters = () => {
+    setAccessTypeFilter("__all__");
+    setManagementFilter("__all__");
+    setAtivoFilter("__all__");
+    setFilterMenuOpen(false);
+  };
+
+  const isAnyFilterSelected =
+    accessTypeFilter !== "__all__" ||
+    managementFilter !== "__all__" ||
+    ativoFilter !== "__all__";
 
   return (
     <div className="space-y-4">
@@ -223,63 +217,70 @@ export function ManagementUsers() {
         <Searchbar onSearch={handleSearch} />
         <div className="flex gap-3">
           <CrudUserForm onSuccess={fetchUsers} />
-          <DropdownMenu>
+          <DropdownMenu open={filterMenuOpen} onOpenChange={setFilterMenuOpen}>
             <DropdownMenuTrigger asChild>
-              <Button size="sm" variant="outline">
+              <Button variant="outline" size="icon">
                 <Filter className="w-4 h-4 mr-1" />
-                Filtrar
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[260px]">
               {/* Filtro por tipo de acesso */}
               <div className="px-4 py-2 font-semibold text-sm text-gray-700">Tipo de Acesso</div>
-              <select
-                className="w-full mb-2 border rounded px-2 py-1 text-sm"
-                value={accessTypeFilter}
-                onChange={e => setAccessTypeFilter(e.target.value)}
-              >
-                <option value="">Todos</option>
-                {accessTypes.map(type => (
-                  <option key={type} value={type}>{type}</option>
-                ))}
-              </select>
+              <Select value={accessTypeFilter} onValueChange={setAccessTypeFilter}>
+                <SelectTrigger className="w-full mb-2">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="__all__">Todos</SelectItem>
+                    {accessTypes.map(type => (
+                      <SelectItem key={type} value={type}>{type}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
               {/* Filtro por gerência */}
               <div className="px-4 py-2 font-semibold text-sm text-gray-700">Gerência</div>
-              <select
-                className="w-full mb-2 border rounded px-2 py-1 text-sm"
-                value={managementFilter}
-                onChange={e => setManagementFilter(e.target.value)}
-              >
-                <option value="">Todas</option>
-                {managements.map(m => (
-                  <option key={m.idGerencia} value={m.idGerencia}>{m.nomeGerencia}</option>
-                ))}
-              </select>
+              <Select value={managementFilter} onValueChange={setManagementFilter}>
+                <SelectTrigger className="w-full mb-2">
+                  <SelectValue placeholder="Todas" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="__all__">Todas</SelectItem>
+                    {managements.map(m => (
+                      <SelectItem key={m.idGerencia} value={String(m.idGerencia)}>{m.nomeGerencia}</SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
               {/* Filtro por ativo */}
               <div className="px-4 py-2 font-semibold text-sm text-gray-700">Ativo</div>
-              <select
-                className="w-full mb-2 border rounded px-2 py-1 text-sm"
-                value={ativoFilter}
-                onChange={e => setAtivoFilter(e.target.value)}
-              >
-                <option value="">Todos</option>
-                <option value="1">Sim</option>
-                <option value="0">Não</option>
-              </select>
-              {/* Filtros de colunas */}
-              <div className="px-4 py-2 font-semibold text-sm text-gray-700">Colunas</div>
-              {columns.map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={visibleColumns[column.id as keyof User]}
-                  onCheckedChange={() =>
-                    toggleColumnVisibility(column.id as keyof User)
-                  }
+              <Select value={ativoFilter} onValueChange={setAtivoFilter}>
+                <SelectTrigger className="w-full mb-2">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="__all__">Todos</SelectItem>
+                    <SelectItem value="1">Sim</SelectItem>
+                    <SelectItem value="0">Não</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {/* Botão para limpar filtros */}
+              <div className="flex justify-center px-2 pb-2">
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={clearFilters}
+                  className="flex items-center gap-1"
+                  disabled={!isAnyFilterSelected}
                 >
-                  {column.label}
-                </DropdownMenuCheckboxItem>
-              ))}
+                  <XCircle className="w-4 h-4" />
+                  Limpar filtros
+                </Button>
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -287,7 +288,16 @@ export function ManagementUsers() {
       <DataTableUsers
         data={filteredData}
         actions={actions}
-        visibleColumns={visibleColumns}
+        visibleColumns={{
+          id: true,
+          name: true,
+          accessType: true,
+          management: true,
+          ativo: true,
+          nomeUsuario: true,
+          email: true,
+          ramal: true,
+        }}
       />
       <Dialog open={editModalState.isOpen} onOpenChange={(isOpen) => !isOpen && closeEditModal()}>
         {editModalState.user && (

@@ -14,13 +14,11 @@ import type { AssignTicketTableRow } from "./DataTableAssignTickets";
 
 interface AdminAssignTicketsTableProps {
     data: AssignTicketTableRow[];
-    visibleColumns: Record<string, boolean>;
     onOpenAssignModal: (ticket: AssignTicketTableRow) => void;
 }
 
 export function AdminAssignTicketsTable({
     data,
-    visibleColumns,
     onOpenAssignModal,
 }: AdminAssignTicketsTableProps) {
     const columns: ColumnDef<AssignTicketTableRow>[] = [
@@ -170,12 +168,7 @@ export function AdminAssignTicketsTable({
             ),
             enableHiding: false,
         },
-    ].filter(
-        (column) =>
-            "accessorKey" in column
-                ? visibleColumns[(column as { accessorKey: string }).accessorKey as keyof AssignTicketTableRow] ?? true
-                : true
-    );
+    ];
 
     const table = useReactTable({
         data,
