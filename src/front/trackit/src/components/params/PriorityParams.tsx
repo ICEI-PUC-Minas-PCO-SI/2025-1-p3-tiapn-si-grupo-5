@@ -41,6 +41,7 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
     const [editingPriorityId, setEditingPriorityId] = useState<number | null>(null);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [nameError, setNameError] = useState<string | null>(null);
+    const [touched, setTouched] = useState(false);
 
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
 
@@ -67,11 +68,16 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
     useEffect(() => {
         if (!isAdding) {
             setNameError(null);
+            setTouched(false);
             return;
         }
-        const result = priorityNameSchema.safeParse(newPriorityName);
-        setNameError(result.success ? null : result.error.issues[0].message);
-    }, [newPriorityName, isAdding]);
+        if (touched) {
+            const result = priorityNameSchema.safeParse(newPriorityName);
+            setNameError(result.success ? null : result.error.issues[0].message);
+        } else {
+            setNameError(null);
+        }
+    }, [newPriorityName, isAdding, touched]);
 
     const handleAddOrEditPriority = async () => {
         const result = priorityNameSchema.safeParse(newPriorityName);
@@ -167,7 +173,10 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
                         type="text"
                         placeholder="Nome da prioridade"
                         value={newPriorityName}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPriorityName(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            setNewPriorityName(e.target.value);
+                            setTouched(true);
+                        }}
                     />
                     <Input
                         type="color"
@@ -188,12 +197,13 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
                             setNewPriorityName("");
                             setNewPriorityColor("#000000");
                             setEditingPriorityId(null);
+                            setTouched(false);
                         }}
                         variant="outline"
                     >
                         Cancelar
                     </Button>
-                    {nameError && (
+                    {nameError && touched && (
                         <span className="text-red-500 text-sm">{nameError}</span>
                     )}
                 </div>

@@ -42,6 +42,7 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
   const [editingStatusId, setEditingStatusId] = useState<number | null>(null);
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
+  const [touched, setTouched] = useState(false);
 
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
 
@@ -69,11 +70,16 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
   useEffect(() => {
     if (!isAdding) {
       setNameError(null);
+      setTouched(false);
       return;
     }
-    const result = statusNameSchema.safeParse(newStatusName);
-    setNameError(result.success ? null : result.error.issues[0].message);
-  }, [newStatusName, isAdding]);
+    if (touched) {
+      const result = statusNameSchema.safeParse(newStatusName);
+      setNameError(result.success ? null : result.error.issues[0].message);
+    } else {
+      setNameError(null);
+    }
+  }, [newStatusName, isAdding, touched]);
 
   const handleAddOrEditStatus = async () => {
     const result = statusNameSchema.safeParse(newStatusName);
@@ -169,7 +175,10 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
             type="text"
             placeholder="Nome do status"
             value={newStatusName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewStatusName(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setNewStatusName(e.target.value);
+              setTouched(true);
+            }}
           />
           <Input
             type="color"
@@ -190,12 +199,13 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
               setNewStatusName("");
               setNewStatusColor("#000000");
               setEditingStatusId(null);
+              setTouched(false);
             }}
             variant="outline"
           >
             Cancelar
           </Button>
-          {nameError && (
+          {nameError && touched && (
             <span className="text-red-500 text-sm">{nameError}</span>
           )}
         </div>

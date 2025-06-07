@@ -42,6 +42,7 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
+  const [touched, setTouched] = useState(false);
 
   const fetchManagement = async () => {
     try {
@@ -67,11 +68,16 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
   useEffect(() => {
     if (!isAdding) {
       setNameError(null);
+      setTouched(false);
       return;
     }
-    const result = managementNameSchema.safeParse(newManagementName);
-    setNameError(result.success ? null : result.error.issues[0].message);
-  }, [newManagementName, isAdding]);
+    if (touched) {
+      const result = managementNameSchema.safeParse(newManagementName);
+      setNameError(result.success ? null : result.error.issues[0].message);
+    } else {
+      setNameError(null);
+    }
+  }, [newManagementName, isAdding, touched]);
 
   const handleAddOrEditManagement = async () => {
     const result = managementNameSchema.safeParse(newManagementName);
@@ -165,7 +171,10 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
             type="text"
             placeholder="Nome do status"
             value={newManagementName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewManagementName(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setNewManagementName(e.target.value);
+              setTouched(true);
+            }}
           />
           <Button
             onClick={handleAddOrEditManagement}
@@ -179,12 +188,13 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
               setIsAdding(false);
               setNewManagementName("");
               setEditingManagementId(null);
+              setTouched(false);
             }}
             variant="outline"
           >
             Cancelar
           </Button>
-          {nameError && (
+          {nameError && touched && (
             <span className="text-red-500 text-sm">{nameError}</span>
           )}
         </div>

@@ -35,6 +35,7 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [nameError, setNameError] = useState<string | null>(null);
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
+    const [touched, setTouched] = useState(false);
 
     const fetchTicketTypes = async () => {
         try {
@@ -59,11 +60,16 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
     useEffect(() => {
         if (!isAdding) {
             setNameError(null);
+            setTouched(false);
             return;
         }
-        const result = ticketTypeNameSchema.safeParse(newName);
-        setNameError(result.success ? null : result.error.issues[0].message);
-    }, [newName, isAdding]);
+        if (touched) {
+            const result = ticketTypeNameSchema.safeParse(newName);
+            setNameError(result.success ? null : result.error.issues[0].message);
+        } else {
+            setNameError(null);
+        }
+    }, [newName, isAdding, touched]);
 
     const handleAddOrEdit = async () => {
         const result = ticketTypeNameSchema.safeParse(newName);
@@ -151,7 +157,10 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
                         type="text"
                         placeholder="Nome do tipo de demanda"
                         value={newName}
-                        onChange={(e) => setNewName(e.target.value)}
+                        onChange={(e) => {
+                            setNewName(e.target.value);
+                            setTouched(true);
+                        }}
                     />
                     <Button
                         onClick={handleAddOrEdit}
@@ -165,12 +174,13 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
                             setIsAdding(false);
                             setNewName("");
                             setEditingId(null);
+                            setTouched(false);
                         }}
                         variant="outline"
                     >
                         Cancelar
                     </Button>
-                    {nameError && (
+                    {nameError && touched && (
                         <span className="text-red-500 text-sm">{nameError}</span>
                     )}
                 </div>
