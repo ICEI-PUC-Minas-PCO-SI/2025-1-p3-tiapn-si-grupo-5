@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { TicketService } from "../services/ticketService";
+import { TicketService } from "../services/TicketService";
 
 const ticketService = new TicketService();
 
@@ -62,6 +62,21 @@ export class TicketController {
         } catch (error) {
             console.error("Erro ao assumir chamado:", error);
             res.status(500).json({ error: "Erro ao assumir chamado" });
+        }
+    }
+
+    async updateTicketAnalyst(req: Request, res: Response) {
+        try {
+            const idChamado = Number(req.params.idChamado);
+            const { idAnalista } = req.body;
+            if (!idAnalista) {
+                return res.status(400).json({ error: "idAnalista é obrigatório para atribuição." });
+            }
+            const ticket = await ticketService.updateTicketAnalyst(idChamado, Number(idAnalista));
+            res.status(200).json(ticket);
+        } catch (error) {
+            console.error("Erro ao atualizar analista do chamado:", error);
+            res.status(500).json({ error: "Erro ao atualizar analista do chamado" });
         }
     }
 }

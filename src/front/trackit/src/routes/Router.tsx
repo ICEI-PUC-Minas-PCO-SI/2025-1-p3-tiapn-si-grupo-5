@@ -12,7 +12,7 @@ import { DetailsStatus } from "@/pages/params/Status";
 import { DetailsManagement } from "@/pages/params/Management";
 import { TicketType } from "@/pages/params/TicketType";
 import { Priority } from "@/pages/params/Priority";
-import { AssignTickets } from "@/pages/assign-tickets/AssignTickets";
+import { AssignTickets } from "@/pages/analyst-assign-tickets/AssignTickets";
 import { AnalystTickets } from "@/pages/analyst-tickets/AnalystTickets";
 import { UserTickets } from "@/pages/user-tickets/UserTickets";
 import { Dashboard } from "@/pages/dashbord/Dashboard";

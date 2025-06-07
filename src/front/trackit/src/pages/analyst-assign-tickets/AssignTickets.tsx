@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getUnassignedTickets, updateTicketAnalyst } from "@/api/ticket";
+import { getUnassignedTickets, assignTicket } from "@/api/ticket";
 import type { ITicket } from "@/api/ticket";
 import { getAllPriorities } from "@/api/priority";
 import type { IPriority } from "@/api/priority";
@@ -12,29 +12,12 @@ import {
   DropdownMenuContent,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
-import { AdminAssignTicketsTable } from "@/components/assing-tickets/AdminAssignTicketsTable";
+import { DataTableAssignTickets } from "@/components/assing-tickets/DataTableAssignTickets";
 import type { AssignTicketTableRow } from "@/components/assing-tickets/DataTableAssignTickets";
 import { Filter } from "lucide-react";
-import { getAllUsers } from "@/api/users";
-import type { IUserListItem } from "@/api/users";
-import { useUser } from "@/contexts/UserContext";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-} from "@/components/ui/select";
+import { useNavigate } from "react-router-dom";
 
-export function AdminAssignTickets() {
+export function AssignTickets() {
   const [tickets, setTickets] = useState<AssignTicketTableRow[]>([]);
   const [filteredData, setFilteredData] = useState<AssignTicketTableRow[]>([]);
   const [search, setSearch] = useState("");
@@ -49,31 +32,14 @@ export function AdminAssignTickets() {
   const [allPriorities, setAllPriorities] = useState<IPriority[]>([]);
   const [priorityFilterOpen, setPriorityFilterOpen] = useState(false);
   const [selectedPriorities, setSelectedPriorities] = useState<number[]>([]);
-  const [analysts, setAnalysts] = useState<IUserListItem[]>([]);
-  const { user } = useUser();
-  const [assigning, setAssigning] = useState<{ [idChamado: number]: boolean }>({});
-  const [selectedAnalyst, setSelectedAnalyst] = useState<{ [idChamado: number]: string }>({});
-  const [assignModal, setAssignModal] = useState<{
-    open: boolean;
-    ticket: AssignTicketTableRow | null;
-  }>({ open: false, ticket: null });
-  const [confirmModal, setConfirmModal] = useState<{
-    open: boolean;
-    ticket: AssignTicketTableRow | null;
-    analystId: string;
-  }>({ open: false, ticket: null, analystId: "" });
+  const navigate = useNavigate();
 
   useEffect(() => {
-    Promise.all([getUnassignedTickets(), getAllPriorities(), getAllUsers()])
-      .then(([ticketsData, priorities, users]: [ITicket[], IPriority[], IUserListItem[]]) => {
+    Promise.all([getUnassignedTickets(), getAllPriorities()])
+      .then(([ticketsData, priorities]: [ITicket[], IPriority[]]) => {
         const priorityMap = new Map<number, IPriority>();
         priorities.forEach((p) => priorityMap.set(p.idPrioridade, p));
         setAllPriorities(priorities);
-
-        const analystsFiltered = users.filter(
-          (u) => u.accessType === "Analista" && u.management.idGerencia === user?.gerencia
-        );
-        setAnalysts(analystsFiltered);
 
         const mapped: AssignTicketTableRow[] = ticketsData.map((t) => {
           let formattedProtocolo = "";
@@ -110,14 +76,21 @@ export function AdminAssignTickets() {
         setFilteredData([]);
         setAlert({ type: "error", message: "Erro ao buscar chamados ou prioridades." });
       });
-  }, [user]);
+  }, []);
 
   useEffect(() => {
+    if (alert?.type === "success") {
+      const timer = setTimeout(() => {
+        setAlert(null);
+        navigate("/analyst/my-tickets");
+      }, 1200);
+      return () => clearTimeout(timer);
+    }
     if (alert) {
       const timer = setTimeout(() => setAlert(null), 3000);
       return () => clearTimeout(timer);
     }
-  }, [alert]);
+  }, [alert, navigate]);
 
   useEffect(() => {
     let data = tickets;
@@ -137,32 +110,13 @@ export function AdminAssignTickets() {
     setFilteredData(data);
   }, [search, tickets, selectedPriorities]);
 
-  const openAssignModal = (ticket: AssignTicketTableRow) => {
-    setAssignModal({ open: true, ticket });
-  };
-
-  const openConfirmModal = (ticket: AssignTicketTableRow, analystId: string) => {
-    setConfirmModal({ open: true, ticket, analystId });
-  };
-
-  const closeAssignModal = () => setAssignModal({ open: false, ticket: null });
-  const closeConfirmModal = () => setConfirmModal({ open: false, ticket: null, analystId: "" });
-
-  const handleAssignToAnalyst = async () => {
-    const ticket = confirmModal.ticket;
-    const analystId = confirmModal.analystId;
-    if (!ticket || !analystId) return;
-    setAssigning((prev) => ({ ...prev, [ticket.idChamado]: true }));
+  const handleAssign = async (idChamado: number) => {
     try {
-      await updateTicketAnalyst(ticket.idChamado, Number(analystId));
-      setTickets((tickets) => tickets.filter((t) => t.idChamado !== ticket.idChamado));
+      await assignTicket(idChamado);
+      setTickets(tickets => tickets.filter(t => t.idChamado !== idChamado));
       setAlert({ type: "success", message: "Chamado atribuído com sucesso!" });
-      closeConfirmModal();
-      closeAssignModal();
     } catch {
-      setAlert({ type: "error", message: "Erro ao atribuir chamado." });
-    } finally {
-      setAssigning((prev) => ({ ...prev, [ticket.idChamado]: false }));
+      setAlert({ type: "error", message: "Erro ao assumir chamado." });
     }
   };
 
@@ -278,105 +232,11 @@ export function AdminAssignTickets() {
           </DropdownMenu>
         </div>
       </div>
-      <AdminAssignTicketsTable
+      <DataTableAssignTickets
         data={filteredData}
         visibleColumns={visibleColumns}
-        onOpenAssignModal={openAssignModal}
+        onAssign={handleAssign}
       />
-
-      {/* Modal de atribuição */}
-      <Dialog open={assignModal.open} onOpenChange={closeAssignModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Atribuir chamado</DialogTitle>
-          </DialogHeader>
-          {assignModal.ticket && (
-            <form
-              onSubmit={e => {
-                e.preventDefault();
-                if (selectedAnalyst[assignModal.ticket!.idChamado]) {
-                  openConfirmModal(assignModal.ticket!, selectedAnalyst[assignModal.ticket!.idChamado]);
-                }
-              }}
-              className="flex flex-col gap-4"
-            >
-              <div>
-                <label className="block mb-1 font-medium">Analista</label>
-                <Select
-                  value={selectedAnalyst[assignModal.ticket.idChamado] || ""}
-                  onValueChange={val =>
-                    setSelectedAnalyst(prev => ({
-                      ...prev,
-                      [assignModal.ticket!.idChamado]: val,
-                    }))
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Selecione o analista" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {analysts.length === 0 && (
-                        <SelectItem value="" disabled>
-                          Nenhum analista disponível
-                        </SelectItem>
-                      )}
-                      {analysts.map((analyst) => (
-                        <SelectItem key={analyst.id} value={analyst.id}>
-                          {analyst.name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-              <DialogFooter>
-                <Button
-                  type="submit"
-                  disabled={!selectedAnalyst[assignModal.ticket.idChamado]}
-                >
-                  Atribuir
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={closeAssignModal}
-                >
-                  Cancelar
-                </Button>
-              </DialogFooter>
-            </form>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal de confirmação */}
-      <Dialog open={confirmModal.open} onOpenChange={closeConfirmModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Confirmar atribuição</DialogTitle>
-          </DialogHeader>
-          <div>
-            Tem certeza que deseja atribuir o chamado{" "}
-            <b>{confirmModal.ticket?.protocolo}</b> ao analista{" "}
-            <b>
-              {analysts.find(a => a.id === confirmModal.analystId)?.name || ""}
-            </b>
-            ?
-          </div>
-          <DialogFooter>
-            <Button
-              onClick={handleAssignToAnalyst}
-              disabled={assigning[confirmModal.ticket?.idChamado || 0]}
-            >
-              {assigning[confirmModal.ticket?.idChamado || 0] ? "Atribuindo..." : "Confirmar"}
-            </Button>
-            <Button variant="outline" onClick={closeConfirmModal}>
-              Cancelar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

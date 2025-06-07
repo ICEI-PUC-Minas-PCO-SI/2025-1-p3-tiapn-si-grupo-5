@@ -4,13 +4,16 @@ import { autenticarToken } from "../middlewares/auth-jwt";
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
 
-// Schema para criação de ticket
 const ticketCreateSchema = z.object({
     assunto: z.string().min(3),
     descricao: z.string().min(3),
     idSolicitante: z.number(),
     idPrioridade: z.number(),
     idTipoChamado: z.number()
+});
+
+const ticketUpdateAnalystSchema = z.object({
+    idAnalista: z.union([z.number(), z.string()])
 });
 
 export class TicketRoutes {
@@ -33,6 +36,16 @@ export class TicketRoutes {
         this.router.get("/tickets/unassigned", autenticarToken, this.ticketController.getUnassignedTickets.bind(this.ticketController));
         this.router.get("/tickets/my", autenticarToken, this.ticketController.getMyTickets.bind(this.ticketController));
         this.router.patch("/tickets/:idChamado/assign", autenticarToken, this.ticketController.assignTicket.bind(this.ticketController));
+        this.router.patch(
+            "/tickets/:idChamado/analyst",
+            autenticarToken,
+            validatePayload(ticketUpdateAnalystSchema),
+            (req, res, next) => {
+                this.ticketController.updateTicketAnalyst(req, res)
+                    .then(() => undefined)
+                    .catch(next);
+            }
+        );
     }
 
     public getRouter(): Router {

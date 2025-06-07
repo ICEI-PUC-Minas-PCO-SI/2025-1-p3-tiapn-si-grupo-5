@@ -54,4 +54,11 @@ export class TicketService {
             data: { idAnalista }
         });
     }
+
+    async updateTicketAnalyst(idChamado: number, idAnalista: number) {
+        return prisma.chamado.update({
+            where: { idChamado },
+            data: { idAnalista }
+        });
+    }
 }
