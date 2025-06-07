@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { getUnassignedTickets, updateTicketAnalyst } from "@/api/ticket";
 import type { ITicket } from "@/api/ticket";
 import { getAllPriorities } from "@/api/priority";
@@ -37,10 +38,8 @@ import { XCircle } from "lucide-react";
 export function AdminAssignTickets() {
   const [tickets, setTickets] = useState<AssignTicketTableRow[]>([]);
   const [filteredData, setFilteredData] = useState<AssignTicketTableRow[]>([]);
-  const [search, setSearch] = useState("");
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [allPriorities, setAllPriorities] = useState<IPriority[]>([]);
-  const [priorityFilter, setPriorityFilter] = useState<string>("__all__");
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [analysts, setAnalysts] = useState<IUserListItem[]>([]);
   const { user } = useUser();
@@ -55,6 +54,13 @@ export function AdminAssignTickets() {
     ticket: AssignTicketTableRow | null;
     analystId: string;
   }>({ open: false, ticket: null, analystId: "" });
+
+  // Query params
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Filtros controlados por query params
+  const search = searchParams.get("search") || "";
+  const priorityFilter = searchParams.get("priority") || "__all__";
 
   useEffect(() => {
     Promise.all([getUnassignedTickets(), getAllPriorities(), getAllUsers()])
@@ -170,8 +176,34 @@ export function AdminAssignTickets() {
 
   // Limpar filtro de prioridade e fechar modal
   const clearPriorityFilter = () => {
-    setPriorityFilter("__all__");
+    setSearchParams(params => {
+      params.delete("priority");
+      return params;
+    });
     setFilterMenuOpen(false);
+  };
+
+  // Handlers para filtros
+  const handlePriorityChange = (value: string) => {
+    setSearchParams(params => {
+      if (value === "__all__") {
+        params.delete("priority");
+      } else {
+        params.set("priority", value);
+      }
+      return params;
+    });
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchParams(params => {
+      if (query) {
+        params.set("search", query);
+      } else {
+        params.delete("search");
+      }
+      return params;
+    });
   };
 
   return (
@@ -187,7 +219,7 @@ export function AdminAssignTickets() {
       )}
       <h1 className="title-h1">Atribuir chamados</h1>
       <div className="flex justify-between">
-        <Searchbar onSearch={setSearch} />
+        <Searchbar onSearch={handleSearch} />
         <div className="flex gap-3">
           <DropdownMenu open={filterMenuOpen} onOpenChange={setFilterMenuOpen}>
             <DropdownMenuTrigger asChild>
@@ -197,7 +229,7 @@ export function AdminAssignTickets() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[220px]">
               <div className="px-4 py-2 font-semibold text-sm text-gray-700">Prioridade</div>
-              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+              <Select value={priorityFilter} onValueChange={handlePriorityChange}>
                 <SelectTrigger className="w-full mb-2">
                   <SelectValue placeholder="Todas" />
                 </SelectTrigger>

@@ -1,4 +1,7 @@
+// TODO: ajustar filtro para quando houver lógica de status da demanda
+
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { getTeamTickets } from "@/api/ticket";
 import type { ITicket } from "@/api/ticket";
 import { getAllPriorities } from "@/api/priority";
@@ -18,6 +21,14 @@ import {
 import { Filter } from "lucide-react";
 import { DataTableUserTickets } from "@/components/user-tickets/DataTableUserTickets";
 import { XCircle } from "lucide-react";
+import {
+    Select,
+    SelectTrigger,
+    SelectValue,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+} from "@/components/ui/select";
 
 export interface TeamTicketTableRow {
     idChamado: number;
@@ -40,11 +51,16 @@ export interface TeamTicketTableRow {
 export function AdminTeamTickets() {
     const [tickets, setTickets] = useState<TeamTicketTableRow[]>([]);
     const [filteredData, setFilteredData] = useState<TeamTicketTableRow[]>([]);
-    const [search, setSearch] = useState("");
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [allPriorities, setAllPriorities] = useState<IPriority[]>([]);
     const [priorityFilterOpen, setPriorityFilterOpen] = useState(false);
-    const [selectedPriorities, setSelectedPriorities] = useState<number[]>([]);
+
+    // Query params
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // Filtros controlados por query params
+    const search = searchParams.get("search") || "";
+    const priorityFilter = searchParams.get("priority") || "__all__";
 
     useEffect(() => {
         Promise.all([getTeamTickets(), getAllPriorities(), getAllStatus(), getAllUsers()])
@@ -97,7 +113,6 @@ export function AdminTeamTickets() {
                     };
                 });
                 setTickets(mapped);
-                setFilteredData(mapped);
                 setAlert(null);
             })
             .catch(() => {
@@ -124,33 +139,53 @@ export function AdminTeamTickets() {
                     (ticket.protocolo ?? "").toLowerCase().includes(lowerCaseQuery)
             );
         }
-        if (selectedPriorities.length > 0) {
+        if (priorityFilter && priorityFilter !== "__all__") {
             data = data.filter((ticket) =>
-                selectedPriorities.includes(ticket.prioridade.idPrioridade)
+                String(ticket.prioridade.idPrioridade) === priorityFilter
             );
         }
         setFilteredData(data);
-    }, [search, tickets, selectedPriorities]);
+    }, [search, tickets, priorityFilter]);
 
-    const handlePriorityToggle = (idPrioridade: number) => {
-        setSelectedPriorities((prev) =>
-            prev.includes(idPrioridade)
-                ? prev.filter((id) => id !== idPrioridade)
-                : [...prev, idPrioridade]
-        );
-    };
-
-    const clearPriorityFilter = () => {
-        setSelectedPriorities([]);
-        setPriorityFilterOpen(false);
-    };
-
+    // Prioridades presentes nos chamados
     const prioritiesInTickets = Array.from(
         new Set(tickets.map((t) => t.prioridade.idPrioridade))
     );
     const prioritiesToShow = allPriorities.filter((p) =>
         prioritiesInTickets.includes(p.idPrioridade)
     );
+
+    // Limpar filtro de prioridade e fechar modal
+    const clearPriorityFilter = () => {
+        setSearchParams(params => {
+            params.delete("priority");
+            return params;
+        });
+        setPriorityFilterOpen(false);
+    };
+
+    // Handlers para filtros
+    const handlePriorityChange = (value: string) => {
+        setSearchParams(params => {
+            if (value === "__all__") {
+                params.delete("priority");
+            } else {
+                params.set("priority", value);
+            }
+            return params;
+        });
+    };
+
+    const handleSearch = (query: string) => {
+        setSearchParams(params => {
+            if (query) {
+                params.set("search", query);
+            } else {
+                params.delete("search");
+            }
+            return params;
+        });
+    };
 
     return (
         <div className="space-y-4">
@@ -165,7 +200,7 @@ export function AdminTeamTickets() {
             )}
             <h1 className="title-h1">Chamados da Equipe</h1>
             <div className="flex justify-between">
-                <Searchbar onSearch={setSearch} />
+                <Searchbar onSearch={handleSearch} />
                 <div className="flex gap-3">
                     <DropdownMenu open={priorityFilterOpen} onOpenChange={setPriorityFilterOpen}>
                         <DropdownMenuTrigger asChild>
@@ -175,37 +210,29 @@ export function AdminTeamTickets() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="min-w-[220px]">
                             <div className="px-4 py-2 font-semibold text-sm text-gray-700">Prioridade</div>
-                            {prioritiesToShow.length === 0 ? (
-                                <span className="block px-4 py-2 text-gray-500">Nenhuma prioridade encontrada</span>
-                            ) : (
-                                prioritiesToShow.map((priority) => (
-                                    <div
-                                        key={priority.idPrioridade}
-                                        className="flex items-center gap-2 px-4 py-1 cursor-pointer"
-                                        onClick={() => handlePriorityToggle(priority.idPrioridade)}
-                                    >
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedPriorities.includes(priority.idPrioridade)}
-                                            readOnly
-                                            className="accent-primary"
-                                        />
-                                        <span
-                                            className="inline-block w-4 h-4 rounded-full mr-2"
-                                            style={{ backgroundColor: priority.hexCorPrimaria }}
-                                        />
-                                        {priority.nomePrioridade}
-                                    </div>
-                                ))
-                            )
-                            }
+                            <Select value={priorityFilter} onValueChange={handlePriorityChange}>
+                                <SelectTrigger className="w-full mb-2">
+                                    <SelectValue placeholder="Todas" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="__all__">Todas</SelectItem>
+                                        {prioritiesToShow.map(priority => (
+                                            <SelectItem key={priority.idPrioridade} value={String(priority.idPrioridade)}>
+                                                <span className="inline-block w-4 h-4 rounded-full mr-2" style={{ backgroundColor: priority.hexCorPrimaria }} />
+                                                {priority.nomePrioridade}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                             <div className="flex justify-center px-2 pb-2">
                                 <Button
                                     size="sm"
                                     variant="ghost"
                                     onClick={clearPriorityFilter}
                                     className="flex items-center gap-1"
-                                    disabled={selectedPriorities.length === 0}
+                                    disabled={priorityFilter === "__all__"}
                                 >
                                     <XCircle className="w-4 h-4" />
                                     Limpar filtros

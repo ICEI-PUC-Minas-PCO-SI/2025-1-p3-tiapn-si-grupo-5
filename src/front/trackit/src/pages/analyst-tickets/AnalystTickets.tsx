@@ -1,4 +1,6 @@
+// TODO: ajustar filtro para quando houver lógica de status da demanda
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { getMyTickets } from "@/api/ticket";
 import type { ITicket } from "@/api/ticket";
 import { Button } from "@/components/ui/button";
@@ -27,11 +29,16 @@ import {
 export function AnalystTickets() {
   const [tickets, setTickets] = useState<AssignTicketTableRow[]>([]);
   const [filteredData, setFilteredData] = useState<AssignTicketTableRow[]>([]);
-  const [search, setSearch] = useState("");
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [allPriorities, setAllPriorities] = useState<IPriority[]>([]);
   const [priorityFilterOpen, setPriorityFilterOpen] = useState(false);
-  const [priorityFilter, setPriorityFilter] = useState<string>("__all__");
+
+  // Query params
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Filtros controlados por query params
+  const search = searchParams.get("search") || "";
+  const priorityFilter = searchParams.get("priority") || "__all__";
 
   useEffect(() => {
     Promise.all([getMyTickets(), getAllPriorities()])
@@ -112,8 +119,34 @@ export function AnalystTickets() {
 
   // Limpar filtro de prioridade e fechar modal
   const clearPriorityFilter = () => {
-    setPriorityFilter("__all__");
+    setSearchParams(params => {
+      params.delete("priority");
+      return params;
+    });
     setPriorityFilterOpen(false);
+  };
+
+  // Handlers para filtros
+  const handlePriorityChange = (value: string) => {
+    setSearchParams(params => {
+      if (value === "__all__") {
+        params.delete("priority");
+      } else {
+        params.set("priority", value);
+      }
+      return params;
+    });
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchParams(params => {
+      if (query) {
+        params.set("search", query);
+      } else {
+        params.delete("search");
+      }
+      return params;
+    });
   };
 
   return (
@@ -129,7 +162,7 @@ export function AnalystTickets() {
       )}
       <h1 className="title-h1">Meus chamados</h1>
       <div className="flex justify-between">
-        <Searchbar onSearch={setSearch} />
+        <Searchbar onSearch={handleSearch} />
         <div className="flex gap-3">
           <DropdownMenu open={priorityFilterOpen} onOpenChange={setPriorityFilterOpen}>
             <DropdownMenuTrigger asChild>
@@ -139,7 +172,7 @@ export function AnalystTickets() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[220px]">
               <div className="px-4 py-2 font-semibold text-sm text-gray-700">Prioridade</div>
-              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+              <Select value={priorityFilter} onValueChange={handlePriorityChange}>
                 <SelectTrigger className="w-full mb-2">
                   <SelectValue placeholder="Todas" />
                 </SelectTrigger>

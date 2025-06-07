@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { DataTableUsers } from "@/components/management-users/DataTableUsers";
 import { Searchbar } from "@/components/ui/SearchBar";
 import { Button } from "@/components/ui/button";
@@ -31,10 +32,6 @@ import { XCircle } from "lucide-react";
 export function ManagementUsers() {
   const [Data, setData] = useState<User[]>([]);
   const [filteredData, setFilteredData] = useState<User[]>([]);
-  const [accessTypeFilter, setAccessTypeFilter] = useState<string>("");
-  const [managementFilter, setManagementFilter] = useState<string>("");
-  const [ativoFilter, setAtivoFilter] = useState<string>("");
-
   const [editModalState, setEditModalState] = useState<{
     isOpen: boolean;
     user: IUpdateUser | null;
@@ -46,6 +43,15 @@ export function ManagementUsers() {
     newStatus: number;
   }>({ open: false, user: null, newStatus: 0 });
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
+
+  // Query params
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Filtros controlados por query params
+  const search = searchParams.get("search") || "";
+  const accessTypeFilter = searchParams.get("accessType") || "__all__";
+  const managementFilter = searchParams.get("management") || "__all__";
+  const ativoFilter = searchParams.get("ativo") || "__all__";
 
   const { user: loggedInUser } = useUser();
 
@@ -87,8 +93,14 @@ export function ManagementUsers() {
     if (ativoFilter && ativoFilter !== "__all__") {
       data = data.filter((user) => String(user.ativo) === ativoFilter);
     }
+    if (search) {
+      const lowerCaseQuery = search.toLowerCase();
+      data = data.filter((user) =>
+        user.name.toLowerCase().includes(lowerCaseQuery)
+      );
+    }
     setFilteredData(data);
-  }, [Data, accessTypeFilter, managementFilter, ativoFilter]);
+  }, [Data, accessTypeFilter, managementFilter, ativoFilter, search]);
 
   useEffect(() => {
     if (alert) {
@@ -163,14 +175,6 @@ export function ManagementUsers() {
     },
   ];
 
-  const handleSearch = (query: string) => {
-    const lowerCaseQuery = query.toLowerCase();
-    const filtered = Data.filter((user) =>
-      user.name.toLowerCase().includes(lowerCaseQuery)
-    );
-    setFilteredData(filtered);
-  };
-
   // Filtros para selects
   const accessTypes = Array.from(new Set(Data.map(u => u.accessType))).filter(Boolean);
   const managements = Array.from(
@@ -179,16 +183,66 @@ export function ManagementUsers() {
 
   // Função para limpar todos os filtros e fechar o modal
   const clearFilters = () => {
-    setAccessTypeFilter("__all__");
-    setManagementFilter("__all__");
-    setAtivoFilter("__all__");
+    setSearchParams(params => {
+      params.delete("accessType");
+      params.delete("management");
+      params.delete("ativo");
+      params.delete("search");
+      return params;
+    });
     setFilterMenuOpen(false);
   };
 
   const isAnyFilterSelected =
     accessTypeFilter !== "__all__" ||
     managementFilter !== "__all__" ||
-    ativoFilter !== "__all__";
+    ativoFilter !== "__all__" ||
+    !!search;
+
+  // Handlers para filtros
+  const handleAccessTypeChange = (value: string) => {
+    setSearchParams(params => {
+      if (value === "__all__") {
+        params.delete("accessType");
+      } else {
+        params.set("accessType", value);
+      }
+      return params;
+    });
+  };
+
+  const handleManagementChange = (value: string) => {
+    setSearchParams(params => {
+      if (value === "__all__") {
+        params.delete("management");
+      } else {
+        params.set("management", value);
+      }
+      return params;
+    });
+  };
+
+  const handleAtivoChange = (value: string) => {
+    setSearchParams(params => {
+      if (value === "__all__") {
+        params.delete("ativo");
+      } else {
+        params.set("ativo", value);
+      }
+      return params;
+    });
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchParams(params => {
+      if (query) {
+        params.set("search", query);
+      } else {
+        params.delete("search");
+      }
+      return params;
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -226,7 +280,7 @@ export function ManagementUsers() {
             <DropdownMenuContent align="end" className="min-w-[260px]">
               {/* Filtro por tipo de acesso */}
               <div className="px-4 py-2 font-semibold text-sm text-gray-700">Tipo de Acesso</div>
-              <Select value={accessTypeFilter} onValueChange={setAccessTypeFilter}>
+              <Select value={accessTypeFilter} onValueChange={handleAccessTypeChange}>
                 <SelectTrigger className="w-full mb-2">
                   <SelectValue placeholder="Todos" />
                 </SelectTrigger>
@@ -241,7 +295,7 @@ export function ManagementUsers() {
               </Select>
               {/* Filtro por gerência */}
               <div className="px-4 py-2 font-semibold text-sm text-gray-700">Gerência</div>
-              <Select value={managementFilter} onValueChange={setManagementFilter}>
+              <Select value={managementFilter} onValueChange={handleManagementChange}>
                 <SelectTrigger className="w-full mb-2">
                   <SelectValue placeholder="Todas" />
                 </SelectTrigger>
@@ -256,7 +310,7 @@ export function ManagementUsers() {
               </Select>
               {/* Filtro por ativo */}
               <div className="px-4 py-2 font-semibold text-sm text-gray-700">Ativo</div>
-              <Select value={ativoFilter} onValueChange={setAtivoFilter}>
+              <Select value={ativoFilter} onValueChange={handleAtivoChange}>
                 <SelectTrigger className="w-full mb-2">
                   <SelectValue placeholder="Todos" />
                 </SelectTrigger>
