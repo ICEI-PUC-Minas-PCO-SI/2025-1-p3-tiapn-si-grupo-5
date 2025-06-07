@@ -20,7 +20,6 @@ import { X } from "lucide-react";
 import { PutActiveUser } from "@/components/management-users/PutActiveUser";
 import { useUser } from "@/contexts/UserContext";
 
-
 export function ManagementUsers() {
   const [Data, setData] = useState<User[]>([]);
   const [filteredData, setFilteredData] = useState<User[]>(Data);
@@ -36,6 +35,10 @@ export function ManagementUsers() {
     email: true,
     ramal: true,
   });
+  const [accessTypeFilter, setAccessTypeFilter] = useState<string>("");
+  const [managementFilter, setManagementFilter] = useState<string>("");
+  const [ativoFilter, setAtivoFilter] = useState<string>("");
+
   const [editModalState, setEditModalState] = useState<{
     isOpen: boolean;
     user: IUpdateUser | null;
@@ -78,6 +81,20 @@ export function ManagementUsers() {
   useEffect(() => {
     setFilteredData(Data);
   }, [Data]);
+
+  useEffect(() => {
+    let data = Data;
+    if (accessTypeFilter) {
+      data = data.filter((user) => user.accessType === accessTypeFilter);
+    }
+    if (managementFilter) {
+      data = data.filter((user) => String(user.management.idGerencia) === managementFilter);
+    }
+    if (ativoFilter) {
+      data = data.filter((user) => String(user.ativo) === ativoFilter);
+    }
+    setFilteredData(data);
+  }, [Data, accessTypeFilter, managementFilter, ativoFilter]);
 
   useEffect(() => {
     if (alert) {
@@ -174,6 +191,11 @@ export function ManagementUsers() {
     }));
   };
 
+  const accessTypes = Array.from(new Set(Data.map(u => u.accessType)));
+  const managements = Array.from(
+    new Map(Data.map(u => [u.management.idGerencia, u.management.nomeGerencia])).entries()
+  ).map(([idGerencia, nomeGerencia]) => ({ idGerencia, nomeGerencia }));
+
   return (
     <div className="space-y-4">
       {alert && (
@@ -208,7 +230,44 @@ export function ManagementUsers() {
                 Filtrar
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="min-w-[260px]">
+              {/* Filtro por tipo de acesso */}
+              <div className="px-4 py-2 font-semibold text-sm text-gray-700">Tipo de Acesso</div>
+              <select
+                className="w-full mb-2 border rounded px-2 py-1 text-sm"
+                value={accessTypeFilter}
+                onChange={e => setAccessTypeFilter(e.target.value)}
+              >
+                <option value="">Todos</option>
+                {accessTypes.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+              {/* Filtro por gerência */}
+              <div className="px-4 py-2 font-semibold text-sm text-gray-700">Gerência</div>
+              <select
+                className="w-full mb-2 border rounded px-2 py-1 text-sm"
+                value={managementFilter}
+                onChange={e => setManagementFilter(e.target.value)}
+              >
+                <option value="">Todas</option>
+                {managements.map(m => (
+                  <option key={m.idGerencia} value={m.idGerencia}>{m.nomeGerencia}</option>
+                ))}
+              </select>
+              {/* Filtro por ativo */}
+              <div className="px-4 py-2 font-semibold text-sm text-gray-700">Ativo</div>
+              <select
+                className="w-full mb-2 border rounded px-2 py-1 text-sm"
+                value={ativoFilter}
+                onChange={e => setAtivoFilter(e.target.value)}
+              >
+                <option value="">Todos</option>
+                <option value="1">Sim</option>
+                <option value="0">Não</option>
+              </select>
+              {/* Filtros de colunas */}
+              <div className="px-4 py-2 font-semibold text-sm text-gray-700">Colunas</div>
               {columns.map((column) => (
                 <DropdownMenuCheckboxItem
                   key={column.id}
