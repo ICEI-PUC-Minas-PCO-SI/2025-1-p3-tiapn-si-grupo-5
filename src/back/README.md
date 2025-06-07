@@ -50,17 +50,16 @@ npm run dev
 
 O servidor estará disponível em `http://localhost:3000` (ou porta definida em `PORT`).
 
-## Script para Usuário Padrão
+## Scripts para geração de dados mockados
 
-Existe um script para criar um usuário padrão no banco de dados, útil para testes iniciais ou acesso administrativo:
+Existe um script para criar dados mockados no banco de dados, útil para testes:
 
-- **Arquivo:** `src/back/scripts/createDefaultUser.ts`
+- **Arquivo:** `src/back/scripts/createMock.ts`
 - **Como executar:**  
   No diretório `src/back`, rode:
   ```bash
-  npx ts-node scripts/createDefaultUser.ts
+  npx ts-node scripts/createMock.ts
   ```
-- O usuário criado terá senha `Trackit123` (já hasheada), e você pode ajustar os dados no próprio script conforme necessário.
 
 ## Testes de API
 
@@ -70,11 +69,13 @@ Basta importar as rotas e realizar requisições HTTP conforme a documentação 
 
 ## Testes Automatizados
 
-- Os testes unitários e de integração estão localizados na pasta `tests/`.
+- Os testes unitários e de integração deverão estar localizados na pasta `tests/`.
 - Execute todos os testes com:
   ```bash
   npm run test
   ```
+
+// TODO: Criar testes
 
 ## Estrutura de Pastas
 
@@ -93,6 +94,5 @@ back/
 ├── server.ts # Inicialização do servidor  
 └── README.md # Documentação
 
-## // TODO
-
+// TODO
 - Documentação automática dos endpoints com Swagger/OpenAPI.

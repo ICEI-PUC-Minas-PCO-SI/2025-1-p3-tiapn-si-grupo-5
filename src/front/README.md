@@ -100,7 +100,6 @@ src/
 - **Utilize pastas internas para componentes específicos.**
 - **Nunca faça fetch direto nos componentes, use a camada `api/`.**
 - **Trate erros de API nos componentes para feedback ao usuário.**
-- **Centralize a base da URL da API em `api/config.ts`.**
 - **Siga o padrão de nomenclatura e organização das pastas.**
 
 ---

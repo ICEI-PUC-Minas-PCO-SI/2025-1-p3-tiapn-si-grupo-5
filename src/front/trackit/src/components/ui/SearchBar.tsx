@@ -12,7 +12,7 @@ export function Searchbar({ onSearch }: { onSearch: (query: string) => void }) {
   };
 
   return (
-    <div className="relative w-full max-w-[41rem]">
+    <div className="relative w-full max-w-[41rem] flex items-center ">
       <Input
         type="text"
         placeholder="Pesquise pelo nome ou palavra chave"

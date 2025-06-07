@@ -8,7 +8,6 @@ export class ManagementController {
         try {
             const activeManagements = await managementService.getAllActiveManagement();
             res.json(activeManagements);
-            console.log("Gerências ativas:", JSON.stringify(activeManagements));
         } catch (error) {
             console.error("Erro ao buscar gerências ativas:", error);
             res.status(500).json({ error: "Erro ao buscar gerências ativas" });
