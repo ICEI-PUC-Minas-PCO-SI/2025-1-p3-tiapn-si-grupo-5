@@ -79,4 +79,16 @@ export class TicketController {
             res.status(500).json({ error: "Erro ao atualizar analista do chamado" });
         }
     }
+
+    async getTeamTickets(req: Request, res: Response) {
+        try {
+            // @ts-expect-error usuario injetado pelo middleware de autenticação
+            const idGerencia = req.usuario.gerencia;
+            const tickets = await ticketService.getTicketsByManagement(idGerencia);
+            res.json(tickets);
+        } catch (error) {
+            console.error("Erro ao buscar chamados da equipe:", error);
+            res.status(500).json({ error: "Erro ao buscar chamados da equipe" });
+        }
+    }
 }

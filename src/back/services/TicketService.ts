@@ -61,4 +61,15 @@ export class TicketService {
             data: { idAnalista }
         });
     }
+
+    async getTicketsByManagement(idGerencia: number) {
+        return prisma.chamado.findMany({
+            where: {
+                idAnalista: { not: null },
+                usuario_chamado_idAnalistaTousuario: {
+                    idGerencia: idGerencia
+                }
+            }
+        });
+    }
 }

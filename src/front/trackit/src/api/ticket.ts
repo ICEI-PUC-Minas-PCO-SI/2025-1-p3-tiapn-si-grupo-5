@@ -90,3 +90,14 @@ export async function updateTicketAnalyst(
     });
     if (!response.ok) throw new Error("Erro ao atualizar analista do chamado");
 }
+
+export async function getTeamTickets(): Promise<ITicket[]> {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_BASE_URL}/tickets/team`, {
+        headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+    });
+    if (!response.ok) throw new Error("Erro ao buscar chamados da equipe");
+    return response.json();
+}

@@ -46,6 +46,15 @@ export class TicketRoutes {
                     .catch(next);
             }
         );
+        this.router.get(
+            "/tickets/team",
+            autenticarToken,
+            (req, res, next) => {
+                this.ticketController.getTeamTickets(req, res)
+                    .then(() => undefined)
+                    .catch(next);
+            }
+        );
     }
 
     public getRouter(): Router {

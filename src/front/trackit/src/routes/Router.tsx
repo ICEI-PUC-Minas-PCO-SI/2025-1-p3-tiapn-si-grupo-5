@@ -17,6 +17,7 @@ import { AnalystTickets } from "@/pages/analyst-tickets/AnalystTickets";
 import { UserTickets } from "@/pages/user-tickets/UserTickets";
 import { Dashboard } from "@/pages/dashbord/Dashboard";
 import { AdminAssignTickets } from "@/pages/admin-assign-tickets/AdminAssignTickets";
+import { AdminTeamTickets } from "@/pages/admin-team-tickets/AdminTeamTickets";
 
 export function Router() {
     return (
@@ -58,6 +59,7 @@ export function Router() {
                 <Route path="params/priority" element={<Priority />} />
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="open-tickets" element={<AdminAssignTickets />} />
+                <Route path="assigned-tickets" element={<AdminTeamTickets />} />
             </Route>
         </Routes>
     );
