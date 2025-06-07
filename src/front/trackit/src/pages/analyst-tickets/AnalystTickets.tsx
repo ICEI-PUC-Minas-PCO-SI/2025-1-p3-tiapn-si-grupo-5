@@ -25,6 +25,7 @@ import {
   SelectGroup,
   SelectItem,
 } from "@/components/ui/select";
+import { TableSpinner } from "@/components/ui/spinner";
 
 export function AnalystTickets() {
   const [tickets, setTickets] = useState<AssignTicketTableRow[]>([]);
@@ -32,6 +33,7 @@ export function AnalystTickets() {
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [allPriorities, setAllPriorities] = useState<IPriority[]>([]);
   const [priorityFilterOpen, setPriorityFilterOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Query params
   const [searchParams, setSearchParams] = useSearchParams();
@@ -41,6 +43,7 @@ export function AnalystTickets() {
   const priorityFilter = searchParams.get("priority") || "__all__";
 
   useEffect(() => {
+    setLoading(true);
     Promise.all([getMyTickets(), getAllPriorities()])
       .then(([ticketsData, priorities]: [ITicket[], IPriority[]]) => {
         const priorityMap = new Map<number, IPriority>();
@@ -76,11 +79,13 @@ export function AnalystTickets() {
         setTickets(mapped);
         setFilteredData(mapped);
         setAlert(null);
+        setLoading(false);
       })
       .catch(() => {
         setTickets([]);
         setFilteredData([]);
         setAlert({ type: "error", message: "Erro ao buscar chamados ou prioridades." });
+        setLoading(false);
       });
   }, []);
 
@@ -204,16 +209,22 @@ export function AnalystTickets() {
           </DropdownMenu>
         </div>
       </div>
-      <DataTableMyTickets
-        data={filteredData}
-        visibleColumns={{
-          protocolo: true,
-          assunto: true,
-          dataAbertura: true,
-          prioridade: true,
-          actions: true,
-        }}
-      />
+      <div>
+        {loading ? (
+          <TableSpinner />
+        ) : (
+          <DataTableMyTickets
+            data={filteredData}
+            visibleColumns={{
+              protocolo: true,
+              assunto: true,
+              dataAbertura: true,
+              prioridade: true,
+              actions: true,
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }

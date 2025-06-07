@@ -28,6 +28,7 @@ import {
     SelectGroup,
     SelectItem,
 } from "@/components/ui/select";
+import { TableSpinner } from "@/components/ui/spinner";
 
 export interface UserTicketTableRow {
     idChamado: number;
@@ -54,6 +55,7 @@ export function UserTickets() {
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [allPriorities, setAllPriorities] = useState<IPriority[]>([]);
     const [priorityFilterOpen, setPriorityFilterOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     // Query params
     const [searchParams, setSearchParams] = useSearchParams();
@@ -63,6 +65,7 @@ export function UserTickets() {
     const priorityFilter = searchParams.get("priority") || "__all__";
 
     useEffect(() => {
+        setLoading(true);
         Promise.all([getAllTickets(), getAllPriorities(), getAllStatus(), getAllUsers()])
             .then(([ticketsData, priorities, statuses, users]: [
                 ITicket[],
@@ -116,11 +119,13 @@ export function UserTickets() {
                     });
                 setTickets(mapped);
                 setAlert(null);
+                setLoading(false);
             })
             .catch(() => {
                 setTickets([]);
                 setFilteredData([]);
                 setAlert({ type: "error", message: "Erro ao buscar chamados ou parâmetros." });
+                setLoading(false);
             });
     }, [user]);
 
@@ -244,18 +249,24 @@ export function UserTickets() {
                     </DropdownMenu>
                 </div>
             </div>
-            <DataTableUserTickets
-                data={filteredData}
-                visibleColumns={{
-                    protocolo: true,
-                    assunto: true,
-                    dataAbertura: true,
-                    prioridade: true,
-                    status: true,
-                    analista: true,
-                    actions: true,
-                }}
-            />
+            <div>
+                {loading ? (
+                    <TableSpinner />
+                ) : (
+                    <DataTableUserTickets
+                        data={filteredData}
+                        visibleColumns={{
+                            protocolo: true,
+                            assunto: true,
+                            dataAbertura: true,
+                            prioridade: true,
+                            status: true,
+                            analista: true,
+                            actions: true,
+                        }}
+                    />
+                )}
+            </div>
         </div>
     );
 }

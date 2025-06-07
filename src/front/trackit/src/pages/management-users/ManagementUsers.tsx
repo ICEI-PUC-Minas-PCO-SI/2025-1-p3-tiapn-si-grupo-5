@@ -28,6 +28,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { XCircle } from "lucide-react";
+import { TableSpinner } from "@/components/ui/spinner";
 
 export function ManagementUsers() {
   const [Data, setData] = useState<User[]>([]);
@@ -44,6 +45,9 @@ export function ManagementUsers() {
   }>({ open: false, user: null, newStatus: 0 });
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
 
+  // Spinner state
+  const [loading, setLoading] = useState(true);
+
   // Query params
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -57,6 +61,7 @@ export function ManagementUsers() {
 
   const fetchUsers = async () => {
     try {
+      setLoading(true);
       const users = await getAllUsers();
       const mappedUsers: User[] = users.map((u) => {
         return {
@@ -74,6 +79,8 @@ export function ManagementUsers() {
       setData(mappedUsers);
     } catch (error) {
       console.error("Erro ao processar usuários:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -339,20 +346,26 @@ export function ManagementUsers() {
           </DropdownMenu>
         </div>
       </div>
-      <DataTableUsers
-        data={filteredData}
-        actions={actions}
-        visibleColumns={{
-          id: true,
-          name: true,
-          accessType: true,
-          management: true,
-          ativo: true,
-          nomeUsuario: true,
-          email: true,
-          ramal: true,
-        }}
-      />
+      <div>
+        {loading ? (
+          <TableSpinner />
+        ) : (
+          <DataTableUsers
+            data={filteredData}
+            actions={actions}
+            visibleColumns={{
+              id: true,
+              name: true,
+              accessType: true,
+              management: true,
+              ativo: true,
+              nomeUsuario: true,
+              email: true,
+              ramal: true,
+            }}
+          />
+        )}
+      </div>
       <Dialog open={editModalState.isOpen} onOpenChange={(isOpen) => !isOpen && closeEditModal()}>
         {editModalState.user && (
           <PutUserForm

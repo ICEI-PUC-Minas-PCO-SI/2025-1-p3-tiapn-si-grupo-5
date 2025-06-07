@@ -34,6 +34,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { XCircle } from "lucide-react";
+import { TableSpinner } from "@/components/ui/spinner";
 
 export function AdminAssignTickets() {
   const [tickets, setTickets] = useState<AssignTicketTableRow[]>([]);
@@ -54,6 +55,7 @@ export function AdminAssignTickets() {
     ticket: AssignTicketTableRow | null;
     analystId: string;
   }>({ open: false, ticket: null, analystId: "" });
+  const [loading, setLoading] = useState(true);
 
   // Query params
   const [searchParams, setSearchParams] = useSearchParams();
@@ -63,6 +65,7 @@ export function AdminAssignTickets() {
   const priorityFilter = searchParams.get("priority") || "__all__";
 
   useEffect(() => {
+    setLoading(true);
     Promise.all([getUnassignedTickets(), getAllPriorities(), getAllUsers()])
       .then(([ticketsData, priorities, users]: [ITicket[], IPriority[], IUserListItem[]]) => {
         const priorityMap = new Map<number, IPriority>();
@@ -103,11 +106,13 @@ export function AdminAssignTickets() {
         setTickets(mapped);
         setFilteredData(mapped);
         setAlert(null);
+        setLoading(false);
       })
       .catch(() => {
         setTickets([]);
         setFilteredData([]);
         setAlert({ type: "error", message: "Erro ao buscar chamados ou prioridades." });
+        setLoading(false);
       });
   }, [user]);
 
@@ -261,10 +266,16 @@ export function AdminAssignTickets() {
           </DropdownMenu>
         </div>
       </div>
-      <AdminAssignTicketsTable
-        data={filteredData}
-        onOpenAssignModal={openAssignModal}
-      />
+      <div>
+        {loading ? (
+          <TableSpinner />
+        ) : (
+          <AdminAssignTicketsTable
+            data={filteredData}
+            onOpenAssignModal={openAssignModal}
+          />
+        )}
+      </div>
 
       {/* Modal de atribuição */}
       <Dialog open={assignModal.open} onOpenChange={closeAssignModal}>
