@@ -409,21 +409,21 @@ Serão utilzados o Vercel e o Railway para hospedagem do frontend e backend resp
 
 ## Qualidade de software
 
-### Functional Suitability
+### Adequação Funcional
 | Subcaracterística          | Justificativa                                                                                                              | Métrica (objetivo)                                                       |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | Functional completeness    | Garantir que todas as funcionalidades-chave (cadastro, abertura de chamado, chat, dashboards) estejam implementadas.       | % de requisitos funcionais implementados (meta ≥ 100 %)                  |
 | Functional correctness     | As respostas do sistema (API) devem estar alinhadas ao esperado pelos casos de uso (por ex. geração de protocolo correto). | Nº de incidentes em produção por comportamento inesperado (meta ≤ 2/mês) |
 | Functional appropriateness | A interface e os fluxos devem permitir que o usuário complete tarefas com mínimo de esforço.                               | Tempo médio para abrir um chamado (meta ≤ 30 s)                          |
 
-### Performance Efficiency
+### Eficiência e Perfomance
 
 | Subcaracterística    | Justificativa                                                               | Métrica (objetivo)                         |
 | -------------------- | --------------------------------------------------------------------------- | ------------------------------------------ |
 | Time behavior        | O sistema deve responder rapidamente às interações (forms, listagem, chat). | 95 % das requisições < 2 s                 |
 | Resource utilization | Uso moderado de CPU/memória no servidor para suportar escalabilidade.       | CPU < 70 % sob carga média; memória < 75 % |
 
-### Usability
+### Usabilidade
 
 | Subcaracterística     | Justificativa                                                                   | Métrica (objetivo)                               |
 | --------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------ |
@@ -431,14 +431,14 @@ Serão utilzados o Vercel e o Railway para hospedagem do frontend e backend resp
 | Learnability          | Novos usuários devem conseguir abrir seu primeiro chamado sem ajuda externa.    | Tempo até 1º chamado ≤ 2 min (80 % dos usuários) |
 | User error protection | Minimizam-se erros de input (validações em formulário, confirmação de ações).   | Nº de erros de formulário por sessão ≤ 1         |
 
-### Security
+### Segurança
 
 | Subcaracterística | Justificativa                                                             | Métrica (objetivo)                   |
 | ----------------- | ------------------------------------------------------------------------- | ------------------------------------ |
 | Confidentiality   | Dados sensíveis (senhas, e‑mails) devem permanecer protegidos.            | 100 % das senhas armazenadas em hash |
 | Authenticity      | Garantir que apenas usuários autenticados acessem suas áreas autorizadas. | 0 acessos não autorizados detectados |
 
-### Maintainability
+### Manutenabilidade
 
 | Subcaracterística | Justificativa                                                          | Métrica (objetivo)                   |
 | ----------------- | ---------------------------------------------------------------------- | ------------------------------------ |

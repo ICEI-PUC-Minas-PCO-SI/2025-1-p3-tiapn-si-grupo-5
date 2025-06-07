@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { DefaultSpinner } from "@/components/ui/spinner";
-import { getMe } from "@/api/auth";
-import { getAllActiveManagements } from "@/api/management";
-import type { Management } from "../interfaces/InterfaceManagement";
+import { getMe } from "@/api/Auth";
+import { getAllActiveManagements } from "@/api/Management";
+import type { IManagement } from "../api/Management";
 
 type User = {
   id: number;
@@ -44,7 +44,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
             let nomeGerencia: string | undefined = undefined;
             if (usuario.gerencia) {
               try {
-                const managements: Management[] = await getAllActiveManagements();
+                const managements: IManagement[] = await getAllActiveManagements();
                 const found = managements.find(
                   (g) => g.idGerencia === usuario.gerencia
                 );

@@ -15,24 +15,58 @@ Nesse tópico abordaremos a definição do problema e da solução proposta para
 Analisando o escopo do projeto, definimos as seguintes personas:
 
 <div align="center">
-  <img src="images/imagem-persona-1.png" alt="Imagem Persona 1" />
+  <img src="images/imagem-persona-1.png" width="400"/>
 </div>
 
+**Carlos, o Servidor:**  
+Carlos tem 35 anos e é um servidor público da PBH que trabalha no setor de Recursos Humanos. Ele precisa abrir e acompanhar chamados técnicos relacionados às suas atividades nos sistemas de RH. Sua maior frustração é a falta de atualizações rápidas sobre o status dos chamados, o que frequentemente o deixa sem respostas para demandas urgentes. Carlos valoriza um sistema que seja simples de usar e que forneça notificações automáticas sobre o progresso de suas solicitações.
 
-**Carlos, o Servidor:** Carlos tem 35 anos e é um servidor público da PBH que precisa abrir e acompanhar chamados técnicos relacionadoS a suas atividades nos sistemas de RH. Sua frustação é a falta de atualizações rápidas sobre o status dos chamados.
+---
 
 <div align="center">
-  <img src="images/imagem-persona-2.png" alt="Imagem Persona 2" />
+  <img src="images/imagem-persona-2.png" width="400"/>
 </div>
 
-**Mariana, a Analista:** Mariana tem 28 anos e é uma analista de TI da ASTIN que precisa de ferramentas para gerenciar e responder chamados eficientemente. Sua frustração é o volume excessivo de chamados que chegam por e-mail sem um sistema de priorização e organização adequado.
+**Mariana, a Analista:**  
+Mariana tem 28 anos e é uma analista de TI da ASTIN. Ela gerencia um grande volume de chamados diariamente e precisa de ferramentas para organizar, priorizar e responder às solicitações de forma eficiente. Sua maior frustração é o excesso de chamados que chegam por e-mail, sem um sistema de priorização adequado, o que a obriga a gastar tempo organizando manualmente as demandas. Mariana busca um sistema que permita filtrar chamados, atribuí-los a si mesma e manter uma comunicação clara com os solicitantes.
+
+---
 
 <div align="center">
-  <img src="images/imagem-persona-3.png" alt="Imagem Persona 3" />
+  <img src="images/imagem-persona-3.png" width="400"/>
 </div>
 
+**Roberto, o Gestor:**  
+Roberto tem 45 anos e é gerente da ASTIN. Ele supervisiona uma equipe de analistas e precisa monitorar o desempenho da equipe, identificar gargalos e obter métricas detalhadas sobre os atendimentos. Sua maior frustração é a dificuldade em consolidar dados de diferentes fontes para gerar relatórios gerenciais. Roberto valoriza um sistema que ofereça dashboards intuitivos e relatórios históricos para apoiar a tomada de decisões estratégicas.
 
-**Roberto, o Gestor:** Roberto tem 45 anos e é gerente da ASTIN. Ele precisa monitorar sua equipe e obter métricas sobre os atendimentos. Sua frustração é a dificuldade em identificar gargalos e avaliar o desempenho da equipe.
+---
+
+<div align="center">
+  <img src="images/imagem-persona-6.jpeg" width="400"/>
+</div>
+
+**Ana, a Servidora Multitarefa:**  
+Ana tem 42 anos e trabalha no setor financeiro da PBH. Além de suas responsabilidades diárias, ela frequentemente precisa abrir chamados técnicos para resolver problemas nos sistemas de pagamento. Sua maior frustração é a falta de clareza nas respostas dos analistas, o que a obriga a repetir informações. Ana valoriza um sistema que centralize o histórico de interações e permita anexar documentos relevantes para agilizar o atendimento.
+
+---
+
+<div align="center">
+  <img src="images/imagem-persona-5.jpeg" width="400"/>
+</div>
+
+**Joana, a Analista Júnior:**  
+Joana tem 24 anos e começou recentemente a trabalhar na ASTIN. Ela ainda está se familiarizando com os processos internos e frequentemente precisa de suporte para entender como priorizar e resolver chamados. Sua maior frustração é a falta de um sistema que facilite a colaboração com colegas mais experientes. Joana valoriza um sistema que permita compartilhar informações e consultar históricos de chamados para aprender com casos anteriores.
+
+---
+
+<div align="center">
+  <img src="images/imagem-persona-4.jpeg" width="400"/>
+</div>
+
+**Eduardo, o Gestor Estratégico:**  
+Eduardo tem 50 anos e é diretor de TI da PBH. Ele supervisiona várias equipes, incluindo a ASTIN, e precisa de uma visão consolidada do desempenho geral dos atendimentos. Sua maior frustração é a falta de integração entre os sistemas utilizados pelas diferentes equipes. Eduardo valoriza um sistema que permita configurar parâmetros globais e gerar relatórios comparativos entre equipes para alinhar estratégias de melhoria contínua.
+
+---
 
 ## Histórias de usuários
 
@@ -41,8 +75,14 @@ Com base na análise das personas, foram identificadas as seguintes histórias d
 |EU COMO... `PERSONA`        | QUERO/PRECISO ... `FUNCIONALIDADE`           |PARA ... `MOTIVO/VALOR`                    |
 |----------------------------|----------------------------------------------|-------------------------------------------|
 |**Servidor Público**           | Abrir e acompanhar chamados técnicos         | Resolver problemas dos sistemas de RH rapidamente            |
+|**Servidor Público**           | Receber notificações sobre atualizações no chamado | Garantir que estou sempre informado sobre o progresso da minha solicitação |
+|**Servidor Público**           | Visualizar o histórico completo de interações no chamado | Consultar informações anteriores para maior clareza e rastreabilidade |
 |**Analista de Suporte Técnico** |Organizar, filtrar e responder os chamados rapidamente    | Solucionar as demandas sem atrasos            |
+|**Analista de Suporte Técnico** | Atribuir chamados a si mesmo e priorizá-los conforme urgência | Gerenciar melhor meu tempo e atender os chamados mais críticos primeiro |
+|**Analista de Suporte Técnico** | Enviar mensagens e anexos diretamente no chamado | Facilitar a comunicação com o cliente e compartilhar informações relevantes |
 |**Gerente de TI**               | Obter métricas detalhadas sobre a equipe     | Melhorar a eficiência e tomada de decisão |
+|**Gerente de TI**               | Configurar parâmetros do sistema, como níveis de prioridade | Adaptar o sistema às necessidades específicas da equipe |
+|**Gerente de TI**               | Visualizar relatórios históricos sobre o desempenho da equipe | Identificar tendências e propor melhorias estratégicas |
 
 ## Requisitos
 

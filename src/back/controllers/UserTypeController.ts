@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "../generated/prisma";
+import { UserTypeService } from "../services/userTypeService";
 
-const prisma = new PrismaClient();
+const userTypeService = new UserTypeService();
 
 export class UserTypeController {
     async getAllUserTypes(req: Request, res: Response) {
         try {
-            const userTypes = await prisma.tipousuario.findMany();
+            const userTypes = await userTypeService.getAllUserTypes();
             res.json(userTypes);
         } catch (error) {
             console.error("Erro ao buscar tipos de usuário:", error);

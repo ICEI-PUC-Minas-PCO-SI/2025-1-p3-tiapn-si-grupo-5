@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ImagePlus, CircleCheckBig } from "lucide-react";
 {/* import { UploadButton } from "@/components/ui/UploadButton";
  */}
-import { SettingsUserForm } from "@/components/SettingsUserForm";
+import { SettingsUserForm } from "@/components/settings/SettingsUserForm";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
 import { useState, useEffect } from "react";

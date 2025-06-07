@@ -1,8 +1,8 @@
-import { KpiCard } from "@/components/KpiCard"
+import { KpiCard } from "@/components/dasboard/KpiCard"
 import { ChartBar } from "@/components/ui/ChartBar"
 import { ChartPie } from "@/components/ui/ChartPie"
 import { ChartLine } from "@/components/ui/ChartLine"
-import { DashboardDataTable } from "@/components/DashboardDataTable"
+import { DashboardDataTable } from "@/components/dasboard/DashboardDataTable"
 
 export function Dashboard() {
     return (

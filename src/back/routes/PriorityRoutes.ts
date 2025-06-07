@@ -1,0 +1,45 @@
+import { Router } from "express";
+import { PriorityController } from "../controllers/priorityController";
+import { validatePayload } from "../middlewares/validate-payload";
+import { z } from "zod";
+
+// Schemas para validação
+const priorityCreateSchema = z.object({
+    nomePrioridade: z.string().min(3),
+    color: z.string().min(3)
+});
+const priorityUpdateSchema = z.object({
+    idPrioridade: z.union([z.number(), z.string()]),
+    nomePrioridade: z.string().min(3),
+    color: z.string().min(3)
+});
+
+export class PriorityRoutes {
+    private router: Router;
+    private priorityController: PriorityController;
+
+    constructor() {
+        this.router = Router();
+        this.priorityController = new PriorityController();
+        this.initializeRoutes();
+    }
+
+    private initializeRoutes() {
+        this.router.get('/priorities', this.priorityController.getPriorities.bind(this.priorityController));
+        this.router.post(
+            '/priorities',
+            validatePayload(priorityCreateSchema),
+            this.priorityController.createPriority.bind(this.priorityController)
+        );
+        this.router.put(
+            '/priorities/:id',
+            validatePayload(priorityUpdateSchema),
+            this.priorityController.updatePriority.bind(this.priorityController)
+        );
+        this.router.delete('/priorities/:id', this.priorityController.deletePriority.bind(this.priorityController));
+    }
+
+    public getRouter(): Router {
+        return this.router;
+    }
+}

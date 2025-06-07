@@ -1,7 +1,7 @@
 import Logo from "../../assets/TrackIt_Logo.svg";
 import Suport from "../../assets/Suporte_solucao.svg";
 import { Link } from "react-router";
-import { LoginUser } from "@/components/LoginUser";
+import { LoginUser } from "@/components/login/LoginUser";
 import { Toaster } from "sonner";
 
 export function Login() {
@@ -9,6 +9,19 @@ export function Login() {
     return (
         <>
             <div className="flex w-full min-h-screen">
+                                <div className="flex min-h-screen w-full p-9 flex-col justify-center items-center gap-1 bg-slate-100">
+                    <div>
+                        <img
+                            className="w-auto h-auto"
+                            src={Suport}
+                            alt="Transformando suporte em solução"
+                        />
+                    </div>
+                    <h1 className="font-'[Inter]' text-[2rem] font-bold leading-[48px] text-slate-950">
+                        Transformando <span className="text-cyan-800">suporte </span>
+                        em <span className="text-cyan-800">solução</span>
+                    </h1>
+                </div>
                 <div className="flex flex-col w-full min-h-screen p-9 items-start justify-start gap-[4rem]">
                     <div className="flex flex-col gap-4 items-start justify-start w-full h-full">
                         <img className="w-24 h-20" src={Logo} alt="Logo Track It" />
@@ -42,19 +55,6 @@ export function Login() {
                             </div>
                         </div>
                     </footer>
-                </div>
-                <div className="flex min-h-screen w-full p-9 flex-col justify-center items-center gap-1 bg-slate-100">
-                    <div>
-                        <img
-                            className="w-auto h-auto"
-                            src={Suport}
-                            alt="Transformando suporte em solução"
-                        />
-                    </div>
-                    <h1 className="font-'[Inter]' text-[2rem] font-bold leading-[48px] text-slate-950">
-                        Transformando <span className="text-cyan-800">suporte </span>
-                        em <span className="text-cyan-800">solução</span>
-                    </h1>
                 </div>
             </div>
             <Toaster position="bottom-right"

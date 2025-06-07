@@ -18,9 +18,13 @@ A proposta par a melhoria na geração de relatórios é realizar a extração d
 
 ## Modelagem dos processos
 
-[PROCESSO 1 - Nome do processo](./processes/fluxo-atendimento-demandas.md "Detalhamento do processo 1.")
+[PROCESSO 1 - Fluxo de Atendimento de demandas](./processes/fluxo-atendimento-demandas-as-is.md "Detalhamento do processo 1.")
 
-[PROCESSO 2 - Nome do processo](./processes/fluxo-de-relatorios.md "Detalhamento do processo 2.")
+[PROCESSO 2 - TrackIT](./processes/fluxo-atendimento-demandas-to-be.md "Detalhamento do processo 2.")
+
+[PROCESSO 3 - Fluxo de Relatórios](./processes/fluxo-de-relatorios-as-is.md "Detalhamento do processo 3.")
+
+[PROCESSO 4 - Fluxo de Relatórios Automatizado](./processes/fluxo-de-relatorios-to-be.md "Detalhamento do processo 4.")
 
 
 ## Indicadores de desempenho

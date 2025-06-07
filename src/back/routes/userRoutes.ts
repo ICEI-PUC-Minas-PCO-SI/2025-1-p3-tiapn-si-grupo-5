@@ -1,6 +1,36 @@
 import { Router } from "express";
-import { UserController } from "../controllers/UserController";
-import { autenticarToken } from "../middlewares/authJWT";
+import { UserController } from "../controllers/userController";
+import { autenticarToken } from "../middlewares/auth-jwt";
+import { validatePayload } from "../middlewares/validate-payload";
+import { z } from "zod";
+
+// Schemas para validação
+const userRegisterSchema = z.object({
+    nomeUsuario: z.string().min(3),
+    matricula: z.string().min(4),
+    ramal: z.string().min(4),
+    email: z.string().email(),
+    senha: z.string().min(8),
+    gerencia: z.union([z.number(), z.string()]),
+    tipoUsuario: z.union([z.number(), z.string()])
+});
+const userUpdateSchema = z.object({
+    matricula: z.string().min(4),
+    gerencia: z.union([z.number(), z.string()]),
+    tipoUsuario: z.union([z.number(), z.string()])
+});
+const userStatusSchema = z.object({
+    ativo: z.union([z.number(), z.string()])
+});
+const userProfileUpdateSchema = z.object({
+    nome: z.string().min(3),
+    email: z.string().email(),
+    ramal: z.string().min(4)
+});
+const userLoginSchema = z.object({
+    email: z.string().email(),
+    senha: z.string().min(8)
+});
 
 export class UserRoutes {
     private router: Router;
@@ -13,13 +43,33 @@ export class UserRoutes {
     }
 
     private initializeRoutes() {
-        this.router.post("/register", this.userController.registerUser.bind(this.userController));
-        this.router.post("/login", this.userController.loginUser.bind(this.userController));
-        this.router.get("/", this.userController.getAllUsers.bind(this.userController));
-        this.router.put("/:idUsuario", this.userController.updateUser.bind(this.userController));
-        this.router.patch("/:idUsuario/status", this.userController.changeUserStatus.bind(this.userController));
-        this.router.get("/me", autenticarToken, this.userController.getMe.bind(this.userController));
-        this.router.put("/profile/:idUsuario", this.userController.updateProfileUser.bind(this.userController));
+        this.router.post(
+            "/users/register",
+            validatePayload(userRegisterSchema),
+            this.userController.registerUser.bind(this.userController)
+        );
+        this.router.post(
+            "/users/login",
+            validatePayload(userLoginSchema),
+            this.userController.loginUser.bind(this.userController)
+        );
+        this.router.get("/users", this.userController.getAllUsers.bind(this.userController));
+        this.router.put(
+            "/users/:idUsuario",
+            validatePayload(userUpdateSchema),
+            this.userController.updateUser.bind(this.userController)
+        );
+        this.router.patch(
+            "/users/:idUsuario/status",
+            validatePayload(userStatusSchema),
+            this.userController.changeUserStatus.bind(this.userController)
+        );
+        this.router.get("/users/me", autenticarToken, this.userController.getMe.bind(this.userController));
+        this.router.put(
+            "/users/profile/:idUsuario",
+            validatePayload(userProfileUpdateSchema),
+            this.userController.updateProfileUser.bind(this.userController)
+        );
     }
 
     public getRouter(): Router {

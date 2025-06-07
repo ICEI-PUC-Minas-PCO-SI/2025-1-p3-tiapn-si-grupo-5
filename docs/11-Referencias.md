@@ -1,19 +1,45 @@
 # Referências
 
-Inclua todas as referências (livros, artigos, sites, etc.) utilizadas no desenvolvimento do trabalho.
+- ASTIN: PDU 2024. Belo Horizonte, 2024. Acessado em abril de 2025.
 
-Exemplo:
+- MYSQL: MySQL Documentation. Disponível em: <https://dev.mysql.com/doc/>. Acesso em: junho de 2025.
 
-- BENYON, David. **Interação humano-computador**. 2. ed. São Paulo: Pearson Prentice Hall, 2011.
+- REACT: React Documentation. Disponível em: <https://react.dev/>. Acesso em: junho de 2025.
 
-- CORMEN, Thomas H et al. **Algoritmos:** teoria e prática. 4. ed. Rio de Janeiro: GEN LTC, 2024.
- 
-- ELMASRI, Ramez; NAVATHE, Sham. **Sistemas de banco de dados**. 7. ed. São Paulo: Pearson, c2019.
+- TAILWINDCSS: TailwindCSS Documentation. Disponível em: <https://tailwindcss.com/docs>. Acesso em: junho de 2025.
 
-- RUSSELL, Stuart J.; NORVIG, Peter. **Inteligência artificial:** uma abordagem moderna. 4. ed. Rio de Janeiro, RJ: LTC, 2022.
+- TYPESCRIPT: TypeScript Documentation. Disponível em: <https://www.typescriptlang.org/docs/>. Acesso em: junho de 2025.
 
-- SUTHERLAND, Jeffrey Victor; SUTHERLAND, J. J. **Scrum:** a arte de fazer o dobro do trabalho na metade do tempo. Rio de Janeiro, RJ: Sextante, 2019. 254 p.
+- PRISMA ORM: Prisma Documentation. Disponível em: <https://www.prisma.io/docs>. Acesso em: junho de 2025.
 
-> **Links úteis**:
-> - [Padrão PUC Minas de normalização ABNT](http://portal.pucminas.br/biblioteca/documentos/GUIA-COMPLETO-ABNT-Elaborar-formatar-trabalho-cientificoNOVO.pdf)
-> - [Formato ABNT](https://www.normastecnicas.com/abnt/)
+- SHADCN/UI: Shadcn/UI Documentation. Disponível em: <https://ui.shadcn.dev/>. Acesso em: junho de 2025.
+
+- NODEJS: Node.js Documentation. Disponível em: <https://nodejs.org/en/docs/>. Acesso em: junho de 2025.
+
+- EXPRESS: Express Documentation. Disponível em: <https://expressjs.com/>. Acesso em: junho de 2025.
+
+- VITE: Vite Documentation. Disponível em: <https://vitejs.dev/>. Acesso em: junho de 2025.
+
+- SOCKET.IO: Socket.IO Documentation. Disponível em: <https://socket.io/docs/v4/>. Acesso em: junho de 2025.
+
+- JSONWEBTOKEN: JsonWebToken Documentation. Disponível em: <https://github.com/auth0/node-jsonwebtoken>. Acesso em: junho de 2025.
+
+- BCRYPT: Bcrypt Documentation. Disponível em: <https://github.com/kelektiv/node.bcrypt.js>. Acesso em: junho de 2025.
+
+- NODemailer: Nodemailer Documentation. Disponível em: <https://nodemailer.com/>. Acesso em: junho de 2025.
+
+- ZOD: Zod Documentation. Disponível em: <https://zod.dev/>. Acesso em: junho de 2025.
+
+- JEST: Jest Documentation. Disponível em: <https://jestjs.io/docs/>. Acesso em: junho de 2025.
+
+- ESLINT: ESLint Documentation. Disponível em: <https://eslint.org/docs/latest/>. Acesso em: junho de 2025.
+
+- PRETTIER: Prettier Documentation. Disponível em: <https://prettier.io/docs/en/>. Acesso em: junho de 2025.
+
+- HUSKY: Husky Documentation. Disponível em: <https://typicode.github.io/husky/>. Acesso em: junho de 2025.
+
+- PLANETSCALE: PlanetScale Documentation. Disponível em: <https://planetscale.com/docs>. Acesso em: junho de 2025.
+
+- VERCEL: Vercel Documentation. Disponível em: <https://vercel.com/docs>. Acesso em: junho de 2025.
+
+- RAILWAY: Railway Documentation. Disponível em: <https://railway.app/docs>. Acesso em: junho de 2025.
