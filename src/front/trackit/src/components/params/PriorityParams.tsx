@@ -11,6 +11,15 @@ import {
     deletePriority,
 } from "@/api/priority";
 import { z } from "zod";
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogFooter,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 
 interface PriorityParamsProps {
     isAdding: boolean;
@@ -32,6 +41,8 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
     const [editingPriorityId, setEditingPriorityId] = useState<number | null>(null);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [nameError, setNameError] = useState<string | null>(null);
+
+    const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
 
     const fetchPriorities = async () => {
         try {
@@ -99,14 +110,20 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
         setIsAdding(true);
     };
 
-    const handleDeletePriority = async (idPrioridade: number) => {
+    const handleDeletePriority = (idPrioridade: number) => {
+        setDeleteDialog({ open: true, id: idPrioridade });
+    };
+
+    const confirmDeletePriority = async () => {
+        if (!deleteDialog.id) return;
         try {
-            await deletePriority(idPrioridade);
-            setPriorityList((prev) => prev.filter((p) => p.idPrioridade !== idPrioridade));
+            await deletePriority(deleteDialog.id);
+            setPriorityList((prev) => prev.filter((p) => p.idPrioridade !== deleteDialog.id));
             setAlert({ type: "success", message: "Prioridade excluída com sucesso!" });
         } catch (error) {
             setAlert({ type: "error", message: getErrorMessage(error) || "Prioridade associada a um chamado existente." });
         }
+        setDeleteDialog({ open: false, id: null });
     };
 
     const isSaveDisabled = !newPriorityName || !!nameError;
@@ -181,6 +198,28 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
                     )}
                 </div>
             )}
+            <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, id: open ? deleteDialog.id : null })}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Excluir prioridade</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Tem certeza que deseja excluir esta prioridade? Esta ação não poderá ser desfeita.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setDeleteDialog({ open: false, id: null })}>
+                            Cancelar
+                        </AlertDialogCancel>
+                        <Button
+                            variant="delete"
+                            onClick={confirmDeletePriority}
+                            type="button"
+                        >
+                            Excluir
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

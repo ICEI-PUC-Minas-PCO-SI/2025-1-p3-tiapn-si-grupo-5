@@ -11,6 +11,15 @@ import {
   deleteStatus,
 } from "@/api/status";
 import { z } from "zod";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 
 interface StatusParamsProps {
   isAdding: boolean;
@@ -33,6 +42,8 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
   const [editingStatusId, setEditingStatusId] = useState<number | null>(null);
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
+
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
 
   const fetchStatuses = async () => {
     try {
@@ -101,14 +112,20 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
     setIsAdding(true);
   };
 
-  const handleDeleteStatus = async (idStatus: number) => {
+  const handleDeleteStatus = (idStatus: number) => {
+    setDeleteDialog({ open: true, id: idStatus });
+  };
+
+  const confirmDeleteStatus = async () => {
+    if (!deleteDialog.id) return;
     try {
-      await deleteStatus(idStatus);
-      setStatusList((prev) => prev.filter((s) => s.idStatus !== idStatus));
+      await deleteStatus(deleteDialog.id);
+      setStatusList((prev) => prev.filter((s) => s.idStatus !== deleteDialog.id));
       setAlert({ type: "success", message: "Status excluído com sucesso!" });
     } catch (error) {
       setAlert({ type: "error", message: getErrorMessage(error) || "Status associado a um chamado existente." });
     }
+    setDeleteDialog({ open: false, id: null });
   };
 
   const isSaveDisabled = !newStatusName || !!nameError;
@@ -183,6 +200,28 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
           )}
         </div>
       )}
+      <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, id: open ? deleteDialog.id : null })}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir status</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir este status? Esta ação não poderá ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteDialog({ open: false, id: null })}>
+              Cancelar
+            </AlertDialogCancel>
+            <Button
+              variant="delete"
+              onClick={confirmDeleteStatus}
+              type="button"
+            >
+              Excluir
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

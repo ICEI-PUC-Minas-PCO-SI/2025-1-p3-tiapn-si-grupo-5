@@ -11,6 +11,15 @@ import {
     deleteTicketType,
 } from "@/api/tickettype";
 import { z } from "zod";
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogFooter,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 
 const ticketTypeNameSchema = z.string().min(8, "O nome deve ter pelo menos 8 caracteres");
 
@@ -25,6 +34,7 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
     const [editingId, setEditingId] = useState<number | null>(null);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [nameError, setNameError] = useState<string | null>(null);
+    const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
 
     const fetchTicketTypes = async () => {
         try {
@@ -88,10 +98,15 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
         setIsAdding(true);
     };
 
-    const handleDelete = async (id: number) => {
+    const handleDelete = (id: number) => {
+        setDeleteDialog({ open: true, id });
+    };
+
+    const confirmDelete = async () => {
+        if (!deleteDialog.id) return;
         try {
-            await deleteTicketType(id);
-            setTicketTypes((prev) => prev.filter((t) => t.idTipoChamado !== id));
+            await deleteTicketType(deleteDialog.id);
+            setTicketTypes((prev) => prev.filter((t) => t.idTipoChamado !== deleteDialog.id));
             setAlert({ type: "success", message: "Tipo de demanda excluído!" });
         } catch (error) {
             const err = error as Error;
@@ -101,6 +116,7 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
                     : "Erro ao excluir tipo de demanda.";
             setAlert({ type: "error", message: msg });
         }
+        setDeleteDialog({ open: false, id: null });
     };
 
     const isSaveDisabled = !newName || !!nameError;
@@ -159,6 +175,28 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
                     )}
                 </div>
             )}
+            <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, id: open ? deleteDialog.id : null })}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Excluir tipo de demanda</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Tem certeza que deseja excluir este tipo de demanda? Esta ação não poderá ser desfeita.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setDeleteDialog({ open: false, id: null })}>
+                            Cancelar
+                        </AlertDialogCancel>
+                        <Button
+                            variant="delete"
+                            onClick={confirmDelete}
+                            type="button"
+                        >
+                            Excluir
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
