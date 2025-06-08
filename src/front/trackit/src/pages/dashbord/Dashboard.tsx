@@ -6,13 +6,11 @@ import { ChartLine } from "@/components/ui/ChartLine";
 import { DashboardDataTable } from "@/components/dasboard/DashboardDataTable";
 import { getAllStatus, type IStatus } from "@/api/status";
 import { getAllTickets, type ITicket } from "@/api/ticket";
-import { useNavigate } from "react-router-dom";
 
 export function Dashboard() {
     const [statusList, setStatusList] = useState<IStatus[]>([]);
     const [tickets, setTickets] = useState<ITicket[]>([]);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
 
     useEffect(() => {
         setLoading(true);
@@ -46,11 +44,8 @@ export function Dashboard() {
                         key={status.idStatus}
                         kpiTitle={status.nomeStatus}
                         kpiValue={loading ? "..." : status.count.toString()}
-                        kpiLink="#"
+                        kpiLink={`/admin/assigned-tickets?status=${status.idStatus}`}
                         kpiColor={status.hexCorPrimaria}
-                        onDetailsClick={() =>
-                            navigate(`/admin/assigned-tickets?status=${status.idStatus}`)
-                        }
                     />
                 ))}
             </div>

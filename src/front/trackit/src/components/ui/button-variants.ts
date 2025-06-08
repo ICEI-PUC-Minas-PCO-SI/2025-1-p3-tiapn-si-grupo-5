@@ -22,6 +22,7 @@ export const buttonVariants = cva(
           "bg-green-600 text-white min-w-[7.75rem] h-[3rem] rounded-[0.375rem] cursor-pointer hover:bg-green-500 hover:shadow-[0px_0.125rem_0.5rem_0px] hover:shadow-green-700 transition-all duration-200",
         ghost:
           "bg-transparent text-slate-700 min-w-[7.75rem] h-[3rem] rounded-[6px] cursor-pointer focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aux-1",
+
       },
       size: {
         default: "min-w-[7.75rem] h-[3rem]",

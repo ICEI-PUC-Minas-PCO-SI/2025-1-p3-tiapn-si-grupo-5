@@ -1,30 +1,31 @@
-import { Button } from "@/components/ui/button";
-import { Link }  from "react-router-dom"; 
+import { NavLink } from "react-router-dom";
 
 interface KpiCardProps {
     kpiTitle: string;
     kpiValue: string | number;
     kpiColor?: string;
     kpiLink?: string;
-    onDetailsClick?: () => void;
 }
 
-export function KpiCard({ kpiTitle, kpiValue, kpiColor, onDetailsClick }: KpiCardProps) {
+export function KpiCard({ kpiTitle, kpiValue, kpiColor, kpiLink }: KpiCardProps) {
     return (
         <div
             className="rounded-lg shadow-md p-6 flex flex-col items-start min-w-[512px] max-w-fit bg-white"
             style={kpiColor ? { borderLeft: `8px solid ${kpiColor}` } : {}}
         >
-            <span className="text-lg font-semibold mb-2">{kpiTitle}</span>
+            <span className="text-lg font-semibold mb-2 text-slate-700">{kpiTitle}</span>
             <span className="text-3xl font-bold mb-4" style={kpiColor ? { color: kpiColor } : {}}>
                 {kpiValue}
             </span>
-            <Link
-                className="p-0 h-auto text-sm"
-                navigate={onDetailsClick}
-            >
-                Ver detalhes
-            </Link>
+            {kpiLink && (
+                <NavLink
+                    to={kpiLink}
+                    className="text-slate-700 hover:underline text-sm font-medium mt-2"
+                    style={{ padding: 0, height: "auto" }}
+                >
+                    Ver detalhes
+                </NavLink>
+            )}
         </div>
     );
 }
