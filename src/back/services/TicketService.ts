@@ -18,7 +18,7 @@ export class TicketService {
                 dataAbertura,
                 idSolicitante,
                 idTipoChamado,
-                idPrioridade, // Corrija aqui para salvar corretamente
+                idPrioridade,
                 idStatus: null,
             },
         });
