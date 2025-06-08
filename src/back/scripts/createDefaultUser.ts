@@ -4,6 +4,16 @@ import { hashPassword } from "../services/hashPasswordService";
 const prisma = new PrismaClient();
 
 async function main() {
+    const email = "admin@trackit.com";
+    const exists = await prisma.usuario.findFirst({
+        where: { email }
+    });
+
+    if (exists) {
+        console.log("Usuário padrão já existe:", email);
+        return;
+    }
+
     const senha = "Trackit123";
     const senhaHasheada = await hashPassword(senha);
 
@@ -12,7 +22,7 @@ async function main() {
             nomeUsuario: "Usuário TrackIT",
             matricula: "000000000123456",
             ramal: "3199998888",
-            email: "admin@trackit.com",
+            email,
             senha: senhaHasheada,
             idTipoUsuario: 1,
             idGerencia: 1,
@@ -35,4 +45,4 @@ main()
 /*
     Para executar este script, use o comando, estando em src/back, execute:
     npx ts-node scripts/createDefaultUser.ts
-*/ 
+*/

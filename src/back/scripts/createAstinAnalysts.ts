@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 const prisma = new PrismaClient();
 
 const fakeAnalysts = [
-    { nome: "Bruno Astin", email: "bruno.astin@pbh.gov.br" },
+    { nome: "Bruno Carvalho", email: "bruno.carvalho@pbh.gov.br" },
     { nome: "Carla Torres", email: "carla.torres@pbh.gov.br" },
     { nome: "Diego Andrade", email: "diego.andrade@pbh.gov.br" },
     { nome: "Elisa Martins", email: "elisa.martins@pbh.gov.br" },

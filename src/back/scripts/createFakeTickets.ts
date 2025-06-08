@@ -6,14 +6,20 @@ function randomItem<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function randomDateThisMonth() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth();
+function randomDate2024() {
+    const year = 2024;
+    const month = Math.floor(Math.random() * 12);
     const day = Math.floor(Math.random() * 28) + 1;
     const hour = Math.floor(Math.random() * 24);
     const min = Math.floor(Math.random() * 60);
     return new Date(year, month, day, hour, min);
+}
+
+function randomDate2025() {
+    const start = new Date(2025, 0, 1).getTime();
+    const end = new Date(2025, 5, 6, 23, 59, 59).getTime();
+    const date = new Date(start + Math.random() * (end - start));
+    return date;
 }
 
 const assuntos = [
@@ -63,59 +69,67 @@ const descricoes = [
 ];
 
 async function main() {
+    // Busca usuários, tipos, prioridades e status default
     const users = await prisma.usuario.findMany({
         where: { idTipoUsuario: 3, ativo: 1 }
     });
     const tipos = await prisma.tipochamado.findMany({ where: { ativo: 1 } });
     const prioridades = await prisma.prioridadechamado.findMany({ where: { ativo: 1 } });
+    const statuses = await prisma.statuschamado.findMany({ where: { ativo: 1 } });
 
-    if (!users.length || !tipos.length || !prioridades.length) {
-        throw new Error("Usuários, tipos de chamado ou prioridades não encontrados.");
+    if (!users.length || !tipos.length || !prioridades.length || !statuses.length) {
+        throw new Error("Usuários, tipos de chamado, prioridades ou status não encontrados.");
     }
 
-    const ticketsToCreate = 120;
+    const ticketsToCreate2024 = 450;
+    const ticketsToCreate2025 = 150;
     const protocolosUsados = new Set<string>();
 
-    for (let i = 0; i < ticketsToCreate; i++) {
+    // Função para sortear status (com chance maior de não ser concluído)
+    function randomStatusId() {
+        // Deixe "Concluído" menos frequente
+        const nonConcluido = statuses.filter(s => s.nomeStatus !== "Concluído");
+        // 70% não concluído, 30% concluído
+        if (Math.random() < 0.7) {
+            return randomItem(nonConcluido).idStatus;
+        } else {
+            const concluidos = statuses.filter(s => s.nomeStatus === "Concluído");
+            return concluidos.length > 0 ? randomItem(concluidos).idStatus : randomItem(nonConcluido).idStatus;
+        }
+    }
+
+    // Cria tickets para 2024
+    for (let i = 0; i < ticketsToCreate2024; i++) {
         const solicitante = randomItem(users);
         const tipo = randomItem(tipos);
-
-        let prioridade;
-        if (
-            tipo.nomeTipo.toLowerCase().includes("acesso") ||
-            tipo.nomeTipo.toLowerCase().includes("erro") ||
-            tipo.nomeTipo.toLowerCase().includes("problema")
-        ) {
-            prioridade = prioridades.find(p =>
-                ["Urgente", "Alta"].includes(p.nomePrioridade)
-            ) || randomItem(prioridades);
-        } else if (
-            tipo.nomeTipo.toLowerCase().includes("relatório") ||
-            tipo.nomeTipo.toLowerCase().includes("projetos")
-        ) {
-            prioridade = prioridades.find(p =>
-                ["Média"].includes(p.nomePrioridade)
-            ) || randomItem(prioridades);
-        } else {
-            prioridade = prioridades.find(p =>
-                ["Baixa", "Rotina", "Informativa"].includes(p.nomePrioridade)
-            ) || randomItem(prioridades);
-        }
+        const prioridade = randomItem(prioridades);
+        const statusId = randomStatusId();
 
         const assunto = randomItem(assuntos);
         const descricao = randomItem(descricoes);
-        const dataAbertura = randomDateThisMonth();
+        const dataAbertura = randomDate2024();
+
+        // Se status for concluído, define dataFechamento depois de dataAbertura
+        let dataFechamento: Date | null = null;
+        if (statuses.find(s => s.idStatus === statusId)?.nomeStatus === "Concluído") {
+            // Entre 1h e 15 dias depois
+            const delta = Math.floor(Math.random() * (15 * 24 * 60 * 60 * 1000 - 60 * 60 * 1000)) + 60 * 60 * 1000;
+            dataFechamento = new Date(dataAbertura.getTime() + delta);
+            // Garante que não passa de 2024
+            if (dataFechamento.getFullYear() > 2024) dataFechamento = new Date(2024, 11, 31, 23, 59, 59);
+        }
 
         const chamado = await prisma.chamado.create({
             data: {
-                protocolo: "TEMP", // valor temporário, nunca será repetido
+                protocolo: "TEMP",
                 assunto,
                 descricao,
                 dataAbertura,
+                dataFechamento,
                 idSolicitante: solicitante.idUsuario,
                 idTipoChamado: tipo.idTipoChamado,
                 idPrioridade: prioridade.idPrioridade,
-                idStatus: null
+                idStatus: statusId
             }
         });
 
@@ -135,7 +149,58 @@ async function main() {
         });
     }
 
-    console.log(`Criados ${ticketsToCreate} chamados de teste.`);
+    // Cria tickets para 2025
+    for (let i = 0; i < ticketsToCreate2025; i++) {
+        const solicitante = randomItem(users);
+        const tipo = randomItem(tipos);
+        const prioridade = randomItem(prioridades);
+        const statusId = randomStatusId();
+
+        const assunto = randomItem(assuntos);
+        const descricao = randomItem(descricoes);
+        const dataAbertura = randomDate2025();
+
+        let dataFechamento: Date | null = null;
+        if (statuses.find(s => s.idStatus === statusId)?.nomeStatus === "Concluído") {
+            // Entre 1h e 15 dias depois
+            const delta = Math.floor(Math.random() * (15 * 24 * 60 * 60 * 1000 - 60 * 60 * 1000)) + 60 * 60 * 1000;
+            dataFechamento = new Date(dataAbertura.getTime() + delta);
+            // Garante que não passa de 06/06/2025
+            const maxDate = new Date(2025, 5, 6, 23, 59, 59);
+            if (dataFechamento > maxDate) dataFechamento = maxDate;
+        }
+
+        const chamado = await prisma.chamado.create({
+            data: {
+                protocolo: "TEMP",
+                assunto,
+                descricao,
+                dataAbertura,
+                dataFechamento,
+                idSolicitante: solicitante.idUsuario,
+                idTipoChamado: tipo.idTipoChamado,
+                idPrioridade: prioridade.idPrioridade,
+                idStatus: statusId
+            }
+        });
+
+        const ano = dataAbertura.getFullYear().toString().slice(-2);
+        const idZero = chamado.idChamado.toString().padStart(6, "0");
+        let protocolo = `${idZero}${ano}`;
+        let sufixo = 1;
+        while (protocolosUsados.has(protocolo) || await prisma.chamado.findUnique({ where: { protocolo } })) {
+            protocolo = `${idZero}${ano}${sufixo}`;
+            sufixo++;
+        }
+        protocolosUsados.add(protocolo);
+
+        await prisma.chamado.update({
+            where: { idChamado: chamado.idChamado },
+            data: { protocolo }
+        });
+    }
+
+    console.log(`Criados ${ticketsToCreate2024 + ticketsToCreate2025} chamados de teste.`);
 }
 
 main()

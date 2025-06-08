@@ -24,20 +24,15 @@ async function createTicketTypeIfNotExists(nomeTipo: string) {
 
 async function main() {
     const ticketTypes = [
-        { nomeTipo: "Acesso ao arterh" },
+        { nomeTipo: "Acesso ao ArteRH" },
         { nomeTipo: "Suporte" },
         { nomeTipo: "Portal do servidor" },
-        { nomeTipo: "Atualização do ad" },
         { nomeTipo: "Sistemas" },
         { nomeTipo: "Relatórios" },
         { nomeTipo: "Projetos" },
-        { nomeTipo: "Ifponto" },
-        { nomeTipo: "Alteração de validações" },
-        { nomeTipo: "Análise/correção de processos" },
+        { nomeTipo: "IF Ponto" },
+        { nomeTipo: "Análise/Correção de processos" },
         { nomeTipo: "Ativação/criação/configuração/exclusão" },
-        { nomeTipo: "Avaliação de desempenho" },
-        { nomeTipo: "Classificação do servidor" },
-        { nomeTipo: "Demonstrativo de pagamento" }
     ];
 
     for (const type of ticketTypes) {

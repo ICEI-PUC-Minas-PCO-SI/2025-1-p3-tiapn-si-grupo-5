@@ -27,13 +27,10 @@ async function createStatusIfNotExists(nomeStatus: string, hexCor: string) {
 async function main() {
     const statuses = [
         { nomeStatus: "Cancelado", hexCor: "#B0BEC5" },
-        { nomeStatus: "Não iniciado", hexCor: "#757575" },
         { nomeStatus: "Em análise", hexCor: "#1976D2" },
         { nomeStatus: "Em execução", hexCor: "#FB8C00" },
         { nomeStatus: "Concluído", hexCor: "#43A047" },
-        { nomeStatus: "Concluído parcialmente", hexCor: "#FDD835" },
-        { nomeStatus: "Aguardando resposta Usuário", hexCor: "#8E24AA" },
-        { nomeStatus: "Pendente. vide obs.", hexCor: "#E53935" }
+        { nomeStatus: "Aguardando resposta", hexCor: "#8E24AA" },
     ];
 
     for (const status of statuses) {

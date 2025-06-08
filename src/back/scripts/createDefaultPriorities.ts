@@ -30,8 +30,6 @@ async function main() {
         { nomePrioridade: "Alta", hexCor: "#FB8C00" },
         { nomePrioridade: "Média", hexCor: "#FDD835" },
         { nomePrioridade: "Baixa", hexCor: "#43A047" },
-        { nomePrioridade: "Informativa", hexCor: "#1E88E5" },
-        { nomePrioridade: "Rotina", hexCor: "#8E24AA" }
     ];
 
     for (const priority of priorities) {
