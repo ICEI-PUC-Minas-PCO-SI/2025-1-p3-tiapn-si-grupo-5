@@ -7,6 +7,7 @@ import { DashboardDataTable } from "@/components/dasboard/DashboardDataTable";
 import { getAllStatus, type IStatus } from "@/api/status";
 import { getAllTickets, type ITicket } from "@/api/ticket";
 import { getAllPriorities, type IPriority } from "@/api/priority";
+import { getAllTicketTypes, type ITicketType } from "@/api/tickettype";
 import { TableSpinner } from "@/components/ui/spinner";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
 
@@ -19,20 +20,24 @@ export function Dashboard() {
     const [priorities, setPriorities] = useState<IPriority[]>([]);
     const [selectedYearPriorityPie, setSelectedYearPriorityPie] = useState<string>("");
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+    const [ticketTypes, setTicketTypes] = useState<ITicketType[]>([]);
+    const [selectedYearLine, setSelectedYearLine] = useState<string>("");
 
     useEffect(() => {
         setLoading(true);
-        Promise.all([getAllStatus(), getAllTickets(), getAllPriorities()])
-            .then(([statuses, tickets, priorities]) => {
+        Promise.all([getAllStatus(), getAllTickets(), getAllPriorities(), getAllTicketTypes()])
+            .then(([statuses, tickets, priorities, types]) => {
                 setStatusList(statuses);
                 setTickets(tickets);
                 setPriorities(priorities);
+                setTicketTypes(types);
                 setAlert(null);
             })
             .catch(() => {
                 setStatusList([]);
                 setTickets([]);
                 setPriorities([]);
+                setTicketTypes([]);
                 setAlert({ type: "error", message: "Não foi possível retornar os dados do dashboard." });
             })
             .finally(() => setLoading(false));
@@ -69,15 +74,15 @@ export function Dashboard() {
                 setSelectedYearBar(String(years[0]));
                 setSelectedYearPie(String(years[0]));
                 setSelectedYearPriorityPie(String(years[0]));
+                setSelectedYearLine(String(years[0]));
             }
         }
     }, [tickets]);
 
     const months = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
+        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
     ];
-    // Gráfico de barras: chamados concluídos por mês, usando getAllTickets
     const closedTicketsByMonth = months.map((month, idx) => {
         const count = tickets.filter(t => {
             if (!t.dataFechamento) return false;
@@ -87,7 +92,6 @@ export function Dashboard() {
         return { month, quantidade: count };
     });
 
-    // Conta tickets por status, apenas demandas não concluídas
     const ticketsByStatus = statusList.map((status) => {
         const count = tickets.filter(t =>
             t.idStatus === status.idStatus && !t.dataFechamento
@@ -98,7 +102,6 @@ export function Dashboard() {
         };
     });
 
-    // Gráfico de pizza de status por ano, todos os tickets, filtrando pelo ano de abertura
     const ticketsByStatusForYear = statusList.map((status) => {
         const count = tickets.filter(t => {
             if (!t.dataAbertura) return false;
@@ -112,7 +115,6 @@ export function Dashboard() {
         };
     }).filter(item => item.quantity > 0);
 
-    // Gráfico de pizza de prioridade por ano (todos os tickets, filtrando pelo ano de abertura)
     const ticketsByPriorityForYear = priorities.map((priority) => {
         const count = tickets.filter(t => {
             if (!t.dataAbertura) return false;
@@ -126,7 +128,31 @@ export function Dashboard() {
         };
     }).filter(item => item.quantity > 0);
 
-    // Alert timeout
+    const lineChartData = months.map((month, idx) => {
+        const data: { month: string;[key: string]: number | string } = { month };
+        ticketTypes.forEach(type => {
+            data[type.nomeTipo] = tickets.filter(t => {
+                if (!t.dataAbertura) return false;
+                const d = new Date(t.dataAbertura);
+                return (
+                    selectedYearLine &&
+                    d.getFullYear() === Number(selectedYearLine) &&
+                    d.getMonth() === idx &&
+                    t.idTipoChamado === type.idTipoChamado
+                );
+            }).length;
+        });
+        return data;
+    });
+
+    const lineChartConfig = ticketTypes.reduce((acc, type, idx) => {
+        acc[type.nomeTipo] = {
+            label: type.nomeTipo,
+            color: `var(--chart-${(idx % 12) + 1})`
+        };
+        return acc;
+    }, {} as Record<string, { label: string; color: string }>);
+
     useEffect(() => {
         if (alert) {
             const timer = setTimeout(() => setAlert(null), 3500);
@@ -217,28 +243,14 @@ export function Dashboard() {
                             onYearChange={setSelectedYearPriorityPie}
                         />
                         <ChartLine
-                            chartData={[
-                                { month: "January", hardware: 50, software: 70, network: 40, security: 30, training: 20, consulting: 60, quantity: 10 },
-                                { month: "February", hardware: 60, software: 80, network: 50, security: 40, training: 30, consulting: 70, quantity: 20 },
-                                { month: "March", hardware: 70, software: 90, network: 60, security: 50, training: 40, consulting: 80, quantity: 30 },
-                                { month: "April", hardware: 80, software: 100, network: 70, security: 60, training: 50, consulting: 90, quantity: 40 },
-                                { month: "May", hardware: 90, software: 110, network: 80, security: 70, training: 60, consulting: 100, quantity: 50 },
-                                { month: "June", hardware: 100, software: 120, network: 90, security: 80, training: 70, consulting: 110, quantity: 60 },
-                                { month: "July", hardware: 110, software: 130, network: 100, security: 90, training: 80, consulting: 120, quantity: 70 },
-                            ]}
-                            chartConfig={{
-                                hardware: { label: "Hardware", color: "var(--chart-1)" },
-                                software: { label: "Software", color: "var(--chart-2)" },
-                                network: { label: "Network", color: "var(--chart-3)" },
-                                security: { label: "Security", color: "var(--chart-4)" },
-                                training: { label: "Training", color: "var(--chart-5)" },
-                                consulting: { label: "Consulting", color: "var(--chart-6)" },
-                                quantity: { label: "Other", color: "var(--chart-7)" },
-                            }}
-                            cardTitle="Demandas por Tipo de Helpdesk"
-                            cardDescription="Gráfico de linhas mostrando demandas típicas de helpdesk ao longo dos monthes"
-                            trendInfo="Tendência de aumento nas demandas de hardware e software"
-                            footerInfo="Dados acumulados de 2024"
+                            chartData={lineChartData}
+                            chartConfig={lineChartConfig}
+                            cardTitle="Demandas por Tipo de Chamado"
+                            cardDescription="Gráfico de linhas mostrando demandas port tipo de chamado ao longo dos meses"
+                            footerInfo={`Dados acumulados de ${selectedYearLine || "----"}`}
+                            years={closedTicketYears}
+                            selectedYear={selectedYearLine}
+                            onYearChange={setSelectedYearLine}
                         />
                     </div>
                     <div className="flex flex-col gap-4">

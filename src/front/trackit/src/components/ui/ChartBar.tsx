@@ -131,7 +131,7 @@ export function ChartBar({
                 </ChartContainer>
             </CardContent>
             <CardFooter className="flex-col items-start gap-2 text-sm">
-                <div className="leading-none text-slate-750 mt-3">
+                <div className="leading-none text-slate-750 mt-4">
                     {footerInfo}
                 </div>
             </CardFooter>
