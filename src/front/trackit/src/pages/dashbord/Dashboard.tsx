@@ -6,11 +6,14 @@ import { ChartLine } from "@/components/ui/ChartLine";
 import { DashboardDataTable } from "@/components/dasboard/DashboardDataTable";
 import { getAllStatus, type IStatus } from "@/api/status";
 import { getAllTickets, type ITicket } from "@/api/ticket";
+import { getClosedTickets } from "@/api/dashboard";
 
 export function Dashboard() {
     const [statusList, setStatusList] = useState<IStatus[]>([]);
     const [tickets, setTickets] = useState<ITicket[]>([]);
+    const [closedTickets, setClosedTickets] = useState<ITicket[]>([]);
     const [loading, setLoading] = useState(true);
+    const [selectedYear, setSelectedYear] = useState<string>("");
 
     useEffect(() => {
         setLoading(true);
@@ -22,6 +25,27 @@ export function Dashboard() {
             .finally(() => setLoading(false));
     }, []);
 
+    // Buscar chamados encerrados
+    useEffect(() => {
+        getClosedTickets()
+            .then((tickets) => {
+                setClosedTickets(tickets);
+                // Seleciona o ano mais recente por padrão
+                const years = Array.from(
+                    new Set(
+                        tickets
+                            .map(t => {
+                                if (!t.dataFechamento) return undefined;
+                                const year = new Date(t.dataFechamento).getFullYear();
+                                return isNaN(year) ? undefined : year;
+                            })
+                            .filter((y): y is number => typeof y === "number")
+                    )
+                ).sort((a, b) => (b ?? 0) - (a ?? 0));
+                if (years.length > 0) setSelectedYear(String(years[0]));
+            });
+    }, []);
+
     // Conta tickets por status
     const ticketsByStatus = statusList.map((status) => {
         const count = tickets.filter(t => t.idStatus === status.idStatus).length;
@@ -29,6 +53,32 @@ export function Dashboard() {
             ...status,
             count,
         };
+    });
+
+    // Anos disponíveis para filtro
+    const closedTicketYears = Array.from(
+        new Set(
+            closedTickets
+                .map(t => {
+                    if (!t.dataFechamento) return undefined;
+                    const year = new Date(t.dataFechamento).getFullYear();
+                    return isNaN(year) ? undefined : year;
+                })
+                .filter((y): y is number => typeof y === "number")
+        )
+    ).sort((a, b) => (b ?? 0) - (a ?? 0));
+
+    const months = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ];
+    const closedTicketsByMonth = months.map((month, idx) => {
+        const count = closedTickets.filter(t => {
+            if (!t.dataFechamento) return false;
+            const d = new Date(t.dataFechamento);
+            return selectedYear && d.getFullYear() === Number(selectedYear) && d.getMonth() === idx;
+        }).length;
+        return { month, quantidade: count };
     });
 
     return (
@@ -55,20 +105,7 @@ export function Dashboard() {
             </div>
             <div className="flex flex-wrap gap-8 items-center">
                 <ChartBar
-                    chartData={[
-                        { month: "January", quantity: 320 },
-                        { month: "February", quantity: 250 },
-                        { month: "March", quantity: 180 },
-                        { month: "April", quantity: 300 },
-                        { month: "May", quantity: 220 },
-                        { month: "June", quantity: 250 },
-                        { month: "July", quantity: 300 },
-                        { month: "August", quantity: 280 },
-                        { month: "September", quantity: 310 },
-                        { month: "October", quantity: 330 },
-                        { month: "November", quantity: 250 },
-                        { month: "December", quantity: 400 },
-                    ]}
+                    chartData={closedTicketsByMonth}
                     chartConfig={{
                         desktop: {
                             label: "Resolvidos",
@@ -77,8 +114,10 @@ export function Dashboard() {
                     }}
                     cardTitle="Chamados Resolvidos por Mês"
                     cardDescription="Gráfico de barras dos chamados resolvidos ao longo do ano"
-                    trendInfo="Tendência de crescimento ao longo do ano"
-                    footerInfo="Dados acumulados de 2024"
+                    footerInfo={`Dados acumulados de ${selectedYear || "----"}`}
+                    years={closedTicketYears}
+                    selectedYear={selectedYear}
+                    onYearChange={setSelectedYear}
                 />
                 <ChartPie
                     chartData={[
@@ -168,7 +207,7 @@ export function Dashboard() {
             </div>
             <div className="flex flex-col gap-4">
                 <h2 className="title-h2 text-slate-950">Analistas e Demandas</h2>
-                <DashboardDataTable/>
+                <DashboardDataTable />
             </div>
         </div>
     );
