@@ -33,11 +33,15 @@ export function Dashboard() {
 
     return (
         <div className="flex flex-col h-full gap-8 w-fit">
-            <div className="flex gap-4 justify-between">
+            <div className="flex flex-col gap-4 justify-between">
                 <h1 className="title-h1 text-slate-950">
                     Dashboard
                 </h1>
+                <h2 className="title-h2 text-slate-950">
+                    Indicadores KPI por status de demandas
+                </h2>
             </div>
+
             <div className="flex flex-wrap gap-8 items-center w-[66rem]">
                 {ticketsByStatus.map((status) => (
                     <KpiCard
@@ -164,7 +168,7 @@ export function Dashboard() {
             </div>
             <div className="flex flex-col gap-4">
                 <h2 className="title-h2 text-slate-950">Analistas e Demandas</h2>
-                <DashboardDataTable />
+                <DashboardDataTable/>
             </div>
         </div>
     );

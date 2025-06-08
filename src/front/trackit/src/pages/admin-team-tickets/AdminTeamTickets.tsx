@@ -54,7 +54,8 @@ export function AdminTeamTickets() {
     const [filteredData, setFilteredData] = useState<TeamTicketTableRow[]>([]);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [allPriorities, setAllPriorities] = useState<IPriority[]>([]);
-    const [priorityFilterOpen, setPriorityFilterOpen] = useState(false);
+    const [allStatus, setAllStatus] = useState<IStatus[]>([]);
+    const [filterOpen, setFilterOpen] = useState(false);
     const [loading, setLoading] = useState(true);
 
     // Query params
@@ -75,6 +76,7 @@ export function AdminTeamTickets() {
                 IUserListItem[]
             ]) => {
                 setAllPriorities(priorities);
+                setAllStatus(statuses);
 
                 const mapped: TeamTicketTableRow[] = ticketsData.map((t) => {
                     let formattedProtocolo = "";
@@ -166,22 +168,43 @@ export function AdminTeamTickets() {
         prioritiesInTickets.includes(p.idPrioridade)
     );
 
-    // Limpar filtro de prioridade e fechar modal
-    const clearPriorityFilter = () => {
+    // Status presentes nos chamados
+    const statusInTickets = Array.from(
+        new Set(tickets.map((t) => t.status.idStatus))
+    );
+    const statusToShow = allStatus.filter((s) =>
+        statusInTickets.includes(s.idStatus)
+    );
+
+    // Limpar ambos filtros e fechar modal
+    const clearFilters = () => {
         setSearchParams(params => {
             params.delete("priority");
+            params.delete("status");
             return params;
         });
-        setPriorityFilterOpen(false);
+        setFilterOpen(false);
     };
 
-    // Handlers para filtros
+    // Handler para Select de prioridade
     const handlePriorityChange = (value: string) => {
         setSearchParams(params => {
             if (value === "__all__") {
                 params.delete("priority");
             } else {
                 params.set("priority", value);
+            }
+            return params;
+        });
+    };
+
+    // Handler para Select de status
+    const handleStatusChange = (value: string) => {
+        setSearchParams(params => {
+            if (value === "__all__") {
+                params.delete("status");
+            } else {
+                params.set("status", value);
             }
             return params;
         });
@@ -213,13 +236,14 @@ export function AdminTeamTickets() {
             <div className="flex justify-between">
                 <Searchbar onSearch={handleSearch} />
                 <div className="flex gap-3">
-                    <DropdownMenu open={priorityFilterOpen} onOpenChange={setPriorityFilterOpen}>
+                    {/* Filtro combinado */}
+                    <DropdownMenu open={filterOpen} onOpenChange={setFilterOpen}>
                         <DropdownMenuTrigger asChild>
                             <Button size="icon" variant="outline">
                                 <Filter className="w-4 h-4 mr-1" />
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="min-w-[220px]">
+                        <DropdownMenuContent align="end" className="min-w-[260px]">
                             <div className="px-4 py-2 font-semibold text-sm text-gray-700">Prioridade</div>
                             <Select value={priorityFilter} onValueChange={handlePriorityChange}>
                                 <SelectTrigger className="w-full mb-2">
@@ -237,13 +261,30 @@ export function AdminTeamTickets() {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
+                            <div className="px-4 py-2 font-semibold text-sm text-gray-700">Status</div>
+                            <Select value={statusFilter} onValueChange={handleStatusChange}>
+                                <SelectTrigger className="w-full mb-2">
+                                    <SelectValue placeholder="Todos" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="__all__">Todos</SelectItem>
+                                        {statusToShow.map(status => (
+                                            <SelectItem key={status.idStatus} value={String(status.idStatus)}>
+                                                <span className="inline-block w-4 h-4 rounded-full mr-2" style={{ backgroundColor: status.hexCorPrimaria }} />
+                                                {status.nomeStatus}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                             <div className="flex justify-center px-2 pb-2">
                                 <Button
                                     size="sm"
                                     variant="ghost"
-                                    onClick={clearPriorityFilter}
+                                    onClick={clearFilters}
                                     className="flex items-center gap-1"
-                                    disabled={priorityFilter === "__all__"}
+                                    disabled={priorityFilter === "__all__" && statusFilter === "__all__"}
                                 >
                                     <XCircle className="w-4 h-4" />
                                     Limpar filtros

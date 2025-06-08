@@ -206,7 +206,7 @@ export function DashboardDataTable() {
     );
 
     return (
-        <div className="space-y-4 w-full max-w-[1100px] mx-auto">
+        <div className="space-y-4 w-full">
             <div className="flex justify-between">
                 <Searchbar onSearch={setSearch} />
                 <div className="flex gap-3">
