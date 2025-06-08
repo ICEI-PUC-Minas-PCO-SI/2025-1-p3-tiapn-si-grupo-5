@@ -40,12 +40,3 @@ export async function getTicketsByAnalyst(idAnalista: number): Promise<ITicket[]
     if (!response.ok) throw new Error("Erro ao buscar chamados por analista");
     return response.json();
 }
-
-/**
- * Busca chamados encerrados.
- */
-export async function getClosedTickets(): Promise<ITicket[]> {
-    const response = await fetch(`${API_BASE_URL}/dashboard/tickets-closed`);
-    if (!response.ok) throw new Error("Erro ao buscar chamados encerrados");
-    return response.json();
-}

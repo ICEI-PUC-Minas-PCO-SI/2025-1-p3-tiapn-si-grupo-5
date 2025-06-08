@@ -6,59 +6,42 @@ import { ChartLine } from "@/components/ui/ChartLine";
 import { DashboardDataTable } from "@/components/dasboard/DashboardDataTable";
 import { getAllStatus, type IStatus } from "@/api/status";
 import { getAllTickets, type ITicket } from "@/api/ticket";
-import { getClosedTickets } from "@/api/dashboard";
+import { getAllPriorities, type IPriority } from "@/api/priority";
+import { TableSpinner } from "@/components/ui/spinner";
+import { GlobalAlert } from "@/components/ui/GlobalAlert";
 
 export function Dashboard() {
     const [statusList, setStatusList] = useState<IStatus[]>([]);
     const [tickets, setTickets] = useState<ITicket[]>([]);
-    const [closedTickets, setClosedTickets] = useState<ITicket[]>([]);
     const [loading, setLoading] = useState(true);
-    const [selectedYear, setSelectedYear] = useState<string>("");
+    const [selectedYearBar, setSelectedYearBar] = useState<string>("");
+    const [selectedYearPie, setSelectedYearPie] = useState<string>("");
+    const [priorities, setPriorities] = useState<IPriority[]>([]);
+    const [selectedYearPriorityPie, setSelectedYearPriorityPie] = useState<string>("");
+    const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
     useEffect(() => {
         setLoading(true);
-        Promise.all([getAllStatus(), getAllTickets()])
-            .then(([statuses, tickets]) => {
+        Promise.all([getAllStatus(), getAllTickets(), getAllPriorities()])
+            .then(([statuses, tickets, priorities]) => {
                 setStatusList(statuses);
                 setTickets(tickets);
+                setPriorities(priorities);
+                setAlert(null);
+            })
+            .catch(() => {
+                setStatusList([]);
+                setTickets([]);
+                setPriorities([]);
+                setAlert({ type: "error", message: "Não foi possível retornar os dados do dashboard." });
             })
             .finally(() => setLoading(false));
     }, []);
 
-    // Buscar chamados encerrados
-    useEffect(() => {
-        getClosedTickets()
-            .then((tickets) => {
-                setClosedTickets(tickets);
-                // Seleciona o ano mais recente por padrão
-                const years = Array.from(
-                    new Set(
-                        tickets
-                            .map(t => {
-                                if (!t.dataFechamento) return undefined;
-                                const year = new Date(t.dataFechamento).getFullYear();
-                                return isNaN(year) ? undefined : year;
-                            })
-                            .filter((y): y is number => typeof y === "number")
-                    )
-                ).sort((a, b) => (b ?? 0) - (a ?? 0));
-                if (years.length > 0) setSelectedYear(String(years[0]));
-            });
-    }, []);
-
-    // Conta tickets por status
-    const ticketsByStatus = statusList.map((status) => {
-        const count = tickets.filter(t => t.idStatus === status.idStatus).length;
-        return {
-            ...status,
-            count,
-        };
-    });
-
-    // Anos disponíveis para filtro
+    // Anos disponíveis para filtro (agora usando todos os tickets com dataFechamento)
     const closedTicketYears = Array.from(
         new Set(
-            closedTickets
+            tickets
                 .map(t => {
                     if (!t.dataFechamento) return undefined;
                     const year = new Date(t.dataFechamento).getFullYear();
@@ -68,147 +51,203 @@ export function Dashboard() {
         )
     ).sort((a, b) => (b ?? 0) - (a ?? 0));
 
+    // Seleciona o ano mais recente por padrão para todos os filtros
+    useEffect(() => {
+        if (tickets.length > 0) {
+            const years = Array.from(
+                new Set(
+                    tickets
+                        .map(t => {
+                            if (!t.dataFechamento) return undefined;
+                            const year = new Date(t.dataFechamento).getFullYear();
+                            return isNaN(year) ? undefined : year;
+                        })
+                        .filter((y): y is number => typeof y === "number")
+                )
+            ).sort((a, b) => (b ?? 0) - (a ?? 0));
+            if (years.length > 0) {
+                setSelectedYearBar(String(years[0]));
+                setSelectedYearPie(String(years[0]));
+                setSelectedYearPriorityPie(String(years[0]));
+            }
+        }
+    }, [tickets]);
+
     const months = [
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
+    // Gráfico de barras: chamados concluídos por mês, usando getAllTickets
     const closedTicketsByMonth = months.map((month, idx) => {
-        const count = closedTickets.filter(t => {
+        const count = tickets.filter(t => {
             if (!t.dataFechamento) return false;
             const d = new Date(t.dataFechamento);
-            return selectedYear && d.getFullYear() === Number(selectedYear) && d.getMonth() === idx;
+            return selectedYearBar && d.getFullYear() === Number(selectedYearBar) && d.getMonth() === idx;
         }).length;
         return { month, quantidade: count };
     });
 
+    // Conta tickets por status, apenas demandas não concluídas
+    const ticketsByStatus = statusList.map((status) => {
+        const count = tickets.filter(t =>
+            t.idStatus === status.idStatus && !t.dataFechamento
+        ).length;
+        return {
+            ...status,
+            count,
+        };
+    });
+
+    // Gráfico de pizza de status por ano, todos os tickets, filtrando pelo ano de abertura
+    const ticketsByStatusForYear = statusList.map((status) => {
+        const count = tickets.filter(t => {
+            if (!t.dataAbertura) return false;
+            const d = new Date(t.dataAbertura);
+            return selectedYearPie && d.getFullYear() === Number(selectedYearPie) && t.idStatus === status.idStatus;
+        }).length;
+        return {
+            tipochamado: status.nomeStatus,
+            quantity: count,
+            fill: status.hexCorPrimaria || "#888"
+        };
+    }).filter(item => item.quantity > 0);
+
+    // Gráfico de pizza de prioridade por ano (todos os tickets, filtrando pelo ano de abertura)
+    const ticketsByPriorityForYear = priorities.map((priority) => {
+        const count = tickets.filter(t => {
+            if (!t.dataAbertura) return false;
+            const d = new Date(t.dataAbertura);
+            return selectedYearPriorityPie && d.getFullYear() === Number(selectedYearPriorityPie) && t.idPrioridade === priority.idPrioridade;
+        }).length;
+        return {
+            tipochamado: priority.nomePrioridade,
+            quantity: count,
+            fill: priority.hexCorPrimaria || "#888"
+        };
+    }).filter(item => item.quantity > 0);
+
+    // Alert timeout
+    useEffect(() => {
+        if (alert) {
+            const timer = setTimeout(() => setAlert(null), 3500);
+            return () => clearTimeout(timer);
+        }
+    }, [alert]);
+
     return (
         <div className="flex flex-col h-full gap-8 w-fit">
+            {alert && (
+                <div className="fixed bottom-4 right-4 z-50">
+                    <GlobalAlert
+                        type={alert.type}
+                        message={alert.message}
+                        onClose={() => setAlert(null)}
+                    />
+                </div>
+            )}
             <div className="flex flex-col gap-4 justify-between">
                 <h1 className="title-h1 text-slate-950">
                     Dashboard
                 </h1>
-                <h2 className="title-h2 text-slate-950">
-                    Indicadores KPI por status de demandas
-                </h2>
+                <h3 className="title-h3 text-slate-700">
+                    Indicadores por status de demandas em aberto
+                </h3>
             </div>
-
-            <div className="flex flex-wrap gap-8 items-center w-[66rem]">
-                {ticketsByStatus.map((status) => (
-                    <KpiCard
-                        key={status.idStatus}
-                        kpiTitle={status.nomeStatus}
-                        kpiValue={loading ? "..." : status.count.toString()}
-                        kpiLink={`/admin/assigned-tickets?status=${status.idStatus}`}
-                        kpiColor={status.hexCorPrimaria}
-                    />
-                ))}
-            </div>
-            <div className="flex flex-wrap gap-8 items-center">
-                <ChartBar
-                    chartData={closedTicketsByMonth}
-                    chartConfig={{
-                        desktop: {
-                            label: "Resolvidos",
-                            color: "var(--chart-6)",
-                        },
-                    }}
-                    cardTitle="Chamados Resolvidos por Mês"
-                    cardDescription="Gráfico de barras dos chamados resolvidos ao longo do ano"
-                    footerInfo={`Dados acumulados de ${selectedYear || "----"}`}
-                    years={closedTicketYears}
-                    selectedYear={selectedYear}
-                    onYearChange={setSelectedYear}
-                />
-                <ChartPie
-                    chartData={[
-                        { tipochamado: "Resolvidos", quantity: 150, fill: "var(--chart-6)" },
-                        { tipochamado: "Em aberto", quantity: 150, fill: "var(--chart-7)" },
-                        { tipochamado: "Aguardando resposta", quantity: 150, fill: "var(--chart-8)" },
-                        { tipochamado: "Em análise", quantity: 150, fill: "var(--chart-9)" },
-                    ]}
-                    chartConfig={{
-                        quantity: {
-                            label: "Chamados",
-                        },
-                        resolvidos: {
-                            label: "Resolvidos",
-                            color: "var(--chart-6)",
-                        },
-                        emAberto: {
-                            label: "Em aberto",
-                            color: "var(--chart-7)",
-                        },
-                        aguardandoResposta: {
-                            label: "Aguardando resposta",
-                            color: "var(--chart-8)",
-                        },
-                        emAnalise: {
-                            label: "Em análise",
-                            color: "var(--chart-9)",
-                        },
-                    }}
-                    cardTitle="Distribuição de Chamados"
-                    cardDescription="Gráfico de pizza mostrando a distribuição dos chamados"
-                    trendInfo="Distribuição uniforme entre os tipos de chamados"
-                    footerInfo="Dados acumulados de 2024"
-                />
-                <ChartPie
-                    chartData={[
-                        { tipochamado: "Alta", quantity: 120, fill: "var(--chart-10)" },
-                        { tipochamado: "Média", quantity: 200, fill: "var(--chart-7)" },
-                        { tipochamado: "Baixa", quantity: 80, fill: "var(--chart-6)" },
-                    ]}
-                    chartConfig={{
-                        quantity: {
-                            label: "Demandas",
-                        },
-                        alta: {
-                            label: "Alta",
-                            color: "var(--chart-6)",
-                        },
-                        media: {
-                            label: "Média",
-                            color: "var(--chart-7)",
-                        },
-                        baixa: {
-                            label: "Baixa",
-                            color: "var(--chart-8)",
-                        },
-                    }}
-                    cardTitle="Demandas por Nível de Prioridade"
-                    cardDescription="Gráfico de pizza mostrando as demandas por nível de prioridade"
-                    trendInfo="Alta prioridade representa maior parte das demandas"
-                    footerInfo="Dados acumulados de 2024"
-                />
-                <ChartLine
-                    chartData={[
-                        { month: "January", hardware: 50, software: 70, network: 40, security: 30, training: 20, consulting: 60, quantity: 10 },
-                        { month: "February", hardware: 60, software: 80, network: 50, security: 40, training: 30, consulting: 70, quantity: 20 },
-                        { month: "March", hardware: 70, software: 90, network: 60, security: 50, training: 40, consulting: 80, quantity: 30 },
-                        { month: "April", hardware: 80, software: 100, network: 70, security: 60, training: 50, consulting: 90, quantity: 40 },
-                        { month: "May", hardware: 90, software: 110, network: 80, security: 70, training: 60, consulting: 100, quantity: 50 },
-                        { month: "June", hardware: 100, software: 120, network: 90, security: 80, training: 70, consulting: 110, quantity: 60 },
-                        { month: "July", hardware: 110, software: 130, network: 100, security: 90, training: 80, consulting: 120, quantity: 70 },
-                    ]}
-                    chartConfig={{
-                        hardware: { label: "Hardware", color: "var(--chart-1)" },
-                        software: { label: "Software", color: "var(--chart-2)" },
-                        network: { label: "Network", color: "var(--chart-3)" },
-                        security: { label: "Security", color: "var(--chart-4)" },
-                        training: { label: "Training", color: "var(--chart-5)" },
-                        consulting: { label: "Consulting", color: "var(--chart-6)" },
-                        quantity: { label: "Other", color: "var(--chart-7)" },
-                    }}
-                    cardTitle="Demandas por Tipo de Helpdesk"
-                    cardDescription="Gráfico de linhas mostrando demandas típicas de helpdesk ao longo dos monthes"
-                    trendInfo="Tendência de aumento nas demandas de hardware e software"
-                    footerInfo="Dados acumulados de 2024"
-                />
-            </div>
-            <div className="flex flex-col gap-4">
-                <h2 className="title-h2 text-slate-950">Analistas e Demandas</h2>
-                <DashboardDataTable />
-            </div>
+            {loading ? (
+                <div className="absolute left-1/2 -translate-x-1/2 top-1/3 flex flex-col items-center justify-center w-full min-h-[400px]">
+                    <TableSpinner size={48} />
+                </div>
+            ) : (
+                <>
+                    <div className="flex flex-wrap gap-8 items-center w-[66rem]">
+                        {ticketsByStatus.map((status) => (
+                            <KpiCard
+                                key={status.idStatus}
+                                kpiTitle={status.nomeStatus}
+                                kpiValue={status.count.toString()}
+                                kpiLink={`/admin/assigned-tickets?status=${status.idStatus}`}
+                                kpiColor={status.hexCorPrimaria}
+                            />
+                        ))}
+                    </div>
+                    <h3 className="title-h3 text-slate-700">
+                        Parâmetros acumulados</h3>
+                    <div className="flex flex-wrap gap-8 items-center">
+                        <ChartBar
+                            chartData={closedTicketsByMonth}
+                            chartConfig={{
+                                desktop: {
+                                    label: "Resolvidos",
+                                    color: "var(--chart-6)",
+                                },
+                            }}
+                            cardTitle="Chamados Resolvidos por Mês"
+                            cardDescription="Gráfico de barras dos chamados resolvidos ao longo do ano"
+                            footerInfo={`Dados acumulados de ${selectedYearBar || "----"}`}
+                            years={closedTicketYears}
+                            selectedYear={selectedYearBar}
+                            onYearChange={setSelectedYearBar}
+                        />
+                        <ChartPie
+                            chartData={ticketsByStatusForYear}
+                            chartConfig={{
+                                quantity: {
+                                    label: "Chamados",
+                                },
+                            }}
+                            cardTitle="Distribuição de Chamados"
+                            cardDescription="Gráfico de pizza mostrando a distribuição dos chamados por status"
+                            footerInfo={`Dados acumulados de ${selectedYearPie || "----"}`}
+                            years={closedTicketYears}
+                            selectedYear={selectedYearPie}
+                            onYearChange={setSelectedYearPie}
+                        />
+                        <ChartPie
+                            chartData={ticketsByPriorityForYear}
+                            chartConfig={{
+                                quantity: {
+                                    label: "Demandas",
+                                },
+                            }}
+                            cardTitle="Demandas por Nível de Prioridade"
+                            cardDescription="Gráfico de pizza mostrando as demandas por nível de prioridade"
+                            footerInfo={`Dados acumulados de ${selectedYearPriorityPie || "----"}`}
+                            years={closedTicketYears}
+                            selectedYear={selectedYearPriorityPie}
+                            onYearChange={setSelectedYearPriorityPie}
+                        />
+                        <ChartLine
+                            chartData={[
+                                { month: "January", hardware: 50, software: 70, network: 40, security: 30, training: 20, consulting: 60, quantity: 10 },
+                                { month: "February", hardware: 60, software: 80, network: 50, security: 40, training: 30, consulting: 70, quantity: 20 },
+                                { month: "March", hardware: 70, software: 90, network: 60, security: 50, training: 40, consulting: 80, quantity: 30 },
+                                { month: "April", hardware: 80, software: 100, network: 70, security: 60, training: 50, consulting: 90, quantity: 40 },
+                                { month: "May", hardware: 90, software: 110, network: 80, security: 70, training: 60, consulting: 100, quantity: 50 },
+                                { month: "June", hardware: 100, software: 120, network: 90, security: 80, training: 70, consulting: 110, quantity: 60 },
+                                { month: "July", hardware: 110, software: 130, network: 100, security: 90, training: 80, consulting: 120, quantity: 70 },
+                            ]}
+                            chartConfig={{
+                                hardware: { label: "Hardware", color: "var(--chart-1)" },
+                                software: { label: "Software", color: "var(--chart-2)" },
+                                network: { label: "Network", color: "var(--chart-3)" },
+                                security: { label: "Security", color: "var(--chart-4)" },
+                                training: { label: "Training", color: "var(--chart-5)" },
+                                consulting: { label: "Consulting", color: "var(--chart-6)" },
+                                quantity: { label: "Other", color: "var(--chart-7)" },
+                            }}
+                            cardTitle="Demandas por Tipo de Helpdesk"
+                            cardDescription="Gráfico de linhas mostrando demandas típicas de helpdesk ao longo dos monthes"
+                            trendInfo="Tendência de aumento nas demandas de hardware e software"
+                            footerInfo="Dados acumulados de 2024"
+                        />
+                    </div>
+                    <div className="flex flex-col gap-4">
+                        <h3 className="title-h3 text-slate-700">
+                            Analistas e Demandas</h3>
+                        <DashboardDataTable />
+                    </div>
+                </>
+            )}
         </div>
     );
 }

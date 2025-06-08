@@ -178,7 +178,7 @@ export function DashboardDataTable() {
                     size="sm"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Desde
+                    Na equipe desde
                     <ArrowUpDown
                         className={`ml-2 ${column.getIsSorted() === "asc"
                             ? "rotate-0"
@@ -219,7 +219,7 @@ export function DashboardDataTable() {
                     <DropdownMenu open={filterMenuOpen} onOpenChange={setFilterMenuOpen}>
                         <DropdownMenuTrigger asChild>
                             <Button size="icon" variant="outline">
-                                <Filter className="w-4 h-4 mr-1" />
+                                <Filter className="w-4 h-4" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="min-w-[220px]">

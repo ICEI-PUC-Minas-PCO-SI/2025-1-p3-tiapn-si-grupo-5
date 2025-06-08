@@ -74,7 +74,7 @@ export function ChartBar({
                         >
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline" size="icon">
-                                    <Filter className="w-4 h-4 mr-1" />
+                                    <Filter className="w-4 h-4" />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
@@ -131,7 +131,7 @@ export function ChartBar({
                 </ChartContainer>
             </CardContent>
             <CardFooter className="flex-col items-start gap-2 text-sm">
-                <div className="text-muted-foreground leading-none">
+                <div className="leading-none text-slate-750 mt-3">
                     {footerInfo}
                 </div>
             </CardFooter>

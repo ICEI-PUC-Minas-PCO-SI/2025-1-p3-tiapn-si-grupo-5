@@ -1,9 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { TrendingUp } from "lucide-react"
 import { Label, Pie, PieChart } from "recharts"
-
 import {
     Card,
     CardContent,
@@ -17,8 +15,22 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-
 import type { ChartConfig } from "@/components/ui/chart"
+import {
+    DropdownMenu,
+    DropdownMenuTrigger,
+    DropdownMenuContent,
+} from "@/components/ui/dropdown-menu"
+import {
+    Select,
+    SelectTrigger,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectValue,
+} from "@/components/ui/select"
+import { Button } from "@/components/ui/button"
+import { Filter } from "lucide-react"
 
 export const description = "A simple pie chart"
 
@@ -33,8 +45,10 @@ interface ChartPieProps {
     chartConfig: ChartConfig
     cardTitle: string
     cardDescription: string
-    trendInfo: string
     footerInfo: string
+    years?: number[]
+    selectedYear?: string
+    onYearChange?: (year: string) => void
 }
 
 export function ChartPie({
@@ -42,9 +56,13 @@ export function ChartPie({
     chartConfig,
     cardTitle,
     cardDescription,
-    trendInfo,
     footerInfo,
+    years = [],
+    selectedYear = "",
+    onYearChange,
 }: ChartPieProps) {
+    const [filterMenuOpen, setFilterMenuOpen] = React.useState(false)
+
     const totalQuantity = React.useMemo(() => {
         return chartData.reduce((acc, curr) => acc + curr.quantity, 0)
     }, [chartData])
@@ -52,7 +70,46 @@ export function ChartPie({
     return (
         <Card className="flex flex-col w-128 h-112">
             <CardHeader className="items-center pb-0">
-                <CardTitle>{cardTitle}</CardTitle>
+                <div className="flex items-center justify-between w-full">
+                    <CardTitle>{cardTitle}</CardTitle>
+                    {years.length > 0 && onYearChange && (
+                        <DropdownMenu
+                            open={filterMenuOpen}
+                            onOpenChange={setFilterMenuOpen}
+                        >
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="icon">
+                                    <Filter className="w-4 h-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                                align="end"
+                                className="min-w-[120px]"
+                            >
+                                <div className="px-4 py-2 font-semibold text-sm text-gray-700">
+                                    Ano
+                                </div>
+                                <Select
+                                    value={selectedYear}
+                                    onValueChange={onYearChange}
+                                >
+                                    <SelectTrigger className="w-full mb-2">
+                                        <SelectValue placeholder="Ano" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            {years.map((year) => (
+                                                <SelectItem key={year} value={String(year)}>
+                                                    {year}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    )}
+                </div>
                 <CardDescription>{cardDescription}</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
@@ -105,11 +162,8 @@ export function ChartPie({
                     </PieChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col gap-2 text-sm">
-                <div className="flex items-center gap-2 leading-none font-medium">
-                    {trendInfo} <TrendingUp className="h-4 w-4" />
-                </div>
-                <div className="text-muted-foreground leading-none">
+            <CardFooter className="flex-col items-start gap-2 text-sm">
+                <div className="leading-none text-slate-750">
                     {footerInfo}
                 </div>
             </CardFooter>

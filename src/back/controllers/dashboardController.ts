@@ -47,14 +47,4 @@ export class DashboardController {
             res.status(500).json({ error: "Erro ao buscar chamados por analista" });
         }
     }
-
-    async getClosedTickets(req: Request, res: Response) {
-        try {
-            const tickets = await dashboardService.getClosedTickets();
-            res.json(tickets);
-        } catch (error) {
-            console.log("Erro ao buscar chamados encerrados:", error)
-            res.status(500).json({ error: "Erro ao buscar chamados encerrados" });
-        }
-    }
 }
