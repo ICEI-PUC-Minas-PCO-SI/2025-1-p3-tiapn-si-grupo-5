@@ -11,7 +11,7 @@ import {
     type Row,
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import { ArrowUpDown, ChevronLeft, ChevronRight, Filter, XCircle } from "lucide-react";
 import { TableSpinner } from "@/components/ui/spinner";
 import { Searchbar } from "@/components/ui/SearchBar";
 import {
@@ -205,6 +205,12 @@ export function DashboardDataTable() {
         new Set(data.map(d => d.principalAtividade).filter(a => a && a !== "-"))
     );
 
+    // Função para limpar filtro de principal atividade
+    const clearFilters = () => {
+        setPrincipalAtividadeFilter("__all__");
+        setFilterMenuOpen(false);
+    };
+
     return (
         <div className="space-y-4 w-full">
             <div className="flex justify-between">
@@ -236,6 +242,18 @@ export function DashboardDataTable() {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
+                            <div className="flex justify-center px-2 pb-2">
+                                <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    onClick={clearFilters}
+                                    className="flex items-center gap-1"
+                                    disabled={principalAtividadeFilter === "__all__"}
+                                >
+                                    <XCircle className="w-4 h-4" />
+                                    Limpar filtros
+                                </Button>
+                            </div>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

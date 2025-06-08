@@ -16,6 +16,7 @@ export class DashboardRoutes {
         this.router.get("/dashboard/tickets-by-status", this.dashboardController.getTicketsByStatus.bind(this.dashboardController));
         this.router.get("/dashboard/tickets-by-priority", this.dashboardController.getTicketsByPriority.bind(this.dashboardController));
         this.router.get("/dashboard/tickets-by-analyst", this.dashboardController.getTicketsByAnalyst.bind(this.dashboardController));
+        this.router.get("/dashboard/closed-tickets", this.dashboardController.getClosedTickets.bind(this.dashboardController));
     }
 
     public getRouter(): Router {

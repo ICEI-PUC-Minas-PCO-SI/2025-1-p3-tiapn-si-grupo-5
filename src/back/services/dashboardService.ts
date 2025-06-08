@@ -25,4 +25,14 @@ export class DashboardService {
             where: { idAnalista }
         });
     }
+
+    async getClosedTickets() {
+        return prisma.chamado.findMany({
+            where: {
+                dataFechamento: {
+                    not: null
+                }
+            }
+        });
+    }
 }
