@@ -175,4 +175,14 @@ export class UserController {
             return;
         }
     }
+
+    async getAnalysts(req: Request, res: Response) {
+        try {
+            const analysts = await userService.getAnalysts();
+            res.json(analysts);
+        } catch (error) {
+            console.error("Erro ao buscar analistas:", error);
+            res.status(500).json({ error: "Erro ao buscar analistas" });
+        }
+    }
 }

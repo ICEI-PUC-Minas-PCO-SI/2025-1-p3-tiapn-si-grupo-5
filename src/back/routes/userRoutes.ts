@@ -54,6 +54,7 @@ export class UserRoutes {
             this.userController.loginUser.bind(this.userController)
         );
         this.router.get("/users", this.userController.getAllUsers.bind(this.userController));
+        this.router.get("/users/analysts", this.userController.getAnalysts.bind(this.userController));
         this.router.put(
             "/users/:idUsuario",
             validatePayload(userUpdateSchema),

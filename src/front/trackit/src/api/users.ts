@@ -54,6 +54,18 @@ export interface IGetUser {
     ativo: number;
 }
 
+export interface IAnalyst {
+    idUsuario: number;
+    nomeUsuario: string;
+    matricula: string;
+    idTipoUsuario: number;
+    idGerencia: number;
+    ativo: number;
+    email: string;
+    ramal: string;
+    dataCadastro: string;
+}
+
 export async function registerNewUser(payload: IRegisterUserPayload): Promise<Response> {
     return fetch(`${API_BASE_URL}/users/register`, {
         method: "POST",
@@ -144,4 +156,10 @@ export async function updateProfileUser(
         },
         body: JSON.stringify(payload),
     });
+}
+
+export async function getAllAnalysts(): Promise<IAnalyst[]> {
+    const response = await fetch(`${API_BASE_URL}/users/analysts`);
+    if (!response.ok) throw new Error("Erro ao buscar analistas");
+    return response.json();
 }

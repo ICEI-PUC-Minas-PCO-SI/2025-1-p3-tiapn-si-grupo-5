@@ -105,4 +105,21 @@ export class UserService {
             where: { matricula }
         });
     }
+
+    async getAnalysts() {
+        return prisma.usuario.findMany({
+            where: { idTipoUsuario: 2 },
+            select: {
+                idUsuario: true,
+                nomeUsuario: true,
+                matricula: true,
+                idTipoUsuario: true,
+                idGerencia: true,
+                ativo: true,
+                email: true,
+                ramal: true,
+                dataCadastro: true,
+            }
+        });
+    }
 }
