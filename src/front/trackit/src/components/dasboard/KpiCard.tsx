@@ -1,29 +1,30 @@
-import { Link } from "react-router";
+import { Button } from "@/components/ui/button";
+import { Link }  from "react-router-dom"; 
 
-export function KpiCard({ kpiTitle, kpiValue, kpiLink, kpiColor }: {
+interface KpiCardProps {
     kpiTitle: string;
     kpiValue: string | number;
-    kpiLink?: string;
     kpiColor?: string;
-}) {
+    kpiLink?: string;
+    onDetailsClick?: () => void;
+}
+
+export function KpiCard({ kpiTitle, kpiValue, kpiColor, onDetailsClick }: KpiCardProps) {
     return (
-        <div className="w-[32rem] flex items-center justify-start gap-4 p-4 bg-white rounded-lg shadow-sm border border-slate-200 relative">
-            <span
-                className="w-2 absolute top-0 left-0 bottom-0 rounded-l-md"
-                style={{ backgroundColor: kpiColor }}
-            ></span>
-            <div className="flex flex-col items-start justify-start gap-2 pl-4">
-                <h3 className="title-h3 text-slate-700">{kpiTitle}</h3>
-                <p className="title-h2 text-slate-800"
-                >
-                    {kpiValue}
-                </p>
-                {kpiLink && (
-                    <Link to={kpiLink} className="paragraph-base hover:underline">
-                        Ver detalhes
-                    </Link>
-                )}
-            </div>
+        <div
+            className="rounded-lg shadow-md p-6 flex flex-col items-start min-w-[512px] max-w-fit bg-white"
+            style={kpiColor ? { borderLeft: `8px solid ${kpiColor}` } : {}}
+        >
+            <span className="text-lg font-semibold mb-2">{kpiTitle}</span>
+            <span className="text-3xl font-bold mb-4" style={kpiColor ? { color: kpiColor } : {}}>
+                {kpiValue}
+            </span>
+            <Link
+                className="p-0 h-auto text-sm"
+                navigate={onDetailsClick}
+            >
+                Ver detalhes
+            </Link>
         </div>
     );
 }

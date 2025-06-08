@@ -1,10 +1,38 @@
-import { KpiCard } from "@/components/dasboard/KpiCard"
-import { ChartBar } from "@/components/ui/ChartBar"
-import { ChartPie } from "@/components/ui/ChartPie"
-import { ChartLine } from "@/components/ui/ChartLine"
-import { DashboardDataTable } from "@/components/dasboard/DashboardDataTable"
+import { useEffect, useState } from "react";
+import { KpiCard } from "@/components/dasboard/KpiCard";
+import { ChartBar } from "@/components/ui/ChartBar";
+import { ChartPie } from "@/components/ui/ChartPie";
+import { ChartLine } from "@/components/ui/ChartLine";
+import { DashboardDataTable } from "@/components/dasboard/DashboardDataTable";
+import { getAllStatus, type IStatus } from "@/api/status";
+import { getAllTickets, type ITicket } from "@/api/ticket";
+import { useNavigate } from "react-router-dom";
 
 export function Dashboard() {
+    const [statusList, setStatusList] = useState<IStatus[]>([]);
+    const [tickets, setTickets] = useState<ITicket[]>([]);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        setLoading(true);
+        Promise.all([getAllStatus(), getAllTickets()])
+            .then(([statuses, tickets]) => {
+                setStatusList(statuses);
+                setTickets(tickets);
+            })
+            .finally(() => setLoading(false));
+    }, []);
+
+    // Conta tickets por status
+    const ticketsByStatus = statusList.map((status) => {
+        const count = tickets.filter(t => t.idStatus === status.idStatus).length;
+        return {
+            ...status,
+            count,
+        };
+    });
+
     return (
         <div className="flex flex-col h-full gap-8 w-fit">
             <div className="flex gap-4 justify-between">
@@ -13,30 +41,18 @@ export function Dashboard() {
                 </h1>
             </div>
             <div className="flex flex-wrap gap-8 items-center w-[66rem]">
-                <KpiCard
-                    kpiTitle="Chamados resolvidos"
-                    kpiValue="150"
-                    kpiLink="../"
-                    kpiColor="#16A34A"
-                />
-                <KpiCard
-                    kpiTitle="Chamados em aberto"
-                    kpiValue="150"
-                    kpiLink="../"
-                    kpiColor="#64748B"
-                />
-                <KpiCard
-                    kpiTitle="Chamados aguardando resposta"
-                    kpiValue="150"
-                    kpiLink="../"
-                    kpiColor="#0EA5E9"
-                />
-                <KpiCard
-                    kpiTitle="Chamados em análise"
-                    kpiValue="150"
-                    kpiLink="../"
-                    kpiColor="#FACC15"
-                />
+                {ticketsByStatus.map((status) => (
+                    <KpiCard
+                        key={status.idStatus}
+                        kpiTitle={status.nomeStatus}
+                        kpiValue={loading ? "..." : status.count.toString()}
+                        kpiLink="#"
+                        kpiColor={status.hexCorPrimaria}
+                        onDetailsClick={() =>
+                            navigate(`/admin/assigned-tickets?status=${status.idStatus}`)
+                        }
+                    />
+                ))}
             </div>
             <div className="flex flex-wrap gap-8 items-center">
                 <ChartBar
@@ -156,5 +172,5 @@ export function Dashboard() {
                 <DashboardDataTable />
             </div>
         </div>
-    )
+    );
 }

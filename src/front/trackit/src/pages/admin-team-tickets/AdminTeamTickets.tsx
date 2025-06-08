@@ -63,6 +63,7 @@ export function AdminTeamTickets() {
     // Filtros controlados por query params
     const search = searchParams.get("search") || "";
     const priorityFilter = searchParams.get("priority") || "__all__";
+    const statusFilter = searchParams.get("status") || "__all__";
 
     useEffect(() => {
         setLoading(true);
@@ -149,8 +150,13 @@ export function AdminTeamTickets() {
                 String(ticket.prioridade.idPrioridade) === priorityFilter
             );
         }
+        if (statusFilter && statusFilter !== "__all__") {
+            data = data.filter((ticket) =>
+                String(ticket.status.idStatus) === statusFilter
+            );
+        }
         setFilteredData(data);
-    }, [search, tickets, priorityFilter]);
+    }, [search, tickets, priorityFilter, statusFilter]);
 
     // Prioridades presentes nos chamados
     const prioritiesInTickets = Array.from(
