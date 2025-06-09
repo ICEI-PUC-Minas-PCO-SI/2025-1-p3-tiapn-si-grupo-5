@@ -6,20 +6,19 @@ function randomItem<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function randomDate2024() {
-    const year = 2024;
-    const month = Math.floor(Math.random() * 12);
-    const day = Math.floor(Math.random() * 28) + 1;
-    const hour = Math.floor(Math.random() * 24);
-    const min = Math.floor(Math.random() * 60);
-    return new Date(year, month, day, hour, min);
-}
-
-function randomDate2025() {
-    const start = new Date(2025, 0, 1).getTime();
-    const end = new Date(2025, 5, 6, 23, 59, 59).getTime();
-    const date = new Date(start + Math.random() * (end - start));
-    return date;
+// Gera datas igualmente distribuídas entre dois meses/anos
+function generateDistributedDates(start: Date, end: Date, count: number): Date[] {
+    const dates: Date[] = [];
+    const startTime = start.getTime();
+    const endTime = end.getTime();
+    const step = (endTime - startTime) / count;
+    for (let i = 0; i < count; i++) {
+        // Espalha dentro do intervalo, mas com um pequeno random para não ficar tudo igual
+        const base = startTime + i * step;
+        const jitter = Math.floor(Math.random() * (step * 0.7)); // até 70% do step
+        dates.push(new Date(base + jitter));
+    }
+    return dates;
 }
 
 const assuntos = [
@@ -84,13 +83,30 @@ async function main() {
         throw new Error("Usuários, tipos de chamado, prioridades, status ou analistas não encontrados.");
     }
 
-    const ticketsToCreate2024 = 450;
-    const ticketsToCreate2025 = 150;
+    const ticketsToCreate2024 = 4500;
+    const ticketsToCreate2025 = 2412;
     const protocolosUsados = new Set<string>();
+
+    // Contadores sequenciais por ano para garantir consistência
+    let seq2024 = 1;
+    let seq2025 = 1;
 
     const statusConcluido = statuses.find(s => s.nomeStatus === "Concluído");
     if (!statusConcluido) throw new Error('Status "Concluído" não encontrado.');
     const nonConcluidoStatuses = statuses.filter(s => s.nomeStatus !== "Concluído");
+
+    // Gera datas igualmente distribuídas de 01/01/2024 até 31/12/2024 para 2024
+    const sequencialDatas2024 = generateDistributedDates(
+        new Date(2024, 0, 1, 8, 0, 0),
+        new Date(2024, 11, 31, 18, 0, 0),
+        ticketsToCreate2024
+    );
+    // Gera datas igualmente distribuídas de 01/01/2025 até 31/05/2025 para 2025
+    const sequencialDatas2025 = generateDistributedDates(
+        new Date(2025, 0, 1, 8, 0, 0),
+        new Date(2025, 4, 31, 18, 0, 0),
+        ticketsToCreate2025
+    );
 
     // 2024: todos concluídos, todos com analista e status
     for (let i = 0; i < ticketsToCreate2024; i++) {
@@ -101,7 +117,7 @@ async function main() {
 
         const assunto = randomItem(assuntos);
         const descricao = randomItem(descricoes);
-        const dataAbertura = randomDate2024();
+        const dataAbertura = sequencialDatas2024[i];
 
         // Sempre concluído
         const statusId = statusConcluido.idStatus;
@@ -110,9 +126,21 @@ async function main() {
         let dataFechamento = new Date(dataAbertura.getTime() + delta);
         if (dataFechamento.getFullYear() > 2024) dataFechamento = new Date(2024, 11, 31, 23, 59, 59);
 
-        const chamado = await prisma.chamado.create({
+        // Gera protocolo consistente ANTES de criar o chamado
+        const ano = dataAbertura.getFullYear().toString().slice(-2);
+        const idZero = seq2024.toString().padStart(6, "0");
+        let protocolo = `${idZero}${ano}`;
+        let sufixo = 1;
+        while (protocolosUsados.has(protocolo) || await prisma.chamado.findUnique({ where: { protocolo } })) {
+            protocolo = `${idZero}${ano}${sufixo}`;
+            sufixo++;
+        }
+        protocolosUsados.add(protocolo);
+        seq2024++;
+
+        await prisma.chamado.create({
             data: {
-                protocolo: "TEMP",
+                protocolo,
                 assunto,
                 descricao,
                 dataAbertura,
@@ -124,21 +152,6 @@ async function main() {
                 idAnalista: analista.idUsuario
             }
         });
-
-        const ano = dataAbertura.getFullYear().toString().slice(-2);
-        const idZero = chamado.idChamado.toString().padStart(6, "0");
-        let protocolo = `${idZero}${ano}`;
-        let sufixo = 1;
-        while (protocolosUsados.has(protocolo) || await prisma.chamado.findUnique({ where: { protocolo } })) {
-            protocolo = `${idZero}${ano}${sufixo}`;
-            sufixo++;
-        }
-        protocolosUsados.add(protocolo);
-
-        await prisma.chamado.update({
-            where: { idChamado: chamado.idChamado },
-            data: { protocolo }
-        });
     }
 
     // 2025: 70% concluídos (com analista e status concluído), 15% não concluídos mas com analista e status aleatório (não concluído), 15% sem analista e sem status
@@ -147,7 +160,7 @@ async function main() {
         const tipo = randomItem(tipos);
         const prioridade = randomItem(prioridades);
 
-        const dataAbertura = randomDate2025();
+        const dataAbertura = sequencialDatas2025[i];
         const assunto = randomItem(assuntos);
         const descricao = randomItem(descricoes);
 
@@ -176,9 +189,21 @@ async function main() {
             dataFechamento = null;
         }
 
-        const chamado = await prisma.chamado.create({
+        // Gera protocolo consistente ANTES de criar o chamado
+        const ano = dataAbertura.getFullYear().toString().slice(-2);
+        const idZero = seq2025.toString().padStart(6, "0");
+        let protocolo = `${idZero}${ano}`;
+        let sufixo = 1;
+        while (protocolosUsados.has(protocolo) || await prisma.chamado.findUnique({ where: { protocolo } })) {
+            protocolo = `${idZero}${ano}${sufixo}`;
+            sufixo++;
+        }
+        protocolosUsados.add(protocolo);
+        seq2025++;
+
+        await prisma.chamado.create({
             data: {
-                protocolo: "TEMP",
+                protocolo,
                 assunto,
                 descricao,
                 dataAbertura,
@@ -189,21 +214,6 @@ async function main() {
                 idStatus: statusId,
                 idAnalista: idAnalista
             }
-        });
-
-        const ano = dataAbertura.getFullYear().toString().slice(-2);
-        const idZero = chamado.idChamado.toString().padStart(6, "0");
-        let protocolo = `${idZero}${ano}`;
-        let sufixo = 1;
-        while (protocolosUsados.has(protocolo) || await prisma.chamado.findUnique({ where: { protocolo } })) {
-            protocolo = `${idZero}${ano}${sufixo}`;
-            sufixo++;
-        }
-        protocolosUsados.add(protocolo);
-
-        await prisma.chamado.update({
-            where: { idChamado: chamado.idChamado },
-            data: { protocolo }
         });
     }
 
