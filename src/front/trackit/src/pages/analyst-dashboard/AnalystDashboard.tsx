@@ -10,7 +10,6 @@ import { getAllPriorities, type IPriority } from "@/api/priority";
 import { getAllTicketTypes, type ITicketType } from "@/api/tickettype";
 import { getTicketsByStatus, getTicketsByPriority } from "@/api/dashboard";
 import { useUser } from "@/contexts/UserContext";
-import { NavLink } from "react-router-dom";
 import type { ITicket } from "@/api/ticket";
 
 export function AnalystDashboard() {
@@ -192,17 +191,13 @@ export function AnalystDashboard() {
                 <>
                     <div className="flex flex-wrap gap-8 items-center w-[66rem]">
                         {ticketsByStatus.map(({ status, count }) => (
-                            <NavLink
+                            <KpiCard
                                 key={status.idStatus}
-                                to={`/analyst/my-tickets?status=${status.idStatus}`}
-                                style={{ textDecoration: "none" }}
-                            >
-                                <KpiCard
-                                    kpiTitle={status.nomeStatus}
-                                    kpiValue={count.toString()}
-                                    kpiColor={status.hexCorPrimaria}
-                                />
-                            </NavLink>
+                                kpiTitle={status.nomeStatus}
+                                kpiValue={count.toString()}
+                                kpiColor={status.hexCorPrimaria}
+                                kpiLink={`/analyst/my-tickets?status=${status.idStatus}`}
+                            />
                         ))}
                     </div>
                     <h3 className="title-h3 text-slate-700">
