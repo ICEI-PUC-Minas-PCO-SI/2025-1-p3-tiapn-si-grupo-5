@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getAllPriorities } from "@/api/priority";
 import type { IPriority } from "@/api/priority";
@@ -57,12 +57,31 @@ export function UserTickets() {
     const [priorityFilterOpen, setPriorityFilterOpen] = useState(false);
     const [loading, setLoading] = useState(true);
 
+    // Filtro por ano de abertura
     // Query params
     const [searchParams, setSearchParams] = useSearchParams();
 
     // Filtros controlados por query params
     const search = searchParams.get("search") || "";
     const priorityFilter = searchParams.get("priority") || "__all__";
+    const yearAberturaFilter = searchParams.get("yearAbertura") || "__all__";
+
+    // Anos disponíveis de abertura
+    const anosAberturaDisponiveis = useMemo(() => {
+        return Array.from(
+            new Set(
+                tickets
+                    .map(t => {
+                        if (!t.dataAbertura) return undefined;
+                        const year = new Date(t.dataAbertura).getFullYear();
+                        return isNaN(year) ? undefined : year;
+                    })
+                    .filter((y): y is number => typeof y === "number")
+            )
+        )
+            .sort((a, b) => b - a)
+            .map(String);
+    }, [tickets]);
 
     useEffect(() => {
         setLoading(true);
@@ -151,8 +170,16 @@ export function UserTickets() {
                 String(ticket.prioridade.idPrioridade) === priorityFilter
             );
         }
+        // Filtro por ano de abertura
+        if (yearAberturaFilter && yearAberturaFilter !== "__all__") {
+            data = data.filter((ticket) => {
+                if (!ticket.dataAbertura) return false;
+                const year = new Date(ticket.dataAbertura).getFullYear();
+                return String(year) === yearAberturaFilter;
+            });
+        }
         setFilteredData(data);
-    }, [search, tickets, priorityFilter]);
+    }, [search, tickets, priorityFilter, yearAberturaFilter]);
 
     // Prioridades presentes nos chamados
     const prioritiesInTickets = Array.from(
@@ -162,10 +189,11 @@ export function UserTickets() {
         prioritiesInTickets.includes(p.idPrioridade)
     );
 
-    // Limpar filtro de prioridade e fechar modal
-    const clearPriorityFilter = () => {
+    // Limpar filtros (prioridade e ano) e fechar modal
+    const clearFilters = () => {
         setSearchParams(params => {
             params.delete("priority");
+            params.delete("yearAbertura");
             return params;
         });
         setPriorityFilterOpen(false);
@@ -178,6 +206,18 @@ export function UserTickets() {
                 params.delete("priority");
             } else {
                 params.set("priority", value);
+            }
+            return params;
+        });
+    };
+
+    // Handler para Select de ano de abertura
+    const handleYearAberturaChange = (value: string) => {
+        setSearchParams(params => {
+            if (value === "__all__") {
+                params.delete("yearAbertura");
+            } else {
+                params.set("yearAbertura", value);
             }
             return params;
         });
@@ -233,13 +273,33 @@ export function UserTickets() {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
+                            {/* Novo: filtro por ano de abertura */}
+                            <div className="px-4 py-2 font-semibold text-sm text-gray-700">Ano de Abertura</div>
+                            <Select value={yearAberturaFilter} onValueChange={handleYearAberturaChange}>
+                                <SelectTrigger className="w-full mb-2">
+                                    <SelectValue placeholder="Todos" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="__all__">Todos</SelectItem>
+                                        {anosAberturaDisponiveis.map((ano) => (
+                                            <SelectItem key={ano} value={ano}>
+                                                {ano}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                             <div className="flex justify-center px-2 pb-2">
                                 <Button
                                     size="sm"
                                     variant="ghost"
-                                    onClick={clearPriorityFilter}
+                                    onClick={clearFilters}
                                     className="flex items-center gap-1"
-                                    disabled={priorityFilter === "__all__"}
+                                    disabled={
+                                        priorityFilter === "__all__" &&
+                                        yearAberturaFilter === "__all__"
+                                    }
                                 >
                                     <XCircle className="w-4 h-4" />
                                     Limpar filtros
