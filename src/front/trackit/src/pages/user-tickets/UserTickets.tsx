@@ -80,7 +80,7 @@ export function UserTickets() {
                     .map((t) => {
                         let formattedProtocolo = "";
                         if (t.protocolo && t.protocolo.length === 8) {
-                            const num = t.protocolo.slice(2, 6);
+                            const num = t.protocolo.slice(0, 6);
                             const ano = t.protocolo.slice(6, 8);
                             formattedProtocolo = `#${num}/${ano}`;
                         } else {

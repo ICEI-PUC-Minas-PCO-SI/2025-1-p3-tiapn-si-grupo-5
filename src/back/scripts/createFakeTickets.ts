@@ -84,12 +84,22 @@ async function main() {
     }
 
     const ticketsToCreate2024 = 4500;
-    const ticketsToCreate2025 = 2412;
+    const ticketsToCreate2025 = 2200;
+    const totalTickets = ticketsToCreate2024 + ticketsToCreate2025;
     const protocolosUsados = new Set<string>();
 
     // Contadores sequenciais por ano para garantir consistência
     let seq2024 = 1;
     let seq2025 = 1;
+
+    // Progresso global
+    let createdCount = 0;
+    let progressInterval: NodeJS.Timeout | null = null;
+
+    // Inicia o log de progresso a cada 5 segundos
+    progressInterval = setInterval(() => {
+        console.log(`${createdCount}/${totalTickets} chamados criados...`);
+    }, 5000);
 
     const statusConcluido = statuses.find(s => s.nomeStatus === "Concluído");
     if (!statusConcluido) throw new Error('Status "Concluído" não encontrado.');
@@ -152,6 +162,7 @@ async function main() {
                 idAnalista: analista.idUsuario
             }
         });
+        createdCount++;
     }
 
     // 2025: 70% concluídos (com analista e status concluído), 15% não concluídos mas com analista e status aleatório (não concluído), 15% sem analista e sem status
@@ -215,9 +226,12 @@ async function main() {
                 idAnalista: idAnalista
             }
         });
+        createdCount++;
     }
 
-    console.log(`Criados ${ticketsToCreate2024 + ticketsToCreate2025} chamados de teste.`);
+    // Limpa o timer e mostra o total ao final
+    if (progressInterval) clearInterval(progressInterval);
+    console.log(`Criados ${createdCount} chamados de teste.`);
 }
 
 main()
