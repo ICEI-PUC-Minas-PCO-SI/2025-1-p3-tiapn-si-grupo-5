@@ -76,48 +76,39 @@ async function main() {
     const tipos = await prisma.tipochamado.findMany({ where: { ativo: 1 } });
     const prioridades = await prisma.prioridadechamado.findMany({ where: { ativo: 1 } });
     const statuses = await prisma.statuschamado.findMany({ where: { ativo: 1 } });
+    const analysts = await prisma.usuario.findMany({
+        where: { idTipoUsuario: 2, ativo: 1 }
+    });
 
-    if (!users.length || !tipos.length || !prioridades.length || !statuses.length) {
-        throw new Error("Usuários, tipos de chamado, prioridades ou status não encontrados.");
+    if (!users.length || !tipos.length || !prioridades.length || !statuses.length || !analysts.length) {
+        throw new Error("Usuários, tipos de chamado, prioridades, status ou analistas não encontrados.");
     }
 
     const ticketsToCreate2024 = 450;
     const ticketsToCreate2025 = 150;
     const protocolosUsados = new Set<string>();
 
-    // Função para sortear status (com chance maior de não ser concluído)
-    function randomStatusId() {
-        // Deixe "Concluído" menos frequente
-        const nonConcluido = statuses.filter(s => s.nomeStatus !== "Concluído");
-        // 70% não concluído, 30% concluído
-        if (Math.random() < 0.7) {
-            return randomItem(nonConcluido).idStatus;
-        } else {
-            const concluidos = statuses.filter(s => s.nomeStatus === "Concluído");
-            return concluidos.length > 0 ? randomItem(concluidos).idStatus : randomItem(nonConcluido).idStatus;
-        }
-    }
+    const statusConcluido = statuses.find(s => s.nomeStatus === "Concluído");
+    if (!statusConcluido) throw new Error('Status "Concluído" não encontrado.');
+    const nonConcluidoStatuses = statuses.filter(s => s.nomeStatus !== "Concluído");
 
-    // Cria tickets para 2024
+    // 2024: todos concluídos, todos com analista e status
     for (let i = 0; i < ticketsToCreate2024; i++) {
         const solicitante = randomItem(users);
         const tipo = randomItem(tipos);
         const prioridade = randomItem(prioridades);
-        const statusId = randomStatusId();
+        const analista = randomItem(analysts);
 
         const assunto = randomItem(assuntos);
         const descricao = randomItem(descricoes);
         const dataAbertura = randomDate2024();
 
-        // Se status for concluído, define dataFechamento depois de dataAbertura
-        let dataFechamento: Date | null = null;
-        if (statuses.find(s => s.idStatus === statusId)?.nomeStatus === "Concluído") {
-            // Entre 1h e 15 dias depois
-            const delta = Math.floor(Math.random() * (15 * 24 * 60 * 60 * 1000 - 60 * 60 * 1000)) + 60 * 60 * 1000;
-            dataFechamento = new Date(dataAbertura.getTime() + delta);
-            // Garante que não passa de 2024
-            if (dataFechamento.getFullYear() > 2024) dataFechamento = new Date(2024, 11, 31, 23, 59, 59);
-        }
+        // Sempre concluído
+        const statusId = statusConcluido.idStatus;
+        // Entre 1h e 15 dias depois
+        const delta = Math.floor(Math.random() * (15 * 24 * 60 * 60 * 1000 - 60 * 60 * 1000)) + 60 * 60 * 1000;
+        let dataFechamento = new Date(dataAbertura.getTime() + delta);
+        if (dataFechamento.getFullYear() > 2024) dataFechamento = new Date(2024, 11, 31, 23, 59, 59);
 
         const chamado = await prisma.chamado.create({
             data: {
@@ -129,7 +120,8 @@ async function main() {
                 idSolicitante: solicitante.idUsuario,
                 idTipoChamado: tipo.idTipoChamado,
                 idPrioridade: prioridade.idPrioridade,
-                idStatus: statusId
+                idStatus: statusId,
+                idAnalista: analista.idUsuario
             }
         });
 
@@ -149,25 +141,39 @@ async function main() {
         });
     }
 
-    // Cria tickets para 2025
+    // 2025: 70% concluídos (com analista e status concluído), 15% não concluídos mas com analista e status aleatório (não concluído), 15% sem analista e sem status
     for (let i = 0; i < ticketsToCreate2025; i++) {
         const solicitante = randomItem(users);
         const tipo = randomItem(tipos);
         const prioridade = randomItem(prioridades);
-        const statusId = randomStatusId();
 
+        const dataAbertura = randomDate2025();
         const assunto = randomItem(assuntos);
         const descricao = randomItem(descricoes);
-        const dataAbertura = randomDate2025();
 
+        let statusId: number | null = null;
         let dataFechamento: Date | null = null;
-        if (statuses.find(s => s.idStatus === statusId)?.nomeStatus === "Concluído") {
-            // Entre 1h e 15 dias depois
+        let idAnalista: number | null = null;
+
+        const sorteio = Math.random();
+        if (sorteio < 0.7) {
+            // 70% concluído
+            statusId = statusConcluido.idStatus;
+            idAnalista = randomItem(analysts).idUsuario;
             const delta = Math.floor(Math.random() * (15 * 24 * 60 * 60 * 1000 - 60 * 60 * 1000)) + 60 * 60 * 1000;
             dataFechamento = new Date(dataAbertura.getTime() + delta);
-            // Garante que não passa de 06/06/2025
             const maxDate = new Date(2025, 5, 6, 23, 59, 59);
             if (dataFechamento > maxDate) dataFechamento = maxDate;
+        } else if (sorteio < 0.85) {
+            // 15% não concluído, mas com analista e status aleatório (não concluído)
+            statusId = randomItem(nonConcluidoStatuses).idStatus;
+            idAnalista = randomItem(analysts).idUsuario;
+            dataFechamento = null;
+        } else {
+            // 15% sem analista e sem status
+            statusId = null;
+            idAnalista = null;
+            dataFechamento = null;
         }
 
         const chamado = await prisma.chamado.create({
@@ -180,7 +186,8 @@ async function main() {
                 idSolicitante: solicitante.idUsuario,
                 idTipoChamado: tipo.idTipoChamado,
                 idPrioridade: prioridade.idPrioridade,
-                idStatus: statusId
+                idStatus: statusId,
+                idAnalista: idAnalista
             }
         });
 

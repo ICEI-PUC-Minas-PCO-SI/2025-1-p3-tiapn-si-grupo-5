@@ -262,7 +262,7 @@ export function DashboardDataTable() {
                 {loading ? (
                     <TableSpinner />
                 ) : (
-                    <table className="w-full border rounded bg-white">
+                    <table className="w-full border rounded bg-white text-sm">
                         <thead>
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <tr key={headerGroup.id} className="bg-gray-100 text-gray-700">

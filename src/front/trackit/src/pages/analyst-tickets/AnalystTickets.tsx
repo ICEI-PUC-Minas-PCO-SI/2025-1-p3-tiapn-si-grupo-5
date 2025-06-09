@@ -26,13 +26,24 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { TableSpinner } from "@/components/ui/spinner";
+import { getAllStatus } from "@/api/status";
+import type { IStatus } from "@/api/status";
 
 export function AnalystTickets() {
-  const [tickets, setTickets] = useState<AssignTicketTableRow[]>([]);
-  const [filteredData, setFilteredData] = useState<AssignTicketTableRow[]>([]);
+  type TicketWithStatus = AssignTicketTableRow & {
+    status: {
+      idStatus: number;
+      nomeStatus: string;
+      hexCorPrimaria: string;
+    };
+  };
+
+  const [tickets, setTickets] = useState<TicketWithStatus[]>([]);
+  const [filteredData, setFilteredData] = useState<TicketWithStatus[]>([]);
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [allPriorities, setAllPriorities] = useState<IPriority[]>([]);
   const [priorityFilterOpen, setPriorityFilterOpen] = useState(false);
+  const [allStatus, setAllStatus] = useState<IStatus[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Query params
@@ -41,16 +52,18 @@ export function AnalystTickets() {
   // Filtros controlados por query params
   const search = searchParams.get("search") || "";
   const priorityFilter = searchParams.get("priority") || "__all__";
+  const statusFilter = searchParams.get("status") || "__all__";
 
   useEffect(() => {
     setLoading(true);
-    Promise.all([getMyTickets(), getAllPriorities()])
-      .then(([ticketsData, priorities]: [ITicket[], IPriority[]]) => {
+    Promise.all([getMyTickets(), getAllPriorities(), getAllStatus()])
+      .then(([ticketsData, priorities, statuses]: [ITicket[], IPriority[], IStatus[]]) => {
         const priorityMap = new Map<number, IPriority>();
         priorities.forEach((p) => priorityMap.set(p.idPrioridade, p));
         setAllPriorities(priorities);
+        setAllStatus(statuses);
 
-        const mapped: AssignTicketTableRow[] = ticketsData.map((t) => {
+        const mapped: TicketWithStatus[] = ticketsData.map((t) => {
           let formattedProtocolo = "";
           if (t.protocolo && t.protocolo.length === 8) {
             const num = t.protocolo.slice(2, 6);
@@ -64,6 +77,12 @@ export function AnalystTickets() {
             nomePrioridade: "Não Definida",
             hexCorPrimaria: "#888"
           };
+          // Status pode ser null
+          const statusObj = statuses.find(s => s.idStatus === t.idStatus) || {
+            idStatus: t.idStatus ?? 0,
+            nomeStatus: t.idStatus ? "Não Definido" : "-",
+            hexCorPrimaria: "#888"
+          };
           return {
             idChamado: t.idChamado,
             protocolo: formattedProtocolo,
@@ -73,6 +92,11 @@ export function AnalystTickets() {
               idPrioridade: prioridadeObj.idPrioridade,
               nomePrioridade: prioridadeObj.nomePrioridade,
               hexCorPrimaria: prioridadeObj.hexCorPrimaria
+            },
+            status: {
+              idStatus: statusObj.idStatus,
+              nomeStatus: statusObj.nomeStatus,
+              hexCorPrimaria: statusObj.hexCorPrimaria
             }
           };
         });
@@ -111,8 +135,13 @@ export function AnalystTickets() {
         String(ticket.prioridade.idPrioridade) === priorityFilter
       );
     }
+    if (statusFilter && statusFilter !== "__all__") {
+      data = data.filter((ticket) =>
+        String(ticket.status.idStatus) === statusFilter
+      );
+    }
     setFilteredData(data);
-  }, [search, tickets, priorityFilter]);
+  }, [search, tickets, priorityFilter, statusFilter]);
 
   // Prioridades presentes nos chamados
   const prioritiesInTickets = Array.from(
@@ -122,10 +151,19 @@ export function AnalystTickets() {
     prioritiesInTickets.includes(p.idPrioridade)
   );
 
-  // Limpar filtro de prioridade e fechar modal
-  const clearPriorityFilter = () => {
+  // Status presentes nos chamados
+  const statusInTickets = Array.from(
+    new Set(tickets.map((t) => t.status?.idStatus))
+  );
+  const statusToShow = allStatus.filter((s) =>
+    statusInTickets.includes(s.idStatus)
+  );
+
+  // Limpar filtro de prioridade e status e fechar modal
+  const clearFilters = () => {
     setSearchParams(params => {
       params.delete("priority");
+      params.delete("status");
       return params;
     });
     setPriorityFilterOpen(false);
@@ -138,6 +176,17 @@ export function AnalystTickets() {
         params.delete("priority");
       } else {
         params.set("priority", value);
+      }
+      return params;
+    });
+  };
+
+  const handleStatusChange = (value: string) => {
+    setSearchParams(params => {
+      if (value === "__all__") {
+        params.delete("status");
+      } else {
+        params.set("status", value);
       }
       return params;
     });
@@ -193,13 +242,30 @@ export function AnalystTickets() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
+              <div className="px-4 py-2 font-semibold text-sm text-gray-700">Status</div>
+              <Select value={statusFilter} onValueChange={handleStatusChange}>
+                <SelectTrigger className="w-full mb-2">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="__all__">Todos</SelectItem>
+                    {statusToShow.map(status => (
+                      <SelectItem key={status.idStatus} value={String(status.idStatus)}>
+                        <span className="inline-block w-4 h-4 rounded-full mr-2" style={{ backgroundColor: status.hexCorPrimaria }} />
+                        {status.nomeStatus}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
               <div className="flex justify-center px-2 pb-2">
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={clearPriorityFilter}
+                  onClick={clearFilters}
                   className="flex items-center gap-1"
-                  disabled={priorityFilter === "__all__"}
+                  disabled={priorityFilter === "__all__" && statusFilter === "__all__"}
                 >
                   <XCircle className="w-4 h-4" />
                   Limpar filtros
@@ -220,6 +286,7 @@ export function AnalystTickets() {
               assunto: true,
               dataAbertura: true,
               prioridade: true,
+              status: true,
               actions: true,
             }}
           />

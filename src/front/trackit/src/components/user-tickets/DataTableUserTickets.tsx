@@ -123,7 +123,7 @@ export function DataTableUserTickets({
                 }
                 return p ? (
                     <span
-                        className="px-5 py-1 rounded paragraph text-base"
+                        className="px-5 py-1 rounded paragraph text-sm"
                         style={{
                             backgroundColor: p.hexCorPrimaria,
                             color: "#fff",
@@ -177,7 +177,7 @@ export function DataTableUserTickets({
                 }
                 return s ? (
                     <span
-                        className="px-5 py-1 rounded paragraph text-base"
+                        className="px-5 py-1 rounded paragraph text-sm"
                         style={{
                             backgroundColor: s.hexCorPrimaria,
                             color: "#fff",
@@ -254,7 +254,7 @@ export function DataTableUserTickets({
 
     return (
         <div className="w-full">
-            <table className="w-full border rounded bg-white">
+            <table className="w-full border rounded bg-white text-sm">
                 <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id} className="bg-gray-100 text-gray-700">

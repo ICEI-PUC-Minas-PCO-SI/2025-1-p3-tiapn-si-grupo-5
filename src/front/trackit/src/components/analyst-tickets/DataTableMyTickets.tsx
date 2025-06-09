@@ -12,8 +12,16 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Eye, ChevronRight, ChevronLeft } from "lucide-react";
 import type { AssignTicketTableRow } from "../assing-tickets/DataTableAssignTickets";
 
+type TicketWithStatus = AssignTicketTableRow & {
+    status?: {
+        idStatus: number;
+        nomeStatus: string;
+        hexCorPrimaria: string;
+    };
+};
+
 interface DataTableMyTicketsProps {
-    data: AssignTicketTableRow[];
+    data: TicketWithStatus[];
     visibleColumns: Record<string, boolean>;
 }
 
@@ -21,10 +29,10 @@ export function DataTableMyTickets({
     data,
     visibleColumns,
 }: DataTableMyTicketsProps) {
-    const columns: ColumnDef<AssignTicketTableRow>[] = [
+    const columns: ColumnDef<TicketWithStatus>[] = [
         {
             accessorKey: "protocolo",
-            header: ({ column }: { column: Column<AssignTicketTableRow, unknown> }) => (
+            header: ({ column }: { column: Column<TicketWithStatus, unknown> }) => (
                 <Button
                     variant="ghost"
                     size="sm"
@@ -41,14 +49,14 @@ export function DataTableMyTickets({
                     />
                 </Button>
             ),
-            cell: ({ row }: { row: Row<AssignTicketTableRow> }) => (
+            cell: ({ row }: { row: Row<TicketWithStatus> }) => (
                 <span>{row.original.protocolo || "-"}</span>
             ),
             enableHiding: true,
         },
         {
             accessorKey: "assunto",
-            header: ({ column }: { column: Column<AssignTicketTableRow, unknown> }) => (
+            header: ({ column }: { column: Column<TicketWithStatus, unknown> }) => (
                 <Button
                     variant="ghost"
                     size="sm"
@@ -65,14 +73,14 @@ export function DataTableMyTickets({
                     />
                 </Button>
             ),
-            cell: ({ row }: { row: Row<AssignTicketTableRow> }) => (
+            cell: ({ row }: { row: Row<TicketWithStatus> }) => (
                 <span className="max-w-[220px] truncate block">{row.original.assunto}</span>
             ),
             enableHiding: true,
         },
         {
             accessorKey: "dataAbertura",
-            header: ({ column }: { column: Column<AssignTicketTableRow, unknown> }) => (
+            header: ({ column }: { column: Column<TicketWithStatus, unknown> }) => (
                 <Button
                     variant="ghost"
                     size="sm"
@@ -89,7 +97,7 @@ export function DataTableMyTickets({
                     />
                 </Button>
             ),
-            cell: ({ row }: { row: Row<AssignTicketTableRow> }) => {
+            cell: ({ row }: { row: Row<TicketWithStatus> }) => {
                 const data = row.original.dataAbertura ? new Date(row.original.dataAbertura) : null;
                 const dataFormatada = data ? data.toLocaleDateString('pt-BR') : "";
                 return <span>{dataFormatada}</span>;
@@ -98,7 +106,7 @@ export function DataTableMyTickets({
         },
         {
             accessorKey: "prioridade",
-            header: ({ column }: { column: Column<AssignTicketTableRow, unknown> }) => (
+            header: ({ column }: { column: Column<TicketWithStatus, unknown> }) => (
                 <Button
                     variant="ghost"
                     size="sm"
@@ -115,7 +123,7 @@ export function DataTableMyTickets({
                     />
                 </Button>
             ),
-            cell: ({ row }: { row: Row<AssignTicketTableRow> }) => {
+            cell: ({ row }: { row: Row<TicketWithStatus> }) => {
                 const p = row.original.prioridade;
                 let displayName = p?.nomePrioridade ?? "";
                 if (displayName.length > 10) {
@@ -123,7 +131,7 @@ export function DataTableMyTickets({
                 }
                 return p ? (
                     <span
-                        className="px-5 py-1 rounded paragraph text-base"
+                        className="px-5 py-1 rounded paragraph text-sm"
                         style={{
                             backgroundColor: p.hexCorPrimaria,
                             color: "#fff",
@@ -140,13 +148,63 @@ export function DataTableMyTickets({
                         {displayName}
                     </span>
                 ) : (
+                    <span className="px-5 py-1 rounded bg-gray-200 text-gray-700 font-bold text-sm">-</span>
+                );
+            },
+            enableHiding: true,
+            sortingFn: (a: Row<TicketWithStatus>, b: Row<TicketWithStatus>) => {
+                const nameA = a.original.prioridade?.nomePrioridade?.toLowerCase() || "";
+                const nameB = b.original.prioridade?.nomePrioridade?.toLowerCase() || "";
+                return nameA.localeCompare(nameB);
+            },
+        },
+        {
+            accessorKey: "status",
+            header: ({ column }: { column: Column<TicketWithStatus, unknown> }) => (
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Status
+                    <ArrowUpDown
+                        className={`ml-2 ${column.getIsSorted() === "asc"
+                            ? "rotate-0"
+                            : column.getIsSorted() === "desc"
+                                ? "rotate-180"
+                                : ""
+                            }`}
+                    />
+                </Button>
+            ),
+            cell: ({ row }: { row: Row<TicketWithStatus> }) => {
+                const s = row.original.status;
+                return s && s.nomeStatus !== "-" ? (
+                    <span
+                        className="px-5 py-1 rounded paragraph text-sm"
+                        style={{
+                            backgroundColor: s.hexCorPrimaria,
+                            color: "#fff",
+                            width: "110px",
+                            maxWidth: "110px",
+                            minWidth: "110px",
+                            display: "inline-block",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap"
+                        }}
+                        title={s.nomeStatus}
+                    >
+                        {s.nomeStatus}
+                    </span>
+                ) : (
                     <span className="px-5 py-1 rounded bg-gray-200 text-gray-700 font-bold text-base">-</span>
                 );
             },
             enableHiding: true,
-            sortingFn: (a: Row<AssignTicketTableRow>, b: Row<AssignTicketTableRow>) => {
-                const nameA = a.original.prioridade?.nomePrioridade?.toLowerCase() || "";
-                const nameB = b.original.prioridade?.nomePrioridade?.toLowerCase() || "";
+            sortingFn: (a: Row<TicketWithStatus>, b: Row<TicketWithStatus>) => {
+                const nameA = a.original.status?.nomeStatus?.toLowerCase() || "";
+                const nameB = b.original.status?.nomeStatus?.toLowerCase() || "";
                 return nameA.localeCompare(nameB);
             },
         },
@@ -163,7 +221,11 @@ export function DataTableMyTickets({
             enableHiding: false,
         },
     ].filter(
-        (column) => visibleColumns[column.accessorKey as keyof AssignTicketTableRow] ?? true
+        (column) =>
+            (column as { accessorKey?: string }).accessorKey
+                ? visibleColumns[(column as { accessorKey?: string }).accessorKey as keyof AssignTicketTableRow] ?? true
+                : (column as { id?: string }).id === "actions" ||
+                (column as { accessorKey?: string }).accessorKey === "status"
     );
 
     const table = useReactTable({
@@ -176,7 +238,7 @@ export function DataTableMyTickets({
 
     return (
         <div className="w-full">
-            <table className="w-full border rounded bg-white">
+            <table className="w-full border rounded bg-white text-sm">
                 <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id} className="bg-gray-100 text-gray-700">
@@ -227,7 +289,7 @@ export function DataTableMyTickets({
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
                     >
-                        <ChevronLeft className="w-4 h-4"/>
+                        <ChevronLeft className="w-4 h-4" />
                     </Button>
                     <Button
                         size="icon"
@@ -235,7 +297,7 @@ export function DataTableMyTickets({
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
                     >
-                        <ChevronRight className="w-4 h-4"/>
+                        <ChevronRight className="w-4 h-4" />
                     </Button>
                 </div>
             </div>

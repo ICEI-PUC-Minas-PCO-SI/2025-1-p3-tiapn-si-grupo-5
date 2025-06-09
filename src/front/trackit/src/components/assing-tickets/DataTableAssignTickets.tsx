@@ -136,7 +136,7 @@ export function DataTableAssignTickets({
                 }
                 return p ? (
                     <span
-                        className="px-5 py-1 rounded paragraph text-base"
+                        className="px-5 py-1 rounded paragraph text-sm"
                         style={{
                             backgroundColor: p.hexCorPrimaria,
                             color: "#fff",
@@ -153,7 +153,7 @@ export function DataTableAssignTickets({
                         {displayName}
                     </span>
                 ) : (
-                    <span className="px-5 py-1 rounded bg-gray-200 text-gray-700 font-bold text-base">-</span>
+                    <span className="px-5 py-1 rounded bg-gray-200 text-gray-700 font-bold text-sm">-</span>
                 );
             },
             enableHiding: true,
@@ -192,7 +192,7 @@ export function DataTableAssignTickets({
 
     return (
         <div className="w-full">
-            <table className="w-full border rounded bg-white">
+            <table className="w-full border rounded bg-white text-sm">
                 <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
                         <tr key={headerGroup.id} className="bg-gray-100 text-gray-700">
