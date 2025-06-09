@@ -36,7 +36,7 @@ export const description = "A bar chart"
 
 interface ChartData {
     month: string
-    quantidade: number
+    Quantidade: number
 }
 
 interface ChartBarProps {
@@ -123,7 +123,7 @@ export function ChartBar({
                             content={<ChartTooltipContent hideLabel />}
                         />
                         <Bar
-                            dataKey="quantidade"
+                            dataKey="Quantidade"
                             fill={chartConfig.desktop.color}
                             radius={8}
                         />

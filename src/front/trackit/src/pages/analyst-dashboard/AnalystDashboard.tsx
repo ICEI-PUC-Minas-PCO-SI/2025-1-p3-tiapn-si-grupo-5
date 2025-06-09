@@ -110,7 +110,7 @@ export function AnalystDashboard() {
             const d = new Date(t.dataFechamento);
             return selectedYearBar && d.getFullYear() === Number(selectedYearBar) && d.getMonth() === idx;
         }).length;
-        return { month, quantidade: count };
+        return { month, Quantidade: count };
     });
 
     const ticketsByStatusForYear = ticketsByStatus.map(({ status }) => ({

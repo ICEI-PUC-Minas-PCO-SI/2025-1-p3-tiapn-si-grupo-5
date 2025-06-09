@@ -36,6 +36,8 @@ type AnalystRow = {
     demandasAtendidas: number;
     principalAtividade: string;
     desde: string;
+    ano: string;
+    anosAtendidos: string[];
 };
 
 export function DashboardDataTable() {
@@ -44,7 +46,13 @@ export function DashboardDataTable() {
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
     const [principalAtividadeFilter, setPrincipalAtividadeFilter] = useState("__all__");
+    const [yearFilter, setYearFilter] = useState("__all__");
     const [filterMenuOpen, setFilterMenuOpen] = useState(false);
+
+    const [anosDisponiveis, setAnosDisponiveis] = useState<string[]>([]);
+    const [allTickets, setAllTickets] = useState<ITicket[]>([]);
+    const [analysts, setAnalysts] = useState<IAnalyst[]>([]);
+    const [ticketTypes, setTicketTypes] = useState<ITicketType[]>([]);
 
     useEffect(() => {
         setLoading(true);
@@ -52,43 +60,112 @@ export function DashboardDataTable() {
             getAllAnalysts(),
             getAllTickets(),
             getAllTicketTypes(),
-        ]).then(([analysts, tickets, types]: [IAnalyst[], ITicket[], ITicketType[]]) => {
-            const rows: AnalystRow[] = analysts.map(analyst => {
-                // Chamados concluídos (dataFechamento != null)
-                const ticketsByAnalyst = tickets.filter(
-                    t => t.idAnalista && t.idAnalista === analyst.idUsuario && t.dataFechamento
-                );
-                // Conta por tipo de demanda
-                const typeCount: Record<number, number> = {};
-                ticketsByAnalyst.forEach(t => {
-                    typeCount[t.idTipoChamado] = (typeCount[t.idTipoChamado] || 0) + 1;
-                });
-                // Tipo de demanda mais atendido
-                let principalAtividade = "-";
-                if (ticketsByAnalyst.length > 0) {
-                    const maxTypeId = Object.entries(typeCount).sort((a, b) => b[1] - a[1])[0]?.[0];
-                    const typeObj = types.find(tp => String(tp.idTipoChamado) === String(maxTypeId));
-                    principalAtividade = typeObj ? typeObj.nomeTipo : `Tipo ${maxTypeId}`;
+        ]).then(([analystsRes, ticketsRes, typesRes]: [IAnalyst[], ITicket[], ITicketType[]]) => {
+            setAnalysts(analystsRes);
+            setAllTickets(ticketsRes);
+            setTicketTypes(typesRes);
+
+            const anosSet = new Set<string>();
+            ticketsRes.forEach(t => {
+                if (t.idAnalista && t.dataFechamento) {
+                    const year = String(new Date(t.dataFechamento).getFullYear());
+                    anosSet.add(year);
                 }
-                // Desde (dataCadastro do analista)
-                let desde = "-";
-                if (analyst.dataCadastro) {
-                    const d = new Date(analyst.dataCadastro);
-                    if (!isNaN(d.getTime())) {
-                        desde = `${d.toLocaleString("default", { month: "long" })}/${d.getFullYear()}`;
-                    }
-                }
-                return {
-                    name: analyst.nomeUsuario,
-                    demandasAtendidas: ticketsByAnalyst.length,
-                    principalAtividade,
-                    desde,
-                };
             });
-            setData(rows);
-            setFilteredData(rows);
+            const anosArr = Array.from(anosSet).sort((a, b) => Number(b) - Number(a));
+            setAnosDisponiveis(anosArr);
+
+            setData(buildAnalystRows(analystsRes, ticketsRes, typesRes, "__all__"));
+            setFilteredData(buildAnalystRows(analystsRes, ticketsRes, typesRes, "__all__"));
         }).finally(() => setLoading(false));
     }, []);
+
+    function buildAnalystRows(
+        analysts: IAnalyst[],
+        tickets: ITicket[],
+        types: ITicketType[],
+        year: string
+    ): AnalystRow[] {
+        const analistaTicketsMap = new Map<number, ITicket[]>();
+        const analistaAnoTicketsMap = new Map<number, Map<string, ITicket[]>>();
+        const analistaAnosMap = new Map<number, Set<string>>();
+
+        tickets.forEach(t => {
+            if (t.idAnalista && t.dataFechamento) {
+                const idAnalista = t.idAnalista;
+                const yearTicket = String(new Date(t.dataFechamento).getFullYear());
+
+                if (!analistaTicketsMap.has(idAnalista)) analistaTicketsMap.set(idAnalista, []);
+                analistaTicketsMap.get(idAnalista)!.push(t);
+
+                if (!analistaAnoTicketsMap.has(idAnalista)) analistaAnoTicketsMap.set(idAnalista, new Map());
+                if (!analistaAnoTicketsMap.get(idAnalista)!.has(yearTicket)) analistaAnoTicketsMap.get(idAnalista)!.set(yearTicket, []);
+                analistaAnoTicketsMap.get(idAnalista)!.get(yearTicket)!.push(t);
+
+                if (!analistaAnosMap.has(idAnalista)) analistaAnosMap.set(idAnalista, new Set());
+                analistaAnosMap.get(idAnalista)!.add(yearTicket);
+            }
+        });
+
+        return analysts.map(analyst => {
+            let ticketsByAnalyst: ITicket[] = [];
+            if (year !== "__all__") {
+                ticketsByAnalyst = (analistaTicketsMap.get(analyst.idUsuario) || []).filter(t => {
+                    if (!t.dataFechamento) return false;
+                    const fechamento = new Date(t.dataFechamento);
+                    const abertura = t.dataAbertura ? new Date(t.dataAbertura) : null;
+                    const anoFechamento = fechamento.getFullYear();
+                    const anoFiltro = parseInt(year, 10);
+                    const entraNoAno = anoFechamento === anoFiltro;
+
+                    if (entraNoAno) {
+                        console.log(
+                            `[DEBUG] Chamado ${t.idChamado} - Abertura: ${abertura?.toLocaleDateString()} (${abertura?.getFullYear()}) | Fechamento: ${fechamento.toLocaleDateString()} (${anoFechamento}) | Ano filtro: ${anoFiltro}`
+                        );
+                    }
+                    return entraNoAno;
+                });
+                console.log(
+                    `[DashboardDataTable] Demandas atendidas por ${analyst.nomeUsuario} (${analyst.idUsuario}) no ano ${year}:`,
+                    ticketsByAnalyst.length,
+                    ticketsByAnalyst
+                );
+            } else {
+                ticketsByAnalyst = analistaTicketsMap.get(analyst.idUsuario) || [];
+            }
+            const typeCount: Record<number, number> = {};
+            ticketsByAnalyst.forEach(t => {
+                typeCount[t.idTipoChamado] = (typeCount[t.idTipoChamado] || 0) + 1;
+            });
+            let principalAtividade = "-";
+            if (ticketsByAnalyst.length > 0) {
+                const maxTypeId = Object.entries(typeCount).sort((a, b) => b[1] - a[1])[0]?.[0];
+                const typeObj = types.find(tp => String(tp.idTipoChamado) === String(maxTypeId));
+                principalAtividade = typeObj ? typeObj.nomeTipo : `Tipo ${maxTypeId}`;
+            }
+            let desde = "-";
+            let ano = "-";
+            if (analyst.dataCadastro) {
+                const d = new Date(analyst.dataCadastro);
+                if (!isNaN(d.getTime())) {
+                    desde = `${d.toLocaleString("default", { month: "long" })}/${d.getFullYear()}`;
+                    ano = String(d.getFullYear());
+                }
+            }
+            return {
+                name: analyst.nomeUsuario,
+                demandasAtendidas: ticketsByAnalyst.length,
+                principalAtividade,
+                desde,
+                ano,
+                anosAtendidos: Array.from(analistaAnosMap.get(analyst.idUsuario) || []),
+            };
+        });
+    }
+
+    useEffect(() => {
+        setData(buildAnalystRows(analysts, allTickets, ticketTypes, yearFilter));
+    }, [yearFilter, analysts, allTickets, ticketTypes]);
 
     useEffect(() => {
         let filtered = data;
@@ -103,8 +180,13 @@ export function DashboardDataTable() {
         if (principalAtividadeFilter !== "__all__") {
             filtered = filtered.filter(item => item.principalAtividade === principalAtividadeFilter);
         }
+        if (yearFilter !== "__all__") {
+            filtered = filtered.filter(item =>
+                item.anosAtendidos.includes(yearFilter)
+            );
+        }
         setFilteredData(filtered);
-    }, [search, data, principalAtividadeFilter]);
+    }, [search, data, principalAtividadeFilter, yearFilter]);
 
     const columns: ColumnDef<AnalystRow>[] = [
         {
@@ -205,11 +287,17 @@ export function DashboardDataTable() {
         new Set(data.map(d => d.principalAtividade).filter(a => a && a !== "-"))
     );
 
-    // Função para limpar filtro de principal atividade
+    // Função para limpar filtro de principal atividade e ano
     const clearFilters = () => {
         setPrincipalAtividadeFilter("__all__");
+        setYearFilter("__all__");
         setFilterMenuOpen(false);
     };
+
+    // Adicione o console.log aqui para depuração
+    useEffect(() => {
+        console.log("DashboardDataTable - filteredData:", filteredData);
+    }, [filteredData]);
 
     return (
         <div className="space-y-4 w-full">
@@ -242,13 +330,32 @@ export function DashboardDataTable() {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
+                            <div className="px-4 py-2 font-semibold text-sm text-gray-700">Ano</div>
+                            <Select
+                                value={yearFilter}
+                                onValueChange={setYearFilter}
+                            >
+                                <SelectTrigger className="w-full mb-2">
+                                    <SelectValue placeholder="Todos" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="__all__">Todos</SelectItem>
+                                        {anosDisponiveis.map((ano) => (
+                                            <SelectItem key={ano} value={ano}>
+                                                {ano}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                             <div className="flex justify-center px-2 pb-2">
                                 <Button
                                     size="sm"
                                     variant="ghost"
                                     onClick={clearFilters}
                                     className="flex items-center gap-1"
-                                    disabled={principalAtividadeFilter === "__all__"}
+                                    disabled={principalAtividadeFilter === "__all__" && yearFilter === "__all__"}
                                 >
                                     <XCircle className="w-4 h-4" />
                                     Limpar filtros

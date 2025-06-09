@@ -89,7 +89,7 @@ export function Dashboard() {
             const d = new Date(t.dataFechamento);
             return selectedYearBar && d.getFullYear() === Number(selectedYearBar) && d.getMonth() === idx;
         }).length;
-        return { month, quantidade: count };
+        return { month, Quantidade: count };
     });
 
     const ticketsByStatus = statusList.map((status) => {

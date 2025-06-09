@@ -153,7 +153,7 @@ export function DataTableAssignTickets({
                         {displayName}
                     </span>
                 ) : (
-                    <span className="px-5 py-1 rounded bg-gray-200 text-gray-700 font-bold text-sm">-</span>
+                    <span className="px-5 py-1 rounded bg-gray-200 text-gray-700 font-bold text-base">-</span>
                 );
             },
             enableHiding: true,
