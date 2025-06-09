@@ -1,5 +1,4 @@
-// TODO: ajustar filtro para quando houver lógica de status da demanda
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getMyTickets } from "@/api/ticket";
 import type { ITicket } from "@/api/ticket";
@@ -42,17 +41,31 @@ export function AnalystTickets() {
   const [filteredData, setFilteredData] = useState<TicketWithStatus[]>([]);
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [allPriorities, setAllPriorities] = useState<IPriority[]>([]);
-  const [priorityFilterOpen, setPriorityFilterOpen] = useState(false);
   const [allStatus, setAllStatus] = useState<IStatus[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Query params
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Filtros controlados por query params
   const search = searchParams.get("search") || "";
   const priorityFilter = searchParams.get("priority") || "__all__";
   const statusFilter = searchParams.get("status") || "__all__";
+  const openingYearFilter = searchParams.get("openingYear") || "__all__";
+
+  const anosAberturaDisponiveis = useMemo(() => {
+    return Array.from(
+      new Set(
+        tickets
+          .map(t => {
+            if (!t.dataAbertura) return undefined;
+            const year = new Date(t.dataAbertura).getFullYear();
+            return isNaN(year) ? undefined : year;
+          })
+          .filter((y): y is number => typeof y === "number")
+      )
+    )
+      .sort((a, b) => b - a)
+      .map(String);
+  }, [tickets]);
 
   useEffect(() => {
     setLoading(true);
@@ -77,7 +90,6 @@ export function AnalystTickets() {
             nomePrioridade: "Não Definida",
             hexCorPrimaria: "#888"
           };
-          // Status pode ser null
           const statusObj = statuses.find(s => s.idStatus === t.idStatus) || {
             idStatus: t.idStatus ?? 0,
             nomeStatus: t.idStatus ? "Não Definido" : "-",
@@ -140,10 +152,16 @@ export function AnalystTickets() {
         String(ticket.status.idStatus) === statusFilter
       );
     }
+    if (openingYearFilter && openingYearFilter !== "__all__") {
+      data = data.filter((ticket) => {
+        if (!ticket.dataAbertura) return false;
+        const year = new Date(ticket.dataAbertura).getFullYear();
+        return String(year) === openingYearFilter;
+      });
+    }
     setFilteredData(data);
-  }, [search, tickets, priorityFilter, statusFilter]);
+  }, [search, tickets, priorityFilter, statusFilter, openingYearFilter]);
 
-  // Prioridades presentes nos chamados
   const prioritiesInTickets = Array.from(
     new Set(tickets.map((t) => t.prioridade.idPrioridade))
   );
@@ -151,7 +169,6 @@ export function AnalystTickets() {
     prioritiesInTickets.includes(p.idPrioridade)
   );
 
-  // Status presentes nos chamados
   const statusInTickets = Array.from(
     new Set(tickets.map((t) => t.status?.idStatus))
   );
@@ -159,17 +176,15 @@ export function AnalystTickets() {
     statusInTickets.includes(s.idStatus)
   );
 
-  // Limpar filtro de prioridade e status e fechar modal
   const clearFilters = () => {
     setSearchParams(params => {
       params.delete("priority");
       params.delete("status");
+      params.delete("openingYear");
       return params;
     });
-    setPriorityFilterOpen(false);
   };
 
-  // Handlers para filtros
   const handlePriorityChange = (value: string) => {
     setSearchParams(params => {
       if (value === "__all__") {
@@ -187,6 +202,17 @@ export function AnalystTickets() {
         params.delete("status");
       } else {
         params.set("status", value);
+      }
+      return params;
+    });
+  };
+
+  const handleopeningYearChange = (value: string) => {
+    setSearchParams(params => {
+      if (value === "__all__") {
+        params.delete("openingYear");
+      } else {
+        params.set("openingYear", value);
       }
       return params;
     });
@@ -218,13 +244,13 @@ export function AnalystTickets() {
       <div className="flex justify-between">
         <Searchbar onSearch={handleSearch} />
         <div className="flex gap-3">
-          <DropdownMenu open={priorityFilterOpen} onOpenChange={setPriorityFilterOpen}>
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="icon" variant="outline">
                 <Filter className="w-4 h-4 mr-1" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="min-w-[220px]">
+            <DropdownMenuContent align="end" className="min-w-[260px]">
               <div className="px-4 py-2 font-semibold text-sm text-gray-700">Prioridade</div>
               <Select value={priorityFilter} onValueChange={handlePriorityChange}>
                 <SelectTrigger className="w-full mb-2">
@@ -259,13 +285,33 @@ export function AnalystTickets() {
                   </SelectGroup>
                 </SelectContent>
               </Select>
+              <div className="px-4 py-2 font-semibold text-sm text-gray-700">Ano de Abertura</div>
+              <Select value={openingYearFilter} onValueChange={handleopeningYearChange}>
+                <SelectTrigger className="w-full mb-2">
+                  <SelectValue placeholder="Todos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="__all__">Todos</SelectItem>
+                    {anosAberturaDisponiveis.map((ano) => (
+                      <SelectItem key={ano} value={ano}>
+                        {ano}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
               <div className="flex justify-center px-2 pb-2">
                 <Button
                   size="sm"
                   variant="ghost"
                   onClick={clearFilters}
                   className="flex items-center gap-1"
-                  disabled={priorityFilter === "__all__" && statusFilter === "__all__"}
+                  disabled={
+                    priorityFilter === "__all__" &&
+                    statusFilter === "__all__" &&
+                    openingYearFilter === "__all__"
+                  }
                 >
                   <XCircle className="w-4 h-4" />
                   Limpar filtros

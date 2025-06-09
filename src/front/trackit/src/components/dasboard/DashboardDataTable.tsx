@@ -75,19 +75,24 @@ export function DashboardDataTable() {
             const anosArr = Array.from(anosSet).sort((a, b) => Number(b) - Number(a));
             setAnosDisponiveis(anosArr);
 
+            // Inicializa a tabela com todos os dados (sem filtro de ano)
             setData(buildAnalystRows(analystsRes, ticketsRes, typesRes, "__all__"));
             setFilteredData(buildAnalystRows(analystsRes, ticketsRes, typesRes, "__all__"));
         }).finally(() => setLoading(false));
     }, []);
 
+    // Função para montar as linhas da tabela de acordo com o filtro de ano
     function buildAnalystRows(
         analysts: IAnalyst[],
         tickets: ITicket[],
         types: ITicketType[],
         year: string
     ): AnalystRow[] {
+        // Map: idAnalista -> tickets concluídos (todos os anos)
         const analistaTicketsMap = new Map<number, ITicket[]>();
+        // Map: idAnalista -> Map<ano, ITicket[]>
         const analistaAnoTicketsMap = new Map<number, Map<string, ITicket[]>>();
+        // Map: idAnalista -> Set<ano>
         const analistaAnosMap = new Map<number, Set<string>>();
 
         tickets.forEach(t => {
@@ -95,13 +100,16 @@ export function DashboardDataTable() {
                 const idAnalista = t.idAnalista;
                 const yearTicket = String(new Date(t.dataFechamento).getFullYear());
 
+                // Todos os tickets do analista
                 if (!analistaTicketsMap.has(idAnalista)) analistaTicketsMap.set(idAnalista, []);
                 analistaTicketsMap.get(idAnalista)!.push(t);
 
+                // Tickets do analista por ano
                 if (!analistaAnoTicketsMap.has(idAnalista)) analistaAnoTicketsMap.set(idAnalista, new Map());
                 if (!analistaAnoTicketsMap.get(idAnalista)!.has(yearTicket)) analistaAnoTicketsMap.get(idAnalista)!.set(yearTicket, []);
                 analistaAnoTicketsMap.get(idAnalista)!.get(yearTicket)!.push(t);
 
+                // Anos em que o analista atendeu chamados
                 if (!analistaAnosMap.has(idAnalista)) analistaAnosMap.set(idAnalista, new Set());
                 analistaAnosMap.get(idAnalista)!.add(yearTicket);
             }
@@ -110,39 +118,24 @@ export function DashboardDataTable() {
         return analysts.map(analyst => {
             let ticketsByAnalyst: ITicket[] = [];
             if (year !== "__all__") {
-                ticketsByAnalyst = (analistaTicketsMap.get(analyst.idUsuario) || []).filter(t => {
-                    if (!t.dataFechamento) return false;
-                    const fechamento = new Date(t.dataFechamento);
-                    const abertura = t.dataAbertura ? new Date(t.dataAbertura) : null;
-                    const anoFechamento = fechamento.getFullYear();
-                    const anoFiltro = parseInt(year, 10);
-                    const entraNoAno = anoFechamento === anoFiltro;
-
-                    if (entraNoAno) {
-                        console.log(
-                            `[DEBUG] Chamado ${t.idChamado} - Abertura: ${abertura?.toLocaleDateString()} (${abertura?.getFullYear()}) | Fechamento: ${fechamento.toLocaleDateString()} (${anoFechamento}) | Ano filtro: ${anoFiltro}`
-                        );
-                    }
-                    return entraNoAno;
-                });
-                console.log(
-                    `[DashboardDataTable] Demandas atendidas por ${analyst.nomeUsuario} (${analyst.idUsuario}) no ano ${year}:`,
-                    ticketsByAnalyst.length,
-                    ticketsByAnalyst
-                );
+                // Corrige: pega apenas os tickets do analista naquele ano
+                ticketsByAnalyst = analistaAnoTicketsMap.get(analyst.idUsuario)?.get(year) || [];
             } else {
                 ticketsByAnalyst = analistaTicketsMap.get(analyst.idUsuario) || [];
             }
+            // Conta por tipo de demanda
             const typeCount: Record<number, number> = {};
             ticketsByAnalyst.forEach(t => {
                 typeCount[t.idTipoChamado] = (typeCount[t.idTipoChamado] || 0) + 1;
             });
+            // Tipo de demanda mais atendido
             let principalAtividade = "-";
             if (ticketsByAnalyst.length > 0) {
                 const maxTypeId = Object.entries(typeCount).sort((a, b) => b[1] - a[1])[0]?.[0];
                 const typeObj = types.find(tp => String(tp.idTipoChamado) === String(maxTypeId));
                 principalAtividade = typeObj ? typeObj.nomeTipo : `Tipo ${maxTypeId}`;
             }
+            // Desde (dataCadastro do analista)
             let desde = "-";
             let ano = "-";
             if (analyst.dataCadastro) {
@@ -163,10 +156,12 @@ export function DashboardDataTable() {
         });
     }
 
+    // Atualiza os dados da tabela ao mudar o filtro de ano
     useEffect(() => {
         setData(buildAnalystRows(analysts, allTickets, ticketTypes, yearFilter));
     }, [yearFilter, analysts, allTickets, ticketTypes]);
 
+    // Atualiza os dados filtrados ao mudar qualquer filtro
     useEffect(() => {
         let filtered = data;
         if (search) {
