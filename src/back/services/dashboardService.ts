@@ -2,21 +2,30 @@ import { PrismaClient } from "../generated/prisma";
 const prisma = new PrismaClient();
 
 export class DashboardService {
-    async getTicketsByType(idTipoChamado: number) {
+    async getTicketsByType(idTipoChamado: number, idAnalista?: number) {
         return prisma.chamado.findMany({
-            where: { idTipoChamado }
+            where: {
+                idTipoChamado,
+                ...(idAnalista ? { idAnalista } : {})
+            }
         });
     }
 
-    async getTicketsByStatus(idStatus: number) {
+    async getTicketsByStatus(idStatus: number, idAnalista?: number) {
         return prisma.chamado.findMany({
-            where: { idStatus }
+            where: {
+                idStatus,
+                ...(idAnalista ? { idAnalista } : {})
+            }
         });
     }
 
-    async getTicketsByPriority(idPrioridade: number) {
+    async getTicketsByPriority(idPrioridade: number, idAnalista?: number) {
         return prisma.chamado.findMany({
-            where: { idPrioridade }
+            where: {
+                idPrioridade,
+                ...(idAnalista ? { idAnalista } : {})
+            }
         });
     }
 

@@ -6,8 +6,11 @@ const dashboardService = new DashboardService();
 export class DashboardController {
     async getTicketsByType(req: Request, res: Response) {
         try {
-            const { idTipoChamado } = req.query;
-            const tickets = await dashboardService.getTicketsByType(Number(idTipoChamado));
+            const { idTipoChamado, idAnalista } = req.query;
+            const tickets = await dashboardService.getTicketsByType(
+                Number(idTipoChamado),
+                idAnalista ? Number(idAnalista) : undefined
+            );
             res.json(tickets);
         } catch (error) {
             console.log("Erro ao buscar chamados por tipo:", error)
@@ -17,8 +20,11 @@ export class DashboardController {
 
     async getTicketsByStatus(req: Request, res: Response) {
         try {
-            const { idStatus } = req.query;
-            const tickets = await dashboardService.getTicketsByStatus(Number(idStatus));
+            const { idStatus, idAnalista } = req.query;
+            const tickets = await dashboardService.getTicketsByStatus(
+                Number(idStatus),
+                idAnalista ? Number(idAnalista) : undefined
+            );
             res.json(tickets);
         } catch (error) {
             console.log("Erro ao buscar chamados por status:", error)
@@ -28,8 +34,11 @@ export class DashboardController {
 
     async getTicketsByPriority(req: Request, res: Response) {
         try {
-            const { idPrioridade } = req.query;
-            const tickets = await dashboardService.getTicketsByPriority(Number(idPrioridade));
+            const { idPrioridade, idAnalista } = req.query;
+            const tickets = await dashboardService.getTicketsByPriority(
+                Number(idPrioridade),
+                idAnalista ? Number(idAnalista) : undefined
+            );
             res.json(tickets);
         } catch (error) {
             console.log("Erro ao buscar chamados por prioridade:", error)

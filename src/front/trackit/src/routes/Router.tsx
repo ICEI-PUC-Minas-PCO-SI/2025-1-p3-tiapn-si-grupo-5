@@ -18,6 +18,7 @@ import { UserTickets } from "@/pages/user-tickets/UserTickets";
 import { Dashboard } from "@/pages/dashbord/Dashboard";
 import { AdminAssignTickets } from "@/pages/admin-assign-tickets/AdminAssignTickets";
 import { AdminTeamTickets } from "@/pages/admin-team-tickets/AdminTeamTickets";
+import { AnalystDashboard } from "@/pages/analyst-dashboard/AnalystDashboard";
 
 export function Router() {
     return (
@@ -44,6 +45,7 @@ export function Router() {
                 <Route path="settings" element={< Settings />} />
                 <Route path="assign-tickets" element={<AssignTickets />} />
                 <Route path="my-tickets" element={<AnalystTickets />} />
+                <Route path="dashboard" element={<AnalystDashboard />} />
             </Route>
             <Route path="/admin" element={
                 <PrivateRoute allowedTypes={[1]}>
