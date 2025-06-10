@@ -94,11 +94,9 @@ export function Dashboard() {
     });
 
     const ticketsByStatus = statusList.map((status) => {
-        // Antes: só chamados em aberto (dataFechamento nula)
         // const count = tickets.filter(t =>
         //     t.idStatus === status.idStatus && !t.dataFechamento
         // ).length;
-        // Agora: todos os chamados históricos desse status
         const count = tickets.filter(t =>
             t.idStatus === status.idStatus
         ).length;
@@ -182,7 +180,7 @@ export function Dashboard() {
                     Dashboard
                 </h1>
                 <h3 className="title-h3 text-slate-700">
-                    Indicadores por status de demandas em aberto
+                    Indicadores por status de demandas
                 </h3>
             </div>
             {loading ? (
