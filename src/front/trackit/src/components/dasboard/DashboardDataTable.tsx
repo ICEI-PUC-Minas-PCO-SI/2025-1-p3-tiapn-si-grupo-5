@@ -28,8 +28,9 @@ import {
     SelectItem,
 } from "@/components/ui/select";
 import { getAllAnalysts, type IAnalyst } from "@/api/users";
-import { getAllTickets, type ITicket } from "@/api/ticket";
-import { getAllTicketTypes, type ITicketType } from "@/api/tickettype";
+import { getDashboardSummary } from "@/api/dashboard";
+import type { ITicket } from "@/api/ticket";
+import type { ITicketType } from "@/api/tickettype";
 
 type AnalystRow = {
     name: string;
@@ -58,15 +59,14 @@ export function DashboardDataTable() {
         setLoading(true);
         Promise.all([
             getAllAnalysts(),
-            getAllTickets(),
-            getAllTicketTypes(),
-        ]).then(([analystsRes, ticketsRes, typesRes]: [IAnalyst[], ITicket[], ITicketType[]]) => {
+            getDashboardSummary(), // Busca tickets e tipos de chamados juntos
+        ]).then(([analystsRes, dashboardSummary]: [IAnalyst[], { tickets: ITicket[], ticketTypes: ITicketType[] }]) => {
             setAnalysts(analystsRes);
-            setAllTickets(ticketsRes);
-            setTicketTypes(typesRes);
+            setAllTickets(dashboardSummary.tickets);
+            setTicketTypes(dashboardSummary.ticketTypes);
 
             const anosSet = new Set<string>();
-            ticketsRes.forEach(t => {
+            dashboardSummary.tickets.forEach(t => {
                 if (t.idAnalista && t.dataFechamento) {
                     const year = String(new Date(t.dataFechamento).getFullYear());
                     anosSet.add(year);
@@ -75,9 +75,8 @@ export function DashboardDataTable() {
             const anosArr = Array.from(anosSet).sort((a, b) => Number(b) - Number(a));
             setAnosDisponiveis(anosArr);
 
-            // Inicializa a tabela com todos os dados (sem filtro de ano)
-            setData(buildAnalystRows(analystsRes, ticketsRes, typesRes, "__all__"));
-            setFilteredData(buildAnalystRows(analystsRes, ticketsRes, typesRes, "__all__"));
+            setData(buildAnalystRows(analystsRes, dashboardSummary.tickets, dashboardSummary.ticketTypes, "__all__"));
+            setFilteredData(buildAnalystRows(analystsRes, dashboardSummary.tickets, dashboardSummary.ticketTypes, "__all__"));
         }).finally(() => setLoading(false));
     }, []);
 

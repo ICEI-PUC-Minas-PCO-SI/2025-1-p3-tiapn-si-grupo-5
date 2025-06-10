@@ -4,10 +4,11 @@ import { ChartBar } from "@/components/ui/ChartBar";
 import { ChartPie } from "@/components/ui/ChartPie";
 import { ChartLine } from "@/components/ui/ChartLine";
 import { DashboardDataTable } from "@/components/dasboard/DashboardDataTable";
-import { getAllStatus, type IStatus } from "@/api/status";
-import { getAllTickets, type ITicket } from "@/api/ticket";
-import { getAllPriorities, type IPriority } from "@/api/priority";
-import { getAllTicketTypes, type ITicketType } from "@/api/tickettype";
+import { getDashboardSummary } from "@/api/dashboard";
+import type { ITicket } from "@/api/ticket";
+import type { IStatus } from "@/api/status";
+import type { IPriority } from "@/api/priority";
+import type { ITicketType } from "@/api/tickettype";
 import { TableSpinner } from "@/components/ui/spinner";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
 
@@ -25,12 +26,12 @@ export function Dashboard() {
 
     useEffect(() => {
         setLoading(true);
-        Promise.all([getAllStatus(), getAllTickets(), getAllPriorities(), getAllTicketTypes()])
-            .then(([statuses, tickets, priorities, types]) => {
-                setStatusList(statuses);
+        getDashboardSummary()
+            .then(({ tickets, statusList, priorities, ticketTypes }) => {
+                setStatusList(statusList);
                 setTickets(tickets);
                 setPriorities(priorities);
-                setTicketTypes(types);
+                setTicketTypes(ticketTypes);
                 setAlert(null);
             })
             .catch(() => {
@@ -93,8 +94,13 @@ export function Dashboard() {
     });
 
     const ticketsByStatus = statusList.map((status) => {
+        // Antes: só chamados em aberto (dataFechamento nula)
+        // const count = tickets.filter(t =>
+        //     t.idStatus === status.idStatus && !t.dataFechamento
+        // ).length;
+        // Agora: todos os chamados históricos desse status
         const count = tickets.filter(t =>
-            t.idStatus === status.idStatus && !t.dataFechamento
+            t.idStatus === status.idStatus
         ).length;
         return {
             ...status,

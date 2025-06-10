@@ -5,23 +5,22 @@ import { ChartPie } from "@/components/ui/ChartPie";
 import { ChartLine } from "@/components/ui/ChartLine";
 import { TableSpinner } from "@/components/ui/spinner";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
-import { getAllStatus, type IStatus } from "@/api/status";
-import { getAllPriorities, type IPriority } from "@/api/priority";
-import { getAllTicketTypes, type ITicketType } from "@/api/tickettype";
-import { getTicketsByStatus, getTicketsByPriority } from "@/api/dashboard";
+import { getAnalystDashboardSummary } from "@/api/dashboard";
 import { useUser } from "@/contexts/UserContext";
 import type { ITicket } from "@/api/ticket";
+import type { IStatus } from "@/api/status";
+import type { IPriority } from "@/api/priority";
+import type { ITicketType } from "@/api/tickettype";
 
 export function AnalystDashboard() {
     const { user } = useUser();
     const [ticketTypes, setTicketTypes] = useState<ITicketType[]>([]);
+    const [statusList, setStatusList] = useState<IStatus[]>([]);
+    const [priorities, setPriorities] = useState<IPriority[]>([]);
     const [loading, setLoading] = useState(true);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
-    const [ticketsByStatus, setTicketsByStatus] = useState<{ status: IStatus; count: number }[]>([]);
-    const [ticketsByPriority, setTicketsByPriority] = useState<{ priority: IPriority; count: number }[]>([]);
     const [tickets, setTickets] = useState<ITicket[]>([]);
-
     const [selectedYearBar, setSelectedYearBar] = useState<string>("");
     const [selectedYearStatusPie, setSelectedYearStatusPie] = useState<string>("");
     const [selectedYearPriorityPie, setSelectedYearPriorityPie] = useState<string>("");
@@ -30,38 +29,22 @@ export function AnalystDashboard() {
     useEffect(() => {
         if (!user?.id) return;
         setLoading(true);
-        Promise.all([
-            getAllStatus(),
-            getAllPriorities(),
-            getAllTicketTypes(),
-        ]).then(async ([statuses, priorities, types]) => {
-            setTicketTypes(types);
-
-            const allTickets: ITicket[] = [];
-            const statusCounts: { status: IStatus; count: number }[] = [];
-            for (const status of statuses) {
-                const tickets = await getTicketsByStatus(status.idStatus, user.id);
-                statusCounts.push({ status, count: tickets.length });
-                allTickets.push(...tickets);
-            }
-            setTicketsByStatus(statusCounts);
-
-            const priorityCounts: { priority: IPriority; count: number }[] = [];
-            for (const priority of priorities) {
-                const tickets = await getTicketsByPriority(priority.idPrioridade, user.id);
-                priorityCounts.push({ priority, count: tickets.length });
-            }
-            setTicketsByPriority(priorityCounts);
-
-            setTickets(allTickets);
-            setAlert(null);
-        }).catch(() => {
-            setTicketTypes([]);
-            setTicketsByStatus([]);
-            setTicketsByPriority([]);
-            setTickets([]);
-            setAlert({ type: "error", message: "Não foi possível retornar os dados do dashboard do analista." });
-        }).finally(() => setLoading(false));
+        getAnalystDashboardSummary(user.id)
+            .then(({ tickets, statusList, priorities, ticketTypes }) => {
+                setTickets(tickets);
+                setStatusList(statusList);
+                setPriorities(priorities);
+                setTicketTypes(ticketTypes);
+                setAlert(null);
+            })
+            .catch(() => {
+                setTickets([]);
+                setStatusList([]);
+                setPriorities([]);
+                setTicketTypes([]);
+                setAlert({ type: "error", message: "Não foi possível retornar os dados do dashboard do analista." });
+            })
+            .finally(() => setLoading(false));
     }, [user]);
 
     const closedTicketYears = Array.from(
@@ -112,7 +95,12 @@ export function AnalystDashboard() {
         return { month, Quantidade: count };
     });
 
-    const ticketsByStatusForYear = ticketsByStatus.map(({ status }) => ({
+    const ticketsByStatus = statusList.map((status) => ({
+        status,
+        count: tickets.filter(t => t.idStatus === status.idStatus).length,
+    }));
+
+    const ticketsByStatusForYear = statusList.map((status) => ({
         tipochamado: status.nomeStatus,
         quantity: tickets.filter(t => {
             if (!t.dataAbertura) return false;
@@ -122,7 +110,7 @@ export function AnalystDashboard() {
         fill: status.hexCorPrimaria || "#888"
     })).filter(item => item.quantity > 0);
 
-    const ticketsByPriorityForYear = ticketsByPriority.map(({ priority }) => ({
+    const ticketsByPriorityForYear = priorities.map((priority) => ({
         tipochamado: priority.nomePrioridade,
         quantity: tickets.filter(t => {
             if (!t.dataAbertura) return false;
@@ -180,7 +168,7 @@ export function AnalystDashboard() {
                     Meu Dashboard
                 </h1>
                 <h3 className="title-h3 text-slate-700">
-                    Indicadores dos meus chamados
+                    Indicadores históricos dos meus chamados
                 </h3>
             </div>
             {loading ? (
