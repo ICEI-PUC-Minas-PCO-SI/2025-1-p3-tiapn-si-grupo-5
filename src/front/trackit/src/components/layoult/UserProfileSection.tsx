@@ -25,7 +25,7 @@ export function UserProfileSection({
     onLogout = () => { },
 }: UserProfileSectionProps) {
     const roleLabels: Record<number, string> = {
-        1: "Gerente",
+        1: "Gestor",
         2: "Analista",
         3: "Usuário",
     };

@@ -185,7 +185,7 @@ export function RegisterUser() {
                     <label>
                         Gerência:
                     </label>
-                    <Controller
+                    <Controller 
                         name="administration"
                         control={control}
                         render={({ field }) => (
