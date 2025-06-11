@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "@/api/config";
+import { authHeaders } from "@/contexts/helperCookies";
 
 export interface IStatus {
     idStatus: number;
@@ -25,7 +26,7 @@ export async function getAllStatus(): Promise<IStatus[]> {
 export async function addStatus(nomeStatus: string, color: string): Promise<IStatus> {
     const response = await fetch(`${API_BASE_URL}/statuses`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ nomeStatus, color }),
     });
     if (!response.ok) {
@@ -38,7 +39,7 @@ export async function addStatus(nomeStatus: string, color: string): Promise<ISta
 export async function updateStatus(idStatus: number, nomeStatus: string, color: string): Promise<IStatus> {
     const response = await fetch(`${API_BASE_URL}/statuses/${idStatus}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({
             idStatus,
             nomeStatus,
@@ -55,7 +56,7 @@ export async function updateStatus(idStatus: number, nomeStatus: string, color: 
 export async function deleteStatus(idStatus: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/statuses/${idStatus}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ idStatus }),
     });
     if (!response.ok) {

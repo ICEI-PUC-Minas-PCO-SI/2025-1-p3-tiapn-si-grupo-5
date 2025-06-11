@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import { StatusController } from '../controllers/statusController';
+import { StatusController } from '../controllers/StatusController';
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
+import { autenticarToken } from '../middlewares/auth-jwt';
 
 // Schemas para validação
 const statusCreateSchema = z.object({
@@ -25,18 +26,27 @@ export class StatusRoutes {
     }
 
     private initializeRoutes() {
-        this.router.get('/statuses', this.statusController.getStatus.bind(this.statusController));
+        this.router.get(
+            '/statuses',
+            this.statusController.getStatus.bind(this.statusController)
+        );
         this.router.post(
             '/statuses',
             validatePayload(statusCreateSchema),
+            autenticarToken, 
             this.statusController.createStatus.bind(this.statusController)
         );
         this.router.put(
             '/statuses/:id',
             validatePayload(statusUpdateSchema),
+            autenticarToken, 
             this.statusController.updateStatus.bind(this.statusController)
         );
-        this.router.delete('/statuses/:id', this.statusController.deleteStatus.bind(this.statusController));
+        this.router.delete(
+            '/statuses/:id', 
+            autenticarToken, 
+            this.statusController.deleteStatus.bind(this.statusController)
+        );
     }
 
     public getRouter(): Router {

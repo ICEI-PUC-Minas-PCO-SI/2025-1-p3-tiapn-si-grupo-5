@@ -1,8 +1,9 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { DefaultSpinner } from "@/components/ui/spinner";
-import { getMe } from "@/api/Auth";
-import { getAllActiveManagements } from "@/api/Management";
-import type { IManagement } from "../api/Management";
+import { getMe } from "@/api/auth";
+import { getAllActiveManagements } from "@/api/management";
+import type { IManagement } from "../api/management";
+import Cookies from "js-cookie";
 
 type User = {
   id: number;
@@ -34,7 +35,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [logoutLoading, setLogoutLoading] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = Cookies.get("token");
     async function fetchUserAndManagement() {
       if (token) {
         try {
@@ -70,10 +71,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   function setUser(user: User | null, token?: string) {
     setUserState(user);
     if (token) {
-      localStorage.setItem("token", token);
+      const expires = new Date(Date.now() + 60 * 60 * 1000); // 60 minutos
+      Cookies.set("token", token, { expires });
     }
     if (!user) {
-      localStorage.removeItem("token");
+      Cookies.remove("token");
     }
   }
 
@@ -81,7 +83,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     setLogoutLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 500));
     setUserState(null);
-    localStorage.removeItem("token");
+    Cookies.remove("token");
     setLogoutLoading(false);
   }
 

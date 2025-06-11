@@ -154,6 +154,13 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                                     <SelectLabel>Selecione a prioridade da demanda</SelectLabel>
                                     {priorities.map((priority) => (
                                         <SelectItem key={priority.idPrioridade} value={String(priority.idPrioridade)}>
+                                            <span style={{
+                                                display: "inline-block",
+                                                width: 12,
+                                                height: 12,
+                                                borderRadius: "50%",
+                                                backgroundColor: priority.hexCorPrimaria,
+                                            }} /> 
                                             {priority.nomePrioridade}
                                         </SelectItem>
                                     ))}

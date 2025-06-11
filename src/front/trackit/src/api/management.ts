@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "@/api/config";
+import { authHeaders } from "@/contexts/helperCookies";
 
 export interface IManagement {
     idGerencia: number;
@@ -8,7 +9,9 @@ export interface IManagement {
 
 export async function getAllActiveManagements(): Promise<IManagement[]> {
     try {
-        const response = await fetch(`${API_BASE_URL}/departments`);
+        const response = await fetch(`${API_BASE_URL}/departments`, {
+            headers: authHeaders()
+        });
         if (!response.ok) {
             throw new Error("Erro ao buscar gerências ativas");
         }
@@ -23,7 +26,7 @@ export async function getAllActiveManagements(): Promise<IManagement[]> {
 export async function addManagement(nomeGerencia: string): Promise<IManagement> {
     const response = await fetch(`${API_BASE_URL}/departments`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ nomeGerencia }),
     });
     if (!response.ok) {
@@ -36,7 +39,7 @@ export async function addManagement(nomeGerencia: string): Promise<IManagement> 
 export async function updateManagement(idGerencia: number, nomeGerencia: string): Promise<IManagement> {
     const response = await fetch(`${API_BASE_URL}/departments/${idGerencia}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({
             idGerencia,
             nomeGerencia
@@ -52,7 +55,7 @@ export async function updateManagement(idGerencia: number, nomeGerencia: string)
 export async function deleteManagement(idGerencia: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/departments/${idGerencia}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ idGerencia }),
     });
     if (!response.ok) {

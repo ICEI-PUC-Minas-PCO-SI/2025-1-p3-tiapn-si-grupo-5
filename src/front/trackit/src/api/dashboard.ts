@@ -3,6 +3,7 @@ import type { ITicket } from "@/api/ticket";
 import type { IStatus } from "./status";
 import type { IPriority } from "./priority";
 import type { ITicketType } from "./tickettype";
+import { authHeaders } from "@/contexts/helperCookies";
 /*
 
 -- NÃO MAIS UTILIZADO, MAS MANTIDO PARA REFERÊNCIA --
@@ -59,7 +60,9 @@ export async function getDashboardSummary(): Promise<{
     priorities: IPriority[];
     ticketTypes: ITicketType[];
 }> {
-    const response = await fetch(`${API_BASE_URL}/dashboard/summary`);
+    const response = await fetch(`${API_BASE_URL}/dashboard/summary`, {
+        headers: authHeaders()
+    });
     if (!response.ok) throw new Error("Erro ao buscar resumo do dashboard");
     return response.json();
 }
@@ -73,7 +76,9 @@ export async function getAnalystDashboardSummary(idAnalista: number): Promise<{
     priorities: IPriority[];
     ticketTypes: ITicketType[];
 }> {
-    const response = await fetch(`${API_BASE_URL}/dashboard/tickets-by-analyst?idAnalista=${idAnalista}`);
+    const response = await fetch(`${API_BASE_URL}/dashboard/tickets-by-analyst?idAnalista=${idAnalista}`, {
+        headers: authHeaders()
+    });
     if (!response.ok) throw new Error("Erro ao buscar dashboard do analista");
     return response.json();
 }
