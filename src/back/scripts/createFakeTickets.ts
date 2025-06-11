@@ -99,7 +99,7 @@ async function main() {
     // Inicia o log de progresso a cada 5 segundos
     progressInterval = setInterval(() => {
         console.log(`${createdCount}/${totalTickets} chamados criados...`);
-    }, 5000);
+    }, 1000);
 
     const statusConcluido = statuses.find(s => s.nomeStatus === "Concluído");
     if (!statusConcluido) throw new Error('Status "Concluído" não encontrado.');

@@ -1,7 +1,23 @@
-import app from "./app";
+import { App } from "./app";
+import http from "http";
+import { Server as SocketIOServer } from "socket.io";
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+const appInstance = new App().getInstance();
+const server = http.createServer(appInstance);
+
+const io = new SocketIOServer(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+
+io.on("connection", (socket) => {
+  console.log("Novo cliente conectado:", socket.id);
+});
+
+server.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
