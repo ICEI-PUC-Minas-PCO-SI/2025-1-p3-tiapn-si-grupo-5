@@ -11,6 +11,15 @@ import {
     deletePriority,
 } from "@/api/priority";
 import { z } from "zod";
+import {
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogFooter,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 
 interface PriorityParamsProps {
     isAdding: boolean;
@@ -32,6 +41,9 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
     const [editingPriorityId, setEditingPriorityId] = useState<number | null>(null);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [nameError, setNameError] = useState<string | null>(null);
+    const [touched, setTouched] = useState(false);
+
+    const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
 
     const fetchPriorities = async () => {
         try {
@@ -56,11 +68,16 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
     useEffect(() => {
         if (!isAdding) {
             setNameError(null);
+            setTouched(false);
             return;
         }
-        const result = priorityNameSchema.safeParse(newPriorityName);
-        setNameError(result.success ? null : result.error.issues[0].message);
-    }, [newPriorityName, isAdding]);
+        if (touched) {
+            const result = priorityNameSchema.safeParse(newPriorityName);
+            setNameError(result.success ? null : result.error.issues[0].message);
+        } else {
+            setNameError(null);
+        }
+    }, [newPriorityName, isAdding, touched]);
 
     const handleAddOrEditPriority = async () => {
         const result = priorityNameSchema.safeParse(newPriorityName);
@@ -99,14 +116,20 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
         setIsAdding(true);
     };
 
-    const handleDeletePriority = async (idPrioridade: number) => {
+    const handleDeletePriority = (idPrioridade: number) => {
+        setDeleteDialog({ open: true, id: idPrioridade });
+    };
+
+    const confirmDeletePriority = async () => {
+        if (!deleteDialog.id) return;
         try {
-            await deletePriority(idPrioridade);
-            setPriorityList((prev) => prev.filter((p) => p.idPrioridade !== idPrioridade));
+            await deletePriority(deleteDialog.id);
+            setPriorityList((prev) => prev.filter((p) => p.idPrioridade !== deleteDialog.id));
             setAlert({ type: "success", message: "Prioridade excluída com sucesso!" });
         } catch (error) {
             setAlert({ type: "error", message: getErrorMessage(error) || "Prioridade associada a um chamado existente." });
         }
+        setDeleteDialog({ open: false, id: null });
     };
 
     const isSaveDisabled = !newPriorityName || !!nameError;
@@ -150,7 +173,10 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
                         type="text"
                         placeholder="Nome da prioridade"
                         value={newPriorityName}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPriorityName(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                            setNewPriorityName(e.target.value);
+                            setTouched(true);
+                        }}
                     />
                     <Input
                         type="color"
@@ -171,16 +197,39 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
                             setNewPriorityName("");
                             setNewPriorityColor("#000000");
                             setEditingPriorityId(null);
+                            setTouched(false);
                         }}
                         variant="outline"
                     >
                         Cancelar
                     </Button>
-                    {nameError && (
+                    {nameError && touched && (
                         <span className="text-red-500 text-sm">{nameError}</span>
                     )}
                 </div>
             )}
+            <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, id: open ? deleteDialog.id : null })}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Excluir prioridade</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Tem certeza que deseja excluir esta prioridade? Esta ação não poderá ser desfeita.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => setDeleteDialog({ open: false, id: null })}>
+                            Cancelar
+                        </AlertDialogCancel>
+                        <Button
+                            variant="delete"
+                            onClick={confirmDeletePriority}
+                            type="button"
+                        >
+                            Excluir
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }

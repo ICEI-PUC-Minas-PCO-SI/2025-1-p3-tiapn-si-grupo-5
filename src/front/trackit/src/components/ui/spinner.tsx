@@ -11,3 +11,19 @@ export function DefaultSpinner() {
         </div>
     )
 }
+
+export function TableSpinner({ size = 32 }: { size?: number }) {
+    return (
+        <div className="flex items-center justify-center w-full min-h-[80px]">
+            <div
+                className="inline-block animate-spin rounded-full border-4 border-solid border-slate-800 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite] text-slate-900 dark:border-slate-300 dark:border-r-transparent dark:text-slate-300"
+                style={{ width: size, height: size }}
+                role="status"
+            >
+                <span
+                    className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+                >Carregando...</span>
+            </div>
+        </div>
+    );
+}

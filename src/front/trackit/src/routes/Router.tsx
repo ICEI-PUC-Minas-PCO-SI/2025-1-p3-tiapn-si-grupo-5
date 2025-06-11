@@ -12,9 +12,13 @@ import { DetailsStatus } from "@/pages/params/Status";
 import { DetailsManagement } from "@/pages/params/Management";
 import { TicketType } from "@/pages/params/TicketType";
 import { Priority } from "@/pages/params/Priority";
-import { AssignTickets } from "@/pages/assign-tickets/AssignTickets";
+import { AssignTickets } from "@/pages/analyst-assign-tickets/AssignTickets";
 import { AnalystTickets } from "@/pages/analyst-tickets/AnalystTickets";
 import { UserTickets } from "@/pages/user-tickets/UserTickets";
+import { Dashboard } from "@/pages/dashbord/Dashboard";
+import { AdminAssignTickets } from "@/pages/admin-assign-tickets/AdminAssignTickets";
+import { AdminTeamTickets } from "@/pages/admin-team-tickets/AdminTeamTickets";
+import { AnalystDashboard } from "@/pages/analyst-dashboard/AnalystDashboard";
 
 export function Router() {
     return (
@@ -41,6 +45,7 @@ export function Router() {
                 <Route path="settings" element={< Settings />} />
                 <Route path="assign-tickets" element={<AssignTickets />} />
                 <Route path="my-tickets" element={<AnalystTickets />} />
+                <Route path="dashboard" element={<AnalystDashboard />} />
             </Route>
             <Route path="/admin" element={
                 <PrivateRoute allowedTypes={[1]}>
@@ -54,6 +59,9 @@ export function Router() {
                 <Route path="params/department" element={<DetailsManagement />} />
                 <Route path="params/type" element={<TicketType />} />
                 <Route path="params/priority" element={<Priority />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="open-tickets" element={<AdminAssignTickets />} />
+                <Route path="assigned-tickets" element={<AdminTeamTickets />} />
             </Route>
         </Routes>
     );

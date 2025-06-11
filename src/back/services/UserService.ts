@@ -1,5 +1,5 @@
 import { PrismaClient } from "../generated/prisma";
-import { hashPassword, compareHashedPassword } from "../services/HashPasswordService";
+import { hashPassword, compareHashedPassword } from "./hashPasswordService";
 
 const prisma = new PrismaClient();
 
@@ -103,6 +103,23 @@ export class UserService {
     async findUserByMatricula(matricula: string) {
         return prisma.usuario.findFirst({
             where: { matricula }
+        });
+    }
+
+    async getAnalysts() {
+        return prisma.usuario.findMany({
+            where: { idTipoUsuario: 2 },
+            select: {
+                idUsuario: true,
+                nomeUsuario: true,
+                matricula: true,
+                idTipoUsuario: true,
+                idGerencia: true,
+                ativo: true,
+                email: true,
+                ramal: true,
+                dataCadastro: true,
+            }
         });
     }
 }

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { getAllPriorities } from "@/api/priority";
 import type { IPriority } from "@/api/priority";
 import { getAllStatus } from "@/api/status";
@@ -15,10 +16,19 @@ import {
     DropdownMenu,
     DropdownMenuTrigger,
     DropdownMenuContent,
-    DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import { Filter } from "lucide-react";
+import { XCircle } from "lucide-react";
 import { DataTableUserTickets } from "../../components/user-tickets/DataTableUserTickets";
+import {
+    Select,
+    SelectTrigger,
+    SelectValue,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+} from "@/components/ui/select";
+import { TableSpinner } from "@/components/ui/spinner";
 
 export interface UserTicketTableRow {
     idChamado: number;
@@ -42,22 +52,39 @@ export function UserTickets() {
     const { user } = useUser();
     const [tickets, setTickets] = useState<UserTicketTableRow[]>([]);
     const [filteredData, setFilteredData] = useState<UserTicketTableRow[]>([]);
-    const [search, setSearch] = useState("");
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
-    const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>({
-        protocolo: true,
-        assunto: true,
-        dataAbertura: true,
-        prioridade: true,
-        status: true,
-        analista: true,
-        actions: true,
-    });
     const [allPriorities, setAllPriorities] = useState<IPriority[]>([]);
     const [priorityFilterOpen, setPriorityFilterOpen] = useState(false);
-    const [selectedPriorities, setSelectedPriorities] = useState<number[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    // Filtro por ano de abertura
+    // Query params
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    // Filtros controlados por query params
+    const search = searchParams.get("search") || "";
+    const priorityFilter = searchParams.get("priority") || "__all__";
+    const yearAberturaFilter = searchParams.get("yearAbertura") || "__all__";
+
+    // Anos disponíveis de abertura
+    const anosAberturaDisponiveis = useMemo(() => {
+        return Array.from(
+            new Set(
+                tickets
+                    .map(t => {
+                        if (!t.dataAbertura) return undefined;
+                        const year = new Date(t.dataAbertura).getFullYear();
+                        return isNaN(year) ? undefined : year;
+                    })
+                    .filter((y): y is number => typeof y === "number")
+            )
+        )
+            .sort((a, b) => b - a)
+            .map(String);
+    }, [tickets]);
 
     useEffect(() => {
+        setLoading(true);
         Promise.all([getAllTickets(), getAllPriorities(), getAllStatus(), getAllUsers()])
             .then(([ticketsData, priorities, statuses, users]: [
                 ITicket[],
@@ -72,7 +99,7 @@ export function UserTickets() {
                     .map((t) => {
                         let formattedProtocolo = "";
                         if (t.protocolo && t.protocolo.length === 8) {
-                            const num = t.protocolo.slice(2, 6);
+                            const num = t.protocolo.slice(0, 6);
                             const ano = t.protocolo.slice(6, 8);
                             formattedProtocolo = `#${num}/${ano}`;
                         } else {
@@ -85,7 +112,7 @@ export function UserTickets() {
                         };
                         const statusObj = statuses.find(s => s.idStatus === t.idStatus) || {
                             idStatus: t.idStatus ?? 0,
-                            nomeStatus: "Não Definido",
+                            nomeStatus: "Em aberto",
                             hexCorPrimaria: "#888"
                         };
                         const analistaName = t.idAnalista
@@ -110,13 +137,14 @@ export function UserTickets() {
                         };
                     });
                 setTickets(mapped);
-                setFilteredData(mapped);
                 setAlert(null);
+                setLoading(false);
             })
             .catch(() => {
                 setTickets([]);
                 setFilteredData([]);
                 setAlert({ type: "error", message: "Erro ao buscar chamados ou parâmetros." });
+                setLoading(false);
             });
     }, [user]);
 
@@ -137,49 +165,74 @@ export function UserTickets() {
                     (ticket.protocolo ?? "").toLowerCase().includes(lowerCaseQuery)
             );
         }
-        if (selectedPriorities.length > 0) {
+        if (priorityFilter && priorityFilter !== "__all__") {
             data = data.filter((ticket) =>
-                selectedPriorities.includes(ticket.prioridade.idPrioridade)
+                String(ticket.prioridade.idPrioridade) === priorityFilter
             );
         }
+        // Filtro por ano de abertura
+        if (yearAberturaFilter && yearAberturaFilter !== "__all__") {
+            data = data.filter((ticket) => {
+                if (!ticket.dataAbertura) return false;
+                const year = new Date(ticket.dataAbertura).getFullYear();
+                return String(year) === yearAberturaFilter;
+            });
+        }
         setFilteredData(data);
-    }, [search, tickets, selectedPriorities]);
+    }, [search, tickets, priorityFilter, yearAberturaFilter]);
 
-    const columnsList = [
-        { id: "protocolo", label: "Protocolo" },
-        { id: "assunto", label: "Assunto" },
-        { id: "dataAbertura", label: "Aberto em" },
-        { id: "prioridade", label: "Prioridade" },
-        { id: "status", label: "Status" },
-        { id: "analista", label: "Analista" },
-    ];
-
-    const toggleColumnVisibility = (columnId: string) => {
-        setVisibleColumns((prev) => ({
-            ...prev,
-            [columnId]: !prev[columnId],
-        }));
-    };
-
-    const handlePriorityToggle = (idPrioridade: number) => {
-        setSelectedPriorities((prev) =>
-            prev.includes(idPrioridade)
-                ? prev.filter((id) => id !== idPrioridade)
-                : [...prev, idPrioridade]
-        );
-    };
-
-    const clearPriorityFilter = () => {
-        setSelectedPriorities([]);
-        setPriorityFilterOpen(false);
-    };
-
+    // Prioridades presentes nos chamados
     const prioritiesInTickets = Array.from(
         new Set(tickets.map((t) => t.prioridade.idPrioridade))
     );
     const prioritiesToShow = allPriorities.filter((p) =>
         prioritiesInTickets.includes(p.idPrioridade)
     );
+
+    // Limpar filtros (prioridade e ano) e fechar modal
+    const clearFilters = () => {
+        setSearchParams(params => {
+            params.delete("priority");
+            params.delete("yearAbertura");
+            return params;
+        });
+        setPriorityFilterOpen(false);
+    };
+
+    // Handlers para filtros
+    const handlePriorityChange = (value: string) => {
+        setSearchParams(params => {
+            if (value === "__all__") {
+                params.delete("priority");
+            } else {
+                params.set("priority", value);
+            }
+            return params;
+        });
+    };
+
+    // Handler para Select de ano de abertura
+    const handleYearAberturaChange = (value: string) => {
+        setSearchParams(params => {
+            if (value === "__all__") {
+                params.delete("yearAbertura");
+            } else {
+                params.set("yearAbertura", value);
+            }
+            return params;
+        });
+    };
+
+    const handleSearch = (query: string) => {
+        setSearchParams(params => {
+            if (query) {
+                params.set("search", query);
+            } else {
+                params.delete("search");
+            }
+            return params;
+        });
+    };
 
     return (
         <div className="space-y-4">
@@ -194,75 +247,86 @@ export function UserTickets() {
             )}
             <h1 className="title-h1">Meus chamados</h1>
             <div className="flex justify-between">
-                <Searchbar onSearch={setSearch} />
+                <Searchbar onSearch={handleSearch} />
                 <div className="flex gap-3">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant="outline">
-                                Colunas
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            {columnsList.map((column) => (
-                                <DropdownMenuCheckboxItem
-                                    key={column.id}
-                                    className="capitalize"
-                                    checked={visibleColumns[column.id]}
-                                    onCheckedChange={() =>
-                                        toggleColumnVisibility(column.id)
-                                    }
-                                >
-                                    {column.label}
-                                </DropdownMenuCheckboxItem>
-                            ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
                     <DropdownMenu open={priorityFilterOpen} onOpenChange={setPriorityFilterOpen}>
                         <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant="outline">
+                            <Button size="icon" variant="outline">
                                 <Filter className="w-4 h-4 mr-1" />
-                                Filtrar
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="min-w-[220px]">
                             <div className="px-4 py-2 font-semibold text-sm text-gray-700">Prioridade</div>
-                            {prioritiesToShow.length === 0 ? (
-                                <span className="block px-4 py-2 text-gray-500">Nenhuma prioridade encontrada</span>
-                            ) : (
-                                prioritiesToShow.map((priority) => (
-                                    <DropdownMenuCheckboxItem
-                                        key={priority.idPrioridade}
-                                        checked={selectedPriorities.includes(priority.idPrioridade)}
-                                        onCheckedChange={() => handlePriorityToggle(priority.idPrioridade)}
-                                        className="flex items-center gap-2"
-                                    >
-                                        <span
-                                            className="inline-block w-4 h-4 rounded-full mr-2"
-                                            style={{ backgroundColor: priority.hexCorPrimaria }}
-                                        />
-                                        {priority.nomePrioridade}
-                                    </DropdownMenuCheckboxItem>
-                                ))
-                            )
-                            }
-                            <div className="flex justify-end p-2">
+                            <Select value={priorityFilter} onValueChange={handlePriorityChange}>
+                                <SelectTrigger className="w-full mb-2">
+                                    <SelectValue placeholder="Todas" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="__all__">Todas</SelectItem>
+                                        {prioritiesToShow.map(priority => (
+                                            <SelectItem key={priority.idPrioridade} value={String(priority.idPrioridade)}>
+                                                <span className="inline-block w-4 h-4 rounded-full mr-2" style={{ backgroundColor: priority.hexCorPrimaria }} />
+                                                {priority.nomePrioridade}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                            {/* Novo: filtro por ano de abertura */}
+                            <div className="px-4 py-2 font-semibold text-sm text-gray-700">Ano de Abertura</div>
+                            <Select value={yearAberturaFilter} onValueChange={handleYearAberturaChange}>
+                                <SelectTrigger className="w-full mb-2">
+                                    <SelectValue placeholder="Todos" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectItem value="__all__">Todos</SelectItem>
+                                        {anosAberturaDisponiveis.map((ano) => (
+                                            <SelectItem key={ano} value={ano}>
+                                                {ano}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                            <div className="flex justify-center px-2 pb-2">
                                 <Button
                                     size="sm"
                                     variant="ghost"
-                                    onClick={clearPriorityFilter}
-                                    disabled={selectedPriorities.length === 0}
+                                    onClick={clearFilters}
+                                    className="flex items-center gap-1"
+                                    disabled={
+                                        priorityFilter === "__all__" &&
+                                        yearAberturaFilter === "__all__"
+                                    }
                                 >
-                                    Limpar filtro
+                                    <XCircle className="w-4 h-4" />
+                                    Limpar filtros
                                 </Button>
                             </div>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
             </div>
-            <DataTableUserTickets
-                data={filteredData}
-                visibleColumns={visibleColumns}
-            />
+            <div>
+                {loading ? (
+                    <TableSpinner />
+                ) : (
+                    <DataTableUserTickets
+                        data={filteredData}
+                        visibleColumns={{
+                            protocolo: true,
+                            assunto: true,
+                            dataAbertura: true,
+                            prioridade: true,
+                            status: true,
+                            analista: true,
+                            actions: true,
+                        }}
+                    />
+                )}
+            </div>
         </div>
     );
 }

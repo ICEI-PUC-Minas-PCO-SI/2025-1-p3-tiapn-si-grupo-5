@@ -10,7 +10,7 @@ import {
   type Row,
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { ArrowUpDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowUpDown, ChevronLeft, ChevronRight, Pencil, Trash2, CheckCircle2 } from "lucide-react";
 import type { User, ActionButton } from "../../interfaces/InterfacesDataTableUsers";
 
 export function DataTableUsers({
@@ -127,26 +127,35 @@ export function DataTableUsers({
       header: "Ações",
       cell: ({ row }: { row: Row<User> }) => (
         <div className="flex justify-center gap-2">
-          {actions.map((action, index) => {
-            const label =
-              typeof action.label === "function"
-                ? action.label(row.original)
-                : action.label;
-            const variant =
-              typeof action.variant === "function"
-                ? action.variant(row.original)
-                : action.variant;
-            return (
-              <Button
-                key={index}
-                variant={variant}
-                size="sm"
-                onClick={() => action.onClick(row.original)}
-              >
-                {label}
-              </Button>
-            );
-          })}
+          {/* Editar */}
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => actions[0].onClick(row.original)}
+            aria-label="Editar"
+          >
+            <Pencil className="w-4 h-4" />
+          </Button>
+          {/* Ativar/Desativar */}
+          {row.original.ativo === 1 ? (
+            <Button
+              variant="delete"
+              size="icon"
+              onClick={() => actions[1].onClick(row.original)}
+              aria-label="Desativar"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          ) : (
+            <Button
+              variant="active"
+              size="icon"
+              onClick={() => actions[1].onClick(row.original)}
+              aria-label="Ativar"
+            >
+              <CheckCircle2 className="w-4 h-4" />
+            </Button>
+          )}
         </div>
       ),
     },
@@ -164,7 +173,7 @@ export function DataTableUsers({
 
   return (
     <div className="w-full">
-      <table className="w-full border rounded bg-white">
+      <table className="w-full border rounded bg-white text-sm">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id} className="bg-gray-100 text-gray-700">

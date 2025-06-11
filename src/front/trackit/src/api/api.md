@@ -26,6 +26,9 @@ A pasta `api/` centraliza todas as funções responsáveis por consumir a API RE
 - **Auth.ts**  
   Função para buscar os dados do usuário autenticado (`getMe`), utilizando o token JWT.
 
+- **Dashboard.ts**  
+  Funções para buscar chamados filtrados para o dashboard (por tipo, status, prioridade, analista).
+
 ## Boas Práticas
 
 - **Responsabilidade única:** Cada arquivo trata apenas de um recurso/domínio.
@@ -41,6 +44,19 @@ import { getAllUsers, registerNewUser } from "@/api/users";
 async function exemplo() {
   const users = await getAllUsers();
   await registerNewUser({ /* dados do usuário */ });
+}
+```
+
+## Exemplo de Uso - Dashboard
+
+```typescript
+import { getTicketsByType, getTicketsByStatus, getTicketsByPriority, getTicketsByAnalyst } from "@/api/dashboard";
+
+async function exemploDashboard() {
+  const chamadosTipo = await getTicketsByType(1);
+  const chamadosStatus = await getTicketsByStatus(2);
+  const chamadosPrioridade = await getTicketsByPriority(3);
+  const chamadosAnalista = await getTicketsByAnalyst(5);
 }
 ```
 

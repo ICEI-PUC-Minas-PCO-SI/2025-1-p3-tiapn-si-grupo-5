@@ -74,3 +74,30 @@ export async function assignTicket(idChamado: number): Promise<void> {
     });
     if (!response.ok) throw new Error("Erro ao assumir chamado");
 }
+
+export async function updateTicketAnalyst(
+    idChamado: number,
+    idAnalista: number
+): Promise<void> {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}/analyst`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        },
+        body: JSON.stringify({ idAnalista }),
+    });
+    if (!response.ok) throw new Error("Erro ao atualizar analista do chamado");
+}
+
+export async function getTeamTickets(): Promise<ITicket[]> {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${API_BASE_URL}/tickets/team`, {
+        headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+        }
+    });
+    if (!response.ok) throw new Error("Erro ao buscar chamados da equipe");
+    return response.json();
+}

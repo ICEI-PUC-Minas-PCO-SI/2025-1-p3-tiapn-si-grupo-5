@@ -26,6 +26,7 @@ import { getAllActiveManagements } from "@/api/management";
 import { getAllUserTypes } from "../../api/usertypes";
 import { registerNewUser } from "@/api/users";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
+import { Plus } from "lucide-react";
 
 const crudUserSchema = z.object({
     name: z
@@ -49,12 +50,22 @@ const crudUserSchema = z.object({
         message: "Ramal inválido. Deve conter exatamente 10 dígitos numéricos",
     }),
     email: z.string().email("E-mail inválido"),
-    accessType: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-        message: "Selecione um tipo de acesso válido",
-    }),
-    management: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-        message: "Selecione uma gerência válida",
-    }),
+    accessType: z
+        .string()
+        .optional()
+        .or(z.literal(""))
+        .refine((val) => typeof val === "string" && val.length > 0, { message: "Selecione um tipo de acesso válido" })
+        .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+            message: "Selecione um tipo de acesso válido",
+        }),
+    management: z
+        .string()
+        .optional()
+        .or(z.literal(""))
+        .refine((val) => typeof val === "string" && val.length > 0, { message: "Selecione uma gerência válida" })
+        .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+            message: "Selecione uma gerência válida",
+        }),
 });
 
 type CrudUserSchema = z.infer<typeof crudUserSchema>;
@@ -101,6 +112,14 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
         formState: { errors },
     } = useForm<CrudUserSchema>({
         resolver: zodResolver(crudUserSchema),
+        defaultValues: {
+            name: "",
+            matricula: "",
+            ramal: "",
+            email: "",
+            accessType: "",
+            management: "",
+        }
     });
 
     const handleModalOpenChange = (isOpen: boolean) => {
@@ -153,7 +172,9 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
             )}
             <Dialog open={isModalOpen} onOpenChange={handleModalOpenChange}>
                 <DialogTrigger asChild>
-                    <Button size="sm">Criar</Button>
+                    <Button size="icon">
+                        <Plus className="w-4 h-4"/>
+                    </Button>
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>

@@ -1,5 +1,16 @@
 import { Router } from 'express';
-import { TicketTypeController } from '../controllers/TicketTypeController';
+import { TicketTypeController } from '../controllers/ticketTypeController';
+import { validatePayload } from "../middlewares/validate-payload";
+import { z } from "zod";
+
+// Schemas para validação
+const ticketTypeCreateSchema = z.object({
+    nomeTipo: z.string().min(3)
+});
+const ticketTypeUpdateSchema = z.object({
+    idTipoChamado: z.union([z.number(), z.string()]),
+    nomeTipo: z.string().min(3)
+});
 
 export class TicketTypeRoutes {
     private router: Router;
@@ -13,8 +24,16 @@ export class TicketTypeRoutes {
 
     private initializeRoutes() {
         this.router.get('/ticket-types', this.ticketTypeController.getTicketTypes.bind(this.ticketTypeController));
-        this.router.post('/ticket-types', this.ticketTypeController.createTicketType.bind(this.ticketTypeController));
-        this.router.put('/ticket-types/:id', this.ticketTypeController.updateTicketType.bind(this.ticketTypeController));
+        this.router.post(
+            '/ticket-types',
+            validatePayload(ticketTypeCreateSchema),
+            this.ticketTypeController.createTicketType.bind(this.ticketTypeController)
+        );
+        this.router.put(
+            '/ticket-types/:id',
+            validatePayload(ticketTypeUpdateSchema),
+            this.ticketTypeController.updateTicketType.bind(this.ticketTypeController)
+        );
         this.router.delete('/ticket-types/:id', this.ticketTypeController.deleteTicketType.bind(this.ticketTypeController));
     }
 

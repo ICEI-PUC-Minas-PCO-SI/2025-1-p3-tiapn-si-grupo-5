@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { TicketTypeService } from "../services/TicketTypeService";
+import { TicketTypeService } from "../services/ticketTypeService";
 
 const ticketTypeService = new TicketTypeService();
 
@@ -8,7 +8,6 @@ export class TicketTypeController {
         try {
             const tipos = await ticketTypeService.getTicketTypes();
             res.json(tipos);
-            console.log("Tipos de chamado:", JSON.stringify(tipos));
         } catch (error) {
             console.error("Erro ao buscar tipos de chamado:", error);
             res.status(500).json({ error: "Erro ao buscar tipos de chamado" });

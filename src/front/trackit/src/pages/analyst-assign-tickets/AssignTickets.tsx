@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { getUnassignedTickets, assignTicket } from "@/api/ticket";
 import type { ITicket } from "@/api/ticket";
 import { getAllPriorities } from "@/api/priority";
@@ -10,31 +11,38 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
-  DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import { DataTableAssignTickets } from "@/components/assing-tickets/DataTableAssignTickets";
 import type { AssignTicketTableRow } from "@/components/assing-tickets/DataTableAssignTickets";
 import { Filter } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { XCircle } from "lucide-react";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+} from "@/components/ui/select";
+import { TableSpinner } from "@/components/ui/spinner";
 
 export function AssignTickets() {
   const [tickets, setTickets] = useState<AssignTicketTableRow[]>([]);
   const [filteredData, setFilteredData] = useState<AssignTicketTableRow[]>([]);
-  const [search, setSearch] = useState("");
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
-  const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>({
-    protocolo: true,
-    assunto: true,
-    dataAbertura: true,
-    prioridade: true,
-    actions: true,
-  });
   const [allPriorities, setAllPriorities] = useState<IPriority[]>([]);
   const [priorityFilterOpen, setPriorityFilterOpen] = useState(false);
-  const [selectedPriorities, setSelectedPriorities] = useState<number[]>([]);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+
+  // Query params
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Filtros controlados por query params
+  const search = searchParams.get("search") || "";
+  const priorityFilter = searchParams.get("priority") || "__all__";
 
   useEffect(() => {
+    setLoading(true);
     Promise.all([getUnassignedTickets(), getAllPriorities()])
       .then(([ticketsData, priorities]: [ITicket[], IPriority[]]) => {
         const priorityMap = new Map<number, IPriority>();
@@ -44,7 +52,7 @@ export function AssignTickets() {
         const mapped: AssignTicketTableRow[] = ticketsData.map((t) => {
           let formattedProtocolo = "";
           if (t.protocolo && t.protocolo.length === 8) {
-            const num = t.protocolo.slice(2, 6);
+            const num = t.protocolo.slice(0, 6);
             const ano = t.protocolo.slice(6, 8);
             formattedProtocolo = `#${num}/${ano}`;
           } else {
@@ -68,29 +76,23 @@ export function AssignTickets() {
           };
         });
         setTickets(mapped);
-        setFilteredData(mapped);
         setAlert(null);
+        setLoading(false);
       })
       .catch(() => {
         setTickets([]);
         setFilteredData([]);
         setAlert({ type: "error", message: "Erro ao buscar chamados ou prioridades." });
+        setLoading(false);
       });
   }, []);
 
   useEffect(() => {
-    if (alert?.type === "success") {
-      const timer = setTimeout(() => {
-        setAlert(null);
-        navigate("/analyst/my-tickets");
-      }, 1200);
-      return () => clearTimeout(timer);
-    }
     if (alert) {
       const timer = setTimeout(() => setAlert(null), 3000);
       return () => clearTimeout(timer);
     }
-  }, [alert, navigate]);
+  }, [alert]);
 
   useEffect(() => {
     let data = tickets;
@@ -102,13 +104,13 @@ export function AssignTickets() {
           (ticket.protocolo ?? "").toLowerCase().includes(lowerCaseQuery)
       );
     }
-    if (selectedPriorities.length > 0) {
+    if (priorityFilter && priorityFilter !== "__all__") {
       data = data.filter((ticket) =>
-        selectedPriorities.includes(ticket.prioridade.idPrioridade)
+        String(ticket.prioridade.idPrioridade) === priorityFilter
       );
     }
     setFilteredData(data);
-  }, [search, tickets, selectedPriorities]);
+  }, [search, tickets, priorityFilter]);
 
   const handleAssign = async (idChamado: number) => {
     try {
@@ -120,39 +122,45 @@ export function AssignTickets() {
     }
   };
 
-  const columnsList = [
-    { id: "protocolo", label: "Número" },
-    { id: "assunto", label: "Assunto" },
-    { id: "dataAbertura", label: "Aberto em" },
-    { id: "prioridade", label: "Prioridade" },
-  ];
-
-  const toggleColumnVisibility = (columnId: string) => {
-    setVisibleColumns((prev) => ({
-      ...prev,
-      [columnId]: !prev[columnId],
-    }));
-  };
-
-  const handlePriorityToggle = (idPrioridade: number) => {
-    setSelectedPriorities((prev) =>
-      prev.includes(idPrioridade)
-        ? prev.filter((id) => id !== idPrioridade)
-        : [...prev, idPrioridade]
-    );
-  };
-
-  const clearPriorityFilter = () => {
-    setSelectedPriorities([]);
-    setPriorityFilterOpen(false);
-  };
-
+  // Prioridades presentes nos chamados
   const prioritiesInTickets = Array.from(
     new Set(tickets.map((t) => t.prioridade.idPrioridade))
   );
   const prioritiesToShow = allPriorities.filter((p) =>
     prioritiesInTickets.includes(p.idPrioridade)
   );
+
+  // Limpar filtro de prioridade e fechar modal
+  const clearPriorityFilter = () => {
+    setSearchParams(params => {
+      params.delete("priority");
+      return params;
+    });
+    setPriorityFilterOpen(false);
+  };
+
+  // Handlers para filtros
+  const handlePriorityChange = (value: string) => {
+    setSearchParams(params => {
+      if (value === "__all__") {
+        params.delete("priority");
+      } else {
+        params.set("priority", value);
+      }
+      return params;
+    });
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchParams(params => {
+      if (query) {
+        params.set("search", query);
+      } else {
+        params.delete("search");
+      }
+      return params;
+    });
+  };
 
   return (
     <div className="space-y-4">
@@ -167,76 +175,65 @@ export function AssignTickets() {
       )}
       <h1 className="title-h1">Atribuir chamados</h1>
       <div className="flex justify-between">
-        <Searchbar onSearch={setSearch} />
+        <Searchbar onSearch={handleSearch} />
         <div className="flex gap-3">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size="sm" variant="outline">
-                Colunas
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {columnsList.map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={visibleColumns[column.id]}
-                  onCheckedChange={() =>
-                    toggleColumnVisibility(column.id)
-                  }
-                >
-                  {column.label}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
           <DropdownMenu open={priorityFilterOpen} onOpenChange={setPriorityFilterOpen}>
             <DropdownMenuTrigger asChild>
-              <Button size="sm" variant="outline">
+              <Button size="icon" variant="outline">
                 <Filter className="w-4 h-4 mr-1" />
-                Filtrar
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[220px]">
               <div className="px-4 py-2 font-semibold text-sm text-gray-700">Prioridade</div>
-              {prioritiesToShow.length === 0 ? (
-                <span className="block px-4 py-2 text-gray-500">Nenhuma prioridade encontrada</span>
-              ) : (
-                prioritiesToShow.map((priority) => (
-                  <DropdownMenuCheckboxItem
-                    key={priority.idPrioridade}
-                    checked={selectedPriorities.includes(priority.idPrioridade)}
-                    onCheckedChange={() => handlePriorityToggle(priority.idPrioridade)}
-                    className="flex items-center gap-2"
-                  >
-                    <span
-                      className="inline-block w-4 h-4 rounded-full mr-2"
-                      style={{ backgroundColor: priority.hexCorPrimaria }}
-                    />
-                    {priority.nomePrioridade}
-                  </DropdownMenuCheckboxItem>
-                ))
-              )
-              }
-              <div className="flex justify-end p-2">
+              <Select value={priorityFilter} onValueChange={handlePriorityChange}>
+                <SelectTrigger className="w-full mb-2">
+                  <SelectValue placeholder="Todas" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="__all__">Todas</SelectItem>
+                    {prioritiesToShow.map(priority => (
+                      <SelectItem key={priority.idPrioridade} value={String(priority.idPrioridade)}>
+                        <span className="inline-block w-4 h-4 rounded-full mr-2" style={{ backgroundColor: priority.hexCorPrimaria }} />
+                        {priority.nomePrioridade}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <div className="flex justify-center px-2 pb-2">
                 <Button
                   size="sm"
                   variant="ghost"
                   onClick={clearPriorityFilter}
-                  disabled={selectedPriorities.length === 0}
+                  className="flex items-center gap-1"
+                  disabled={priorityFilter === "__all__"}
                 >
-                  Limpar filtro
+                  <XCircle className="w-4 h-4" />
+                  Limpar filtros
                 </Button>
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
-      <DataTableAssignTickets
-        data={filteredData}
-        visibleColumns={visibleColumns}
-        onAssign={handleAssign}
-      />
+      <div>
+        {loading ? (
+          <TableSpinner />
+        ) : (
+          <DataTableAssignTickets
+            data={filteredData}
+            visibleColumns={{
+              protocolo: true,
+              assunto: true,
+              dataAbertura: true,
+              prioridade: true,
+              actions: true,
+            }}
+            onAssign={handleAssign}
+          />
+        )}
+      </div>
     </div>
   );
 }

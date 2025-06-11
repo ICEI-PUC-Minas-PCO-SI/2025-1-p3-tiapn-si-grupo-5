@@ -18,7 +18,7 @@ export class TicketService {
                 dataAbertura,
                 idSolicitante,
                 idTipoChamado,
-                idPrioridade, // Corrija aqui para salvar corretamente
+                idPrioridade,
                 idStatus: null,
             },
         });
@@ -52,6 +52,24 @@ export class TicketService {
         return prisma.chamado.update({
             where: { idChamado },
             data: { idAnalista }
+        });
+    }
+
+    async updateTicketAnalyst(idChamado: number, idAnalista: number) {
+        return prisma.chamado.update({
+            where: { idChamado },
+            data: { idAnalista }
+        });
+    }
+
+    async getTicketsByManagement(idGerencia: number) {
+        return prisma.chamado.findMany({
+            where: {
+                idAnalista: { not: null },
+                usuario_chamado_idAnalistaTousuario: {
+                    idGerencia: idGerencia
+                }
+            }
         });
     }
 }

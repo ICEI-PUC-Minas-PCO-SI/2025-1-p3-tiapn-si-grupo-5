@@ -11,6 +11,15 @@ import {
   deleteManagement,
 } from "../../api/management";
 import { z } from "zod";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 
 const managementNameSchema = z.string().min(4, "O nome deve ter pelo menos 4 caracteres");
 
@@ -32,6 +41,8 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
   const [editingManagementId, setEditingManagementId] = useState<number | null>(null);
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [nameError, setNameError] = useState<string | null>(null);
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
+  const [touched, setTouched] = useState(false);
 
   const fetchManagement = async () => {
     try {
@@ -57,11 +68,16 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
   useEffect(() => {
     if (!isAdding) {
       setNameError(null);
+      setTouched(false);
       return;
     }
-    const result = managementNameSchema.safeParse(newManagementName);
-    setNameError(result.success ? null : result.error.issues[0].message);
-  }, [newManagementName, isAdding]);
+    if (touched) {
+      const result = managementNameSchema.safeParse(newManagementName);
+      setNameError(result.success ? null : result.error.issues[0].message);
+    } else {
+      setNameError(null);
+    }
+  }, [newManagementName, isAdding, touched]);
 
   const handleAddOrEditManagement = async () => {
     const result = managementNameSchema.safeParse(newManagementName);
@@ -98,14 +114,20 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
     setIsAdding(true);
   };
 
-  const handleDeleteManagement = async (idGerencia: number) => {
+  const handleDeleteManagement = (idGerencia: number) => {
+    setDeleteDialog({ open: true, id: idGerencia });
+  };
+
+  const confirmDeleteManagement = async () => {
+    if (!deleteDialog.id) return;
     try {
-      await deleteManagement(idGerencia);
-      setManagementList((prev) => prev.filter((g) => g.idGerencia !== idGerencia));
+      await deleteManagement(deleteDialog.id);
+      setManagementList((prev) => prev.filter((g) => g.idGerencia !== deleteDialog.id));
       setAlert({ type: "success", message: "Gerência excluída com sucesso!" });
     } catch (error) {
       setAlert({ type: "error", message: getErrorMessage(error) || "Gerência associada a um usuário existente." });
     }
+    setDeleteDialog({ open: false, id: null });
   };
 
   const isSaveDisabled = !newManagementName || !!nameError;
@@ -149,7 +171,10 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
             type="text"
             placeholder="Nome do status"
             value={newManagementName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewManagementName(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setNewManagementName(e.target.value);
+              setTouched(true);
+            }}
           />
           <Button
             onClick={handleAddOrEditManagement}
@@ -163,16 +188,39 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
               setIsAdding(false);
               setNewManagementName("");
               setEditingManagementId(null);
+              setTouched(false);
             }}
             variant="outline"
           >
             Cancelar
           </Button>
-          {nameError && (
+          {nameError && touched && (
             <span className="text-red-500 text-sm">{nameError}</span>
           )}
         </div>
       )}
+      <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, id: open ? deleteDialog.id : null })}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir gerência</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir esta gerência? Esta ação não poderá ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteDialog({ open: false, id: null })}>
+              Cancelar
+            </AlertDialogCancel>
+            <Button
+              variant="delete"
+              onClick={confirmDeleteManagement}
+              type="button"
+            >
+              Excluir
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

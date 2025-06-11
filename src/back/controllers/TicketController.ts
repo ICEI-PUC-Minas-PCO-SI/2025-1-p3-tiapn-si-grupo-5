@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { TicketService } from "../services/TicketService";
+import { TicketService } from "../services/ticketService";
 
 const ticketService = new TicketService();
 
@@ -62,6 +62,33 @@ export class TicketController {
         } catch (error) {
             console.error("Erro ao assumir chamado:", error);
             res.status(500).json({ error: "Erro ao assumir chamado" });
+        }
+    }
+
+    async updateTicketAnalyst(req: Request, res: Response) {
+        try {
+            const idChamado = Number(req.params.idChamado);
+            const { idAnalista } = req.body;
+            if (!idAnalista) {
+                return res.status(400).json({ error: "idAnalista é obrigatório para atribuição." });
+            }
+            const ticket = await ticketService.updateTicketAnalyst(idChamado, Number(idAnalista));
+            res.status(200).json(ticket);
+        } catch (error) {
+            console.error("Erro ao atualizar analista do chamado:", error);
+            res.status(500).json({ error: "Erro ao atualizar analista do chamado" });
+        }
+    }
+
+    async getTeamTickets(req: Request, res: Response) {
+        try {
+            // @ts-expect-error usuario injetado pelo middleware de autenticação
+            const idGerencia = req.usuario.gerencia;
+            const tickets = await ticketService.getTicketsByManagement(idGerencia);
+            res.json(tickets);
+        } catch (error) {
+            console.error("Erro ao buscar chamados da equipe:", error);
+            res.status(500).json({ error: "Erro ao buscar chamados da equipe" });
         }
     }
 }

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { PriorityService } from "../services/PriorityService";
+import { PriorityService } from "../services/priorityService";
 
 const priorityService = new PriorityService();
 

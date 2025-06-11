@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
-import { UserService } from "../services/UserService";
+import { UserService } from "../services/userService";
 
 const userService = new UserService();
 
@@ -173,6 +173,16 @@ export class UserController {
             console.error("Erro ao atualizar perfil do usuário:", error);
             res.status(500).json({ error: "Erro ao atualizar perfil do usuário" });
             return;
+        }
+    }
+
+    async getAnalysts(req: Request, res: Response) {
+        try {
+            const analysts = await userService.getAnalysts();
+            res.json(analysts);
+        } catch (error) {
+            console.error("Erro ao buscar analistas:", error);
+            res.status(500).json({ error: "Erro ao buscar analistas" });
         }
     }
 }

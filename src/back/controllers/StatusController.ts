@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { StatusService } from "../services/StatusService";
+import { StatusService } from "../services/statusService";
 
 const statusService = new StatusService();
 
@@ -8,7 +8,6 @@ export class StatusController {
         try {
             const status = await statusService.getStatus();
             res.json(status);
-            console.log("Status ativos:", JSON.stringify(status));
         } catch (error) {
             console.error("Erro ao buscar status:", error);
             res.status(500).json({ error: "Error ao buscar status" });
