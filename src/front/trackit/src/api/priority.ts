@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "@/api/config";
+import { authHeaders } from "@/contexts/helperCookies";
 
 export interface IPriority {
     idPrioridade: number;
@@ -17,7 +18,7 @@ export async function getAllPriorities(): Promise<IPriority[]> {
 export async function addPriority(nomePrioridade: string, color: string): Promise<IPriority> {
     const response = await fetch(`${API_BASE_URL}/priorities`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ nomePrioridade, color }),
     });
     if (!response.ok) {
@@ -30,7 +31,7 @@ export async function addPriority(nomePrioridade: string, color: string): Promis
 export async function updatePriority(idPrioridade: number, nomePrioridade: string, color: string): Promise<IPriority> {
     const response = await fetch(`${API_BASE_URL}/priorities/${idPrioridade}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({
             idPrioridade,
             nomePrioridade,
@@ -47,7 +48,7 @@ export async function updatePriority(idPrioridade: number, nomePrioridade: strin
 export async function deletePriority(idPrioridade: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/priorities/${idPrioridade}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({ idPrioridade }),
     });
     if (!response.ok) {

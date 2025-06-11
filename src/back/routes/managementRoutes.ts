@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { ManagementController } from "../controllers/managementController";
+import { ManagementController } from "../controllers/ManagementController";
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
+import { autenticarToken } from "../middlewares/auth-jwt";
 
 // Schemas para validação
 const managementCreateSchema = z.object({
@@ -23,18 +24,27 @@ export class ManagementRoutes {
     }
 
     private initializeRoutes() {
-        this.router.get("/departments", this.managementController.getAllActiveManagement.bind(this.managementController));
+        this.router.get(
+            "/departments",
+            this.managementController.getAllActiveManagement.bind(this.managementController)
+        );
         this.router.post(
             "/departments",
+            autenticarToken, 
             validatePayload(managementCreateSchema),
             this.managementController.createManagement.bind(this.managementController)
         );
         this.router.put(
             "/departments/:id",
+            autenticarToken, 
             validatePayload(managementUpdateSchema),
             this.managementController.updateManagement.bind(this.managementController)
         );
-        this.router.delete("/departments/:id", this.managementController.deleteManagement.bind(this.managementController));
+        this.router.delete(
+            "/departments/:id",
+            autenticarToken, 
+            this.managementController.deleteManagement.bind(this.managementController)
+        );
     }
 
     public getRouter(): Router {

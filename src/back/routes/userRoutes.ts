@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { UserController } from "../controllers/userController";
+import { UserController } from "../controllers/UserController";
 import { autenticarToken } from "../middlewares/auth-jwt";
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
@@ -53,22 +53,37 @@ export class UserRoutes {
             validatePayload(userLoginSchema),
             this.userController.loginUser.bind(this.userController)
         );
-        this.router.get("/users", this.userController.getAllUsers.bind(this.userController));
-        this.router.get("/users/analysts", this.userController.getAnalysts.bind(this.userController));
+        this.router.get(
+            "/users",
+            autenticarToken,
+            this.userController.getAllUsers.bind(this.userController)
+        );
+        this.router.get(
+            "/users/analysts",
+            autenticarToken,
+            this.userController.getAnalysts.bind(this.userController)
+        );
         this.router.put(
             "/users/:idUsuario",
             validatePayload(userUpdateSchema),
+            autenticarToken,
             this.userController.updateUser.bind(this.userController)
         );
         this.router.patch(
             "/users/:idUsuario/status",
             validatePayload(userStatusSchema),
+            autenticarToken,
             this.userController.changeUserStatus.bind(this.userController)
         );
-        this.router.get("/users/me", autenticarToken, this.userController.getMe.bind(this.userController));
+        this.router.get(
+            "/users/me", 
+            autenticarToken, 
+            this.userController.getMe.bind(this.userController)
+    );
         this.router.put(
             "/users/profile/:idUsuario",
             validatePayload(userProfileUpdateSchema),
+            autenticarToken,
             this.userController.updateProfileUser.bind(this.userController)
         );
     }
