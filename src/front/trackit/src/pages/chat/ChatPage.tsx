@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import Chat from "@/components/chat/Chat";
+import { Button } from "@/components/ui/button"
+import { useState } from "react";
 
 export function ChatPage() {
     // Exemplo de tipos de demanda
@@ -21,6 +23,7 @@ export function ChatPage() {
     const analystName = "Fulano";
     const dataTicketCreated = "01/01/2025";
     const dataTicketClosed = "07/01/2025";
+    const [showFecharDemanda, setShowFecharDemanda] = useState(true);
 
     return (
         <div className="flex flex-col gap-6">
@@ -59,16 +62,27 @@ export function ChatPage() {
                         Tipo de demanda
                     </h2>
                 </div>
-                <div className="flex justify-between mb-4">
+                <div className="flex justify-between items-center mb-4">
                     <span className="paragraph text-slate-700">
                         Analista Responsável: {analystName}
                     </span>
                     <span className="paragraph text-slate-700">
                         Data de Abertura: {dataTicketCreated}
                     </span>
-                    <span className="paragraph text-slate-700">
-                        Data de Fechamento: {dataTicketClosed}
-                    </span>  
+                    {showFecharDemanda ? (
+                        <Button
+                            className=""
+                            variant="delete"
+                            size="sm"
+                            onClick={() => setShowFecharDemanda(false)}
+                        >
+                            Encerrar
+                        </Button>
+                    ) : (
+                        <span className="paragraph text-slate-700">
+                            Data de Fechamento: {dataTicketClosed}
+                        </span>
+                    )}
                 </div>
                 <Separator />
             </header>

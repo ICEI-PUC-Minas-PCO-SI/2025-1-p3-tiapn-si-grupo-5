@@ -1,7 +1,8 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Paperclip, Send, ChevronsRight } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Paperclip, Send, ChevronsRight, ChevronsLeft } from "lucide-react";
+import { Message } from "@/components/ui/Message";
 
 const mockMessages = [
     {
@@ -16,13 +17,18 @@ const mockMessages = [
         user: "Nome do usuário",
         text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
         time: "14:35 | 10/04/2024",
-        isCurrentUser: false,
+        isCurrentUser: true,
     },
 ];
 
+const mockDescricao =
+    "Lorem ipsum dolor sit amet. Hic sint officia sit aliquid blanditiis non voluptatem accusantium est tempore numquam in distinctio facilis. Et architecto velit et quos tempore ut obcaecati dolorum. Et fugiat ipsum ut quae vitae et quia porro est earum quidem et minus delectus ea velit eveniet. Sed ipsa illum ex iusto dignissimos At beatae molestiae. Qui nesciunt ipsa ut maiores voluptatem eum esse praesentium ex adipisci quia ut perspiciatis minima et sunt architecto. Et mollitia corporis ut impedit amet qui molestias adit";
+
 export default function Chat() {
+    const [showDescricao, setShowDescricao] = useState(false);
+
     return (
-        <div className="flex flex-col min-h-[600px] w-full mx-auto border rounded bg-white">
+        <div className="flex flex-col w-full mx-auto border rounded bg-white min-h-[600px]">
             {/* Header com botão retração */}
             <div className="flex items-center justify-between border-b px-4 py-2">
                 <span className="font-semibold text-base">Chat</span>
@@ -30,38 +36,47 @@ export default function Chat() {
                     variant="ghost"
                     size="icon"
                     aria-label="Retrair/Expandir"
+                    onClick={() => setShowDescricao((v) => !v)}
                 >
-                    <ChevronsRight />
+                    {showDescricao ? <ChevronsLeft /> : <ChevronsRight />}
                 </Button>
             </div>
-            {/* Mensagens */}
-            <div className="flex-1 overflow-y-auto p-6">
-                <div className="flex flex-col gap-6">
-                    {mockMessages.map((msg) => (
-                        <div key={msg.id}>
-                            <div className="flex items-start gap-3">
-                                <Avatar className="w-8 h-8">
-                                    <AvatarImage src="https://i.pravatar.cc/40?img=1" alt={msg.user} />
-                                    <AvatarFallback>{msg.user[0]}</AvatarFallback>
-                                </Avatar>
-                                <div className="flex-1 flex">
-                                    <div
-                                        className="bg-slate-900 text-white rounded-lg px-5 py-3 text-sm whitespace-pre-line break-words w-auto max-w-[80vw] md:max-w-[480px]"
-                                        style={{ display: "inline-block" }}
-                                    >
-                                        {msg.text}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex gap-6 mt-2 px-11">
-                                <span className="text-xs text-slate-700 font-medium">
-                                    {msg.user}
-                                </span>
-                                <span className="text-xs text-slate-500">{msg.time}</span>
+            <div className="min-h-[520px] w-full flex">
+                <div className={`transition-all duration-400 ${showDescricao ? "w-1/2 border-r" : "w-full"}`}>
+                    <div className="flex-1 overflow-y-auto p-6">
+                        <div className="flex flex-col gap-6">
+                            {mockMessages.map((msg) => (
+                                <Message
+                                    key={msg.id}
+                                    user={msg.user}
+                                    time={msg.time}
+                                    text={msg.text}
+                                    isCurrentUser={msg.isCurrentUser}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                {/* Conteúdo da descrição */}
+                {showDescricao && (
+                    <div className="flex flex-col bg-white w-1/2 min-w-[240px] max-w-[50vw] overflow-hidden">
+                        <div className="flex items-center justify-between border-b px-4 py-2">
+                            <span className="font-semibold text-base">Descrição da demanda</span>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => setShowDescricao(false)}
+                                aria-label="Ocultar descrição"
+                            >
+                            </Button>
+                        </div>
+                        <div className="flex-1 p-6 overflow-y-auto" style={{ height: "520px" }}>
+                            <div className="whitespace-pre-line text-slate-900 text-sm">
+                                {mockDescricao}
                             </div>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                )}
             </div>
             <form className="flex items-end gap-2 border-t px-4 py-3 bg-white">
                 <Button className="h-11" type="button" variant="outlineDisabled" size="icon">
