@@ -15,7 +15,7 @@ import { Priority } from "@/pages/params/Priority";
 import { AnalystAssignTickets } from "@/pages/analyst-assign-tickets/AnalystAssignTickets";
 import { AnalystTickets } from "@/pages/analyst-tickets/AnalystTickets";
 import { UserTickets } from "@/pages/user-tickets/UserTickets";
-import { Dashboard } from "@/pages/dashbord/Dashboard";
+import { Dashboard } from "@/pages/admin-dashbord/Dashboard";
 import { AdminAssignTickets } from "@/pages/admin-assign-tickets/AdminAssignTickets";
 import { AdminTeamTickets } from "@/pages/admin-team-tickets/AdminTeamTickets";
 import { AnalystDashboard } from "@/pages/analyst-dashboard/AnalystDashboard";

@@ -25,6 +25,13 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { TableSpinner } from "@/components/ui/spinner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 export function AnalystAssignTickets() {
   const [tickets, setTickets] = useState<AssignTicketTableRow[]>([]);
@@ -33,6 +40,11 @@ export function AnalystAssignTickets() {
   const [allPriorities, setAllPriorities] = useState<IPriority[]>([]);
   const [priorityFilterOpen, setPriorityFilterOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [assignModal, setAssignModal] = useState<{
+    open: boolean;
+    ticket: AssignTicketTableRow | null;
+  }>({ open: false, ticket: null });
+  const [assigning, setAssigning] = useState<{ [idChamado: number]: boolean }>({});
 
   // Query params
   const [searchParams, setSearchParams] = useSearchParams();
@@ -113,14 +125,29 @@ export function AnalystAssignTickets() {
   }, [search, tickets, priorityFilter]);
 
   const handleAssign = async (idChamado: number) => {
-    try {
-      await assignTicket(idChamado);
-      setTickets(tickets => tickets.filter(t => t.idChamado !== idChamado));
-      setAlert({ type: "success", message: "Chamado atribuído com sucesso!" });
-    } catch {
-      setAlert({ type: "error", message: "Erro ao assumir chamado." });
+    const ticket = tickets.find(t => t.idChamado === idChamado);
+    if (ticket) {
+      setAssignModal({ open: true, ticket });
     }
   };
+
+  const handleConfirmAssign = async () => {
+    const ticket = assignModal.ticket;
+    if (!ticket) return;
+    setAssigning((prev) => ({ ...prev, [ticket.idChamado]: true }));
+    try {
+      await assignTicket(ticket.idChamado);
+      setTickets(tickets => tickets.filter(t => t.idChamado !== ticket.idChamado));
+      setAlert({ type: "success", message: "Chamado atribuído com sucesso!" });
+      setAssignModal({ open: false, ticket: null });
+    } catch {
+      setAlert({ type: "error", message: "Erro ao assumir chamado." });
+    } finally {
+      setAssigning((prev) => ({ ...prev, [ticket.idChamado]: false }));
+    }
+  };
+
+  const closeAssignModal = () => setAssignModal({ open: false, ticket: null });
 
   // Prioridades presentes nos chamados
   const prioritiesInTickets = Array.from(
@@ -235,6 +262,43 @@ export function AnalystAssignTickets() {
           />
         )}
       </div>
+
+      {/* Modal de confirmação para analista (apenas um modal) */}
+      <Dialog open={assignModal.open} onOpenChange={closeAssignModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Assumir chamado</DialogTitle>
+          </DialogHeader>
+          {assignModal.ticket && (
+            <form
+              onSubmit={e => {
+                e.preventDefault();
+                handleConfirmAssign();
+              }}
+              className="flex flex-col gap-4"
+            >
+              <div>
+                Tem certeza que deseja assumir o chamado <b>{assignModal.ticket.protocolo}</b>?
+              </div>
+              <DialogFooter>
+                <Button
+                  type="submit"
+                  disabled={assigning[assignModal.ticket.idChamado]}
+                >
+                  {assigning[assignModal.ticket.idChamado] ? "Assumindo..." : "Confirmar"}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={closeAssignModal}
+                >
+                  Cancelar
+                </Button>
+              </DialogFooter>
+            </form>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
