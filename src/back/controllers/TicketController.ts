@@ -80,6 +80,36 @@ export class TicketController {
         }
     }
 
+    async updateTicketStatus(req: Request, res: Response) {
+        try {
+            const idChamado = Number(req.params.idChamado);
+            const { idStatus } = req.body;
+            if (!idStatus) {
+                return res.status(400).json({ error: "idStatus é obrigatório para atualizar o status." });
+            }
+            const ticket = await ticketService.updateTicketStatus(idChamado, Number(idStatus));
+            res.status(200).json(ticket);
+        } catch (error) {
+            console.error("Erro ao atualizar status do chamado:", error);
+            res.status(500).json({ error: "Erro ao atualizar status do chamado" });
+        }
+    }
+
+    async closeTicket(req: Request, res: Response) {
+        try {
+            const idChamado = Number(req.params.idChamado);
+            const { dataFechamento } = req.body;
+            if (!dataFechamento) {
+                return res.status(400).json({ error: "dataFechamento é obrigatório para encerrar o chamado." });
+            }
+            const ticket = await ticketService.closeTicket(idChamado, new Date(dataFechamento));
+            res.status(200).json(ticket);
+        } catch (error) {
+            console.error("Erro ao encerrar chamado:", error);
+            res.status(500).json({ error: "Erro ao encerrar chamado" });
+        }
+    }
+
     async getTeamTickets(req: Request, res: Response) {
         try {
             // @ts-expect-error usuario injetado pelo middleware de autenticação

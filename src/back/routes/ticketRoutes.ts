@@ -15,6 +15,12 @@ const ticketCreateSchema = z.object({
 const ticketUpdateAnalystSchema = z.object({
     idAnalista: z.union([z.number(), z.string()])
 });
+const ticketUpdateStatusSchema = z.object({
+    idStatus: z.union([z.number(), z.string()])
+});
+const ticketCloseSchema = z.object({
+    dataFechamento: z.string()
+});
 
 export class TicketRoutes {
     private router: Router;
@@ -79,6 +85,26 @@ export class TicketRoutes {
             autenticarToken,
             (req, res, next) => {
                 this.ticketController.getTicketById(req, res)
+                    .then(() => undefined)
+                    .catch(next);
+            }
+        );
+        this.router.patch(
+            "/tickets/:idChamado/status",
+            autenticarToken,
+            validatePayload(ticketUpdateStatusSchema),
+            (req, res, next) => {
+                this.ticketController.updateTicketStatus(req, res)
+                    .then(() => undefined)
+                    .catch(next);
+            }
+        );
+        this.router.patch(
+            "/tickets/:idChamado/close",
+            autenticarToken,
+            validatePayload(ticketCloseSchema),
+            (req, res, next) => {
+                this.ticketController.closeTicket(req, res)
                     .then(() => undefined)
                     .catch(next);
             }

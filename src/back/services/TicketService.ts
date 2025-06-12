@@ -91,4 +91,18 @@ export class TicketService {
             }
         });
     }
+
+    async updateTicketStatus(idChamado: number, idStatus: number) {
+        return prisma.chamado.update({
+            where: { idChamado },
+            data: { idStatus }
+        });
+    }
+
+    async closeTicket(idChamado: number, dataFechamento: Date) {
+        return prisma.chamado.update({
+            where: { idChamado },
+            data: { dataFechamento }
+        });
+    }
 }

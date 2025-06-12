@@ -110,6 +110,24 @@ export async function getTicketById(idChamado: number) {
     return response.json();
 }
 
+export async function updateTicketStatus(idChamado: number, idStatus: number): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}/status`, {
+        method: "PATCH",
+        headers: authHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ idStatus }),
+    });
+    if (!response.ok) throw new Error("Erro ao atualizar status do chamado");
+}
+
+export async function closeTicket(idChamado: number, dataFechamento: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}/close`, {
+        method: "PATCH",
+        headers: authHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ dataFechamento }),
+    });
+    if (!response.ok) throw new Error("Erro ao encerrar chamado");
+}
+
 export interface ITicketFull extends ITicket {
     usuario_chamado_idSolicitanteTousuario?: {
         idUsuario: number;
