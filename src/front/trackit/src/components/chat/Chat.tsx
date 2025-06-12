@@ -21,10 +21,11 @@ const mockMessages = [
     },
 ];
 
-const mockDescricao =
-    "Lorem ipsum dolor sit amet. Hic sint officia sit aliquid blanditiis non voluptatem accusantium est tempore numquam in distinctio facilis. Et architecto velit et quos tempore ut obcaecati dolorum. Et fugiat ipsum ut quae vitae et quia porro est earum quidem et minus delectus ea velit eveniet. Sed ipsa illum ex iusto dignissimos At beatae molestiae. Qui nesciunt ipsa ut maiores voluptatem eum esse praesentium ex adipisci quia ut perspiciatis minima et sunt architecto. Et mollitia corporis ut impedit amet qui molestias adit";
+interface ChatProps {
+    descricao: string;
+}
 
-export default function Chat() {
+export default function Chat({ descricao }: ChatProps) {
     const [showDescricao, setShowDescricao] = useState(false);
 
     return (
@@ -72,7 +73,7 @@ export default function Chat() {
                         </div>
                         <div className="flex-1 p-6 overflow-y-auto" style={{ height: "520px" }}>
                             <div className="whitespace-pre-line text-slate-900 text-sm">
-                                {mockDescricao}
+                                {descricao}
                             </div>
                         </div>
                     </div>

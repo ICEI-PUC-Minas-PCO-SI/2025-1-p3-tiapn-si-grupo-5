@@ -345,7 +345,7 @@ export function ChatPage() {
                 </div>
                 <Separator />
             </header>
-            <Chat />
+            <Chat descricao={ticket?.descricao || ""} />
         </div>
     )
 }
