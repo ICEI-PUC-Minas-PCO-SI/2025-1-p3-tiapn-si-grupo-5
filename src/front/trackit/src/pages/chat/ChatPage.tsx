@@ -7,6 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import { getTicketById, assignTicket, closeTicket, updateTicketStatus } from "@/api/ticket";
 import { useUser } from "@/contexts/UserContext";
 import { SecondarySpinner } from "@/components/ui/spinner";
+import { updateTicketAnalyst } from "@/api/ticket";
 import type { ITicketFull } from "@/api/ticket";
 import {
     Dialog,
@@ -19,6 +20,8 @@ import { GlobalAlert } from "@/components/ui/GlobalAlert";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectItem } from "@/components/ui/select";
 import { getAllStatus } from "@/api/status";
 import type { IStatus } from "@/api/status";
+import { getAllAnalysts } from "@/api/users";
+import type { IAnalyst } from "@/api/users";
 
 export function ChatPage() {
     const [searchParams] = useSearchParams();
@@ -34,6 +37,10 @@ export function ChatPage() {
     const [allStatus, setAllStatus] = useState<IStatus[]>([]);
     const [selectedStatus, setSelectedStatus] = useState<string>("");
     const [updatingStatus, setUpdatingStatus] = useState(false);
+    const [analystModalOpen, setAnalystModalOpen] = useState(false);
+    const [analysts, setAnalysts] = useState<IAnalyst[]>([]);
+    const [selectedAnalyst, setSelectedAnalyst] = useState<string>("");
+    const [assigningToAnalyst, setAssigningToAnalyst] = useState(false);
 
     const { user } = useUser();
 
@@ -49,7 +56,14 @@ export function ChatPage() {
         getAllStatus().then(setAllStatus);
     }, []);
 
+    useEffect(() => {
+        if (user?.tipo === 1) {
+            getAllAnalysts().then(setAnalysts);
+        }
+    }, [user?.tipo]);
+
     const isAnalyst = user?.tipo === 2;
+    const isManager = user?.tipo === 1;
 
     async function handleConfirmAssignTicket() {
         if (!ticket) return;
@@ -97,6 +111,22 @@ export function ChatPage() {
             setAlert({ type: "error", message: "Erro ao atualizar status." });
         } finally {
             setUpdatingStatus(false);
+        }
+    }
+
+    async function handleAssignToAnalyst() {
+        if (!ticket || !selectedAnalyst) return;
+        setAssigningToAnalyst(true);
+        try {
+            await updateTicketAnalyst(ticket.idChamado, Number(selectedAnalyst));
+            const updated = await getTicketById(ticket.idChamado);
+            setTicket(updated);
+            setAlert({ type: "success", message: "Chamado atribuído ao analista com sucesso!" });
+            setAnalystModalOpen(false);
+        } catch {
+            setAlert({ type: "error", message: "Erro ao atribuir chamado ao analista." });
+        } finally {
+            setAssigningToAnalyst(false);
         }
     }
 
@@ -156,16 +186,18 @@ export function ChatPage() {
                     <h2 className="title-h2 text-slate-800">
                         {ticket?.tipochamado?.nomeTipo || "Tipo de demanda"}
                     </h2>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                            setSelectedStatus(ticket?.idStatus ? String(ticket.idStatus) : "");
-                            setStatusModalOpen(true);
-                        }}
-                    >
-                        Alterar status
-                    </Button>
+                    {isAnalyst && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                                setSelectedStatus(ticket?.idStatus ? String(ticket.idStatus) : "");
+                                setStatusModalOpen(true);
+                            }}
+                        >
+                            Alterar status
+                        </Button>
+                    )}
                     <Dialog open={statusModalOpen} onOpenChange={setStatusModalOpen}>
                         <DialogContent>
                             <DialogHeader>
@@ -217,6 +249,70 @@ export function ChatPage() {
                             </form>
                         </DialogContent>
                     </Dialog>
+                    {isManager && !ticket?.usuario_chamado_idAnalistaTousuario && (
+                        <>
+                            <Button
+                                variant="default"
+                                size="sm"
+                                onClick={() => setAnalystModalOpen(true)}
+                                disabled={assigningToAnalyst}
+                            >
+                                Atribuir
+                            </Button>
+                            <Dialog open={analystModalOpen} onOpenChange={setAnalystModalOpen}>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Atribuir chamado a analista</DialogTitle>
+                                    </DialogHeader>
+                                    <form
+                                        onSubmit={e => {
+                                            e.preventDefault();
+                                            handleAssignToAnalyst();
+                                        }}
+                                        className="flex flex-col gap-4"
+                                    >
+                                        <Select
+                                            value={selectedAnalyst}
+                                            onValueChange={setSelectedAnalyst}
+                                        >
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Selecione o analista" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    {analysts.length === 0 && (
+                                                        <SelectItem value="" disabled>
+                                                            Nenhum analista disponível
+                                                        </SelectItem>
+                                                    )}
+                                                    {analysts.map((analyst) => (
+                                                        <SelectItem key={analyst.idUsuario} value={String(analyst.idUsuario)}>
+                                                            {analyst.nomeUsuario}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                        <DialogFooter>
+                                            <Button
+                                                type="submit"
+                                                disabled={!selectedAnalyst || assigningToAnalyst}
+                                            >
+                                                {assigningToAnalyst ? "Atribuindo..." : "Confirmar"}
+                                            </Button>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                onClick={() => setAnalystModalOpen(false)}
+                                            >
+                                                Cancelar
+                                            </Button>
+                                        </DialogFooter>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
+                        </>
+                    )}
                 </div>
                 <div className="flex justify-between items-center mb-4">
                     <span className="paragraph text-slate-700">

@@ -18,6 +18,15 @@ export class ChatService {
                 remetente: data.remetente as msgchamado_remetente,
                 urlAnexo: data.urlAnexo || null,
                 nomeArquivo: data.nomeArquivo || null,
+            },
+            select: {
+                idMensagem: true,
+                mensagem: true,
+                timestamp: true,
+                remetente: true,
+                idRemetente: true,
+                urlAnexo: true,
+                nomeArquivo: true,
             }
         });
     }
