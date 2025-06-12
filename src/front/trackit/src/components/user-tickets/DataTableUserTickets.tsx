@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { UserTicketTableRow } from "../../pages/user-tickets/UserTickets";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface DataTableUserTicketsProps {
     data: UserTicketTableRow[];
@@ -22,6 +23,17 @@ export function DataTableUserTickets({
     data,
     visibleColumns,
 }: DataTableUserTicketsProps) {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Helper para montar o prefixo correto da rota
+    function getRoutePrefix() {
+        if (location.pathname.startsWith("/admin/")) return "/admin";
+        if (location.pathname.startsWith("/analyst/")) return "/analyst";
+        if (location.pathname.startsWith("/user/")) return "/user";
+        return "";
+    }
+
     const columns: ColumnDef<UserTicketTableRow>[] = [
         {
             accessorKey: "protocolo",
@@ -243,9 +255,16 @@ export function DataTableUserTickets({
         {
             id: "actions",
             header: "Ações",
-            cell: () => (
+            cell: ({ row }: { row: Row<UserTicketTableRow> }) => (
                 <div className="flex justify-center gap-2">
-                    <Button variant="outlineDisabled" size="icon">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => {
+                            const prefix = getRoutePrefix();
+                            navigate(`${prefix}/chat?idChamado=${row.original.idChamado}`);
+                        }}
+                    >
                         <Eye className="w-4 h-4" />
                     </Button>
                 </div>

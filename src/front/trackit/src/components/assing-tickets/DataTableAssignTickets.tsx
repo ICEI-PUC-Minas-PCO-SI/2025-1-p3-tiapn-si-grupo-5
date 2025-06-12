@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Eye, ClipboardList, ChevronRight, ChevronLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export interface AssignTicketTableRow {
     idChamado: number;
@@ -39,6 +40,16 @@ export function DataTableAssignTickets({
     onOpenAssignModal,
     actionsType,
 }: DataTableAssignTicketsProps) {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    function getRoutePrefix() {
+        if (location.pathname.startsWith("/admin/")) return "/admin";
+        if (location.pathname.startsWith("/analyst/")) return "/analyst";
+        if (location.pathname.startsWith("/user/")) return "/user";
+        return "";
+    }
+
     const columns: ColumnDef<AssignTicketTableRow>[] = [
         {
             accessorKey: "protocolo",
@@ -195,7 +206,14 @@ export function DataTableAssignTickets({
                             <ClipboardList className="w-4 h-4" />
                         </Button>
                     )}
-                    <Button variant="outlineDisabled" size="icon">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => {
+                            const prefix = getRoutePrefix();
+                            navigate(`${prefix}/chat?idChamado=${row.original.idChamado}`);
+                        }}
+                    >
                         <Eye className="w-4 h-4" />
                     </Button>
                 </div>
