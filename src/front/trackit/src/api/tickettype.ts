@@ -8,7 +8,9 @@ export interface ITicketType {
 }
 
 export async function getAllTicketTypes(): Promise<ITicketType[]> {
-    const response = await fetch(`${API_BASE_URL}/ticket-types`);
+    const response = await fetch(`${API_BASE_URL}/ticket-types`, {
+        headers: authHeaders()
+    });
     if (!response.ok) throw new Error("Erro ao buscar tipos de chamado");
     return response.json();
 }
