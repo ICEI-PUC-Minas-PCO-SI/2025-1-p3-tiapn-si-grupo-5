@@ -224,7 +224,7 @@ export function Dashboard() {
                                 key={status.idStatus}
                                 kpiTitle={status.nomeStatus}
                                 kpiValue={status.count.toString()}
-                                kpiLink={status.idStatus !== -1 ? `/admin/assigned-tickets?status=${status.idStatus}` : undefined}
+                                kpiLink={status.idStatus !== -1 ? `/admin/assigned-tickets?status=${status.idStatus}` : `/admin/open-tickets`}
                                 kpiColor={status.hexCorPrimaria}
                             />
                         ))}
