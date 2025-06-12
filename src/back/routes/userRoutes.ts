@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { UserController } from "../controllers/UserController";
+import { UserController } from "../controllers/userController";
 import { autenticarToken } from "../middlewares/auth-jwt";
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";

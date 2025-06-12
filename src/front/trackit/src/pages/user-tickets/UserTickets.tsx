@@ -3,10 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import { getAllPriorities } from "@/api/priority";
 import type { IPriority } from "@/api/priority";
 import { getAllStatus } from "@/api/status";
-import type { IStatus } from "@/api/status";
 import { getAllUsers } from "@/api/users";
-import type { IUserListItem } from "@/api/users";
-import { getAllTickets } from "@/api/ticket";
+import { getTicketsBySolicitanteId } from "@/api/ticket";
 import type { ITicket } from "@/api/ticket";
 import { useUser } from "@/contexts/UserContext";
 import { Button } from "@/components/ui/button";
@@ -85,67 +83,78 @@ export function UserTickets() {
 
     useEffect(() => {
         setLoading(true);
-        Promise.all([getAllTickets(), getAllPriorities(), getAllStatus(), getAllUsers()])
-            .then(([ticketsData, priorities, statuses, users]: [
-                ITicket[],
-                IPriority[],
-                IStatus[],
-                IUserListItem[]
-            ]) => {
+
+        async function fetchTickets() {
+            let ticketsData: ITicket[] = [];
+            try {
+                // Sempre busca apenas os tickets do usuário logado
+                if (user?.id) {
+                    ticketsData = await getTicketsBySolicitanteId(user.id);
+                } else {
+                    ticketsData = [];
+                }
+
+                const [priorities, statuses, users] = await Promise.all([
+                    getAllPriorities(),
+                    getAllStatus(),
+                    getAllUsers()
+                ]);
                 setAllPriorities(priorities);
 
-                const mapped: UserTicketTableRow[] = ticketsData
-                    .filter((t) => t.idSolicitante === user?.id)
-                    .map((t) => {
-                        let formattedProtocolo = "";
-                        if (t.protocolo && t.protocolo.length === 8) {
-                            const num = t.protocolo.slice(0, 6);
-                            const ano = t.protocolo.slice(6, 8);
-                            formattedProtocolo = `#${num}/${ano}`;
-                        } else {
-                            formattedProtocolo = t.protocolo || "";
-                        }
-                        const prioridadeObj = priorities.find(p => p.idPrioridade === t.idPrioridade) || {
-                            idPrioridade: t.idPrioridade,
-                            nomePrioridade: "Não Definida",
-                            hexCorPrimaria: "#888"
-                        };
-                        const statusObj = statuses.find(s => s.idStatus === t.idStatus) || {
-                            idStatus: t.idStatus ?? 0,
-                            nomeStatus: "Em aberto",
-                            hexCorPrimaria: "#888"
-                        };
-                        const analistaName = t.idAnalista
-                            ? (users.find(u => u.id === String(t.idAnalista))?.name ?? "-")
-                            : "-";
-                        return {
-                            idChamado: t.idChamado,
-                            protocolo: formattedProtocolo,
-                            assunto: t.assunto,
-                            dataAbertura: t.dataAbertura,
-                            prioridade: {
-                                idPrioridade: prioridadeObj.idPrioridade,
-                                nomePrioridade: prioridadeObj.nomePrioridade,
-                                hexCorPrimaria: prioridadeObj.hexCorPrimaria
-                            },
-                            status: {
-                                idStatus: statusObj.idStatus,
-                                nomeStatus: statusObj.nomeStatus,
-                                hexCorPrimaria: statusObj.hexCorPrimaria
-                            },
-                            analista: analistaName
-                        };
-                    });
+                const mapped: UserTicketTableRow[] = ticketsData.map((t) => {
+                    let formattedProtocolo = "";
+                    if (t.protocolo && t.protocolo.length === 8) {
+                        const num = t.protocolo.slice(0, 6);
+                        const ano = t.protocolo.slice(6, 8);
+                        formattedProtocolo = `#${num}/${ano}`;
+                    } else {
+                        formattedProtocolo = t.protocolo || "";
+                    }
+                    const prioridadeObj = priorities.find(p => p.idPrioridade === t.idPrioridade) || {
+                        idPrioridade: t.idPrioridade,
+                        nomePrioridade: "Não Definida",
+                        hexCorPrimaria: "#888"
+                    };
+                    const statusObj = statuses.find(s => s.idStatus === t.idStatus) || {
+                        idStatus: t.idStatus ?? 0,
+                        nomeStatus: "Em aberto",
+                        hexCorPrimaria: "#888"
+                    };
+                    const analistaName = t.idAnalista
+                        ? (users.find(u => u.id === String(t.idAnalista))?.name ?? "-")
+                        : "-";
+                    return {
+                        idChamado: t.idChamado,
+                        protocolo: formattedProtocolo,
+                        assunto: t.assunto,
+                        dataAbertura: t.dataAbertura,
+                        prioridade: {
+                            idPrioridade: prioridadeObj.idPrioridade,
+                            nomePrioridade: prioridadeObj.nomePrioridade,
+                            hexCorPrimaria: prioridadeObj.hexCorPrimaria
+                        },
+                        status: {
+                            idStatus: statusObj.idStatus,
+                            nomeStatus: statusObj.nomeStatus,
+                            hexCorPrimaria: statusObj.hexCorPrimaria
+                        },
+                        analista: analistaName
+                    };
+                });
                 setTickets(mapped);
                 setAlert(null);
                 setLoading(false);
-            })
-            .catch(() => {
+            } catch {
                 setTickets([]);
                 setFilteredData([]);
                 setAlert({ type: "error", message: "Erro ao buscar chamados ou parâmetros." });
                 setLoading(false);
-            });
+            }
+        }
+
+        if (user?.id) {
+            fetchTickets();
+        }
     }, [user]);
 
     useEffect(() => {

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { TicketController } from "../controllers/TicketController";
+import { TicketController } from "../controllers/ticketController";
 import { autenticarToken } from "../middlewares/auth-jwt";
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
@@ -30,7 +30,7 @@ export class TicketRoutes {
         this.router.post(
             "/tickets",
             validatePayload(ticketCreateSchema),
-            autenticarToken, 
+            autenticarToken,
             this.ticketController.createTicket.bind(this.ticketController)
         );
         this.router.get("/tickets", autenticarToken, this.ticketController.getAllTickets.bind(this.ticketController));
@@ -52,6 +52,24 @@ export class TicketRoutes {
             autenticarToken,
             (req, res, next) => {
                 this.ticketController.getTeamTickets(req, res)
+                    .then(() => undefined)
+                    .catch(next);
+            }
+        );
+        this.router.get(
+            "/tickets/analyst/:idAnalista",
+            autenticarToken,
+            (req, res, next) => {
+                this.ticketController.getTicketsByAnalystId(req, res)
+                    .then(() => undefined)
+                    .catch(next);
+            }
+        );
+        this.router.get(
+            "/tickets/user/:idSolicitante",
+            autenticarToken,
+            (req, res, next) => {
+                this.ticketController.getTicketsBySolicitanteId(req, res)
                     .then(() => undefined)
                     .catch(next);
             }

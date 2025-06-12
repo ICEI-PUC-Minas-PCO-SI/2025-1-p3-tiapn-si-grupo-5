@@ -1,4 +1,6 @@
-import {
+// Este componente não é mais utilizado. Toda a lógica foi migrada para DataTableUserTickets.
+
+/* import {
     flexRender,
     getCoreRowModel,
     getPaginationRowModel,
@@ -303,4 +305,4 @@ export function DataTableMyTickets({
             </div>
         </div>
     );
-}
+} */

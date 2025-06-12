@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
     DropdownMenu,
@@ -7,10 +8,17 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, User, Building } from "lucide-react";
+import { getAllActiveManagements } from "@/api/management";
 import { useUser } from "@/contexts/UserContext";
 
 type UserProfileSectionProps = {
     onLogout?: () => void;
+    name: string;
+    email: string;
+    role: string;
+    department: string;
+    avatarUrl?: string;
+
 };
 
 export function UserProfileSection({
@@ -24,11 +32,33 @@ export function UserProfileSection({
 
     const { user } = useUser();
 
+    const [managementName, setManagementName] = useState<string>("");
+
     const avatarUrl = user?.fotoPerfil;
-    const displayName = user?.nome || "Não encontrado";
-    const displayEmail = user?.email || "Não encontrado";
-    const displayRole = user?.tipo ? roleLabels[user.tipo] || "Não encontrado" : "Não encontrado";
-    const managementName = user?.nomeGerencia || "Não informado";
+    const displayName = user?.nome || "Usuário TrackIt";
+    const displayEmail = user?.email || "usuario@trackit.com";
+    const displayRole = user?.tipo ? roleLabels[user.tipo] || "Usuário" : "Usuário";
+
+    useEffect(() => {
+        async function fetchManagementName() {
+            if (user?.gerencia) {
+                try {
+                    const managements = await getAllActiveManagements();
+                    const found = managements.find(
+                        (m: { idGerencia: number; nomeGerencia: string }) => m.idGerencia === user.gerencia
+                    );
+                    setManagementName(
+                        found ? found.nomeGerencia : "Não informado"
+                    );
+                } catch {
+                    setManagementName("Erro ao buscar");
+                }
+            } else {
+                setManagementName("Não informado");
+            }
+        }
+        fetchManagementName();
+    }, [user?.gerencia]);
 
     function getInitials(name: string): string {
         return name

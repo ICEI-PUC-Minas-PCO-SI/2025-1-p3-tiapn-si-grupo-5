@@ -42,9 +42,15 @@ export class TicketService {
         });
     }
 
-    async getTicketsByAnalyst(idAnalista: number) {
+    async getTicketsByAnalystId(idAnalista: number) {
         return prisma.chamado.findMany({
             where: { idAnalista }
+        });
+    }
+
+    async getTicketsBySolicitanteId(idSolicitante: number) {
+        return prisma.chamado.findMany({
+            where: { idSolicitante }
         });
     }
 

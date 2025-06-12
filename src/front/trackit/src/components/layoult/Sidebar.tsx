@@ -286,7 +286,7 @@ export function Sidebar() {
                                 >
                                     <Link to="/admin/assigned-tickets">
                                         <ClipboardList className="mr-2" />
-                                        <span>Chamados Atribuídos</span>
+                                        <span>Chamados da Equipe</span>
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>

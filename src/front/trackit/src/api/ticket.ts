@@ -85,3 +85,19 @@ export async function getTeamTickets(): Promise<ITicket[]> {
     if (!response.ok) throw new Error("Erro ao buscar chamados da equipe");
     return response.json();
 }
+
+export async function getTicketsByAnalystId(idAnalista: number): Promise<ITicket[]> {
+    const response = await fetch(`${API_BASE_URL}/tickets/analyst/${idAnalista}`, {
+        headers: authHeaders()
+    });
+    if (!response.ok) throw new Error("Erro ao buscar chamados do analista");
+    return response.json();
+}
+
+export async function getTicketsBySolicitanteId(idSolicitante: number): Promise<ITicket[]> {
+    const response = await fetch(`${API_BASE_URL}/tickets/user/${idSolicitante}`, {
+        headers: authHeaders()
+    });
+    if (!response.ok) throw new Error("Erro ao buscar chamados do usuário");
+    return response.json();
+}

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ManagementController } from "../controllers/ManagementController";
+import { ManagementController } from "../controllers/managementController";
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
 import { autenticarToken } from "../middlewares/auth-jwt";

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { TicketService } from "../services/TicketService";
+import { TicketService } from "../services/ticketService";
 
 const ticketService = new TicketService();
 
@@ -44,7 +44,7 @@ export class TicketController {
         try {
             // @ts-expect-error usuario injetado pelo middleware de autenticação
             const idAnalista = req.usuario.id;
-            const tickets = await ticketService.getTicketsByAnalyst(idAnalista);
+            const tickets = await ticketService.getTicketsByAnalystId(idAnalista);
             res.json(tickets);
         } catch (error) {
             console.error("Erro ao buscar meus chamados:", error);
@@ -89,6 +89,28 @@ export class TicketController {
         } catch (error) {
             console.error("Erro ao buscar chamados da equipe:", error);
             res.status(500).json({ error: "Erro ao buscar chamados da equipe" });
+        }
+    }
+
+    async getTicketsByAnalystId(req: Request, res: Response) {
+        try {
+            const idAnalista = Number(req.params.idAnalista);
+            const tickets = await ticketService.getTicketsByAnalystId(idAnalista);
+            res.json(tickets);
+        } catch (error) {
+            console.error("Erro ao buscar chamados do analista:", error);
+            res.status(500).json({ error: "Erro ao buscar chamados do analista" });
+        }
+    }
+
+    async getTicketsBySolicitanteId(req: Request, res: Response) {
+        try {
+            const idSolicitante = Number(req.params.idSolicitante);
+            const tickets = await ticketService.getTicketsBySolicitanteId(idSolicitante);
+            res.json(tickets);
+        } catch (error) {
+            console.error("Erro ao buscar chamados do usuário:", error);
+            res.status(500).json({ error: "Erro ao buscar chamados do usuário" });
         }
     }
 }
