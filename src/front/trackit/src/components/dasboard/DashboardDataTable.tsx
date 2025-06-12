@@ -202,7 +202,22 @@ export function DashboardDataTable() {
                     />
                 </Button>
             ),
-            cell: ({ row }: { row: Row<AnalystRow> }) => <span>{row.original.name}</span>,
+            cell: ({ row }: { row: Row<AnalystRow> }) => (
+                <span
+                    className="block truncate"
+                    style={{
+                        width: "180px",
+                        maxWidth: "180px",
+                        minWidth: "180px",
+                        display: "inline-block",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap"
+                    }}
+                >
+                    {row.original.name}
+                </span>
+            ),
         },
         {
             accessorKey: "demandasAtendidas",
@@ -244,7 +259,22 @@ export function DashboardDataTable() {
                     />
                 </Button>
             ),
-            cell: ({ row }: { row: Row<AnalystRow> }) => <span>{row.original.principalAtividade}</span>,
+            cell: ({ row }: { row: Row<AnalystRow> }) => (
+                <span
+                    className="block truncate"
+                    style={{
+                        width: "180px",
+                        maxWidth: "180px",
+                        minWidth: "180px",
+                        display: "inline-block",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap"
+                    }}
+                >
+                    {row.original.principalAtividade}
+                </span>
+            ),
         },
         {
             accessorKey: "desde",
