@@ -55,12 +55,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
                 nomeGerencia = undefined;
               }
             }
-            setUserState({
-              ...usuario,
-              nomeGerencia,
-              fotoPerfil: usuario.fotoPerfil,
-              idTipoUsuario: usuario.idTipoUsuario
-            });
+            setUserState({ ...usuario, nomeGerencia, fotoPerfil: usuario.fotoPerfil });
           } else {
             logout();
           }
@@ -74,31 +69,13 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     fetchUserAndManagement();
   }, []);
 
-  async function setUser(user: User | null, token?: string) {
-    let userToSet = user;
-    if (userToSet && userToSet.gerencia) {
-      try {
-        const managements: IManagement[] = await getAllActiveManagements();
-        const found = managements.find(
-          (g) => g.idGerencia === userToSet!.gerencia
-        );
-        userToSet = {
-          ...userToSet,
-          nomeGerencia: found?.nomeGerencia,
-        };
-      } catch {
-        userToSet = {
-          ...userToSet,
-          nomeGerencia: undefined,
-        };
-      }
-    }
-    setUserState(userToSet);
+  function setUser(user: User | null, token?: string) {
+    setUserState(user);
     if (token) {
       const expires = new Date(Date.now() + 60 * 60 * 1000); // 60 minutos
       Cookies.set("token", token, { expires });
     }
-    if (!userToSet) {
+    if (!user) {
       Cookies.remove("token");
     }
   }
