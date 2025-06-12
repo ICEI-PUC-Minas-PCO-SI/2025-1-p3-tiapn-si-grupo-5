@@ -19,19 +19,38 @@ export function useChatSocket(
 ) {
     const socketRef = useRef<Socket | null>(null);
 
+    // Cria o socket apenas uma vez
     useEffect(() => {
         const socket = io(SOCKET_URL);
         socketRef.current = socket;
 
-        socket.on("chat:receive", onReceive);
-        if (onError) socket.on("chat:error", onError);
-
-        socket.on("connect_error", (err) => {
-            if (onError) onError({ error: "Erro ao conectar ao chat em tempo real", ...err });
-        });
-
         return () => {
             socket.disconnect();
+        };
+    }, []);
+
+    // Atualiza listeners quando as funções mudam
+    useEffect(() => {
+        const socket = socketRef.current;
+        if (!socket) return;
+
+        if (onReceive) {
+            socket.on("chat:receive", onReceive);
+        }
+        if (onError) {
+            socket.on("chat:error", onError);
+            socket.on("connect_error", (err) => {
+                onError({ error: "Erro ao conectar ao chat em tempo real", ...err });
+            });
+        }
+
+        // Cleanup apenas dos listeners, não do socket inteiro
+        return () => {
+            if (onReceive) socket.off("chat:receive", onReceive);
+            if (onError) {
+                socket.off("chat:error", onError);
+                socket.off("connect_error");
+            }
         };
     }, [onReceive, onError]);
 

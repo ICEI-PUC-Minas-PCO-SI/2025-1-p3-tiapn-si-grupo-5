@@ -74,32 +74,34 @@ export default function Chat({ descricao }: ChatProps) {
             return;
         }
 
-        socketRef.current.off("chat:joined");
-        socketRef.current.off("chat:error");
-        socketRef.current.off("disconnect");
+        const socket = socketRef.current; // Salva a referência atual
 
-        socketRef.current.on("chat:joined", (data) => {
+        socket.off("chat:joined");
+        socket.off("chat:error");
+        socket.off("disconnect");
+
+        socket.on("chat:joined", (data) => {
             console.log("[CHAT] Recebido chat:joined no frontend", data);
         });
-        socketRef.current.on("chat:error", (err) => {
+        socket.on("chat:error", (err) => {
             console.error("[CHAT] Recebido chat:error no frontend", err);
             setError(err.error || "Erro ao entrar no chat");
         });
-        socketRef.current.on("disconnect", () => {
+        socket.on("disconnect", () => {
             console.warn("[CHAT] Socket desconectado no frontend");
         });
 
         console.log("[CHAT] Emitindo joinChamado", { idChamado, idUsuario: user.id });
-        socketRef.current.emit("joinChamado", {
+        socket.emit("joinChamado", {
             idChamado,
             idUsuario: user.id,
         });
 
         return () => {
-            if (socketRef.current) {
-                socketRef.current.off("chat:joined");
-                socketRef.current.off("chat:error");
-                socketRef.current.off("disconnect");
+            if (socket) {
+                socket.off("chat:joined");
+                socket.off("chat:error");
+                socket.off("disconnect");
             }
         };
     }, [idChamado, user, socketRef]);
