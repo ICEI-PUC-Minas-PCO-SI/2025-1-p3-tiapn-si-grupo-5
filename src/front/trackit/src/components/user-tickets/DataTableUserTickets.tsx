@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import type { UserTicketTableRow } from "../../pages/user-tickets/UserTickets";
 
 interface DataTableUserTicketsProps {
@@ -66,7 +67,20 @@ export function DataTableUserTickets({
                 </Button>
             ),
             cell: ({ row }: { row: Row<UserTicketTableRow> }) => (
-                <span className="max-w-[220px] truncate block">{row.original.assunto}</span>
+                <span
+                    className="block truncate"
+                    style={{
+                        width: "220px",
+                        maxWidth: "220px",
+                        minWidth: "220px",
+                        display: "inline-block",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap"
+                    }}
+                >
+                    {row.original.assunto}
+                </span>
             ),
             enableHiding: true,
         },
@@ -121,26 +135,25 @@ export function DataTableUserTickets({
                 if (displayName.length > 10) {
                     displayName = displayName.slice(0, 10) + "...";
                 }
-                return p ? (
-                    <span
-                        className="px-5 py-1 rounded paragraph text-sm"
-                        style={{
-                            backgroundColor: p.hexCorPrimaria,
-                            color: "#fff",
-                            width: "110px",
-                            maxWidth: "110px",
-                            minWidth: "110px",
-                            display: "inline-block",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap"
-                        }}
-                        title={p.nomePrioridade}
-                    >
-                        {displayName}
-                    </span>
-                ) : (
-                    <span className="px-5 py-1 rounded bg-gray-200 text-gray-700 font-bold text-base">-</span>
+                return (
+                    <div className="flex justify-center">
+                        {p ? (
+                            <Badge
+                                className="w-[110px] max-w-[110px] min-w-[110px] inline-block overflow-hidden text-ellipsis whitespace-nowrap"
+                                style={{
+                                    backgroundColor: p.hexCorPrimaria,
+                                    color: "#fff"
+                                }}
+                                title={p.nomePrioridade}
+                            >
+                                {displayName}
+                            </Badge>
+                        ) : (
+                            <Badge
+                                className="w-[110px] max-w-[110px] min-w-[110px] font-bold bg-gray-200 text-slate-700"
+                            >-</Badge>
+                        )}
+                    </div>
                 );
             },
             enableHiding: true,
@@ -175,26 +188,25 @@ export function DataTableUserTickets({
                 if (displayName.length > 10) {
                     displayName = displayName.slice(0, 10) + "...";
                 }
-                return s ? (
-                    <span
-                        className="px-5 py-1 rounded paragraph text-sm"
-                        style={{
-                            backgroundColor: s.hexCorPrimaria,
-                            color: "#fff",
-                            width: "110px",
-                            maxWidth: "110px",
-                            minWidth: "110px",
-                            display: "inline-block",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap"
-                        }}
-                        title={s.nomeStatus}
-                    >
-                        {displayName}
-                    </span>
-                ) : (
-                    <span className="px-5 py-1 rounded bg-gray-200 text-gray-700 font-bold text-base">-</span>
+                return (
+                    <div className="flex justify-center">
+                        {s ? (
+                            <Badge
+                                className="w-[110px] max-w-[110px] min-w-[110px] inline-block overflow-hidden text-ellipsis whitespace-nowrap"
+                                style={{
+                                    backgroundColor: s.hexCorPrimaria,
+                                    color: "#fff"
+                                }}
+                                title={s.nomeStatus}
+                            >
+                                {displayName}
+                            </Badge>
+                        ) : (
+                            <Badge
+                                className="w-[110px] max-w-[110px] min-w-[110px] font-bold bg-gray-200 text-slate-700"
+                            >-</Badge>
+                        )}
+                    </div>
                 );
             },
             enableHiding: true,
@@ -297,6 +309,7 @@ export function DataTableUserTickets({
                             </tr>
                         ))
                     )}
+
                 </tbody>
             </table>
             <div className="flex items-center justify-between py-4">
