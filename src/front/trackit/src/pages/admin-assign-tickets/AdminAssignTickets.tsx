@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
-import { AdminAssignTicketsTable } from "@/components/assing-tickets/AdminAssignTicketsTable";
+import { DataTableAssignTickets } from "@/components/assing-tickets/DataTableAssignTickets";
 import type { AssignTicketTableRow } from "@/components/assing-tickets/DataTableAssignTickets";
 import { Filter } from "lucide-react";
 import { getAllUsers } from "@/api/users";
@@ -270,9 +270,17 @@ export function AdminAssignTickets() {
         {loading ? (
           <TableSpinner />
         ) : (
-          <AdminAssignTicketsTable
+          <DataTableAssignTickets
             data={filteredData}
+            visibleColumns={{
+              protocolo: true,
+              assunto: true,
+              dataAbertura: true,
+              prioridade: true,
+              actions: true,
+            }}
             onOpenAssignModal={openAssignModal}
+            actionsType="admin"
           />
         )}
       </div>

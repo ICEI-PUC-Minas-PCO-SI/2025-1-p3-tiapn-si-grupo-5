@@ -26,23 +26,24 @@ export class ManagementRoutes {
     private initializeRoutes() {
         this.router.get(
             "/departments",
+            autenticarToken,
             this.managementController.getAllActiveManagement.bind(this.managementController)
         );
         this.router.post(
             "/departments",
-            autenticarToken, 
+            autenticarToken,
             validatePayload(managementCreateSchema),
             this.managementController.createManagement.bind(this.managementController)
         );
         this.router.put(
             "/departments/:id",
-            autenticarToken, 
+            autenticarToken,
             validatePayload(managementUpdateSchema),
             this.managementController.updateManagement.bind(this.managementController)
         );
         this.router.delete(
             "/departments/:id",
-            autenticarToken, 
+            autenticarToken,
             this.managementController.deleteManagement.bind(this.managementController)
         );
     }

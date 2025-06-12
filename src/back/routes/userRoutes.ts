@@ -45,11 +45,13 @@ export class UserRoutes {
     private initializeRoutes() {
         this.router.post(
             "/users/register",
+            // Registro pode ser público, manter sem autenticação
             validatePayload(userRegisterSchema),
             this.userController.registerUser.bind(this.userController)
         );
         this.router.post(
             "/users/login",
+            // Login é público
             validatePayload(userLoginSchema),
             this.userController.loginUser.bind(this.userController)
         );
@@ -76,10 +78,10 @@ export class UserRoutes {
             this.userController.changeUserStatus.bind(this.userController)
         );
         this.router.get(
-            "/users/me", 
-            autenticarToken, 
+            "/users/me",
+            autenticarToken,
             this.userController.getMe.bind(this.userController)
-    );
+        );
         this.router.put(
             "/users/profile/:idUsuario",
             validatePayload(userProfileUpdateSchema),

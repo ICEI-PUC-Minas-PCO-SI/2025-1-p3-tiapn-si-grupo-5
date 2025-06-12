@@ -26,13 +26,17 @@ export interface AssignTicketTableRow {
 interface DataTableAssignTicketsProps {
     data: AssignTicketTableRow[];
     visibleColumns: Record<string, boolean>;
-    onAssign: (idChamado: number) => void;
+    onAssign?: (idChamado: number) => void;
+    onOpenAssignModal?: (ticket: AssignTicketTableRow) => void;
+    actionsType: "analyst" | "admin";
 }
 
 export function DataTableAssignTickets({
     data,
     visibleColumns,
     onAssign,
+    onOpenAssignModal,
+    actionsType,
 }: DataTableAssignTicketsProps) {
     const columns: ColumnDef<AssignTicketTableRow>[] = [
         {
@@ -168,9 +172,16 @@ export function DataTableAssignTickets({
             header: "Ações",
             cell: ({ row }: { row: Row<AssignTicketTableRow> }) => (
                 <div className="flex justify-center gap-2">
-                    <Button size="icon" onClick={() => onAssign(row.original.idChamado)}>
-                        <ClipboardList className="w-4 h-4" />
-                    </Button>
+                    {actionsType === "analyst" && onAssign && (
+                        <Button size="icon" onClick={() => onAssign(row.original.idChamado)}>
+                            <ClipboardList className="w-4 h-4" />
+                        </Button>
+                    )}
+                    {actionsType === "admin" && onOpenAssignModal && (
+                        <Button size="icon" onClick={() => onOpenAssignModal(row.original)}>
+                            <ClipboardList className="w-4 h-4" />
+                        </Button>
+                    )}
                     <Button variant="outlineDisabled" size="icon">
                         <Eye className="w-4 h-4" />
                     </Button>
@@ -188,6 +199,11 @@ export function DataTableAssignTickets({
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
+        initialState: {
+            sorting: [
+                { id: "dataAbertura", desc: true }
+            ]
+        }
     });
 
     return (
@@ -243,7 +259,7 @@ export function DataTableAssignTickets({
                         onClick={() => table.previousPage()}
                         disabled={!table.getCanPreviousPage()}
                     >
-                        <ChevronLeft className="w-4 h-4"/>
+                        <ChevronLeft className="w-4 h-4" />
                     </Button>
                     <Button
                         size="icon"
@@ -251,7 +267,7 @@ export function DataTableAssignTickets({
                         onClick={() => table.nextPage()}
                         disabled={!table.getCanNextPage()}
                     >
-                        <ChevronRight className="w-4 h-4"/>
+                        <ChevronRight className="w-4 h-4" />
                     </Button>
                 </div>
             </div>

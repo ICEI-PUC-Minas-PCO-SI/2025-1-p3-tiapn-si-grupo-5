@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/select";
 import { TableSpinner } from "@/components/ui/spinner";
 
-export function AssignTickets() {
+export function AnalystAssignTickets() {
   const [tickets, setTickets] = useState<AssignTicketTableRow[]>([]);
   const [filteredData, setFilteredData] = useState<AssignTicketTableRow[]>([]);
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
@@ -231,6 +231,7 @@ export function AssignTickets() {
               actions: true,
             }}
             onAssign={handleAssign}
+            actionsType="analyst"
           />
         )}
       </div>

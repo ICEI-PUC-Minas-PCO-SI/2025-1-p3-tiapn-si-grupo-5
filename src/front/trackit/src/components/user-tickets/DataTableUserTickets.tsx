@@ -250,6 +250,11 @@ export function DataTableUserTickets({
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
+        initialState: {
+            sorting: [
+                { id: "dataAbertura", desc: true }
+            ]
+        }
     });
 
     return (
