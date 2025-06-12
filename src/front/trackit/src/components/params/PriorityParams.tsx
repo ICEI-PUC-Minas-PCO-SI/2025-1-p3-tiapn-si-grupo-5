@@ -154,7 +154,7 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
                                 className="w-5 h-5 rounded-full"
                                 style={{ backgroundColor: priority.hexCorPrimaria || "transparent" }}
                             ></span>
-                            <span className="paragraph text-slate-700">{priority.nomePrioridade}</span>
+                            <span className="paragraph text-slate-700 dark:text-slate-300">{priority.nomePrioridade}</span>
                         </div>
                         <div className="flex gap-2">
                             <Button variant="delete" size="icon" onClick={() => handleDeletePriority(priority.idPrioridade)}>

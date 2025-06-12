@@ -30,6 +30,8 @@ import { Link, useLocation } from "react-router-dom";
 import { UserProfileSection } from "./UserProfileSection";
 import { useState } from "react";
 import { useUser } from "@/contexts/UserContext";
+import { ThemeToggle } from "../theme/theme-toggle";
+
 export function Sidebar() {
     const location = useLocation();
     const [isParamsOpen, setIsParamsOpen] = useState(false);
@@ -48,8 +50,9 @@ export function Sidebar() {
     return (
         <UISidebar>
             <SidebarHeader>
-                <div className="flex items-center gap-2 px-2">
+                <div className="flex items-center justify-between gap-2 px-2">
                     <span className="font-bold text-lg">TrackIt</span>
+                    <ThemeToggle />
                 </div>
             </SidebarHeader>
             <SidebarSeparator />

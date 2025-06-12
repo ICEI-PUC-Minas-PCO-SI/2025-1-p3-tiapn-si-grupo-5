@@ -31,8 +31,8 @@ export function OpenTicket() {
                 />
             )}
             <header className="max-w-[51.4rem]">
-                <h1 className="title-h1 text-slate-950">Abrir Chamado</h1>
-                <h3 className="title-h3 text-slate-700">Preencha o chamado com as informações solicitadas</h3>
+                <h1 className="title-h1 text-slate-950 dark:text-white">Abrir Chamado</h1>
+                <h3 className="title-h3 text-slate-700 dark:text-slate-300">Preencha o chamado com as informações solicitadas</h3>
             </header>
             <main>
                 <OpenTicketForm setAlert={setAlert} />

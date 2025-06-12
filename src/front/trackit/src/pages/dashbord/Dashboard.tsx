@@ -176,10 +176,10 @@ export function Dashboard() {
                 </div>
             )}
             <div className="flex flex-col gap-4 justify-between">
-                <h1 className="title-h1 text-slate-950">
+                <h1 className="title-h1 text-slate-950 dark:text-white">
                     Dashboard
                 </h1>
-                <h3 className="title-h3 text-slate-700">
+                <h3 className="title-h3 text-slate-700 dark:text-slate-300">
                     Indicadores por status de demandas
                 </h3>
             </div>
@@ -200,7 +200,7 @@ export function Dashboard() {
                             />
                         ))}
                     </div>
-                    <h3 className="title-h3 text-slate-700">
+                    <h3 className="title-h3 text-slate-700 dark:text-slate-300">
                         Parâmetros acumulados</h3>
                     <div className="flex flex-wrap gap-8 items-center">
                         <ChartBar
@@ -258,7 +258,7 @@ export function Dashboard() {
                         />
                     </div>
                     <div className="flex flex-col gap-4">
-                        <h3 className="title-h3 text-slate-700">
+                        <h3 className="title-h3 text-slate-700 dark:text-slate-300">
                             Analistas e Demandas</h3>
                         <DashboardDataTable />
                     </div>

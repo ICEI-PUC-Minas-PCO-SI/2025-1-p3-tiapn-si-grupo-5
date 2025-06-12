@@ -305,7 +305,7 @@ export function DashboardDataTable() {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="min-w-[220px]">
-                            <div className="px-4 py-2 font-semibold text-sm text-gray-700">Principal Atividade</div>
+                            <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-slate-300">Principal Atividade</div>
                             <Select
                                 value={principalAtividadeFilter}
                                 onValueChange={setPrincipalAtividadeFilter}
@@ -324,7 +324,7 @@ export function DashboardDataTable() {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
-                            <div className="px-4 py-2 font-semibold text-sm text-gray-700">Ano</div>
+                            <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-slate-300">Ano</div>
                             <Select
                                 value={yearFilter}
                                 onValueChange={setYearFilter}
@@ -351,8 +351,8 @@ export function DashboardDataTable() {
                                     className="flex items-center gap-1"
                                     disabled={principalAtividadeFilter === "__all__" && yearFilter === "__all__"}
                                 >
-                                    <XCircle className="w-4 h-4" />
-                                    Limpar filtros
+                                    <XCircle className="w-4 h-4 dark:text-slate-300" />
+                                    <span className="dark:text-slate-300">Limpar filtros</span>
                                 </Button>
                             </div>
                         </DropdownMenuContent>
