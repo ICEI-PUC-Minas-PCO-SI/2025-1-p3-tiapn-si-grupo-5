@@ -93,31 +93,60 @@ export function Dashboard() {
         return { month, Quantidade: count };
     });
 
-    const ticketsByStatus = statusList.map((status) => {
-        // const count = tickets.filter(t =>
-        //     t.idStatus === status.idStatus && !t.dataFechamento
-        // ).length;
-        const count = tickets.filter(t =>
-            t.idStatus === status.idStatus
-        ).length;
-        return {
-            ...status,
-            count,
-        };
-    });
+    // KPI de chamados sem status definido
+    const undefinedStatusCount = tickets.filter(t => !t.idStatus || !statusList.some(s => s.idStatus === t.idStatus)).length;
 
-    const ticketsByStatusForYear = statusList.map((status) => {
-        const count = tickets.filter(t => {
-            if (!t.dataAbertura) return false;
-            const d = new Date(t.dataAbertura);
-            return selectedYearPie && d.getFullYear() === Number(selectedYearPie) && t.idStatus === status.idStatus;
-        }).length;
-        return {
-            tipochamado: status.nomeStatus,
-            quantity: count,
-            fill: status.hexCorPrimaria || "#888"
-        };
-    }).filter(item => item.quantity > 0);
+    const ticketsByStatus = [
+        ...statusList.map((status) => {
+            const count = tickets.filter(t =>
+                t.idStatus === status.idStatus
+            ).length;
+            return {
+                ...status,
+                count,
+            };
+        }),
+        {
+            idStatus: -1,
+            nomeStatus: "Não atribuído",
+            hexCorPrimaria: "#888",
+            hexCorSecundaria: "#ccc",
+            ativo: 1,
+            count: undefinedStatusCount,
+        }
+    ];
+
+    const ticketsByStatusForYear = [
+        ...statusList.map((status) => {
+            const count = tickets.filter(t => {
+                if (!t.dataAbertura) return false;
+                const d = new Date(t.dataAbertura);
+                return selectedYearPie && d.getFullYear() === Number(selectedYearPie) && t.idStatus === status.idStatus;
+            }).length;
+            return {
+                tipochamado: status.nomeStatus,
+                quantity: count,
+                fill: status.hexCorPrimaria || "#888"
+            };
+        }),
+        // Fatia para chamados sem status definido
+        (() => {
+            const count = tickets.filter(t => {
+                if (!t.dataAbertura) return false;
+                const d = new Date(t.dataAbertura);
+                return (
+                    selectedYearPie &&
+                    d.getFullYear() === Number(selectedYearPie) &&
+                    (!t.idStatus || !statusList.some(s => s.idStatus === t.idStatus))
+                );
+            }).length;
+            return {
+                tipochamado: "Não atribuído",
+                quantity: count,
+                fill: "#888"
+            };
+        })()
+    ].filter(item => item.quantity > 0);
 
     const ticketsByPriorityForYear = priorities.map((priority) => {
         const count = tickets.filter(t => {
@@ -195,7 +224,7 @@ export function Dashboard() {
                                 key={status.idStatus}
                                 kpiTitle={status.nomeStatus}
                                 kpiValue={status.count.toString()}
-                                kpiLink={`/admin/assigned-tickets?status=${status.idStatus}`}
+                                kpiLink={status.idStatus !== -1 ? `/admin/assigned-tickets?status=${status.idStatus}` : undefined}
                                 kpiColor={status.hexCorPrimaria}
                             />
                         ))}
