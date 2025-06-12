@@ -74,13 +74,31 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     fetchUserAndManagement();
   }, []);
 
-  function setUser(user: User | null, token?: string) {
-    setUserState(user);
+  async function setUser(user: User | null, token?: string) {
+    let userToSet = user;
+    if (userToSet && userToSet.gerencia) {
+      try {
+        const managements: IManagement[] = await getAllActiveManagements();
+        const found = managements.find(
+          (g) => g.idGerencia === userToSet!.gerencia
+        );
+        userToSet = {
+          ...userToSet,
+          nomeGerencia: found?.nomeGerencia,
+        };
+      } catch {
+        userToSet = {
+          ...userToSet,
+          nomeGerencia: undefined,
+        };
+      }
+    }
+    setUserState(userToSet);
     if (token) {
       const expires = new Date(Date.now() + 60 * 60 * 1000); // 60 minutos
       Cookies.set("token", token, { expires });
     }
-    if (!user) {
+    if (!userToSet) {
       Cookies.remove("token");
     }
   }
