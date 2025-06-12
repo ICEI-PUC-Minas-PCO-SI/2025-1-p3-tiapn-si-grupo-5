@@ -113,4 +113,21 @@ export class TicketController {
             res.status(500).json({ error: "Erro ao buscar chamados do usuário" });
         }
     }
+
+    async getTicketById(req: Request, res: Response) {
+        try {
+            const idChamado = Number(req.params.idChamado);
+            if (!idChamado) {
+                return res.status(400).json({ error: "idChamado é obrigatório" });
+            }
+            const ticket = await ticketService.getTicketById(idChamado);
+            if (!ticket) {
+                return res.status(404).json({ error: "Chamado não encontrado" });
+            }
+            res.json(ticket);
+        } catch (error) {
+            console.error("Erro ao buscar chamado por id:", error);
+            res.status(500).json({ error: "Erro ao buscar chamado por id" });
+        }
+    }
 }

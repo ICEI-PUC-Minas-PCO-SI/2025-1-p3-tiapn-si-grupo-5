@@ -78,4 +78,17 @@ export class TicketService {
             }
         });
     }
+
+    async getTicketById(idChamado: number) {
+        return prisma.chamado.findUnique({
+            where: { idChamado },
+            include: {
+                usuario_chamado_idSolicitanteTousuario: true,
+                usuario_chamado_idAnalistaTousuario: true,
+                prioridadechamado: true,
+                statuschamado: true,
+                tipochamado: true,
+            }
+        });
+    }
 }

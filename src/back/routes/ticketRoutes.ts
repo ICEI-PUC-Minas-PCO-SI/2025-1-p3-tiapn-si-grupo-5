@@ -74,6 +74,15 @@ export class TicketRoutes {
                     .catch(next);
             }
         );
+        this.router.get(
+            "/tickets/:idChamado",
+            autenticarToken,
+            (req, res, next) => {
+                this.ticketController.getTicketById(req, res)
+                    .then(() => undefined)
+                    .catch(next);
+            }
+        );
     }
 
     public getRouter(): Router {

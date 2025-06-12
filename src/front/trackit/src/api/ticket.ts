@@ -101,3 +101,38 @@ export async function getTicketsBySolicitanteId(idSolicitante: number): Promise<
     if (!response.ok) throw new Error("Erro ao buscar chamados do usuário");
     return response.json();
 }
+
+export async function getTicketById(idChamado: number) {
+    const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}`, {
+        headers: authHeaders()
+    });
+    if (!response.ok) throw new Error("Erro ao buscar chamado por id");
+    return response.json();
+}
+
+export interface ITicketFull extends ITicket {
+    usuario_chamado_idSolicitanteTousuario?: {
+        idUsuario: number;
+        nomeUsuario: string;
+        email: string;
+    } | null;
+    usuario_chamado_idAnalistaTousuario?: {
+        idUsuario: number;
+        nomeUsuario: string;
+        email: string;
+    } | null;
+    prioridadechamado?: {
+        idPrioridade: number;
+        nomePrioridade: string;
+        hexCorPrimaria: string;
+    } | null;
+    statuschamado?: {
+        idStatus: number;
+        nomeStatus: string;
+        hexCorPrimaria: string;
+    } | null;
+    tipochamado?: {
+        idTipoChamado: number;
+        nomeTipo: string;
+    } | null;
+}
