@@ -24,7 +24,7 @@ export function ThemeToggle() {
         {!isDark && <Sun className="h-5 w-5 text-yellow-500" />}
         {isDark && <span className="h-5 w-5" />}
       </div>
-      <Switch checked={isDark} onCheckedChange={handleSwitch} />
+      <Switch className="cursor-pointer" checked={isDark} onCheckedChange={handleSwitch} />
       <div className="w-5 flex justify-center">
         {isDark && <Moon className="h-5 w-5 text-blue-500" />}
         {!isDark && <span className="h-5 w-5" />}
