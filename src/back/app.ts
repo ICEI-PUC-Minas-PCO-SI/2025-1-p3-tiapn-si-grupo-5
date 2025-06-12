@@ -9,6 +9,7 @@ import { TicketTypeRoutes } from "./routes/ticketTypeRoutes";
 import { errorHandler } from "./middlewares/error-handler";
 import { PriorityRoutes } from "./routes/priorityRoutes";
 import { DashboardRoutes } from "./routes/dashboardRoutes";
+import { ChatRoutes } from "./routes/chatRoutes";
 
 export class App {
     private app: Express;
@@ -34,6 +35,7 @@ export class App {
         const ticketTypeRoutes = new TicketTypeRoutes();
         const priorityRoutes = new PriorityRoutes();
         const dashboardRoutes = new DashboardRoutes();
+        const chatRoutes = new ChatRoutes();
 
         this.app.use("/", userRoutes.getRouter());
         this.app.use("/", managementRoutes.getRouter());
@@ -43,6 +45,7 @@ export class App {
         this.app.use("/", ticketTypeRoutes.getRouter());
         this.app.use("/", priorityRoutes.getRouter());
         this.app.use("/", dashboardRoutes.getRouter());
+        this.app.use("/", chatRoutes.getRouter());
     }
 
     public getInstance(): Express {

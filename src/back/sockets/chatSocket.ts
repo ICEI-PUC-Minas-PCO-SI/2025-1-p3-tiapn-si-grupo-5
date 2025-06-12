@@ -1,7 +1,9 @@
 import { Server as SocketIOServer, Socket } from "socket.io";
-import { PrismaClient, msgchamado_remetente } from "../generated/prisma";
+import { PrismaClient } from "../generated/prisma";
+import { ChatService } from "../services/chatService";
 
 const prisma = new PrismaClient();
+const chatService = new ChatService();
 
 type ChatSendData = {
     idChamado: number;
@@ -60,7 +62,7 @@ export function setupChatSocket(io: SocketIOServer) {
                     socket.emit("chat:error", { error: "Você não tem permissão para acessar este chat." });
                 }
             } catch (err) {
-                socket.emit("chat:error", { error: "Erro ao validar permissão para entrar na sala do chamado.", err});
+                socket.emit("chat:error", { error: "Erro ao validar permissão para entrar na sala do chamado.", err });
             }
         });
 
@@ -73,16 +75,14 @@ export function setupChatSocket(io: SocketIOServer) {
                     return;
                 }
 
-                // Salva no banco
-                const novaMensagem = await prisma.msgchamado.create({
-                    data: {
-                        idChamado,
-                        idRemetente,
-                        mensagem,
-                        remetente: remetente as msgchamado_remetente,
-                        urlAnexo: urlAnexo || null,
-                        nomeArquivo: nomeArquivo || null,
-                    },
+                // Salva no banco usando o ChatService
+                const novaMensagem = await chatService.saveMessage({
+                    idChamado,
+                    idRemetente,
+                    mensagem,
+                    remetente,
+                    urlAnexo,
+                    nomeArquivo,
                 });
 
                 // Envia para todos na sala do chamado
@@ -97,3 +97,11 @@ export function setupChatSocket(io: SocketIOServer) {
         });
     });
 }
+
+/*
+- O frontend conecta ao socket.io e emite "joinChamado" com idChamado e idUsuario.
+- O backend valida se o usuário pode acessar o chat do chamado (solicitante, analista ou gestor).
+- Se permitido, o usuário entra na sala do chamado (socket.join).
+- Quando uma mensagem é enviada ("chat:send"), ela é persistida no banco via ChatService e emitida para todos na sala do chamado ("chat:receive").
+- As mensagens podem ser buscadas via REST GET /chats/:idChamado/messages para exibir o histórico ao abrir o chat.
+*/
