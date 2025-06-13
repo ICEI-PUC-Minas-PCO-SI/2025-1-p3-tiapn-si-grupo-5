@@ -34,7 +34,19 @@ export class ChatService {
     async getMessagesByChamado(idChamado: number) {
         return prisma.msgchamado.findMany({
             where: { idChamado },
-            orderBy: { timestamp: "asc" }
+            orderBy: { timestamp: "asc" },
+            include: {
+                usuario: {
+                    select: {
+                        nomeUsuario: true,
+                        gerencia: {
+                            select: {
+                                nomeGerencia: true
+                            }
+                        }
+                    }
+                }
+            }
         });
     }
 }

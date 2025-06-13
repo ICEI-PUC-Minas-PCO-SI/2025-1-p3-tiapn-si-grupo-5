@@ -1,3 +1,4 @@
+/* Componente Chat: exibe o chat de um chamado, histórico de mensagens, envia mensagens e integra com socket.io para chat em tempo real. */
 import { useEffect, useState, useRef } from "react";
 import type { FormEvent } from "react";
 import { Button } from "@/components/ui/button";
@@ -6,10 +7,8 @@ import { Paperclip, Send, ChevronsRight, ChevronsLeft } from "lucide-react";
 import { Message } from "@/components/ui/Message";
 import { useUser } from "@/contexts/UserContext";
 import { useChatSocket } from "@/hooks/useChatSocket";
-import type { ChatMessage } from "@/hooks/useChatSocket";
+import type { ChatMessage } from "@/api/chat";
 import { getChatMessages } from "@/api/chat";
-import { getTicketById } from "@/api/ticket";
-import type { ITicketFull } from "@/api/ticket";
 
 interface ChatProps {
     descricao: string;
@@ -23,95 +22,75 @@ export default function Chat({ descricao }: ChatProps) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Novo estado para dados do ticket
-    const [ticketInfo, setTicketInfo] = useState<ITicketFull | null>(null);
-
-    // Pega o idChamado da URL
+    // Obtém o idChamado da URL
     const searchParams = new URLSearchParams(window.location.search);
     const idChamado = Number(searchParams.get("idChamado"));
 
-    // Buscar histórico ao abrir (apenas uma vez por idChamado)
+    // Busca o histórico de mensagens ao abrir o chat
     useEffect(() => {
         setLoading(true);
         setError(null);
-        console.log("[CHAT] Buscando histórico de mensagens para chamado", idChamado);
+        // Busca as mensagens do chamado via API REST
         getChatMessages(idChamado)
             .then(data => {
-                console.log("[CHAT] Mensagens carregadas:", data);
                 setMessages(data);
             })
             .catch(err => {
-                console.error("[CHAT] Erro ao buscar mensagens:", err);
                 setMessages([]);
                 setError(err.message || "Erro ao buscar mensagens");
             })
             .finally(() => setLoading(false));
     }, [idChamado]);
 
-    // Buscar ticket ao abrir (para pegar dados do solicitante e analista)
-    useEffect(() => {
-        getTicketById(idChamado)
-            .then(setTicketInfo)
-            .catch(() => setTicketInfo(null));
-    }, [idChamado]);
-
-    // Conectar ao socket
+    // Hook customizado para conectar ao socket.io e receber mensagens em tempo real
     const socketRef = useChatSocket(
         (msg: ChatMessage) => {
-            console.log("[CHAT] Mensagem recebida via socket:", msg);
+            // Adiciona mensagem recebida via socket ao estado, evitando duplicatas
             setMessages(prev => {
-                // Evita duplicatas por idMensagem
                 if (!msg.idMensagem) {
-                    console.warn("[CHAT] Mensagem recebida sem idMensagem:", msg);
+                    // Mensagem sem idMensagem não é adicionada
                 }
                 if (prev.some(m => m.idMensagem === msg.idMensagem)) {
-                    console.log("[CHAT] Mensagem duplicada, não adicionando.");
                     return prev;
                 }
-                const novoArray = [...prev, msg];
-                console.log("[CHAT] Mensagens depois de adicionar:", novoArray);
-                return novoArray;
+                return [...prev, msg];
             });
         },
         (err) => {
-            console.error("[CHAT] Erro no chat em tempo real:", err);
             setError(err.error || "Erro no chat em tempo real");
         }
     );
 
-    // Entrar na sala do chamado
+    // Entra na sala do chamado no socket ao montar o componente
     useEffect(() => {
         if (!user || !socketRef.current) {
-            console.log("[CHAT] Esperando user e socketRef estarem prontos...", { user, socket: socketRef.current });
             return;
         }
 
         const socket = socketRef.current;
 
+        // Remove listeners antigos para evitar múltiplos handlers
         socket.off("chat:joined");
         socket.off("chat:error");
         socket.off("disconnect");
 
-        /* socket.on("chat:joined", (data) => {
-            console.log("[CHAT] Recebido chat:joined no frontend", data);
-        }); */
-
+        // Listener de erro ao entrar na sala
         socket.on("chat:error", (err) => {
-            console.error("[CHAT] Recebido chat:error no frontend", err);
             setError(err.error || "Erro ao entrar no chat");
         });
 
+        // Listener de desconexão do socket
         socket.on("disconnect", () => {
-            console.warn("[CHAT] Socket desconectado no frontend");
+            // Apenas loga/desabilita recursos se necessário
         });
 
-        /* console.log("[CHAT] Emitindo joinChamado", { idChamado, idUsuario: user.id }); */
-
+        // Entra na sala do chamado
         socket.emit("joinChamado", {
             idChamado,
             idUsuario: user.id,
         });
 
+        // Cleanup dos listeners ao desmontar
         return () => {
             if (socket) {
                 socket.off("chat:joined");
@@ -121,16 +100,10 @@ export default function Chat({ descricao }: ChatProps) {
         };
     }, [idChamado, user, socketRef]);
 
-    // Enviar mensagem
+    // Envia mensagem para o socket e limpa o input
     function handleSend(e: FormEvent) {
         e.preventDefault();
         if (!input.trim() || !user || !socketRef.current) return;
-        console.log("[CHAT] Enviando mensagem via socket:", {
-            idChamado,
-            idRemetente: user.id,
-            mensagem: input,
-            remetente: user.tipo === 2 ? "analista" : "usuario",
-        });
         socketRef.current.emit("chat:send", {
             idChamado,
             idRemetente: user.id,
@@ -143,6 +116,7 @@ export default function Chat({ descricao }: ChatProps) {
         }
     }
 
+    // Formata o timestamp da mensagem para o horário brasileiro, mostrando data se necessário
     function formatToBrazilTime(isoString: string) {
         const date = new Date(isoString);
         const now = new Date();
@@ -164,18 +138,19 @@ export default function Chat({ descricao }: ChatProps) {
         }
     }
 
-    // Ref para a div de mensagens
+    // Ref para scroll automático ao final das mensagens
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
-    // Ref para o textarea
+    // Ref para o textarea (input de mensagem)
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-    // Scroll automático para o final ao adicionar mensagem
+    // Sempre que as mensagens mudam, faz scroll para o final
     useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
         }
     }, [messages]);
 
+    // Renderização do componente
     return (
         <div className="flex flex-col w-full mx-auto border rounded bg-white h-[600px]">
             {/* Header com botão retração */}
@@ -204,28 +179,15 @@ export default function Chat({ descricao }: ChatProps) {
                                         let nome = "Desconhecido";
                                         let gerencia = "";
                                         let avatarImg = undefined;
-
-                                        // Se for o usuário atual
+                                        // Se for o usuário logado, usa dados do contexto
                                         if (msg.idRemetente === user?.id) {
                                             nome = user?.nome || "Desconhecido";
                                             gerencia = user?.nomeGerencia || "";
                                             avatarImg = user?.fotoPerfil;
-                                        } else if (
-                                            ticketInfo &&
-                                            msg.idRemetente === ticketInfo.idSolicitante &&
-                                            ticketInfo.usuario_chamado_idSolicitanteTousuario
-                                        ) {
-                                            // Se for o solicitante
-                                            nome = ticketInfo.usuario_chamado_idSolicitanteTousuario.nomeUsuario;
-                                            gerencia = ticketInfo.usuario_chamado_idSolicitanteTousuario.gerencia?.nomeGerencia || "";
-                                        } else if (
-                                            ticketInfo &&
-                                            msg.idRemetente === ticketInfo.idAnalista &&
-                                            ticketInfo.usuario_chamado_idAnalistaTousuario
-                                        ) {
-                                            // Se for o analista
-                                            nome = ticketInfo.usuario_chamado_idAnalistaTousuario.nomeUsuario;
-                                            gerencia = ticketInfo.usuario_chamado_idAnalistaTousuario.gerencia?.nomeGerencia || "";
+                                        } else if (msg.usuario) {
+                                            // Para outros remetentes, usa dados vindos do backend
+                                            nome = msg.usuario.nomeUsuario || "Desconhecido";
+                                            gerencia = msg.usuario.gerencia?.nomeGerencia || "";
                                         }
 
                                         return (

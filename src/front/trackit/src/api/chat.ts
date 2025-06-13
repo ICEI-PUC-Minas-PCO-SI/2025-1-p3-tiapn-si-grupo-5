@@ -9,6 +9,12 @@ export interface ChatMessage {
     idRemetente: number;
     urlAnexo?: string | null;
     nomeArquivo?: string | null;
+    usuario?: {
+        nomeUsuario: string;
+        gerencia?: {
+            nomeGerencia: string;
+        } | null;
+    };
 }
 
 export async function getChatMessages(idChamado: number): Promise<ChatMessage[]> {
