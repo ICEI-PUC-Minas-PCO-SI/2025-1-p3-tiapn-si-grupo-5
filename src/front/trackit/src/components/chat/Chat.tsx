@@ -116,6 +116,14 @@ export default function Chat({ descricao }: ChatProps) {
         }
     }
 
+    // handler para enviar ao pressionar Enter (sem Shift)
+    function handleInputKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            handleSend(e as unknown as FormEvent);
+        }
+    }
+
     // Formata o timestamp da mensagem para o horário brasileiro, mostrando data se necessário
     function formatToBrazilTime(isoString: string) {
         const date = new Date(isoString);
@@ -240,6 +248,7 @@ export default function Chat({ descricao }: ChatProps) {
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     ref={textareaRef}
+                    onKeyDown={handleInputKeyDown}
                 />
                 <Button
                     type="submit"
