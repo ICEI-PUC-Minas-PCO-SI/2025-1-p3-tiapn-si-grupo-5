@@ -9,7 +9,7 @@ export const buttonVariants = cva(
         default:
           "bg-sky-700 text-slate-100 min-w-[7.75rem] h-[3rem] rounded-[0.375rem] cursor-pointer hover:bg-sky-600 hover:shadow-[0px_0.125rem_0.5rem_0px] hover:shadow-slate-800 transition-all duration-200",
         outline:
-          "bg-transparent text-slate-700 min-w-[7.75rem] h-[3rem] rounded-[6px] border border-slate-300 cursor-pointer hover:shadow-md hover:shadow-slate-200 transition-all duration-300 ease-in-out",
+          "bg-transparent text-slate-700 min-w-[7.75rem] h-[3rem] rounded-[6px] border border-slate-300 cursor-pointer hover:shadow-md hover:shadow-slate-200 transition-all duration-300 ease-in-out dark:text-white",
         outlineDisabled:
           "bg-transparent text-slate-400 min-w-[7.75rem] h-[3rem] rounded-[6px] border border-slate-200 cursor-not-allowed opacity-60",
         secondary:
@@ -21,7 +21,9 @@ export const buttonVariants = cva(
         active:
           "bg-green-600 text-white min-w-[7.75rem] h-[3rem] rounded-[0.375rem] cursor-pointer hover:bg-green-500 hover:shadow-[0px_0.125rem_0.5rem_0px] hover:shadow-green-700 transition-all duration-200",
         ghost:
-          "bg-transparent text-slate-700 min-w-[7.75rem] h-[3rem] rounded-[6px] cursor-pointer focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aux-1",
+          "bg-transparent text-slate-700 min-w-[7.75rem] h-[3rem] rounded-[6px] cursor-pointer focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aux-1 dark:text-white",
+        annex:
+          "bg-transparent py-[12px] px-[24px] items-center gap-[12px] flex justify-center border-[1px] border-slate-500 rounded-[6px] cursor-pointer hover:shadow-lg hover:shadow-slate-300 transition-all duration-100"
 
       },
       size: {

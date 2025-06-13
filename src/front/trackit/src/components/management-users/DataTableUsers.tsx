@@ -173,21 +173,25 @@ export function DataTableUsers({
 
   return (
     <div className="w-full">
-      <table className="w-full border rounded bg-white text-sm">
+      <table className="w-full border rounded bg-white text-sm dark:bg-slate-900 dark:text-slate-200">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id} className="bg-gray-100 text-gray-700">
+            <tr key={headerGroup.id} className="bg-gray-100 text-gray-700 dark:bg-slate-800">
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="text-center px-4 py-2"
+                  className={`text-center px-4 py-2 ${header.column.getCanSort() ? "group" : ""} ${header.id === "actions" ? "dark:text-white" : ""}`}
                   style={{ width: `${100 / columns.length}%` }}
                 >
                   {header.isPlaceholder
                     ? null
-                    : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
+                    : (
+                      <div className={header.column.getCanSort() ? "dark:text-slate-200" : ""}>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                      </div>
                     )}
                 </th>
               ))}
@@ -197,11 +201,11 @@ export function DataTableUsers({
         <tbody>
           {table.getRowModel().rows.length === 0 ? (
             <tr>
-              <td colSpan={columns.length} className="text-center py-6">Nenhum usuário encontrado</td>
+              <td colSpan={columns.length} className="text-center py-6 dark:bg-slate-900 dark:text-slate-200">Nenhum usuário encontrado</td>
             </tr>
           ) : (
             table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="border-t hover:bg-gray-50">
+              <tr key={row.id} className="border-t hover:bg-gray-50 dark:hover:bg-slate-800">
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}

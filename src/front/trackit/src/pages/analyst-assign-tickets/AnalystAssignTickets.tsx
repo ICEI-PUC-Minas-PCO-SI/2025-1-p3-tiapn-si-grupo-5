@@ -211,7 +211,7 @@ export function AnalystAssignTickets() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[220px]">
-              <div className="px-4 py-2 font-semibold text-sm text-gray-700">Prioridade</div>
+              <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Prioridade</div>
               <Select value={priorityFilter} onValueChange={handlePriorityChange}>
                 <SelectTrigger className="w-full mb-2">
                   <SelectValue placeholder="Todas" />

@@ -139,7 +139,7 @@ export function TicketTypeParams({ isAdding, setIsAdding }: TicketTypeParamsProp
             <ul className="divide-y divide-gray-200">
                 {ticketTypes.map((type) => (
                     <li key={type.idTipoChamado} className="flex justify-between items-center py-2">
-                        <span className="paragraph text-slate-700">{type.nomeTipo}</span>
+                        <span className="paragraph text-slate-700 dark:text-slate-300">{type.nomeTipo}</span>
                         <div className="flex gap-2">
                             <Button variant="delete" size="icon" onClick={() => handleDelete(type.idTipoChamado)}>
                                 <Trash2 />

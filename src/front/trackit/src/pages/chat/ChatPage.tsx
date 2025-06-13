@@ -139,7 +139,7 @@ export function ChatPage() {
     }
 
     return (
-        <div className="flex flex-col gap-6 h-full">
+        <div className="flex flex-col gap-6 h-full bg-white dark:bg-slate-950">
             {alert && (
                 <GlobalAlert
                     type={alert.type}
@@ -150,10 +150,10 @@ export function ChatPage() {
             <header className="flex flex-col gap-4">
                 <div className="flex justify-between items-center mb-4">
                     <div className="flex gap-4 items-center">
-                        <h1 className="title-h1 text-slate-950">
+                        <h1 className="title-h1 text-slate-950 dark:text-white">
                             {ticket?.assunto || "Assunto da demanda"}
                         </h1>
-                        <Badge variant="outline" className="h-10">
+                        <Badge variant="outline" className="h-10 dark:bg-slate-800 dark:text-white dark:border-slate-700">
                             {ticket?.protocolo && ticket.protocolo.length === 8
                                 ? `#${ticket.protocolo.slice(0, 6)}/${ticket.protocolo.slice(6, 8)}`
                                 : ticket?.protocolo
@@ -183,7 +183,7 @@ export function ChatPage() {
                     </div>
                 </div>
                 <div className="mb-4 flex items-center justify-between">
-                    <h2 className="title-h2 text-slate-800">
+                    <h2 className="title-h2 text-slate-800 dark:text-slate-300">
                         {ticket?.tipochamado?.nomeTipo || "Tipo de demanda"}
                     </h2>
                     {isAnalyst && (
@@ -194,6 +194,7 @@ export function ChatPage() {
                                 setSelectedStatus(ticket?.idStatus ? String(ticket.idStatus) : "");
                                 setStatusModalOpen(true);
                             }}
+                            className="dark:border-slate-700 dark:text-white"
                         >
                             Alterar status
                         </Button>
@@ -315,17 +316,17 @@ export function ChatPage() {
                     )}
                 </div>
                 <div className="flex justify-between items-center mb-4">
-                    <span className="paragraph text-slate-700">
+                    <span className="paragraph text-slate-700 dark:text-slate-300">
                         Analista Responsável: {ticket?.usuario_chamado_idAnalistaTousuario?.nomeUsuario || "-"}
                     </span>
-                    <span className="paragraph text-slate-700">
+                    <span className="paragraph text-slate-700 dark:text-slate-300">
                         Data de Abertura: {ticket?.dataAbertura ? new Date(ticket.dataAbertura).toLocaleDateString("pt-BR") : "-"}
                     </span>
                     {isAnalyst ? (
                         !ticket?.usuario_chamado_idAnalistaTousuario ? (
                             <>
                                 <Button
-                                    className=""
+                                    className="dark:bg-sky-700 dark:text-white"
                                     variant="default"
                                     size="sm"
                                     onClick={() => setAssignModalOpen(true)}
@@ -376,13 +377,13 @@ export function ChatPage() {
                                 </Dialog>
                             </>
                         ) : ticket?.dataFechamento ? (
-                            <span className="paragraph text-slate-700">
+                            <span className="paragraph text-slate-700 dark:text-slate-300">
                                 Data de Fechamento: {new Date(ticket.dataFechamento).toLocaleDateString("pt-BR")}
                             </span>
                         ) : (
                             <>
                                 <Button
-                                    className=""
+                                    className="dark:bg-red-700 dark:text-white"
                                     variant="delete"
                                     size="sm"
                                     onClick={() => setCloseModalOpen(true)}
@@ -434,12 +435,12 @@ export function ChatPage() {
                             </>
                         )
                     ) : (
-                        <span className="paragraph text-slate-700">
+                        <span className="paragraph text-slate-700 dark:text-slate-300">
                             Data de Fechamento: {ticket?.dataFechamento ? new Date(ticket.dataFechamento).toLocaleDateString("pt-BR") : "-"}
                         </span>
                     )}
                 </div>
-                <Separator />
+                <Separator className="dark:bg-slate-700" />
             </header>
             <Chat descricao={ticket?.descricao || ""} />
         </div>

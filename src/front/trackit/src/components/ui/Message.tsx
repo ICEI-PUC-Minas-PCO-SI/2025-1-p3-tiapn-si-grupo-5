@@ -21,7 +21,7 @@ export function Message({ nome, gerencia, horaFormatada, text, isCurrentUser, av
                     <div
                         className={`rounded-lg px-5 py-3 text-sm whitespace-pre-line break-words w-auto max-w-[80vw] md:max-w-[480px] ${isCurrentUser
                             ? "bg-sky-700 text-white"
-                            : "bg-slate-900 text-white"
+                            : "bg-slate-900 dark:bg-slate-700 text-white"
                             }`}
                         style={{ display: "inline-block" }}
                     >
@@ -33,15 +33,15 @@ export function Message({ nome, gerencia, horaFormatada, text, isCurrentUser, av
                 className={`flex gap-2 px-11 text-xs ${isCurrentUser ? "justify-end text-right" : "justify-start text-left"
                     }`}
             >
-                <span className="text-slate-700 font-medium">{nome}</span>
+                <span className="text-slate-700 font-medium dark:text-slate-200">{nome}</span>
                 {gerencia && (
                     <>
-                        <span className="inline-block align-middle">|</span>
-                        <span className="text-slate-700">{gerencia}</span>
+                        <span className="inline-block align-middle dark:text-slate-400">|</span>
+                        <span className="text-slate-700 dark:text-slate-300">{gerencia}</span>
                     </>
                 )}
-                <span className="inline-block align-middle">|</span>
-                <span className="text-slate-500">{horaFormatada}</span>
+                <span className="inline-block align-middle dark:text-slate-400">|</span>
+                <span className="text-slate-500 dark:text-slate-400">{horaFormatada}</span>
             </div>
         </div>
     );

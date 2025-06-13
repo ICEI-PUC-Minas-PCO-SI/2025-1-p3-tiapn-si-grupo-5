@@ -11,6 +11,7 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
             "w-10 h-10 rounded-[6px] border border-slate-300 bg-white flex items-center justify-center shadow transition-all",
             "focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]",
             "focus-within:aria-invalid:ring-destructive/20 focus-within:dark:aria-invalid:ring-destructive/40 focus-within:aria-invalid:border-destructive"
+            
           )}
         >
           <input

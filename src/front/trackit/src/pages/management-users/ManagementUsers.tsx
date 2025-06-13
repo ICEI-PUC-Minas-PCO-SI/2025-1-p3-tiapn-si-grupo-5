@@ -286,7 +286,7 @@ export function ManagementUsers() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[260px]">
               {/* Filtro por tipo de acesso */}
-              <div className="px-4 py-2 font-semibold text-sm text-gray-700">Tipo de Acesso</div>
+              <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Tipo de Acesso</div>
               <Select value={accessTypeFilter} onValueChange={handleAccessTypeChange}>
                 <SelectTrigger className="w-full mb-2">
                   <SelectValue placeholder="Todos" />
@@ -301,7 +301,7 @@ export function ManagementUsers() {
                 </SelectContent>
               </Select>
               {/* Filtro por gerência */}
-              <div className="px-4 py-2 font-semibold text-sm text-gray-700">Gerência</div>
+              <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Gerência</div>
               <Select value={managementFilter} onValueChange={handleManagementChange}>
                 <SelectTrigger className="w-full mb-2">
                   <SelectValue placeholder="Todas" />
@@ -316,7 +316,7 @@ export function ManagementUsers() {
                 </SelectContent>
               </Select>
               {/* Filtro por ativo */}
-              <div className="px-4 py-2 font-semibold text-sm text-gray-700">Ativo</div>
+              <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Ativo</div>
               <Select value={ativoFilter} onValueChange={handleAtivoChange}>
                 <SelectTrigger className="w-full mb-2">
                   <SelectValue placeholder="Todos" />

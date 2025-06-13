@@ -19,6 +19,7 @@ import { useUser } from "@/contexts/UserContext";
 import { getAllTicketTypes } from "@/api/tickettype";
 import { getAllPriorities } from "@/api/priority";
 import type { IPriority } from "@/api/priority";
+import { Anexar } from "../annex/annex";
 
 const openTicket = z.object({
     subject: z.string().min(1, {
@@ -231,15 +232,15 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                     </div>
                 </div>
             </div>
-            {/* Anexar arquivo a ser implementado */}
+            <Anexar />
             <footer className="flex justify-start gap-4">
-                <Button type="submit" size="fit" disabled={isSubmitting}>
+                <Button type="submit" size="fit" disabled={isSubmitting} className="w-[11.25rem] max-w-[11.25rem]">
                     Abrir chamado
                 </Button>
                 <Button
                     className="text-slate-950 w-[11.25rem] max-w-[11.25rem] 
                         shadow-[0px_2px_8px_0px_rgba(0,0,0,0.25)] hover:text-slate-700 
-                        hover:shadow-[0px_4px_16px_0px_rgba(0,0,0,0.30)] transition-all duration-200"
+                        hover:shadow-[0px_4px_16px_0px_rgba(0,0,0,0.30)] transition-all duration-200 dark:text-slate-300"
                     variant={"outline"}
                     type="button"
                     onClick={handleCancel}

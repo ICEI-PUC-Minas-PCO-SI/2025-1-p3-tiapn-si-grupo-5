@@ -152,10 +152,10 @@ export default function Chat({ descricao }: ChatProps) {
 
     // Renderização do componente
     return (
-        <div className="flex flex-col w-full mx-auto border rounded bg-white h-[600px]">
+        <div className="flex flex-col w-full mx-auto border rounded bg-white h-[600px] dark:bg-slate-900 dark:border-slate-800">
             {/* Header com botão retração */}
-            <div className="flex items-center justify-between border-b px-4 py-2">
-                <span className="font-semibold text-base">Chat</span>
+            <div className="flex items-center justify-between border-b px-4 py-2 dark:border-slate-800 dark:bg-slate-900">
+                <span className="font-semibold text-base dark:text-white">Chat</span>
                 <Button
                     variant="ghost"
                     size="icon"
@@ -166,11 +166,11 @@ export default function Chat({ descricao }: ChatProps) {
                 </Button>
             </div>
             <div className="flex w-full flex-1 min-h-0">
-                <div className={`transition-all duration-400 ${showDescricao ? "w-1/2 border-r" : "w-full"} flex flex-col h-full`}>
+                <div className={`transition-all duration-400 ${showDescricao ? "w-1/2 border-r" : "w-full"} flex flex-col h-full dark:border-slate-800`}>
                     <div className="flex-1 overflow-y-auto p-6">
                         <div className="flex flex-col gap-6">
                             {loading ? (
-                                <span className="text-center text-slate-500">Carregando mensagens...</span>
+                                <span className="text-center text-slate-500 dark:text-slate-300">Carregando mensagens...</span>
                             ) : error ? (
                                 <span className="text-center text-red-500">{error}</span>
                             ) : (
@@ -210,9 +210,9 @@ export default function Chat({ descricao }: ChatProps) {
                 </div>
                 {/* Conteúdo da descrição */}
                 {showDescricao && (
-                    <div className="flex flex-col bg-white w-1/2 min-w-[240px] max-w-[50vw] overflow-hidden h-full">
-                        <div className="flex items-center justify-between border-b px-4 py-2">
-                            <span className="font-semibold text-base">Descrição da demanda</span>
+                    <div className="flex flex-col bg-white w-1/2 min-w-[240px] max-w-[50vw] overflow-hidden h-full dark:bg-slate-900 dark:border-slate-800">
+                        <div className="flex items-center justify-between border-b px-4 py-2 dark:border-slate-800 dark:bg-slate-900">
+                            <span className="font-semibold text-base dark:text-white">Descrição da demanda</span>
                             <Button
                                 variant="ghost"
                                 size="icon"
@@ -221,19 +221,19 @@ export default function Chat({ descricao }: ChatProps) {
                             />
                         </div>
                         <div className="flex-1 p-6 overflow-y-auto">
-                            <div className="whitespace-pre-line text-slate-900 text-sm">
+                            <div className="whitespace-pre-line text-slate-900 text-sm dark:text-slate-200">
                                 {descricao}
                             </div>
                         </div>
                     </div>
                 )}
             </div>
-            <form className="flex items-end gap-2 border-t px-4 py-3 bg-white" onSubmit={handleSend}>
+            <form className="flex items-end gap-2 border-t px-4 py-3 bg-white dark:bg-slate-900 dark:border-slate-800" onSubmit={handleSend}>
                 <Button className="h-11" type="button" variant="outlineDisabled" size="icon" disabled>
                     <Paperclip className="w-5 h-5" />
                 </Button>
                 <Textarea
-                    className="resize-none min-h-[44px] max-h-32 flex-1"
+                    className="resize-none min-h-[44px] max-h-32 flex-1 dark:bg-slate-800 dark:text-slate-200"
                     placeholder="Digite sua mensagem..."
                     rows={1}
                     value={input}

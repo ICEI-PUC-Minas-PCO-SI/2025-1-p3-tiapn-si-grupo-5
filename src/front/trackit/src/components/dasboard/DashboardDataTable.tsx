@@ -335,7 +335,7 @@ export function DashboardDataTable() {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="min-w-[220px]">
-                            <div className="px-4 py-2 font-semibold text-sm text-gray-700">Principal Atividade</div>
+                            <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Principal Atividade</div>
                             <Select
                                 value={principalAtividadeFilter}
                                 onValueChange={setPrincipalAtividadeFilter}
@@ -354,7 +354,7 @@ export function DashboardDataTable() {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
-                            <div className="px-4 py-2 font-semibold text-sm text-gray-700">Ano</div>
+                            <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Ano</div>
                             <Select
                                 value={yearFilter}
                                 onValueChange={setYearFilter}
@@ -378,11 +378,11 @@ export function DashboardDataTable() {
                                     size="sm"
                                     variant="ghost"
                                     onClick={clearFilters}
-                                    className="flex items-center gap-1"
+                                    className="flex items-center gap-1 dark:text-white"
                                     disabled={principalAtividadeFilter === "__all__" && yearFilter === "__all__"}
                                 >
-                                    <XCircle className="w-4 h-4" />
-                                    Limpar filtros
+                                    <XCircle className="w-4 h-4 dark:text-white" />
+                                    <span className="dark:text-white">Limpar filtros</span>
                                 </Button>
                             </div>
                         </DropdownMenuContent>
@@ -393,21 +393,25 @@ export function DashboardDataTable() {
                 {loading ? (
                     <TableSpinner />
                 ) : (
-                    <table className="w-full border rounded bg-white text-sm">
+                    <table className="w-full border rounded bg-white text-sm dark:bg-slate-900 dark:text-slate-200">
                         <thead>
                             {table.getHeaderGroups().map((headerGroup) => (
-                                <tr key={headerGroup.id} className="bg-gray-100 text-gray-700">
+                                <tr key={headerGroup.id} className="bg-gray-100 text-gray-700 dark:bg-slate-800">
                                     {headerGroup.headers.map((header) => (
                                         <th
                                             key={header.id}
-                                            className="text-center px-4 py-2"
+                                            className={`text-center px-4 py-2 ${header.column.getCanSort() ? "group" : ""} ${header.id === "actions" ? "dark:text-white" : ""}`}
                                             style={{ width: `${100 / columns.length}%` }}
                                         >
                                             {header.isPlaceholder
                                                 ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
+                                                : (
+                                                    <div className={header.column.getCanSort() ? "dark:text-slate-200" : ""}>
+                                                        {flexRender(
+                                                            header.column.columnDef.header,
+                                                            header.getContext()
+                                                        )}
+                                                    </div>
                                                 )}
                                         </th>
                                     ))}
@@ -417,11 +421,11 @@ export function DashboardDataTable() {
                         <tbody>
                             {table.getRowModel().rows.length === 0 ? (
                                 <tr>
-                                    <td colSpan={columns.length} className="text-center py-6">Nenhum analista encontrado</td>
+                                    <td colSpan={columns.length} className="text-center py-6 dark:bg-slate-900 dark:text-slate-200">Nenhum analista encontrado</td>
                                 </tr>
                             ) : (
                                 table.getRowModel().rows.map((row) => (
-                                    <tr key={row.id} className="border-t hover:bg-gray-50">
+                                    <tr key={row.id} className="border-t hover:bg-gray-50 dark:hover:bg-slate-800">
                                         {row.getVisibleCells().map((cell) => (
                                             <td
                                                 key={cell.id}
