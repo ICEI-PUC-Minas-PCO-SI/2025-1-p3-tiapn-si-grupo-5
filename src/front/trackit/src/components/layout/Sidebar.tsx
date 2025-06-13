@@ -314,13 +314,12 @@ export function Sidebar() {
                 <SidebarSeparator />
                 {user && (
                     <UserProfileSection
-
                         name={user.nome.split(" ").slice(0, 2).join(" ")}
                         email={user.email}
                         role={user.tipo === 1 ? "admin" : user.tipo === 2 ? "analyst" : "user"}
                         department={user.nomeGerencia || ""}
                         onLogout={handleLogout}
-                        avatarUrl={user.fotoPerfil}
+                        avatarUrl={user.fotoPerfil || undefined}
                     />
                 )}
             </SidebarFooter>
