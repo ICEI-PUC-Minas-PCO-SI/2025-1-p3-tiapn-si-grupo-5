@@ -11,7 +11,9 @@ export interface IStatus {
 
 export async function getAllStatus(): Promise<IStatus[]> {
     try {
-        const response = await fetch(`${API_BASE_URL}/statuses`);
+        const response = await fetch(`${API_BASE_URL}/statuses`, {
+            headers: authHeaders()
+        });
         if (!response.ok) {
             throw new Error("Erro ao buscar status");
         }

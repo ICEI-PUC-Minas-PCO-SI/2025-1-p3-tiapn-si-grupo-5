@@ -12,13 +12,14 @@ import { DetailsStatus } from "@/pages/params/Status";
 import { DetailsManagement } from "@/pages/params/Management";
 import { TicketType } from "@/pages/params/TicketType";
 import { Priority } from "@/pages/params/Priority";
-import { AssignTickets } from "@/pages/analyst-assign-tickets/AssignTickets";
+import { AnalystAssignTickets } from "@/pages/analyst-assign-tickets/AnalystAssignTickets";
 import { AnalystTickets } from "@/pages/analyst-tickets/AnalystTickets";
 import { UserTickets } from "@/pages/user-tickets/UserTickets";
-import { Dashboard } from "@/pages/dashbord/Dashboard";
+import { Dashboard } from "@/pages/admin-dashbord/Dashboard";
 import { AdminAssignTickets } from "@/pages/admin-assign-tickets/AdminAssignTickets";
 import { AdminTeamTickets } from "@/pages/admin-team-tickets/AdminTeamTickets";
 import { AnalystDashboard } from "@/pages/analyst-dashboard/AnalystDashboard";
+import { ChatPage } from "@/pages/chat/ChatPage";
 
 export function Router() {
     return (
@@ -35,6 +36,7 @@ export function Router() {
                 <Route path="open-ticket" element={<OpenTicket />} />
                 <Route path="my-tickets" element={<UserTickets />} />
                 <Route path="settings" element={< Settings />} />
+                <Route path="chat" element={<ChatPage />} />
             </Route>
             <Route path="/analyst" element={
                 <PrivateRoute allowedTypes={[2]}>
@@ -43,9 +45,10 @@ export function Router() {
             }>
                 <Route index element={<Index />} />
                 <Route path="settings" element={< Settings />} />
-                <Route path="assign-tickets" element={<AssignTickets />} />
+                <Route path="assign-tickets" element={<AnalystAssignTickets />} />
                 <Route path="my-tickets" element={<AnalystTickets />} />
                 <Route path="dashboard" element={<AnalystDashboard />} />
+                <Route path="chat" element={<ChatPage />} />
             </Route>
             <Route path="/admin" element={
                 <PrivateRoute allowedTypes={[1]}>
@@ -62,6 +65,7 @@ export function Router() {
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="open-tickets" element={<AdminAssignTickets />} />
                 <Route path="assigned-tickets" element={<AdminTeamTickets />} />
+                <Route path="chat" element={<ChatPage />} />
             </Route>
         </Routes>
     );

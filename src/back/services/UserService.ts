@@ -80,6 +80,22 @@ export class UserService {
     async getMe(usuarioId: number) {
         return prisma.usuario.findUnique({
             where: { idUsuario: usuarioId },
+            select: {
+                idUsuario: true,
+                nomeUsuario: true,
+                email: true,
+                ramal: true,
+                matricula: true,
+                idGerencia: true,
+                idTipoUsuario: true,
+                ativo: true,
+                fotoPerfil: true,
+                gerencia: {
+                    select: {
+                        nomeGerencia: true
+                    }
+                }
+            }
         });
     }
 

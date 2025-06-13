@@ -164,10 +164,10 @@ export function AnalystDashboard() {
                 </div>
             )}
             <div className="flex flex-col gap-4 justify-between">
-                <h1 className="title-h1 text-slate-950">
+                <h1 className="title-h1 text-slate-950 dark:text-white">
                     Meu Dashboard
                 </h1>
-                <h3 className="title-h3 text-slate-700">
+                <h3 className="title-h3 text-slate-700 dark:text-slate-300">
                     Indicadores históricos dos meus chamados
                 </h3>
             </div>
@@ -188,7 +188,7 @@ export function AnalystDashboard() {
                             />
                         ))}
                     </div>
-                    <h3 className="title-h3 text-slate-700">
+                    <h3 className="title-h3 text-slate-700 dark:text-slate-300">
                         Parâmetros acumulados</h3>
                     <div className="flex flex-wrap gap-8 items-center">
                         <ChartBar

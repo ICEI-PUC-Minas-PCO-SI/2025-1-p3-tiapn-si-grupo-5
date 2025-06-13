@@ -85,3 +85,76 @@ export async function getTeamTickets(): Promise<ITicket[]> {
     if (!response.ok) throw new Error("Erro ao buscar chamados da equipe");
     return response.json();
 }
+
+export async function getTicketsByAnalystId(idAnalista: number): Promise<ITicket[]> {
+    const response = await fetch(`${API_BASE_URL}/tickets/analyst/${idAnalista}`, {
+        headers: authHeaders()
+    });
+    if (!response.ok) throw new Error("Erro ao buscar chamados do analista");
+    return response.json();
+}
+
+export async function getTicketsBySolicitanteId(idSolicitante: number): Promise<ITicket[]> {
+    const response = await fetch(`${API_BASE_URL}/tickets/user/${idSolicitante}`, {
+        headers: authHeaders()
+    });
+    if (!response.ok) throw new Error("Erro ao buscar chamados do usuário");
+    return response.json();
+}
+
+export async function getTicketById(idChamado: number) {
+    const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}`, {
+        headers: authHeaders()
+    });
+    if (!response.ok) throw new Error("Erro ao buscar chamado por id");
+    return response.json();
+}
+
+export async function updateTicketStatus(idChamado: number, idStatus: number): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}/status`, {
+        method: "PATCH",
+        headers: authHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ idStatus }),
+    });
+    if (!response.ok) throw new Error("Erro ao atualizar status do chamado");
+}
+
+export async function closeTicket(idChamado: number, dataFechamento: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}/close`, {
+        method: "PATCH",
+        headers: authHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ dataFechamento }),
+    });
+    if (!response.ok) throw new Error("Erro ao encerrar chamado");
+}
+
+export interface ITicketFull extends ITicket {
+    usuario_chamado_idSolicitanteTousuario?: {
+        idUsuario: number;
+        nomeUsuario: string;
+        gerencia?: {
+            nomeGerencia: string;
+        } | null;
+    } | null;
+    usuario_chamado_idAnalistaTousuario?: {
+        idUsuario: number;
+        nomeUsuario: string;
+        gerencia?: {
+            nomeGerencia: string;
+        } | null;
+    } | null;
+    prioridadechamado?: {
+        idPrioridade: number;
+        nomePrioridade: string;
+        hexCorPrimaria: string;
+    } | null;
+    statuschamado?: {
+        idStatus: number;
+        nomeStatus: string;
+        hexCorPrimaria: string;
+    } | null;
+    tipochamado?: {
+        idTipoChamado: number;
+        nomeTipo: string;
+    } | null;
+}

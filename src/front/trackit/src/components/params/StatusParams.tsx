@@ -156,7 +156,7 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
                 className="w-5 h-5 rounded-full"
                 style={{ backgroundColor: status.hexCorPrimaria || "transparent" }}
               ></span>
-              <span className="paragraph text-slate-700">{status.nomeStatus}</span>
+              <span className="paragraph text-slate-700 dark:text-slate-300">{status.nomeStatus}</span>
             </div>
             <div className="flex gap-2">
               <Button variant="delete" size="icon" onClick={() => handleDeleteStatus(status.idStatus)}>

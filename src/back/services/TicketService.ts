@@ -42,9 +42,15 @@ export class TicketService {
         });
     }
 
-    async getTicketsByAnalyst(idAnalista: number) {
+    async getTicketsByAnalystId(idAnalista: number) {
         return prisma.chamado.findMany({
             where: { idAnalista }
+        });
+    }
+
+    async getTicketsBySolicitanteId(idSolicitante: number) {
+        return prisma.chamado.findMany({
+            where: { idSolicitante }
         });
     }
 
@@ -70,6 +76,53 @@ export class TicketService {
                     idGerencia: idGerencia
                 }
             }
+        });
+    }
+
+    async getTicketById(idChamado: number) {
+        return prisma.chamado.findUnique({
+            where: { idChamado },
+            include: {
+                usuario_chamado_idSolicitanteTousuario: {
+                    select: {
+                        idUsuario: true,
+                        nomeUsuario: true,
+                        gerencia: {
+                            select: {
+                                nomeGerencia: true
+                            }
+                        }
+                    }
+                },
+                usuario_chamado_idAnalistaTousuario: {
+                    select: {
+                        idUsuario: true,
+                        nomeUsuario: true,
+                        gerencia: {
+                            select: {
+                                nomeGerencia: true
+                            }
+                        }
+                    }
+                },
+                prioridadechamado: true,
+                statuschamado: true,
+                tipochamado: true,
+            }
+        });
+    }
+
+    async updateTicketStatus(idChamado: number, idStatus: number) {
+        return prisma.chamado.update({
+            where: { idChamado },
+            data: { idStatus }
+        });
+    }
+
+    async closeTicket(idChamado: number, dataFechamento: Date) {
+        return prisma.chamado.update({
+            where: { idChamado },
+            data: { dataFechamento }
         });
     }
 }

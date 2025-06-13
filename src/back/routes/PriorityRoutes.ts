@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { PriorityController } from "../controllers/PriorityController";
+import { PriorityController } from "../controllers/priorityController";
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
 import { autenticarToken } from "../middlewares/auth-jwt";

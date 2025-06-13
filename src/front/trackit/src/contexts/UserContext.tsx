@@ -1,23 +1,23 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { DefaultSpinner } from "@/components/ui/spinner";
 import { getMe } from "@/api/auth";
-import { getAllActiveManagements } from "@/api/management";
-import type { IManagement } from "../api/management";
+import type { IMeResponse } from "@/api/auth";
 import Cookies from "js-cookie";
 
-type User = {
+export interface User {
   id: number;
   nome: string;
   email: string;
   ramal?: string;
   matricula?: string;
-  gerencia?: number;
-  tipo?: number;
+  gerencia?: number | null;
+  tipo?: number | null;
   ativo: number;
   createdAt?: string;
   nomeGerencia?: string;
-  fotoPerfil?: string;
-};
+  fotoPerfil?: string | null;
+  idTipoUsuario?: number | null;
+}
 
 type UserContextType = {
   user: User | null;
@@ -39,22 +39,22 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     async function fetchUserAndManagement() {
       if (token) {
         try {
-          const data = await getMe(token);
+          const data: IMeResponse | null = await getMe(token);
           if (data && data.usuario) {
             const usuario = data.usuario;
-            let nomeGerencia: string | undefined = undefined;
-            if (usuario.gerencia) {
-              try {
-                const managements: IManagement[] = await getAllActiveManagements();
-                const found = managements.find(
-                  (g) => g.idGerencia === usuario.gerencia
-                );
-                nomeGerencia = found?.nomeGerencia;
-              } catch {
-                nomeGerencia = undefined;
-              }
-            }
-            setUserState({ ...usuario, nomeGerencia, fotoPerfil: usuario.fotoPerfil });
+            setUserState({
+              id: usuario.idUsuario,
+              nome: usuario.nomeUsuario,
+              email: usuario.email,
+              ramal: usuario.ramal,
+              matricula: usuario.matricula,
+              gerencia: usuario.idGerencia ?? undefined,
+              tipo: usuario.idTipoUsuario ?? undefined,
+              ativo: usuario.ativo,
+              fotoPerfil: usuario.fotoPerfil ?? undefined,
+              nomeGerencia: usuario.gerencia?.nomeGerencia ?? undefined,
+              idTipoUsuario: usuario.idTipoUsuario ?? undefined,
+            });
           } else {
             logout();
           }

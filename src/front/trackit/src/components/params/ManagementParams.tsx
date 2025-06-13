@@ -148,7 +148,7 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
             className="flex justify-between items-center py-2"
           >
             <div className="flex items-center gap-2">
-              <span className="paragraph text-slate-700">{gerencia.nomeGerencia}</span>
+              <span className="paragraph text-slate-700 dark:text-slate-300">{gerencia.nomeGerencia}</span>
             </div>
             <div className="flex gap-2 ">
               <Button variant="delete" size="icon"

@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
-import { DataTableMyTickets } from "@/components/analyst-tickets/DataTableMyTickets";
+import { DataTableUserTickets } from "@/components/user-tickets/DataTableUserTickets";
 import type { AssignTicketTableRow } from "@/components/assing-tickets/DataTableAssignTickets";
 import { Filter } from "lucide-react";
 import { getAllPriorities } from "@/api/priority";
@@ -325,7 +325,7 @@ export function AnalystTickets() {
         {loading ? (
           <TableSpinner />
         ) : (
-          <DataTableMyTickets
+          <DataTableUserTickets
             data={filteredData}
             visibleColumns={{
               protocolo: true,
@@ -333,6 +333,7 @@ export function AnalystTickets() {
               dataAbertura: true,
               prioridade: true,
               status: true,
+              analista: false,
               actions: true,
             }}
           />

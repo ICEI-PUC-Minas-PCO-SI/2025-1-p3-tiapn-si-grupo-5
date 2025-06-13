@@ -10,7 +10,9 @@ export interface IPriority {
 }
 
 export async function getAllPriorities(): Promise<IPriority[]> {
-    const response = await fetch(`${API_BASE_URL}/priorities`);
+    const response = await fetch(`${API_BASE_URL}/priorities`, {
+        headers: authHeaders()
+    });
     if (!response.ok) throw new Error("Erro ao buscar prioridades");
     return response.json();
 }

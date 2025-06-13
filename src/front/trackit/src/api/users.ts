@@ -156,7 +156,9 @@ export async function updateProfileUser(
 }
 
 export async function getAllAnalysts(): Promise<IAnalyst[]> {
-    const response = await fetch(`${API_BASE_URL}/users/analysts`);
+    const response = await fetch(`${API_BASE_URL}/users/analysts`, {
+        headers: authHeaders()
+    });
     if (!response.ok) throw new Error("Erro ao buscar analistas");
     return response.json();
 }

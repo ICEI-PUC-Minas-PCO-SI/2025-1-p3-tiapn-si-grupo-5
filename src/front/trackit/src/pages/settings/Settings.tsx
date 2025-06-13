@@ -46,8 +46,8 @@ export function Settings() {
                 </div>
             )}
             <div>
-                <h1 className="title-h1 text-slate-950">Configurações</h1>
-                <h2 className="title-h3 text-slate-700">Aqui você pode editar os dados da sua conta.</h2>
+                <h1 className="title-h1 text-slate-950 dark:text-white">Configurações</h1>
+                <h2 className="title-h3 text-slate-700 dark:text-slate-300">Aqui você pode editar os dados da sua conta.</h2>
             </div>
             <header className="flex items-center gap-4">
                 <Avatar className="h-24 w-24">

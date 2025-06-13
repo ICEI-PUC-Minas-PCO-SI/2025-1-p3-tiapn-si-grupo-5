@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Express } from "express";
 import cors from "cors";
 import { UserRoutes } from "./routes/userRoutes";
 import { ManagementRoutes } from "./routes/managementRoutes";
@@ -7,33 +7,48 @@ import { TicketRoutes } from "./routes/ticketRoutes";
 import { StatusRoutes } from "./routes/statusRoutes";
 import { TicketTypeRoutes } from "./routes/ticketTypeRoutes";
 import { errorHandler } from "./middlewares/error-handler";
-import { PriorityRoutes } from "./routes/PriorityRoutes";
+import { PriorityRoutes } from "./routes/priorityRoutes";
 import { DashboardRoutes } from "./routes/dashboardRoutes";
+import { ChatRoutes } from "./routes/chatRoutes";
 
-const app = express();
-app.use(express.json());
-app.use(cors());
+export class App {
+    private app: Express;
 
-const userRoutes = new UserRoutes();
-const managementRoutes = new ManagementRoutes();
-const userTypeRoutes = new UserTypeRoutes();
-const ticketRoutes = new TicketRoutes();
-const statusRoutes = new StatusRoutes();
-const ticketTypeRoutes = new TicketTypeRoutes();
-const priorityRoutes = new PriorityRoutes();
-const dashboardRoutes = new DashboardRoutes();
+    constructor() {
+        this.app = express();
+        this.config();
+        this.routes();
+        this.app.use(errorHandler);
+    }
 
-// Rotas agrupadas por recurso
-app.use("/", userRoutes.getRouter());
-app.use("/", managementRoutes.getRouter());
-app.use("/", userTypeRoutes.getRouter());
-app.use("/", ticketRoutes.getRouter());
-app.use("/", statusRoutes.getRouter());
-app.use("/", ticketTypeRoutes.getRouter());
-app.use("/", priorityRoutes.getRouter());
-app.use("/", dashboardRoutes.getRouter());
+    private config() {
+        this.app.use(express.json());
+        this.app.use(cors());
+    }
 
-// Middleware global de tratamento de erros
-app.use(errorHandler);
+    private routes() {
+        const userRoutes = new UserRoutes();
+        const managementRoutes = new ManagementRoutes();
+        const userTypeRoutes = new UserTypeRoutes();
+        const ticketRoutes = new TicketRoutes();
+        const statusRoutes = new StatusRoutes();
+        const ticketTypeRoutes = new TicketTypeRoutes();
+        const priorityRoutes = new PriorityRoutes();
+        const dashboardRoutes = new DashboardRoutes();
+        const chatRoutes = new ChatRoutes();
 
-export default app;
+        this.app.use("/", userRoutes.getRouter());
+        this.app.use("/", managementRoutes.getRouter());
+        this.app.use("/", userTypeRoutes.getRouter());
+        this.app.use("/", ticketRoutes.getRouter());
+        this.app.use("/", statusRoutes.getRouter());
+        this.app.use("/", ticketTypeRoutes.getRouter());
+        this.app.use("/", priorityRoutes.getRouter());
+        this.app.use("/", dashboardRoutes.getRouter());
+        this.app.use("/", chatRoutes.getRouter());
+    }
+
+    public getInstance(): Express {
+        return this.app;
+    }
+}

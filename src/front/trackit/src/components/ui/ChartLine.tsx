@@ -81,7 +81,7 @@ export function ChartLine({
                                 align="end"
                                 className="min-w-[120px]"
                             >
-                                <div className="px-4 py-2 font-semibold text-sm text-gray-700">
+                                <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">
                                     Ano
                                 </div>
                                 <Select

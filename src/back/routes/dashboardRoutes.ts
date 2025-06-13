@@ -13,19 +13,29 @@ export class DashboardRoutes {
     }
 
     private initializeRoutes() {
-/*         
-    -- NÃO MAIS UTILIZADO, MAS MANTIDO PARA REFERÊNCIA --
-
-        this.router.get("/dashboard/tickets-by-type", this.dashboardController.getTicketsByType.bind(this.dashboardController));
-        this.router.get("/dashboard/tickets-by-status", this.dashboardController.getTicketsByStatus.bind(this.dashboardController));
-        this.router.get("/dashboard/tickets-by-priority", this.dashboardController.getTicketsByPriority.bind(this.dashboardController));
-         */
+/*        this.router.get(
+            "/dashboard/tickets-by-type",
+            autenticarToken,
+            this.dashboardController.getTicketsByType.bind(this.dashboardController)
+        );
+        this.router.get(
+            "/dashboard/tickets-by-status",
+            autenticarToken,
+            this.dashboardController.getTicketsByStatus.bind(this.dashboardController)
+        );
+        this.router.get(
+            "/dashboard/tickets-by-priority",
+            autenticarToken,
+            this.dashboardController.getTicketsByPriority.bind(this.dashboardController)
+        ); */
         this.router.get(
             "/dashboard/tickets-by-analyst",
+            autenticarToken,
             this.dashboardController.getTicketsByAnalyst.bind(this.dashboardController)
         );
         this.router.get(
             "/dashboard/summary",
+            autenticarToken,
             this.dashboardController.getDashboardSummary.bind(this.dashboardController)
         );
     }

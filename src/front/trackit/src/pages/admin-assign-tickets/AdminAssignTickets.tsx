@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
-import { AdminAssignTicketsTable } from "@/components/assing-tickets/AdminAssignTicketsTable";
+import { DataTableAssignTickets } from "@/components/assing-tickets/DataTableAssignTickets";
 import type { AssignTicketTableRow } from "@/components/assing-tickets/DataTableAssignTickets";
 import { Filter } from "lucide-react";
 import { getAllUsers } from "@/api/users";
@@ -233,7 +233,7 @@ export function AdminAssignTickets() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[220px]">
-              <div className="px-4 py-2 font-semibold text-sm text-gray-700">Prioridade</div>
+              <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Prioridade</div>
               <Select value={priorityFilter} onValueChange={handlePriorityChange}>
                 <SelectTrigger className="w-full mb-2">
                   <SelectValue placeholder="Todas" />
@@ -270,9 +270,17 @@ export function AdminAssignTickets() {
         {loading ? (
           <TableSpinner />
         ) : (
-          <AdminAssignTicketsTable
+          <DataTableAssignTickets
             data={filteredData}
+            visibleColumns={{
+              protocolo: true,
+              assunto: true,
+              dataAbertura: true,
+              prioridade: true,
+              actions: true,
+            }}
             onOpenAssignModal={openAssignModal}
+            actionsType="admin"
           />
         )}
       </div>

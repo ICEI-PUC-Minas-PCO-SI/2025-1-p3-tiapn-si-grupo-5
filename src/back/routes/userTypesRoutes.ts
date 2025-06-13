@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { UserTypeController } from "../controllers/UserTypeController";
+import { UserTypeController } from "../controllers/userTypeController";
+import { autenticarToken } from "../middlewares/auth-jwt";
 
 export class UserTypeRoutes {
     private router: Router;
@@ -12,7 +13,9 @@ export class UserTypeRoutes {
     }
 
     private initializeRoutes() {
-        this.router.get("/user-types", this.userTypeController.getAllUserTypes.bind(this.userTypeController));
+        this.router.get("/user-types",
+            autenticarToken, 
+            this.userTypeController.getUserTypes.bind(this.userTypeController));
     }
 
     public getRouter(): Router {

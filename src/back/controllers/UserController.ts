@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
-import { UserService } from "../services/UserService";
+import { UserService } from "../services/userService";
 
 const userService = new UserService();
 
@@ -134,7 +134,8 @@ export class UserController {
                     gerencia: usuario.idGerencia,
                     tipo: usuario.idTipoUsuario,
                     ativo: usuario.ativo,
-                    fotoPerfil: usuario.fotoPerfil
+                    fotoPerfil: usuario.fotoPerfil,
+                    idTipoUsuario: usuario.idTipoUsuario
                 }
             });
         } catch (error) {
