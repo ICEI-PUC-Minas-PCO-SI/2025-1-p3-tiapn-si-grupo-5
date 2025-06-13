@@ -16,7 +16,7 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from 'react-router-dom';
-import { getAllActiveManagements } from "@/api/management";
+import { getAllActiveManagementsPublic } from "@/api/management";
 import { registerNewUser } from "@/api/users";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
 
@@ -62,7 +62,6 @@ export function RegisterUser() {
     const navigate = useNavigate();
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [managements, setManagements] = useState<{ idGerencia: number; nomeGerencia: string }[]>([]);
-
     useEffect(() => {
         if (alert) {
             const timer = setTimeout(() => setAlert(null), 3000);
@@ -73,7 +72,7 @@ export function RegisterUser() {
     useEffect(() => {
         async function fetchManagements() {
             try {
-                const data = await getAllActiveManagements();
+                const data = await getAllActiveManagementsPublic();
                 setManagements(data);
             } catch (error) {
                 console.error("Erro ao buscar gerências ativas:", error);

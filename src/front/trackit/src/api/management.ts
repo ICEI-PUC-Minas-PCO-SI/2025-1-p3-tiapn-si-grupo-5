@@ -23,6 +23,20 @@ export async function getAllActiveManagements(): Promise<IManagement[]> {
     }
 }
 
+export async function getAllActiveManagementsPublic(): Promise<IManagement[]> {
+    try {
+        const response = await fetch(`${API_BASE_URL}/departments/public`);
+        if (!response.ok) {
+            throw new Error("Erro ao buscar gerências ativas (público)");
+        }
+        const managements = await response.json();
+        return managements;
+    } catch (error) {
+        console.error("Erro ao buscar gerências ativas (público):", error);
+        throw error;
+    }
+}
+
 export async function addManagement(nomeGerencia: string): Promise<IManagement> {
     const response = await fetch(`${API_BASE_URL}/departments`, {
         method: "POST",

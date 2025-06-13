@@ -25,6 +25,10 @@ export class ManagementRoutes {
 
     private initializeRoutes() {
         this.router.get(
+            "/departments/public",
+            this.managementController.getAllActiveManagement.bind(this.managementController)
+        );
+        this.router.get(
             "/departments",
             autenticarToken,
             this.managementController.getAllActiveManagement.bind(this.managementController)
