@@ -2,18 +2,17 @@ import { API_BASE_URL } from "@/api/config";
 
 export interface IMeResponse {
     usuario: {
-        idUsuario: number;
-        nomeUsuario: string;
+        id: number;
+        nome: string;
         email: string;
         ramal?: string;
         matricula?: string;
-        idGerencia?: number | null;
-        idTipoUsuario?: number | null;
+        gerencia?: number | null;
+        tipo?: number | null;
         ativo: number;
         fotoPerfil?: string | null;
-        gerencia?: {
-            nomeGerencia: string;
-        } | null;
+        idTipoUsuario?: number | null;
+        nomeGerencia?: string;
     } | null;
 }
 

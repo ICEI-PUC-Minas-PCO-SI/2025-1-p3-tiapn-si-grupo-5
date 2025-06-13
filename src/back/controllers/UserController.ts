@@ -135,7 +135,8 @@ export class UserController {
                     tipo: usuario.idTipoUsuario,
                     ativo: usuario.ativo,
                     fotoPerfil: usuario.fotoPerfil,
-                    idTipoUsuario: usuario.idTipoUsuario
+                    idTipoUsuario: usuario.idTipoUsuario,
+                    nomeGerencia: usuario.gerencia?.nomeGerencia
                 }
             });
         } catch (error) {
