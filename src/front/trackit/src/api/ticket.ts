@@ -132,12 +132,16 @@ export interface ITicketFull extends ITicket {
     usuario_chamado_idSolicitanteTousuario?: {
         idUsuario: number;
         nomeUsuario: string;
-        email: string;
+        gerencia?: {
+            nomeGerencia: string;
+        } | null;
     } | null;
     usuario_chamado_idAnalistaTousuario?: {
         idUsuario: number;
         nomeUsuario: string;
-        email: string;
+        gerencia?: {
+            nomeGerencia: string;
+        } | null;
     } | null;
     prioridadechamado?: {
         idPrioridade: number;

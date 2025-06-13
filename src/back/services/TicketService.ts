@@ -83,8 +83,28 @@ export class TicketService {
         return prisma.chamado.findUnique({
             where: { idChamado },
             include: {
-                usuario_chamado_idSolicitanteTousuario: true,
-                usuario_chamado_idAnalistaTousuario: true,
+                usuario_chamado_idSolicitanteTousuario: {
+                    select: {
+                        idUsuario: true,
+                        nomeUsuario: true,
+                        gerencia: {
+                            select: {
+                                nomeGerencia: true
+                            }
+                        }
+                    }
+                },
+                usuario_chamado_idAnalistaTousuario: {
+                    select: {
+                        idUsuario: true,
+                        nomeUsuario: true,
+                        gerencia: {
+                            select: {
+                                nomeGerencia: true
+                            }
+                        }
+                    }
+                },
                 prioridadechamado: true,
                 statuschamado: true,
                 tipochamado: true,

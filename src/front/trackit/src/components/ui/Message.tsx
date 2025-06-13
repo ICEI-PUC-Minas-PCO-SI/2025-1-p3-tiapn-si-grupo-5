@@ -1,20 +1,21 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface MessageProps {
-    user: string;
-    time: string;
+    nome: string;
+    gerencia?: string;
+    horaFormatada: string;
     text: string;
     isCurrentUser: boolean;
     avatarImg?: string;
 }
 
-export function Message({ user, time, text, isCurrentUser, avatarImg }: MessageProps) {
+export function Message({ nome, gerencia, horaFormatada, text, isCurrentUser, avatarImg }: MessageProps) {
     return (
         <div className={`flex flex-col gap-1 ${isCurrentUser ? "items-end" : "items-start"}`}>
             <div className={`flex items-start gap-3 ${isCurrentUser ? "flex-row-reverse" : ""}`}>
                 <Avatar className="w-8 h-8">
-                    <AvatarImage src={avatarImg || "https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg"} alt={user} />
-                    <AvatarFallback>{user[0]}</AvatarFallback>
+                    <AvatarImage src={avatarImg || "https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg"} alt={nome} />
+                    <AvatarFallback>{nome[0]}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 flex" style={isCurrentUser ? { justifyContent: "flex-end" } : {}}>
                     <div
@@ -32,8 +33,15 @@ export function Message({ user, time, text, isCurrentUser, avatarImg }: MessageP
                 className={`flex gap-2 px-11 text-xs ${isCurrentUser ? "justify-end text-right" : "justify-start text-left"
                     }`}
             >
-                <span className="text-slate-700 font-medium">{user}</span>
-                <span className="text-slate-500">{time}</span>
+                <span className="text-slate-700 font-medium">{nome}</span>
+                {gerencia && (
+                    <>
+                        <span className="inline-block align-middle">|</span>
+                        <span className="text-slate-700">{gerencia}</span>
+                    </>
+                )}
+                <span className="inline-block align-middle">|</span>
+                <span className="text-slate-500">{horaFormatada}</span>
             </div>
         </div>
     );
