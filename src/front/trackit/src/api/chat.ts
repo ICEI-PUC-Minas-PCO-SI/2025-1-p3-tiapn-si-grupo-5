@@ -11,6 +11,7 @@ export interface ChatMessage {
     nomeArquivo?: string | null;
     usuario?: {
         nomeUsuario: string;
+        fotoPerfil?: string | null;
         gerencia?: {
             nomeGerencia: string;
         } | null;

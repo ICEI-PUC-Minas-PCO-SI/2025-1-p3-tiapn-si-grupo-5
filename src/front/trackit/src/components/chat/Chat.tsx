@@ -188,6 +188,7 @@ export default function Chat({ descricao }: ChatProps) {
                                             // Para outros remetentes, usa dados vindos do backend
                                             nome = msg.usuario.nomeUsuario || "Desconhecido";
                                             gerencia = msg.usuario.gerencia?.nomeGerencia || "";
+                                            avatarImg = msg.usuario.fotoPerfil || undefined;
                                         }
 
                                         return (

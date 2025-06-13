@@ -6,7 +6,17 @@ interface MessageProps {
     horaFormatada: string;
     text: string;
     isCurrentUser: boolean;
-    avatarImg?: string;
+    avatarImg?: string | null;
+}
+
+function getInitials(nome: string) {
+    if (!nome) return "";
+    return nome
+        .split(" ")
+        .map((n: string) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
 }
 
 export function Message({ nome, gerencia, horaFormatada, text, isCurrentUser, avatarImg }: MessageProps) {
@@ -14,8 +24,11 @@ export function Message({ nome, gerencia, horaFormatada, text, isCurrentUser, av
         <div className={`flex flex-col gap-1 ${isCurrentUser ? "items-end" : "items-start"}`}>
             <div className={`flex items-start gap-3 ${isCurrentUser ? "flex-row-reverse" : ""}`}>
                 <Avatar className="w-8 h-8">
-                    <AvatarImage src={avatarImg || "https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg"} alt={nome} />
-                    <AvatarFallback>{nome[0]}</AvatarFallback>
+                    {avatarImg ? (
+                        <AvatarImage src={avatarImg} alt={nome} />
+                    ) : (
+                        <AvatarFallback>{getInitials(nome)}</AvatarFallback>
+                    )}
                 </Avatar>
                 <div className="flex-1 flex" style={isCurrentUser ? { justifyContent: "flex-end" } : {}}>
                     <div

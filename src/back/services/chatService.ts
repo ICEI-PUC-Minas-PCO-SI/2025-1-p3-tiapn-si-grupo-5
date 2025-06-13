@@ -39,6 +39,7 @@ export class ChatService {
                 usuario: {
                     select: {
                         nomeUsuario: true,
+                        fotoPerfil: true,
                         gerencia: {
                             select: {
                                 nomeGerencia: true
