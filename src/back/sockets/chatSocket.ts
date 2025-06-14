@@ -1,9 +1,12 @@
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { PrismaClient } from "../generated/prisma";
 import { ChatService } from "../services/chatService";
+import { sendNotificationEmail } from "../services/emailServices";
+import { NotificationService } from "../services/notificationService";
 
 const prisma = new PrismaClient();
 const chatService = new ChatService();
+const notificationService = new NotificationService();
 
 type ChatSendData = {
     idChamado: number;
@@ -105,6 +108,7 @@ export function setupChatSocket(io: SocketIOServer) {
                         usuario: {
                             select: {
                                 nomeUsuario: true,
+                                email: true,
                                 fotoPerfil: true,
                                 gerencia: {
                                     select: {
@@ -115,6 +119,71 @@ export function setupChatSocket(io: SocketIOServer) {
                         }
                     }
                 });
+
+                // Descobre o destinatário (analista ou solicitante)
+                const chamado = await prisma.chamado.findUnique({
+                    where: { idChamado },
+                    select: {
+                        idSolicitante: true,
+                        idAnalista: true,
+                        assunto: true,
+                        usuario_chamado_idSolicitanteTousuario: { select: { email: true, nomeUsuario: true } },
+                        usuario_chamado_idAnalistaTousuario: { select: { email: true, nomeUsuario: true } }
+                    }
+                });
+
+                let destinatarioId: number | undefined;
+                let destinatarioEmail: string | undefined;
+                let destinatarioNome: string | undefined;
+
+                if (remetente === "usuario" && chamado?.idAnalista && chamado.usuario_chamado_idAnalistaTousuario) {
+                    destinatarioId = chamado.idAnalista;
+                    destinatarioEmail = chamado.usuario_chamado_idAnalistaTousuario.email;
+                    destinatarioNome = chamado.usuario_chamado_idAnalistaTousuario.nomeUsuario;
+                } else if (remetente === "analista" && chamado?.idSolicitante && chamado.usuario_chamado_idSolicitanteTousuario) {
+                    destinatarioId = chamado.idSolicitante;
+                    destinatarioEmail = chamado.usuario_chamado_idSolicitanteTousuario.email;
+                    destinatarioNome = chamado.usuario_chamado_idSolicitanteTousuario.nomeUsuario;
+                }
+
+                // Verifica se o destinatário está na sala do chamado
+                let destinatarioNaSala = false;
+                if (destinatarioId) {
+                    const room = io.sockets.adapter.rooms.get(`chamado_${idChamado}`);
+                    if (room) {
+                        for (const socketId of room) {
+                            const s = io.sockets.sockets.get(socketId);
+                            if (s && s.data && s.data.userId === destinatarioId) {
+                                destinatarioNaSala = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // Se o destinatário NÃO está na sala, envia notificação e e-mail
+                if (destinatarioId && destinatarioEmail && !destinatarioNaSala) {
+                    try {
+                        // Salva notificação no banco
+                        await notificationService.createNotification({
+                            titulo: "Nova mensagem no chamado",
+                            mensagem: mensagem,
+                            idUsuario: destinatarioId,
+                            idChamado,
+                        });
+                        // Envia e-mail
+                        await sendNotificationEmail({
+                            to: destinatarioEmail,
+                            nomeUsuario: destinatarioNome || "Usuário",
+                            idChamado,
+                            assunto: chamado?.assunto || "",
+                            mensagem,
+                        });
+                    } catch (err) {
+                        console.error("[SOCKET] Erro ao enviar notificação/e-mail:", err);
+                        // Não lança, apenas loga o erro
+                    }
+                }
 
                 console.log(`[SOCKET] Mensagem salva e emitida para chamado_${idChamado}:`, mensagemCompleta);
 
@@ -136,6 +205,10 @@ export function setupChatSocket(io: SocketIOServer) {
 - O frontend conecta ao socket.io e emite "joinChamado" com idChamado e idUsuario.
 - O backend valida se o usuário pode acessar o chat do chamado (solicitante, analista ou gestor).
 - Se permitido, o usuário entra na sala do chamado (socket.join).
-- Quando uma mensagem é enviada ("chat:send"), ela é persistida no banco via ChatService e emitida para todos na sala do chamado ("chat:receive").
+- Quando uma mensagem é enviada ("chat:send"):
+    - Ela é persistida no banco via ChatService.
+    - É emitida para todos na sala do chamado ("chat:receive").
+    - Se o destinatário não estiver na sala, o backend salva uma notificação no banco e envia um e-mail de notificação para o destinatário.
 - As mensagens podem ser buscadas via REST GET /chats/:idChamado/messages para exibir o histórico ao abrir o chat.
+- As notificações podem ser consultadas via endpoint de notificações.
 */
