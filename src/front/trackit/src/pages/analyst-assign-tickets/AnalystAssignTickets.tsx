@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { getUnassignedTickets, assignTicket } from "@/api/ticket";
 import type { ITicket } from "@/api/ticket";
 import { getAllPriorities } from "@/api/priority";
@@ -48,6 +48,7 @@ export function AnalystAssignTickets() {
 
   // Query params
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   // Filtros controlados por query params
   const search = searchParams.get("search") || "";
@@ -140,6 +141,10 @@ export function AnalystAssignTickets() {
       setTickets(tickets => tickets.filter(t => t.idChamado !== ticket.idChamado));
       setAlert({ type: "success", message: "Chamado atribuído com sucesso!" });
       setAssignModal({ open: false, ticket: null });
+      // Redireciona para o chat do chamado atribuído após um pequeno delay
+      setTimeout(() => {
+        navigate(`/analyst/chat?idChamado=${ticket.idChamado}`);
+      }, 1200);
     } catch {
       setAlert({ type: "error", message: "Erro ao assumir chamado." });
     } finally {

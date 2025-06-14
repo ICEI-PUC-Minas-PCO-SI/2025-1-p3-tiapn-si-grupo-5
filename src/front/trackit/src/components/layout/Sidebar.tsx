@@ -36,16 +36,25 @@ export function Sidebar() {
     const location = useLocation();
     const [isParamsOpen, setIsParamsOpen] = useState(false);
     const { user, logout } = useUser();
+    console.log(user)
 
     let userRole: "admin" | "analyst" | "user" | undefined;
     if (user) {
-        if (user.tipo === 1) userRole = "admin";
-        else if (user.tipo === 2) userRole = "analyst";
-        else if (user.tipo === 3) userRole = "user";
+        if (user.tipo === 1 || user.idTipoUsuario === 1) userRole = "admin";
+        else if (user.tipo === 2 || user.idTipoUsuario === 2) userRole = "analyst";
+        else if (user.tipo === 3 || user.idTipoUsuario === 3) userRole = "user";
     }
     const handleLogout = () => {
         logout();
     };
+
+    const displayName =
+        user?.nome
+            ? user.nome.split(" ").slice(0, 2).join(" ")
+            : "Não localizado";
+    const displayEmail = user?.email || "Não localizado";
+    const displayDepartment = user?.nomeGerencia || "Não localizado";
+    const displayAvatar = user?.fotoPerfil || undefined;
 
     return (
         <UISidebar>
@@ -314,12 +323,18 @@ export function Sidebar() {
                 <SidebarSeparator />
                 {user && (
                     <UserProfileSection
-                        name={user.nome.split(" ").slice(0, 2).join(" ")}
-                        email={user.email}
-                        role={user.tipo === 1 ? "admin" : user.tipo === 2 ? "analyst" : "user"}
-                        department={user.nomeGerencia || ""}
+                        name={displayName}
+                        email={displayEmail}
+                        role={
+                            user.tipo === 1 || user.idTipoUsuario === 1
+                                ? "admin"
+                                : user.tipo === 2 || user.idTipoUsuario === 2
+                                    ? "analyst"
+                                    : "user"
+                        }
+                        department={displayDepartment}
                         onLogout={handleLogout}
-                        avatarUrl={user.fotoPerfil || undefined}
+                        avatarUrl={displayAvatar}
                     />
                 )}
             </SidebarFooter>

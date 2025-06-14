@@ -43,16 +43,16 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
           if (data && data.usuario) {
             const usuario = data.usuario;
             setUserState({
-              id: usuario.idUsuario,
-              nome: usuario.nomeUsuario,
+              id: usuario.id,
+              nome: usuario.nome,
               email: usuario.email,
               ramal: usuario.ramal,
               matricula: usuario.matricula,
-              gerencia: usuario.idGerencia ?? undefined,
-              tipo: usuario.idTipoUsuario ?? undefined,
+              gerencia: usuario.gerencia ?? undefined,
+              tipo: usuario.tipo ?? undefined,
               ativo: usuario.ativo,
               fotoPerfil: usuario.fotoPerfil ?? undefined,
-              nomeGerencia: usuario.gerencia?.nomeGerencia ?? undefined,
+              nomeGerencia: usuario.nomeGerencia ?? undefined,
               idTipoUsuario: usuario.idTipoUsuario ?? undefined,
             });
           } else {
@@ -73,6 +73,25 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     if (token) {
       const expires = new Date(Date.now() + 60 * 60 * 1000); // 60 minutos
       Cookies.set("token", token, { expires });
+      (async () => {
+        const data: IMeResponse | null = await getMe(token);
+        if (data && data.usuario) {
+          const usuario = data.usuario;
+          setUserState({
+            id: usuario.id,
+            nome: usuario.nome,
+            email: usuario.email,
+            ramal: usuario.ramal,
+            matricula: usuario.matricula,
+            gerencia: usuario.gerencia ?? undefined,
+            tipo: usuario.tipo ?? undefined,
+            ativo: usuario.ativo,
+            fotoPerfil: usuario.fotoPerfil ?? undefined,
+            nomeGerencia: usuario.nomeGerencia ?? undefined,
+            idTipoUsuario: usuario.idTipoUsuario ?? undefined,
+          });
+        }
+      })();
     }
     if (!user) {
       Cookies.remove("token");

@@ -98,7 +98,7 @@ export function setupChatSocket(io: SocketIOServer) {
                     nomeArquivo,
                 });
 
-                // Busca a mensagem recém-criada com join do usuário
+                // Busca a mensagem recém-criada com join do usuário (igual ao REST)
                 const mensagemCompleta = await prisma.msgchamado.findUnique({
                     where: { idMensagem: novaMensagem.idMensagem },
                     include: {
@@ -106,16 +106,17 @@ export function setupChatSocket(io: SocketIOServer) {
                             select: {
                                 nomeUsuario: true,
                                 fotoPerfil: true,
-                                gerencia: { select: { nomeGerencia: true } }
+                                gerencia: {
+                                    select: {
+                                        nomeGerencia: true
+                                    }
+                                }
                             }
                         }
                     }
                 });
 
                 console.log(`[SOCKET] Mensagem salva e emitida para chamado_${idChamado}:`, mensagemCompleta);
-                if (!mensagemCompleta?.idMensagem) {
-                    console.warn("[SOCKET] mensagemCompleta emitida sem idMensagem:", mensagemCompleta);
-                }
 
                 // Envia para todos na sala do chamado
                 io.to(`chamado_${idChamado}`).emit("chat:receive", mensagemCompleta);
