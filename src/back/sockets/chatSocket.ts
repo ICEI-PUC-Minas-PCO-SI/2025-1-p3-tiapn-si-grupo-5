@@ -68,6 +68,8 @@ export function setupChatSocket(io: SocketIOServer) {
 
                 // if (isSolicitante || isAnalista || isGestor) {
                 socket.join(`chamado_${idChamado}`);
+                // Salva o userId no socket para detecção correta depois
+                socket.data.userId = idUsuario;
                 console.log(`[SOCKET] Usuário ${idUsuario} entrou na sala chamado_${idChamado}`);
                 socket.emit("chat:joined", { idChamado });
                 // } else {
@@ -80,7 +82,6 @@ export function setupChatSocket(io: SocketIOServer) {
             }
         });
 
-        // Recebe mensagem e persiste no banco
         socket.on("chat:send", async (data: ChatSendData) => {
             console.log(`[SOCKET] chat:send recebido:`, data);
             try {
@@ -120,6 +121,9 @@ export function setupChatSocket(io: SocketIOServer) {
                     }
                 });
 
+                // Envia para todos na sala do chamado IMEDIATAMENTE (sem aguardar notificação)
+                io.to(`chamado_${idChamado}`).emit("chat:receive", mensagemCompleta);
+
                 // Descobre o destinatário (analista ou solicitante)
                 const chamado = await prisma.chamado.findUnique({
                     where: { idChamado },
@@ -146,7 +150,7 @@ export function setupChatSocket(io: SocketIOServer) {
                     destinatarioNome = chamado.usuario_chamado_idSolicitanteTousuario.nomeUsuario;
                 }
 
-                // Verifica se o destinatário está na sala do chamado
+                // Verifica se o destinatário está na sala do chamado (agora usando socket.data.userId)
                 let destinatarioNaSala = false;
                 if (destinatarioId) {
                     const room = io.sockets.adapter.rooms.get(`chamado_${idChamado}`);
@@ -161,34 +165,31 @@ export function setupChatSocket(io: SocketIOServer) {
                     }
                 }
 
-                // Se o destinatário NÃO está na sala, envia notificação e e-mail
+                // Se o destinatário NÃO está na sala, envia notificação e e-mail (em background, não await)
                 if (destinatarioId && destinatarioEmail && !destinatarioNaSala) {
-                    try {
-                        // Salva notificação no banco
-                        await notificationService.createNotification({
-                            titulo: "Nova mensagem no chamado",
-                            mensagem: mensagem,
-                            idUsuario: destinatarioId,
-                            idChamado,
-                        });
-                        // Envia e-mail
-                        await sendNotificationEmail({
-                            to: destinatarioEmail,
-                            nomeUsuario: destinatarioNome || "Usuário",
-                            idChamado,
-                            assunto: chamado?.assunto || "",
-                            mensagem,
-                        });
-                    } catch (err) {
-                        console.error("[SOCKET] Erro ao enviar notificação/e-mail:", err);
-                        // Não lança, apenas loga o erro
-                    }
+                    (async () => {
+                        try {
+                            await notificationService.createNotification({
+                                titulo: "Nova mensagem no chamado",
+                                mensagem: mensagem,
+                                idUsuario: destinatarioId,
+                                idChamado,
+                            });
+                            await sendNotificationEmail({
+                                to: destinatarioEmail,
+                                nomeUsuario: destinatarioNome || "Usuário",
+                                idChamado,
+                                assunto: chamado?.assunto || "",
+                                mensagem,
+                            });
+                        } catch (err) {
+                            console.error("[SOCKET] Erro ao enviar notificação/e-mail:", err);
+                        }
+                    })();
                 }
 
                 console.log(`[SOCKET] Mensagem salva e emitida para chamado_${idChamado}:`, mensagemCompleta);
 
-                // Envia para todos na sala do chamado
-                io.to(`chamado_${idChamado}`).emit("chat:receive", mensagemCompleta);
             } catch (err) {
                 console.log(`[SOCKET] Erro ao salvar mensagem:`, err);
                 socket.emit("chat:error", { error: "Erro ao salvar mensagem.", err });
