@@ -5,7 +5,7 @@ export interface ChatMessage {
     idMensagem: number;
     mensagem: string;
     timestamp: string;
-    remetente: "usuario" | "analista";
+    remetente: "usuario" | "analista" | "gestor";
     idRemetente: number;
     urlAnexo?: string | null;
     nomeArquivo?: string | null;

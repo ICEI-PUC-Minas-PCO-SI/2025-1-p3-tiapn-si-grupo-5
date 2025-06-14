@@ -104,11 +104,22 @@ export default function Chat({ descricao }: ChatProps) {
     function handleSend(e: FormEvent) {
         e.preventDefault();
         if (!input.trim() || !user || !socketRef.current) return;
+
+        let remetente: "usuario" | "analista" | "gestor" = "usuario";
+        const tipo = user.idTipoUsuario ?? user.tipo;
+        if (tipo === 1) {
+            remetente = "gestor";
+        } else if (tipo === 2) {
+            remetente = "analista";
+        } else {
+            remetente = "usuario";
+        }
+
         socketRef.current.emit("chat:send", {
             idChamado,
             idRemetente: user.id,
             mensagem: input,
-            remetente: user.tipo === 2 ? "analista" : "usuario",
+            remetente,
         });
         setInput("");
         if (textareaRef.current) {

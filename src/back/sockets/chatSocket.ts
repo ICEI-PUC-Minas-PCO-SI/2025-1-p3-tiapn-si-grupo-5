@@ -12,7 +12,7 @@ type ChatSendData = {
     idChamado: number;
     idRemetente: number;
     mensagem: string;
-    remetente: "usuario" | "analista";
+    remetente: "usuario" | "analista" | "gestor";
     urlAnexo?: string;
     nomeArquivo?: string;
 };
@@ -83,16 +83,19 @@ export function setupChatSocket(io: SocketIOServer) {
         });
 
         socket.on("chat:send", async (data: ChatSendData) => {
-            console.log(`[SOCKET] chat:send recebido:`, data);
+            console.log("[BACK][SOCKET] Evento chat:send recebido:", data);
             try {
                 const { idChamado, idRemetente, mensagem, remetente, urlAnexo, nomeArquivo } = data;
+                // Log para debug do remetente recebido
+                console.log("[BACK][SOCKET] remetente recebido:", remetente, "idRemetente:", idRemetente);
+
                 if (!idChamado || !idRemetente || !mensagem || !remetente) {
                     console.log(`[SOCKET] chat:send faltando dados`);
                     socket.emit("chat:error", { error: "Dados obrigatórios ausentes." });
                     return;
                 }
 
-                // Salva no banco usando o ChatService
+                // Salva no banco usando o ChatService (agora aceita gestor)
                 const novaMensagem = await chatService.saveMessage({
                     idChamado,
                     idRemetente,
@@ -124,7 +127,7 @@ export function setupChatSocket(io: SocketIOServer) {
                 // Envia para todos na sala do chamado IMEDIATAMENTE (sem aguardar notificação)
                 io.to(`chamado_${idChamado}`).emit("chat:receive", mensagemCompleta);
 
-                // Descobre o destinatário (analista ou solicitante)
+                // Busca os dados do chamado e participantes
                 const chamado = await prisma.chamado.findUnique({
                     where: { idChamado },
                     select: {
@@ -136,48 +139,82 @@ export function setupChatSocket(io: SocketIOServer) {
                     }
                 });
 
-                let destinatarioId: number | undefined;
-                let destinatarioEmail: string | undefined;
-                let destinatarioNome: string | undefined;
+                // Lógica de notificação:
+                // Se gestor envia, notifica todos os outros (analista e solicitante), exceto o gestor
+                // Se analista envia, notifica solicitante
+                // Se solicitante envia, notifica analista
 
-                if (remetente === "usuario" && chamado?.idAnalista && chamado.usuario_chamado_idAnalistaTousuario) {
-                    destinatarioId = chamado.idAnalista;
-                    destinatarioEmail = chamado.usuario_chamado_idAnalistaTousuario.email;
-                    destinatarioNome = chamado.usuario_chamado_idAnalistaTousuario.nomeUsuario;
-                } else if (remetente === "analista" && chamado?.idSolicitante && chamado.usuario_chamado_idSolicitanteTousuario) {
-                    destinatarioId = chamado.idSolicitante;
-                    destinatarioEmail = chamado.usuario_chamado_idSolicitanteTousuario.email;
-                    destinatarioNome = chamado.usuario_chamado_idSolicitanteTousuario.nomeUsuario;
-                }
+                const destinatarios: { id: number, email: string, nome: string }[] = [];
 
-                // Verifica se o destinatário está na sala do chamado (agora usando socket.data.userId)
-                let destinatarioNaSala = false;
-                if (destinatarioId) {
-                    const room = io.sockets.adapter.rooms.get(`chamado_${idChamado}`);
-                    if (room) {
-                        for (const socketId of room) {
-                            const s = io.sockets.sockets.get(socketId);
-                            if (s && s.data && s.data.userId === destinatarioId) {
-                                destinatarioNaSala = true;
-                                break;
-                            }
-                        }
+                if (remetente === "gestor") {
+                    // Notifica solicitante se não for o gestor
+                    if (
+                        chamado?.idSolicitante &&
+                        chamado.usuario_chamado_idSolicitanteTousuario &&
+                        chamado.idSolicitante !== idRemetente
+                    ) {
+                        destinatarios.push({
+                            id: chamado.idSolicitante,
+                            email: chamado.usuario_chamado_idSolicitanteTousuario.email,
+                            nome: chamado.usuario_chamado_idSolicitanteTousuario.nomeUsuario
+                        });
+                    }
+                    // Notifica analista se não for o gestor
+                    if (
+                        chamado?.idAnalista &&
+                        chamado.usuario_chamado_idAnalistaTousuario &&
+                        chamado.idAnalista !== idRemetente
+                    ) {
+                        destinatarios.push({
+                            id: chamado.idAnalista,
+                            email: chamado.usuario_chamado_idAnalistaTousuario.email,
+                            nome: chamado.usuario_chamado_idAnalistaTousuario.nomeUsuario
+                        });
+                    }
+                    // Adicione este log:
+                    console.log("[SOCKET][DEBUG] Destinatários para gestor:", destinatarios);
+                } else if (remetente === "analista") {
+                    if (
+                        chamado?.idSolicitante &&
+                        chamado.usuario_chamado_idSolicitanteTousuario
+                    ) {
+                        destinatarios.push({
+                            id: chamado.idSolicitante,
+                            email: chamado.usuario_chamado_idSolicitanteTousuario.email,
+                            nome: chamado.usuario_chamado_idSolicitanteTousuario.nomeUsuario
+                        });
+                    }
+                } else if (remetente === "usuario") {
+                    if (
+                        chamado?.idAnalista &&
+                        chamado.usuario_chamado_idAnalistaTousuario
+                    ) {
+                        destinatarios.push({
+                            id: chamado.idAnalista,
+                            email: chamado.usuario_chamado_idAnalistaTousuario.email,
+                            nome: chamado.usuario_chamado_idAnalistaTousuario.nomeUsuario
+                        });
                     }
                 }
 
-                // Se o destinatário NÃO está na sala, envia notificação e e-mail (em background, não await)
-                if (destinatarioId && destinatarioEmail && !destinatarioNaSala) {
+                // Para cada destinatário, verifica se está na sala e envia notificação/email se não estiver
+                for (const destinatario of destinatarios) {
+                    // Remova a verificação de sala:
+                    // let destinatarioNaSala = false;
+                    // ...verificação de sala...
+                    // if (!destinatarioNaSala) {
+                    console.log(`[SOCKET][NOTIF] Criando notificação para idUsuario=${destinatario.id} (remetente=${remetente})`);
                     (async () => {
                         try {
                             await notificationService.createNotification({
                                 titulo: "Nova mensagem no chamado",
                                 mensagem: mensagem,
-                                idUsuario: destinatarioId,
+                                idUsuario: destinatario.id,
                                 idChamado,
                             });
                             await sendNotificationEmail({
-                                to: destinatarioEmail,
-                                nomeUsuario: destinatarioNome || "Usuário",
+                                to: destinatario.email,
+                                nomeUsuario: destinatario.nome || "Usuário",
                                 idChamado,
                                 assunto: chamado?.assunto || "",
                                 mensagem,
@@ -186,6 +223,7 @@ export function setupChatSocket(io: SocketIOServer) {
                             console.error("[SOCKET] Erro ao enviar notificação/e-mail:", err);
                         }
                     })();
+                    // }
                 }
 
                 console.log(`[SOCKET] Mensagem salva e emitida para chamado_${idChamado}:`, mensagemCompleta);

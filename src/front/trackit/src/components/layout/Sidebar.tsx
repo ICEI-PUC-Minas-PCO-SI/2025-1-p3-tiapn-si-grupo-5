@@ -36,7 +36,6 @@ export function Sidebar() {
     const location = useLocation();
     const [isParamsOpen, setIsParamsOpen] = useState(false);
     const { user, logout } = useUser();
-    console.log(user)
 
     let userRole: "admin" | "analyst" | "user" | undefined;
     if (user) {
