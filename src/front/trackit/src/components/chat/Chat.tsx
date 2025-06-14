@@ -150,6 +150,32 @@ export default function Chat({ descricao }: ChatProps) {
         }
     }, [messages]);
 
+    /* handler para enviar ao pressionar Enter (sem Shift) e quebra de linha ao pressionar Tab 
+    
+    esse comportamento pode ser mudado posteriormente caso a ux nao seja a esperada
+    */
+    function handleInputKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+        if (e.key === "Enter" && !e.shiftKey && !e.altKey && !e.ctrlKey) {
+            e.preventDefault();
+            handleSend(e as unknown as FormEvent);
+        } else if (e.key === "Tab") {
+            e.preventDefault();
+            const textarea = textareaRef.current;
+            if (textarea) {
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const value = textarea.value;
+                // Insere uma quebra de linha na posição do cursor
+                const newValue = value.substring(0, start) + "\n" + value.substring(end);
+                setInput(newValue);
+                // Atualiza o cursor para depois da quebra de linha
+                setTimeout(() => {
+                    textarea.selectionStart = textarea.selectionEnd = start + 1;
+                }, 0);
+            }
+        }
+    }
+
     // Renderização do componente
     return (
         <div className="flex flex-col w-full mx-auto border rounded bg-white h-[600px] dark:bg-slate-900 dark:border-slate-800">
@@ -240,6 +266,7 @@ export default function Chat({ descricao }: ChatProps) {
                     value={input}
                     onChange={e => setInput(e.target.value)}
                     ref={textareaRef}
+                    onKeyDown={handleInputKeyDown}
                 />
                 <Button
                     type="submit"

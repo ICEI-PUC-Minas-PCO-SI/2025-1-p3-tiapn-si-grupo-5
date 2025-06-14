@@ -98,14 +98,28 @@ export function setupChatSocket(io: SocketIOServer) {
                     nomeArquivo,
                 });
 
-                console.log(`[SOCKET] Mensagem salva e emitida para chamado_${idChamado}:`, novaMensagem);
-                // Adicione log detalhado:
-                if (!novaMensagem.idMensagem) {
-                    console.warn("[SOCKET] novaMensagem emitida sem idMensagem:", novaMensagem);
-                }
+                // Busca a mensagem recém-criada com join do usuário (igual ao REST)
+                const mensagemCompleta = await prisma.msgchamado.findUnique({
+                    where: { idMensagem: novaMensagem.idMensagem },
+                    include: {
+                        usuario: {
+                            select: {
+                                nomeUsuario: true,
+                                fotoPerfil: true,
+                                gerencia: {
+                                    select: {
+                                        nomeGerencia: true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+
+                console.log(`[SOCKET] Mensagem salva e emitida para chamado_${idChamado}:`, mensagemCompleta);
 
                 // Envia para todos na sala do chamado
-                io.to(`chamado_${idChamado}`).emit("chat:receive", novaMensagem);
+                io.to(`chamado_${idChamado}`).emit("chat:receive", mensagemCompleta);
             } catch (err) {
                 console.log(`[SOCKET] Erro ao salvar mensagem:`, err);
                 socket.emit("chat:error", { error: "Erro ao salvar mensagem.", err });
