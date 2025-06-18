@@ -10,7 +10,8 @@ const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:3000";
 
 export function useChatSocket(
     onReceive: (msg: ChatMessage) => void,
-    onError?: (err: { error: string;[key: string]: unknown }) => void
+    onError?: (err: { error: string;[key: string]: unknown }) => void,
+    onJoined?: (data: { idChamado: number }) => void
 ) {
     // Ref para manter a instância do socket entre renders
     const socketRef = useRef<Socket | null>(null);
@@ -41,6 +42,10 @@ export function useChatSocket(
                 onError({ error: "Erro ao conectar ao chat em tempo real", ...err });
             });
         }
+        // Listener para quando o usuário entra na sala do chamado
+        if (onJoined) {
+            socket.on("chat:joined", onJoined);
+        }
 
         // Remove listeners ao desmontar ou atualizar dependências
         return () => {
@@ -49,8 +54,9 @@ export function useChatSocket(
                 socket.off("chat:error", onError);
                 socket.off("connect_error");
             }
+            if (onJoined) socket.off("chat:joined", onJoined);
         };
-    }, [onReceive, onError]);
+    }, [onReceive, onError, onJoined]);
 
     // Retorna a ref do socket para uso externo
     return socketRef;

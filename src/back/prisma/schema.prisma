@@ -142,4 +142,5 @@ model usuario {
 enum msgchamado_remetente {
   usuario
   analista
+  gestor
 }

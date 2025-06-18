@@ -70,7 +70,8 @@ export type usuario = $Result.DefaultSelection<Prisma.$usuarioPayload>
 export namespace $Enums {
   export const msgchamado_remetente: {
   usuario: 'usuario',
-  analista: 'analista'
+  analista: 'analista',
+  gestor: 'gestor'
 };
 
 export type msgchamado_remetente = (typeof msgchamado_remetente)[keyof typeof msgchamado_remetente]

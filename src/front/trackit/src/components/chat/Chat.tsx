@@ -9,6 +9,7 @@ import { useUser } from "@/contexts/UserContext";
 import { useChatSocket } from "@/hooks/useChatSocket";
 import type { ChatMessage } from "@/api/chat";
 import { getChatMessages } from "@/api/chat";
+import { markAllNotificationsAsRead } from "@/api/notifications";
 
 interface ChatProps {
     descricao: string;
@@ -58,6 +59,23 @@ export default function Chat({ descricao }: ChatProps) {
         },
         (err) => {
             setError(err.error || "Erro no chat em tempo real");
+        },
+        async () => {
+            // Evento disparado quando entrou na sala do chamado
+            try {
+                if (user && idChamado) {
+                    await markAllNotificationsAsRead(user.id, idChamado);
+                    // Dispara evento global para Sidebar atualizar badge
+                    window.dispatchEvent(new Event("refresh-unread-notifications"));
+                }
+            } catch (e: unknown) {
+                // Opcional: feedback de erro ao marcar notificações
+                if (e instanceof Error) {
+                    setError(e.message || "Erro ao marcar notificações como lidas");
+                } else {
+                    setError("Erro ao marcar notificações como lidas");
+                }
+            }
         }
     );
 
@@ -104,11 +122,22 @@ export default function Chat({ descricao }: ChatProps) {
     function handleSend(e: FormEvent) {
         e.preventDefault();
         if (!input.trim() || !user || !socketRef.current) return;
+
+        let remetente: "usuario" | "analista" | "gestor" = "usuario";
+        const tipo = user.idTipoUsuario ?? user.tipo;
+        if (tipo === 1) {
+            remetente = "gestor";
+        } else if (tipo === 2) {
+            remetente = "analista";
+        } else {
+            remetente = "usuario";
+        }
+
         socketRef.current.emit("chat:send", {
             idChamado,
             idRemetente: user.id,
             mensagem: input,
-            remetente: user.tipo === 2 ? "analista" : "usuario",
+            remetente,
         });
         setInput("");
         if (textareaRef.current) {

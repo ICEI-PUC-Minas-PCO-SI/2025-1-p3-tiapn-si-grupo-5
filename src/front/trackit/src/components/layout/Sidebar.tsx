@@ -28,15 +28,43 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { UserProfileSection } from "./UserProfileSection";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getUnreadChamados } from "@/api/notifications";
 import { useUser } from "@/contexts/UserContext";
 import { ThemeToggle } from "../theme/theme-toggle";
 
 export function Sidebar() {
     const location = useLocation();
     const [isParamsOpen, setIsParamsOpen] = useState(false);
+    const [hasUnread, setHasUnread] = useState(false);
     const { user, logout } = useUser();
-    console.log(user)
+
+    const refreshUnread = () => {
+        if (!user?.id) {
+            setHasUnread(false);
+            return;
+        }
+        getUnreadChamados(user.id)
+            .then((ids) => setHasUnread(Array.isArray(ids) && ids.length > 0))
+            .catch(() => setHasUnread(false));
+    };
+
+    useEffect(() => {
+        refreshUnread();
+        // Atualiza quando usuário muda
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user?.id]);
+
+    // NOVO: escute evento global para atualizar badge
+    useEffect(() => {
+        function handleRefreshUnread() {
+            refreshUnread();
+        }
+        window.addEventListener("refresh-unread-notifications", handleRefreshUnread);
+        return () => {
+            window.removeEventListener("refresh-unread-notifications", handleRefreshUnread);
+        };
+    }, [user?.id]);
 
     let userRole: "admin" | "analyst" | "user" | undefined;
     if (user) {
@@ -99,13 +127,29 @@ export function Sidebar() {
                             <SidebarMenuItem>
                                 <SidebarMenuButton
                                     asChild
-                                    isActive={location.pathname === "/user/tickets"}
+                                    isActive={location.pathname === "/user/my-tickets"}
                                     variant="default"
                                     size="default"
+                                    style={{ position: "relative" }}
                                 >
                                     <Link to="/user/my-tickets">
                                         <Ticket className="mr-2" />
                                         <span>Ver Chamados</span>
+                                        {hasUnread && (
+                                            <span
+                                                style={{
+                                                    position: "absolute",
+                                                    top: 10,
+                                                    right: 18,
+                                                    width: 10,
+                                                    height: 10,
+                                                    borderRadius: "50%",
+                                                    background: "#2563eb",
+                                                    display: "inline-block"
+                                                }}
+                                                aria-label="Notificações não lidas"
+                                            />
+                                        )}
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
@@ -146,10 +190,26 @@ export function Sidebar() {
                                     isActive={location.pathname === "/analyst/my-tickets"}
                                     variant="default"
                                     size="default"
+                                    style={{ position: "relative" }}
                                 >
                                     <Link to="/analyst/my-tickets">
                                         <Ticket className="mr-2" />
                                         <span>Meus Chamados</span>
+                                        {hasUnread && (
+                                            <span
+                                                style={{
+                                                    position: "absolute",
+                                                    top: 10,
+                                                    right: 18,
+                                                    width: 10,
+                                                    height: 10,
+                                                    borderRadius: "50%",
+                                                    background: "#2563eb",
+                                                    display: "inline-block"
+                                                }}
+                                                aria-label="Notificações não lidas"
+                                            />
+                                        )}
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>

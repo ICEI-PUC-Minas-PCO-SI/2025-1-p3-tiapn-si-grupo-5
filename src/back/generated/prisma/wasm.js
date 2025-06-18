@@ -275,7 +275,8 @@ exports.Prisma.usuarioOrderByRelevanceFieldEnum = {
 };
 exports.msgchamado_remetente = exports.$Enums.msgchamado_remetente = {
   usuario: 'usuario',
-  analista: 'analista'
+  analista: 'analista',
+  gestor: 'gestor'
 };
 
 exports.Prisma.ModelName = {

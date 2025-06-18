@@ -13,6 +13,9 @@ import { ArrowUpDown, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { UserTicketTableRow } from "../../pages/user-tickets/UserTickets";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getUnreadChamados } from "@/api/notifications";
+import { useUser } from "@/contexts/UserContext";
 
 interface DataTableUserTicketsProps {
     data: UserTicketTableRow[];
@@ -25,6 +28,15 @@ export function DataTableUserTickets({
 }: DataTableUserTicketsProps) {
     const navigate = useNavigate();
     const location = useLocation();
+    const { user } = useUser();
+    const [unreadChamados, setUnreadChamados] = useState<number[]>([]);
+
+    useEffect(() => {
+        if (!user?.id) return;
+        getUnreadChamados(user.id)
+            .then(setUnreadChamados)
+            .catch(() => setUnreadChamados([]));
+    }, [user?.id]);
 
     // Helper para montar o prefixo correto da rota
     function getRoutePrefix() {
@@ -264,8 +276,24 @@ export function DataTableUserTickets({
                             const prefix = getRoutePrefix();
                             navigate(`${prefix}/chat?idChamado=${row.original.idChamado}`);
                         }}
+                        style={{ position: "relative" }}
                     >
                         <Eye className="w-4 h-4" />
+                        {unreadChamados.includes(row.original.idChamado) && (
+                            <span
+                                style={{
+                                    position: "absolute",
+                                    top: 6,
+                                    right: 6,
+                                    width: 10,
+                                    height: 10,
+                                    borderRadius: "50%",
+                                    background: "#2563eb", // azul-600
+                                    display: "inline-block"
+                                }}
+                                aria-label="Notificações não lidas"
+                            />
+                        )}
                     </Button>
                 </div>
             ),

@@ -7,9 +7,10 @@ import { TicketRoutes } from "./routes/ticketRoutes";
 import { StatusRoutes } from "./routes/statusRoutes";
 import { TicketTypeRoutes } from "./routes/ticketTypeRoutes";
 import { errorHandler } from "./middlewares/error-handler";
-import { PriorityRoutes } from "./routes/priorityRoutes";
+import { PriorityRoutes } from "./routes/PriorityRoutes";
 import { DashboardRoutes } from "./routes/dashboardRoutes";
 import { ChatRoutes } from "./routes/chatRoutes";
+import { NotificationRoutes } from "./routes/notificationRoutes";
 
 export class App {
     private app: Express;
@@ -36,6 +37,7 @@ export class App {
         const priorityRoutes = new PriorityRoutes();
         const dashboardRoutes = new DashboardRoutes();
         const chatRoutes = new ChatRoutes();
+        const notificationRoutes = new NotificationRoutes();
 
         this.app.use("/", userRoutes.getRouter());
         this.app.use("/", managementRoutes.getRouter());
@@ -46,6 +48,7 @@ export class App {
         this.app.use("/", priorityRoutes.getRouter());
         this.app.use("/", dashboardRoutes.getRouter());
         this.app.use("/", chatRoutes.getRouter());
+        this.app.use("/", notificationRoutes.getRouter());
     }
 
     public getInstance(): Express {

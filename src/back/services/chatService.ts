@@ -6,7 +6,7 @@ export class ChatService {
         idChamado: number;
         idRemetente: number;
         mensagem: string;
-        remetente: "usuario" | "analista";
+        remetente: "usuario" | "analista" | "gestor";
         urlAnexo?: string | null;
         nomeArquivo?: string | null;
     }) {
