@@ -18,23 +18,50 @@ const schema = z.object({
 });
 
 export function ResetPassword() {
-    const [isShow, setIsShow] = useState(false);
     const [senha, setSenha] = useState("");
     const [confirmarSenha, setConfirmarSenha] = useState("");
     const [loading, setLoading] = useState(false);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+    const [error, setError] = useState<{ senha?: string; confirmarSenha?: string } | null>(null);
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const [isShowSenha, setIsShowSenha] = useState(false);
+    const [isShowConfirmarSenha, setIsShowConfirmarSenha] = useState(false);
 
     const token = searchParams.get("token") || "";
 
-    const handlePassword = () => setIsShow((v) => !v);
+    const handleShowSenha = () => setIsShowSenha((v) => !v);
+    const handleShowConfirmarSenha = () => setIsShowConfirmarSenha((v) => !v);
+
+    function validateFields(senhaValue: string, confirmarSenhaValue: string) {
+        const result = schema.safeParse({ senha: senhaValue, confirmarSenha: confirmarSenhaValue });
+        if (!result.success) {
+            const fieldErrors: { senha?: string; confirmarSenha?: string } = {};
+            for (const err of result.error.errors) {
+                if (err.path[0] === "senha") fieldErrors.senha = err.message;
+                if (err.path[0] === "confirmarSenha") fieldErrors.confirmarSenha = err.message;
+            }
+            setError(fieldErrors);
+            return false;
+        }
+        setError(null);
+        return true;
+    }
+
+    function handleSenhaChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setSenha(e.target.value);
+        validateFields(e.target.value, confirmarSenha);
+    }
+
+    function handleConfirmarSenhaChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setConfirmarSenha(e.target.value);
+        validateFields(senha, e.target.value);
+    }
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        const result = schema.safeParse({ senha, confirmarSenha });
-        if (!result.success) {
-            setAlert({ type: "error", message: result.error.errors[0].message });
+        if (!validateFields(senha, confirmarSenha)) {
+            setAlert({ type: "error", message: "Preencha os campos corretamente." });
             return;
         }
         if (!token) {
@@ -47,7 +74,7 @@ export function ResetPassword() {
             setAlert({ type: "success", message: "Senha redefinida com sucesso! Redirecionando para login..." });
             setTimeout(() => {
                 navigate("/");
-            }, 1500);
+            }, 3000);
         } catch (err: unknown) {
             let msg = "Erro ao redefinir senha.";
             if (
@@ -63,6 +90,12 @@ export function ResetPassword() {
             setLoading(false);
         }
     }
+
+    const isValid =
+        !error &&
+        senha.length >= 8 &&
+        confirmarSenha.length >= 8 &&
+        senha === confirmarSenha;
 
     return (
         <div className={clsx(
@@ -97,44 +130,50 @@ export function ResetPassword() {
                     <div className="relative">
                         <Input
                             className="input-layout pr-10 bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100"
-                            type={isShow ? "text" : "password"}
+                            type={isShowSenha ? "text" : "password"}
                             placeholder="Digite sua nova senha"
                             value={senha}
-                            onChange={e => setSenha(e.target.value)}
+                            onChange={handleSenhaChange}
                             required
                         />
                         <button
                             type="button"
-                            onClick={handlePassword}
+                            onClick={handleShowSenha}
                             className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-500 dark:text-slate-300 focus:outline-0"
                             tabIndex={-1}
                         >
-                            {!isShow ? <IoEyeOutline size={24} /> : <IoEyeOffOutline size={24} />}
+                            {!isShowSenha ? <IoEyeOutline size={24} /> : <IoEyeOffOutline size={24} />}
                         </button>
                     </div>
+                    {error?.senha && (
+                        <span className="text-red-500 text-sm font-'[Inter]'">{error.senha}</span>
+                    )}
                 </div>
                 <div>
                     <label className="block mb-1 text-slate-800 dark:text-slate-200 font-medium">Confirmar senha:</label>
                     <div className="relative">
                         <Input
                             className="input-layout pr-10 bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-slate-100"
-                            type={isShow ? "text" : "password"}
+                            type={isShowConfirmarSenha ? "text" : "password"}
                             placeholder="Digite novamente a senha"
                             value={confirmarSenha}
-                            onChange={e => setConfirmarSenha(e.target.value)}
+                            onChange={handleConfirmarSenhaChange}
                             required
                         />
                         <button
                             type="button"
-                            onClick={handlePassword}
+                            onClick={handleShowConfirmarSenha}
                             className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-slate-500 dark:text-slate-300 focus:outline-0"
                             tabIndex={-1}
                         >
-                            {!isShow ? <IoEyeOutline size={24} /> : <IoEyeOffOutline size={24} />}
+                            {!isShowConfirmarSenha ? <IoEyeOutline size={24} /> : <IoEyeOffOutline size={24} />}
                         </button>
                     </div>
+                    {error?.confirmarSenha && (
+                        <span className="text-red-500 text-sm font-'[Inter]'">{error.confirmarSenha}</span>
+                    )}
                 </div>
-                <Button className="btn-layout" type="submit" disabled={loading}>
+                <Button className="btn-layout" type="submit" disabled={loading || !isValid}>
                     {loading ? "Salvando..." : "Trocar senha"}
                 </Button>
             </form>

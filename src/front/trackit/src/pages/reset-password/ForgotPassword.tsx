@@ -15,11 +15,26 @@ export function ForgotPassword() {
     const [email, setEmail] = useState("");
     const [loading, setLoading] = useState(false);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
+    function validateEmail(value: string) {
+        const result = schema.safeParse({ email: value });
+        if (!result.success) {
+            setError(result.error.errors[0].message);
+            return false;
+        }
+        setError(null);
+        return true;
+    }
+
+    function handleEmailChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setEmail(e.target.value);
+        validateEmail(e.target.value);
+    }
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        const result = schema.safeParse({ email });
-        if (!result.success) {
+        if (!validateEmail(email)) {
             setAlert({ type: "error", message: "Preencha um e-mail válido." });
             return;
         }
@@ -45,6 +60,8 @@ export function ForgotPassword() {
             setLoading(false);
         }
     }
+
+    const isValid = !error && email.length > 0;
 
     return (
         <div className={clsx(
@@ -81,12 +98,15 @@ export function ForgotPassword() {
                         type="email"
                         placeholder="Digite seu e-mail"
                         value={email}
-                        onChange={e => setEmail(e.target.value)}
+                        onChange={handleEmailChange}
                         required
                         autoFocus
                     />
+                    {error && (
+                        <span className="text-red-500 text-sm font-'[Inter]'">{error}</span>
+                    )}
                 </div>
-                <Button className="btn-layout" type="submit" disabled={loading}>
+                <Button className="btn-layout" type="submit" disabled={loading || !isValid}>
                     {loading ? "Enviando..." : "Enviar verificação"}
                 </Button>
             </form>
