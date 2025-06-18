@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { UserController } from "../controllers/userController";
+import { UserController } from "../controllers/UserController";
 import { autenticarToken } from "../middlewares/auth-jwt";
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
@@ -87,6 +87,16 @@ export class UserRoutes {
             validatePayload(userProfileUpdateSchema),
             autenticarToken,
             this.userController.updateProfileUser.bind(this.userController)
+        );
+        this.router.get(
+            "/users/check-email/:email",
+            async (req, res, next) => {
+                try {
+                    await this.userController.checkEmailExists(req, res);
+                } catch (err) {
+                    next(err);
+                }
+            }
         );
     }
 

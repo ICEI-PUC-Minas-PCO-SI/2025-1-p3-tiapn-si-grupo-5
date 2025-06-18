@@ -187,4 +187,13 @@ export class UserController {
             res.status(500).json({ error: "Erro ao buscar analistas" });
         }
     }
+
+    async checkEmailExists(req: Request, res: Response) {
+        const email = req.params.email;
+        if (!email) {
+            return res.status(400).json({ exists: false, error: "E-mail não registrado" });
+        }
+        const user = await userService.findUserByEmail(email);
+        res.json({ exists: !!user });
+    }
 }
