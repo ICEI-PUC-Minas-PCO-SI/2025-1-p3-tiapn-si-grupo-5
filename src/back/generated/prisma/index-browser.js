@@ -210,6 +210,15 @@ exports.Prisma.UsuarioScalarFieldEnum = {
   idTipoUsuario: 'idTipoUsuario'
 };
 
+exports.Prisma.VerificacaoScalarFieldEnum = {
+  idVerificacao: 'idVerificacao',
+  idUsuario: 'idUsuario',
+  token: 'token',
+  tipo: 'tipo',
+  criadoEm: 'criadoEm',
+  expiraEm: 'expiraEm'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -273,6 +282,11 @@ exports.Prisma.usuarioOrderByRelevanceFieldEnum = {
   ramal: 'ramal',
   fotoPerfil: 'fotoPerfil'
 };
+
+exports.Prisma.verificacaoOrderByRelevanceFieldEnum = {
+  token: 'token',
+  tipo: 'tipo'
+};
 exports.msgchamado_remetente = exports.$Enums.msgchamado_remetente = {
   usuario: 'usuario',
   analista: 'analista',
@@ -289,7 +303,8 @@ exports.Prisma.ModelName = {
   statuschamado: 'statuschamado',
   tipochamado: 'tipochamado',
   tipousuario: 'tipousuario',
-  usuario: 'usuario'
+  usuario: 'usuario',
+  verificacao: 'verificacao'
 };
 
 /**

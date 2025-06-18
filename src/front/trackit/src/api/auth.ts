@@ -23,3 +23,27 @@ export async function getMe(token: string): Promise<IMeResponse | null> {
     if (!response.ok) return null;
     return response.json();
 }
+
+export async function requestPasswordReset(email: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/users/request-password-reset`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+    });
+    if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err?.error || "Erro ao solicitar redefinição de senha");
+    }
+}
+
+export async function resetPassword(token: string, senha: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/users/reset-password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, senha }),
+    });
+    if (!response.ok) {
+        const err = await response.json().catch(() => ({}));
+        throw new Error(err?.error || "Erro ao redefinir senha");
+    }
+}

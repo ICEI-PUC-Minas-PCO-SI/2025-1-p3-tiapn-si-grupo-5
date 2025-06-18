@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { Register } from "../pages/register/Register";
 import { Login } from "../pages/login/Login";
 import { ForgotPassword } from "../pages/reset-password/ForgotPassword";
+import { ResetPassword } from "@/pages/reset-password/ResetPassword";
 import { DefaultLayoult } from "../layouts/DefaultLayoult";
 import { ManagementUsers } from "../pages/management-users/ManagementUsers";
 import { Index } from "@/layouts/Index";
@@ -27,6 +28,7 @@ export function Router() {
             <Route path="/" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/user" element={
                 <PrivateRoute allowedTypes={[3]}>
                     <DefaultLayoult />

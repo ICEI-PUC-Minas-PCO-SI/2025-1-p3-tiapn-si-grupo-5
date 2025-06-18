@@ -31,6 +31,13 @@ const userLoginSchema = z.object({
     email: z.string().email(),
     senha: z.string().min(8)
 });
+const requestResetSchema = z.object({
+    email: z.string().email()
+});
+const resetPasswordSchema = z.object({
+    token: z.string().uuid(),
+    senha: z.string().min(8)
+});
 
 export class UserRoutes {
     private router: Router;
@@ -87,6 +94,26 @@ export class UserRoutes {
             validatePayload(userProfileUpdateSchema),
             autenticarToken,
             this.userController.updateProfileUser.bind(this.userController)
+        );
+        this.router.get(
+            "/users/check-email/:email",
+            async (req, res, next) => {
+                try {
+                    await this.userController.checkEmailExists(req, res);
+                } catch (err) {
+                    next(err);
+                }
+            }
+        );
+        this.router.post(
+            "/users/request-password-reset",
+            validatePayload(requestResetSchema),
+            this.userController.requestPasswordReset.bind(this.userController)
+        );
+        this.router.post(
+            "/users/reset-password",
+            validatePayload(resetPasswordSchema),
+            this.userController.resetPassword.bind(this.userController)
         );
     }
 
