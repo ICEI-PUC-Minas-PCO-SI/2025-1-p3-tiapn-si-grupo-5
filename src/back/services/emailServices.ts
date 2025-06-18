@@ -80,6 +80,29 @@ export async function sendNotificationEmail({
     }
 }
 
+export async function sendPasswordResetEmail({
+    to,
+    nomeUsuario,
+    token
+}: {
+    to: string;
+    nomeUsuario: string;
+    token: string;
+}) {
+    const resetUrl = `${process.env.FRONTEND_URL || "http://localhost:5173"}/reset-password?token=${token}`;
+    const subject = "Redefinição de senha - TrackIt";
+    const html = `
+        <div>
+            <h2>Olá, ${nomeUsuario}!</h2>
+            <p>Você solicitou a redefinição de senha. Clique no link abaixo para criar uma nova senha:</p>
+            <p><a href="${resetUrl}">${resetUrl}</a></p>
+            <p>Este link expira em 30 minutos.</p>
+            <p>Se não foi você, ignore este e-mail.</p>
+        </div>
+    `;
+    return sendEmail({ to, subject, html });
+}
+
 if (require.main === module) {
     (async () => {
         await sendEmail({

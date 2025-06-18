@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 import { UserService } from "../services/userService";
+import { sendPasswordResetEmail } from "../services/emailServices";
 
 const userService = new UserService();
 
@@ -195,5 +196,28 @@ export class UserController {
         }
         const user = await userService.findUserByEmail(email);
         res.json({ exists: !!user });
+    }
+
+    async requestPasswordReset(req: Request, res: Response) {
+        const { email } = req.body;
+        const result = await userService.createPasswordResetToken(email);
+        if (!result) {
+            return res.status(404).json({ error: "E-mail não encontrado" });
+        }
+        await sendPasswordResetEmail({
+            to: result.user.email,
+            nomeUsuario: result.user.nomeUsuario,
+            token: result.token
+        });
+        res.json({ message: "E-mail de redefinição enviado com sucesso." });
+    }
+
+    async resetPassword(req: Request, res: Response) {
+        const { token, senha } = req.body;
+        const result = await userService.resetPasswordByToken(token, senha);
+        if (!result.success) {
+            return res.status(400).json({ error: result.error });
+        }
+        res.json({ message: "Senha redefinida com sucesso." });
     }
 }

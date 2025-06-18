@@ -141,13 +141,13 @@ model usuario {
 }
 
 model verificacao {
-  idVerificacao Int      @id @default(autoincrement())
+  idVerificacao Int       @id @default(autoincrement())
   idUsuario     Int
-  token         String   @unique @db.Char(36)
-  tipo          String?  @db.VarChar(30)
-  criadoEm      DateTime @default(now()) @db.DateTime(0)
+  token         String    @unique @db.Char(36)
+  tipo          String?   @db.VarChar(30)
+  criadoEm      DateTime  @default(now()) @db.DateTime(0)
   expiraEm      DateTime?
-  usuario       usuario  @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade, onUpdate: NoAction, map: "verificacao_ibfk_1")
+  usuario       usuario   @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade, onUpdate: NoAction, map: "verificacao_ibfk_1")
 
   @@index([idUsuario], map: "idUsuario_verificacao")
 }
