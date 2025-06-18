@@ -31,6 +31,13 @@ const userLoginSchema = z.object({
     email: z.string().email(),
     senha: z.string().min(8)
 });
+const requestResetSchema = z.object({
+    email: z.string().email()
+});
+const resetPasswordSchema = z.object({
+    token: z.string().uuid(),
+    senha: z.string().min(8)
+});
 
 export class UserRoutes {
     private router: Router;
@@ -97,6 +104,16 @@ export class UserRoutes {
                     next(err);
                 }
             }
+        );
+        this.router.post(
+            "/users/request-password-reset",
+            validatePayload(requestResetSchema),
+            this.userController.requestPasswordReset.bind(this.userController)
+        );
+        this.router.post(
+            "/users/reset-password",
+            validatePayload(resetPasswordSchema),
+            this.userController.resetPassword.bind(this.userController)
         );
     }
 

@@ -190,34 +190,52 @@ export class UserController {
     }
 
     async checkEmailExists(req: Request, res: Response) {
-        const email = req.params.email;
-        if (!email) {
-            return res.status(400).json({ exists: false, error: "E-mail não registrado" });
+        try {
+            const email = req.params.email;
+            if (!email) {
+                res.status(400).json({ exists: false, error: "E-mail não registrado" });
+                return;
+            }
+            const user = await userService.findUserByEmail(email);
+            res.json({ exists: !!user });
+        } catch (error) {
+            console.error("Erro ao checar e-mail:", error);
+            res.status(500).json({ error: "Erro ao checar e-mail" });
         }
-        const user = await userService.findUserByEmail(email);
-        res.json({ exists: !!user });
     }
 
     async requestPasswordReset(req: Request, res: Response) {
-        const { email } = req.body;
-        const result = await userService.createPasswordResetToken(email);
-        if (!result) {
-            return res.status(404).json({ error: "E-mail não encontrado" });
+        try {
+            const { email } = req.body;
+            const result = await userService.createPasswordResetToken(email);
+            if (!result) {
+                res.status(404).json({ error: "E-mail não encontrado" });
+                return;
+            }
+            await sendPasswordResetEmail({
+                to: result.user.email,
+                nomeUsuario: result.user.nomeUsuario,
+                token: result.token
+            });
+            res.json({ message: "E-mail de redefinição enviado com sucesso." });
+        } catch (error) {
+            console.error("Erro ao solicitar redefinição de senha:", error);
+            res.status(500).json({ error: "Erro ao solicitar redefinição de senha" });
         }
-        await sendPasswordResetEmail({
-            to: result.user.email,
-            nomeUsuario: result.user.nomeUsuario,
-            token: result.token
-        });
-        res.json({ message: "E-mail de redefinição enviado com sucesso." });
     }
 
     async resetPassword(req: Request, res: Response) {
-        const { token, senha } = req.body;
-        const result = await userService.resetPasswordByToken(token, senha);
-        if (!result.success) {
-            return res.status(400).json({ error: result.error });
+        try {
+            const { token, senha } = req.body;
+            const result = await userService.resetPasswordByToken(token, senha);
+            if (!result.success) {
+                res.status(400).json({ error: result.error });
+                return;
+            }
+            res.json({ message: "Senha redefinida com sucesso." });
+        } catch (error) {
+            console.error("Erro ao redefinir senha:", error);
+            res.status(500).json({ error: "Erro ao redefinir senha" });
         }
-        res.json({ message: "Senha redefinida com sucesso." });
     }
 }
