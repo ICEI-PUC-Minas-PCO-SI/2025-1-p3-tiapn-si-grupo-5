@@ -18,4 +18,11 @@ export class NotificationController {
         await notificationService.markAllAsReadForChamado(idUsuario, idChamado);
         res.status(204).send();
     }
+
+    async getUnreadChamados(req: Request, res: Response) {
+        const idUsuario = Number(req.params.idUsuario);
+        if (!idUsuario) return res.status(400).json({ error: "idUsuario obrigatório" });
+        const chamados = await notificationService.getUnreadChamados(idUsuario);
+        res.json(chamados);
+    }
 }

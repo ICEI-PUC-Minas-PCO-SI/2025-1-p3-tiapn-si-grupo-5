@@ -40,4 +40,16 @@ export class NotificationService {
             data: { lida: 1 }
         });
     }
+
+    async getUnreadChamados(idUsuario: number) {
+        const notificacoes = await prisma.notificacao.findMany({
+            where: {
+                idUsuario,
+                lida: 0,
+                idChamado: { not: null }
+            },
+            select: { idChamado: true }
+        });
+        return [...new Set(notificacoes.map(n => n.idChamado))];
+    }
 }

@@ -31,6 +31,15 @@ export class NotificationRoutes {
                     .catch(next);
             }
         );
+        this.router.get(
+            "/notifications/unread-chamados/:idUsuario",
+            autenticarToken,
+            (req, res, next) => {
+                this.notificationController.getUnreadChamados(req, res)
+                    .then(() => undefined)
+                    .catch(next);
+            }
+        );
     }
 
     public getRouter(): Router {
