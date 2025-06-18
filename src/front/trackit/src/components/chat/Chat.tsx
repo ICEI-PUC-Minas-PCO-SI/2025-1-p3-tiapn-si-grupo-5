@@ -65,6 +65,8 @@ export default function Chat({ descricao }: ChatProps) {
             try {
                 if (user && idChamado) {
                     await markAllNotificationsAsRead(user.id, idChamado);
+                    // Dispara evento global para Sidebar atualizar badge
+                    window.dispatchEvent(new Event("refresh-unread-notifications"));
                 }
             } catch (e: unknown) {
                 // Opcional: feedback de erro ao marcar notificações
