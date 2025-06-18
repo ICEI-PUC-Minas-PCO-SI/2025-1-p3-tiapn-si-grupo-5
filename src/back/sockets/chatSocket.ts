@@ -199,31 +199,40 @@ export function setupChatSocket(io: SocketIOServer) {
 
                 // Para cada destinatário, verifica se está na sala e envia notificação/email se não estiver
                 for (const destinatario of destinatarios) {
-                    // Remova a verificação de sala:
-                    // let destinatarioNaSala = false;
-                    // ...verificação de sala...
-                    // if (!destinatarioNaSala) {
-                    console.log(`[SOCKET][NOTIF] Criando notificação para idUsuario=${destinatario.id} (remetente=${remetente})`);
-                    (async () => {
-                        try {
-                            await notificationService.createNotification({
-                                titulo: "Nova mensagem no chamado",
-                                mensagem: mensagem,
-                                idUsuario: destinatario.id,
-                                idChamado,
-                            });
-                            await sendNotificationEmail({
-                                to: destinatario.email,
-                                nomeUsuario: destinatario.nome || "Usuário",
-                                idChamado,
-                                assunto: chamado?.assunto || "",
-                                mensagem,
-                            });
-                        } catch (err) {
-                            console.error("[SOCKET] Erro ao enviar notificação/e-mail:", err);
+                    // Verifica se o destinatário está na sala do chamado
+                    let destinatarioNaSala = false;
+                    const room = io.sockets.adapter.rooms.get(`chamado_${idChamado}`);
+                    if (room) {
+                        for (const socketId of room) {
+                            const s = io.sockets.sockets.get(socketId);
+                            if (s && s.data && s.data.userId === destinatario.id) {
+                                destinatarioNaSala = true;
+                                break;
+                            }
                         }
-                    })();
-                    // }
+                    }
+                    if (!destinatarioNaSala) {
+                        console.log(`[SOCKET][NOTIF] Criando notificação para idUsuario=${destinatario.id} (remetente=${remetente})`);
+                        (async () => {
+                            try {
+                                await notificationService.createNotification({
+                                    titulo: "Nova mensagem no chamado",
+                                    mensagem: mensagem,
+                                    idUsuario: destinatario.id,
+                                    idChamado,
+                                });
+                                await sendNotificationEmail({
+                                    to: destinatario.email,
+                                    nomeUsuario: destinatario.nome || "Usuário",
+                                    idChamado,
+                                    assunto: chamado?.assunto || "",
+                                    mensagem,
+                                });
+                            } catch (err) {
+                                console.error("[SOCKET] Erro ao enviar notificação/e-mail:", err);
+                            }
+                        })();
+                    }
                 }
 
                 console.log(`[SOCKET] Mensagem salva e emitida para chamado_${idChamado}:`, mensagemCompleta);
