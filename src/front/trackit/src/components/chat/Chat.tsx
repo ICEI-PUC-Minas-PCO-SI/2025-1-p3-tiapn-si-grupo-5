@@ -9,6 +9,7 @@ import { useUser } from "@/contexts/UserContext";
 import { useChatSocket } from "@/hooks/useChatSocket";
 import type { ChatMessage } from "@/api/chat";
 import { getChatMessages } from "@/api/chat";
+import { markAllNotificationsAsRead } from "@/api/notifications";
 
 interface ChatProps {
     descricao: string;
@@ -58,6 +59,21 @@ export default function Chat({ descricao }: ChatProps) {
         },
         (err) => {
             setError(err.error || "Erro no chat em tempo real");
+        },
+        async () => {
+            // Evento disparado quando entrou na sala do chamado
+            try {
+                if (user && idChamado) {
+                    await markAllNotificationsAsRead(user.id, idChamado);
+                }
+            } catch (e: unknown) {
+                // Opcional: feedback de erro ao marcar notificações
+                if (e instanceof Error) {
+                    setError(e.message || "Erro ao marcar notificações como lidas");
+                } else {
+                    setError("Erro ao marcar notificações como lidas");
+                }
+            }
         }
     );
 

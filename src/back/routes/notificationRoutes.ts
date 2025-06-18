@@ -23,10 +23,10 @@ export class NotificationRoutes {
             }
         );
         this.router.patch(
-            "/notifications/:idNotificacao/read",
+            "/notifications/read-all/:idUsuario/:idChamado",
             autenticarToken,
             (req, res, next) => {
-                this.notificationController.markAsRead(req, res)
+                this.notificationController.markAllAsReadForChamado(req, res)
                     .then(() => undefined)
                     .catch(next);
             }

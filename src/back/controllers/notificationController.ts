@@ -11,10 +11,11 @@ export class NotificationController {
         res.json(notifications);
     }
 
-    async markAsRead(req: Request, res: Response) {
-        const idNotificacao = Number(req.params.idNotificacao);
-        if (!idNotificacao) return res.status(400).json({ error: "idNotificacao obrigatório" });
-        await notificationService.markAsRead(idNotificacao);
+    async markAllAsReadForChamado(req: Request, res: Response) {
+        const idUsuario = Number(req.params.idUsuario);
+        const idChamado = Number(req.params.idChamado);
+        if (!idUsuario || !idChamado) return res.status(400).json({ error: "idUsuario e idChamado obrigatórios" });
+        await notificationService.markAllAsReadForChamado(idUsuario, idChamado);
         res.status(204).send();
     }
 }

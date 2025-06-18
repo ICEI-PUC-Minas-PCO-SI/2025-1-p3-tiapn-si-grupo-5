@@ -72,6 +72,10 @@ export function setupChatSocket(io: SocketIOServer) {
                 socket.data.userId = idUsuario;
                 console.log(`[SOCKET] Usuário ${idUsuario} entrou na sala chamado_${idChamado}`);
                 socket.emit("chat:joined", { idChamado });
+
+                // Marcar notificações pendentes desse chamado como lidas para o usuário
+                await notificationService.markAllAsReadForChamado(idUsuario, idChamado);
+
                 // } else {
                 //     console.log(`[SOCKET] Usuário ${idUsuario} não tem permissão para chamado_${idChamado}`);
                 //     socket.emit("chat:error", { error: "Você não tem permissão para acessar este chat." });

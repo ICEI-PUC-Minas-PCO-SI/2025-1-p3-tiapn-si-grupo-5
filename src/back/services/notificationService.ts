@@ -30,9 +30,13 @@ export class NotificationService {
         });
     }
 
-    async markAsRead(idNotificacao: number) {
-        return prisma.notificacao.update({
-            where: { idNotificacao },
+    async markAllAsReadForChamado(idUsuario: number, idChamado: number) {
+        return prisma.notificacao.updateMany({
+            where: {
+                idUsuario,
+                idChamado,
+                lida: 0
+            },
             data: { lida: 1 }
         });
     }
