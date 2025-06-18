@@ -63,6 +63,11 @@ export type tipousuario = $Result.DefaultSelection<Prisma.$tipousuarioPayload>
  * 
  */
 export type usuario = $Result.DefaultSelection<Prisma.$usuarioPayload>
+/**
+ * Model verificacao
+ * 
+ */
+export type verificacao = $Result.DefaultSelection<Prisma.$verificacaoPayload>
 
 /**
  * Enums
@@ -306,6 +311,16 @@ export class PrismaClient<
     * ```
     */
   get usuario(): Prisma.usuarioDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.verificacao`: Exposes CRUD operations for the **verificacao** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Verificacaos
+    * const verificacaos = await prisma.verificacao.findMany()
+    * ```
+    */
+  get verificacao(): Prisma.verificacaoDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -755,7 +770,8 @@ export namespace Prisma {
     statuschamado: 'statuschamado',
     tipochamado: 'tipochamado',
     tipousuario: 'tipousuario',
-    usuario: 'usuario'
+    usuario: 'usuario',
+    verificacao: 'verificacao'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -774,7 +790,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "chamado" | "gerencia" | "logatividade" | "msgchamado" | "notificacao" | "prioridadechamado" | "statuschamado" | "tipochamado" | "tipousuario" | "usuario"
+      modelProps: "chamado" | "gerencia" | "logatividade" | "msgchamado" | "notificacao" | "prioridadechamado" | "statuschamado" | "tipochamado" | "tipousuario" | "usuario" | "verificacao"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1438,6 +1454,72 @@ export namespace Prisma {
           }
         }
       }
+      verificacao: {
+        payload: Prisma.$verificacaoPayload<ExtArgs>
+        fields: Prisma.verificacaoFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.verificacaoFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$verificacaoPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.verificacaoFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$verificacaoPayload>
+          }
+          findFirst: {
+            args: Prisma.verificacaoFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$verificacaoPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.verificacaoFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$verificacaoPayload>
+          }
+          findMany: {
+            args: Prisma.verificacaoFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$verificacaoPayload>[]
+          }
+          create: {
+            args: Prisma.verificacaoCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$verificacaoPayload>
+          }
+          createMany: {
+            args: Prisma.verificacaoCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          delete: {
+            args: Prisma.verificacaoDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$verificacaoPayload>
+          }
+          update: {
+            args: Prisma.verificacaoUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$verificacaoPayload>
+          }
+          deleteMany: {
+            args: Prisma.verificacaoDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.verificacaoUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.verificacaoUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$verificacaoPayload>
+          }
+          aggregate: {
+            args: Prisma.VerificacaoAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVerificacao>
+          }
+          groupBy: {
+            args: Prisma.verificacaoGroupByArgs<ExtArgs>
+            result: $Utils.Optional<VerificacaoGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.verificacaoCountArgs<ExtArgs>
+            result: $Utils.Optional<VerificacaoCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1532,6 +1614,7 @@ export namespace Prisma {
     tipochamado?: tipochamadoOmit
     tipousuario?: tipousuarioOmit
     usuario?: usuarioOmit
+    verificacao?: verificacaoOmit
   }
 
   /* Types for Logging */
@@ -1826,6 +1909,7 @@ export namespace Prisma {
     logatividade: number
     msgchamado: number
     notificacao: number
+    verificacao: number
   }
 
   export type UsuarioCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1834,6 +1918,7 @@ export namespace Prisma {
     logatividade?: boolean | UsuarioCountOutputTypeCountLogatividadeArgs
     msgchamado?: boolean | UsuarioCountOutputTypeCountMsgchamadoArgs
     notificacao?: boolean | UsuarioCountOutputTypeCountNotificacaoArgs
+    verificacao?: boolean | UsuarioCountOutputTypeCountVerificacaoArgs
   }
 
   // Custom InputTypes
@@ -1880,6 +1965,13 @@ export namespace Prisma {
    */
   export type UsuarioCountOutputTypeCountNotificacaoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: notificacaoWhereInput
+  }
+
+  /**
+   * UsuarioCountOutputType without action
+   */
+  export type UsuarioCountOutputTypeCountVerificacaoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: verificacaoWhereInput
   }
 
 
@@ -11266,6 +11358,7 @@ export namespace Prisma {
     logatividade?: boolean | usuario$logatividadeArgs<ExtArgs>
     msgchamado?: boolean | usuario$msgchamadoArgs<ExtArgs>
     notificacao?: boolean | usuario$notificacaoArgs<ExtArgs>
+    verificacao?: boolean | usuario$verificacaoArgs<ExtArgs>
     gerencia?: boolean | usuario$gerenciaArgs<ExtArgs>
     tipousuario?: boolean | usuario$tipousuarioArgs<ExtArgs>
     _count?: boolean | UsuarioCountOutputTypeDefaultArgs<ExtArgs>
@@ -11294,6 +11387,7 @@ export namespace Prisma {
     logatividade?: boolean | usuario$logatividadeArgs<ExtArgs>
     msgchamado?: boolean | usuario$msgchamadoArgs<ExtArgs>
     notificacao?: boolean | usuario$notificacaoArgs<ExtArgs>
+    verificacao?: boolean | usuario$verificacaoArgs<ExtArgs>
     gerencia?: boolean | usuario$gerenciaArgs<ExtArgs>
     tipousuario?: boolean | usuario$tipousuarioArgs<ExtArgs>
     _count?: boolean | UsuarioCountOutputTypeDefaultArgs<ExtArgs>
@@ -11307,6 +11401,7 @@ export namespace Prisma {
       logatividade: Prisma.$logatividadePayload<ExtArgs>[]
       msgchamado: Prisma.$msgchamadoPayload<ExtArgs>[]
       notificacao: Prisma.$notificacaoPayload<ExtArgs>[]
+      verificacao: Prisma.$verificacaoPayload<ExtArgs>[]
       gerencia: Prisma.$gerenciaPayload<ExtArgs> | null
       tipousuario: Prisma.$tipousuarioPayload<ExtArgs> | null
     }
@@ -11667,6 +11762,7 @@ export namespace Prisma {
     logatividade<T extends usuario$logatividadeArgs<ExtArgs> = {}>(args?: Subset<T, usuario$logatividadeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$logatividadePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     msgchamado<T extends usuario$msgchamadoArgs<ExtArgs> = {}>(args?: Subset<T, usuario$msgchamadoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$msgchamadoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notificacao<T extends usuario$notificacaoArgs<ExtArgs> = {}>(args?: Subset<T, usuario$notificacaoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notificacaoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    verificacao<T extends usuario$verificacaoArgs<ExtArgs> = {}>(args?: Subset<T, usuario$verificacaoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$verificacaoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     gerencia<T extends usuario$gerenciaArgs<ExtArgs> = {}>(args?: Subset<T, usuario$gerenciaArgs<ExtArgs>>): Prisma__gerenciaClient<$Result.GetResult<Prisma.$gerenciaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     tipousuario<T extends usuario$tipousuarioArgs<ExtArgs> = {}>(args?: Subset<T, usuario$tipousuarioArgs<ExtArgs>>): Prisma__tipousuarioClient<$Result.GetResult<Prisma.$tipousuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
@@ -12172,6 +12268,30 @@ export namespace Prisma {
   }
 
   /**
+   * usuario.verificacao
+   */
+  export type usuario$verificacaoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the verificacao
+     */
+    select?: verificacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the verificacao
+     */
+    omit?: verificacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: verificacaoInclude<ExtArgs> | null
+    where?: verificacaoWhereInput
+    orderBy?: verificacaoOrderByWithRelationInput | verificacaoOrderByWithRelationInput[]
+    cursor?: verificacaoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VerificacaoScalarFieldEnum | VerificacaoScalarFieldEnum[]
+  }
+
+  /**
    * usuario.gerencia
    */
   export type usuario$gerenciaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12225,6 +12345,984 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: usuarioInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model verificacao
+   */
+
+  export type AggregateVerificacao = {
+    _count: VerificacaoCountAggregateOutputType | null
+    _avg: VerificacaoAvgAggregateOutputType | null
+    _sum: VerificacaoSumAggregateOutputType | null
+    _min: VerificacaoMinAggregateOutputType | null
+    _max: VerificacaoMaxAggregateOutputType | null
+  }
+
+  export type VerificacaoAvgAggregateOutputType = {
+    idVerificacao: number | null
+    idUsuario: number | null
+  }
+
+  export type VerificacaoSumAggregateOutputType = {
+    idVerificacao: number | null
+    idUsuario: number | null
+  }
+
+  export type VerificacaoMinAggregateOutputType = {
+    idVerificacao: number | null
+    idUsuario: number | null
+    token: string | null
+    tipo: string | null
+    criadoEm: Date | null
+    expiraEm: Date | null
+  }
+
+  export type VerificacaoMaxAggregateOutputType = {
+    idVerificacao: number | null
+    idUsuario: number | null
+    token: string | null
+    tipo: string | null
+    criadoEm: Date | null
+    expiraEm: Date | null
+  }
+
+  export type VerificacaoCountAggregateOutputType = {
+    idVerificacao: number
+    idUsuario: number
+    token: number
+    tipo: number
+    criadoEm: number
+    expiraEm: number
+    _all: number
+  }
+
+
+  export type VerificacaoAvgAggregateInputType = {
+    idVerificacao?: true
+    idUsuario?: true
+  }
+
+  export type VerificacaoSumAggregateInputType = {
+    idVerificacao?: true
+    idUsuario?: true
+  }
+
+  export type VerificacaoMinAggregateInputType = {
+    idVerificacao?: true
+    idUsuario?: true
+    token?: true
+    tipo?: true
+    criadoEm?: true
+    expiraEm?: true
+  }
+
+  export type VerificacaoMaxAggregateInputType = {
+    idVerificacao?: true
+    idUsuario?: true
+    token?: true
+    tipo?: true
+    criadoEm?: true
+    expiraEm?: true
+  }
+
+  export type VerificacaoCountAggregateInputType = {
+    idVerificacao?: true
+    idUsuario?: true
+    token?: true
+    tipo?: true
+    criadoEm?: true
+    expiraEm?: true
+    _all?: true
+  }
+
+  export type VerificacaoAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which verificacao to aggregate.
+     */
+    where?: verificacaoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of verificacaos to fetch.
+     */
+    orderBy?: verificacaoOrderByWithRelationInput | verificacaoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: verificacaoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` verificacaos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` verificacaos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned verificacaos
+    **/
+    _count?: true | VerificacaoCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: VerificacaoAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: VerificacaoSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: VerificacaoMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: VerificacaoMaxAggregateInputType
+  }
+
+  export type GetVerificacaoAggregateType<T extends VerificacaoAggregateArgs> = {
+        [P in keyof T & keyof AggregateVerificacao]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVerificacao[P]>
+      : GetScalarType<T[P], AggregateVerificacao[P]>
+  }
+
+
+
+
+  export type verificacaoGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: verificacaoWhereInput
+    orderBy?: verificacaoOrderByWithAggregationInput | verificacaoOrderByWithAggregationInput[]
+    by: VerificacaoScalarFieldEnum[] | VerificacaoScalarFieldEnum
+    having?: verificacaoScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: VerificacaoCountAggregateInputType | true
+    _avg?: VerificacaoAvgAggregateInputType
+    _sum?: VerificacaoSumAggregateInputType
+    _min?: VerificacaoMinAggregateInputType
+    _max?: VerificacaoMaxAggregateInputType
+  }
+
+  export type VerificacaoGroupByOutputType = {
+    idVerificacao: number
+    idUsuario: number
+    token: string
+    tipo: string | null
+    criadoEm: Date
+    expiraEm: Date | null
+    _count: VerificacaoCountAggregateOutputType | null
+    _avg: VerificacaoAvgAggregateOutputType | null
+    _sum: VerificacaoSumAggregateOutputType | null
+    _min: VerificacaoMinAggregateOutputType | null
+    _max: VerificacaoMaxAggregateOutputType | null
+  }
+
+  type GetVerificacaoGroupByPayload<T extends verificacaoGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<VerificacaoGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof VerificacaoGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], VerificacaoGroupByOutputType[P]>
+            : GetScalarType<T[P], VerificacaoGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type verificacaoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    idVerificacao?: boolean
+    idUsuario?: boolean
+    token?: boolean
+    tipo?: boolean
+    criadoEm?: boolean
+    expiraEm?: boolean
+    usuario?: boolean | usuarioDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["verificacao"]>
+
+
+
+  export type verificacaoSelectScalar = {
+    idVerificacao?: boolean
+    idUsuario?: boolean
+    token?: boolean
+    tipo?: boolean
+    criadoEm?: boolean
+    expiraEm?: boolean
+  }
+
+  export type verificacaoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"idVerificacao" | "idUsuario" | "token" | "tipo" | "criadoEm" | "expiraEm", ExtArgs["result"]["verificacao"]>
+  export type verificacaoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    usuario?: boolean | usuarioDefaultArgs<ExtArgs>
+  }
+
+  export type $verificacaoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "verificacao"
+    objects: {
+      usuario: Prisma.$usuarioPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      idVerificacao: number
+      idUsuario: number
+      token: string
+      tipo: string | null
+      criadoEm: Date
+      expiraEm: Date | null
+    }, ExtArgs["result"]["verificacao"]>
+    composites: {}
+  }
+
+  type verificacaoGetPayload<S extends boolean | null | undefined | verificacaoDefaultArgs> = $Result.GetResult<Prisma.$verificacaoPayload, S>
+
+  type verificacaoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<verificacaoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: VerificacaoCountAggregateInputType | true
+    }
+
+  export interface verificacaoDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['verificacao'], meta: { name: 'verificacao' } }
+    /**
+     * Find zero or one Verificacao that matches the filter.
+     * @param {verificacaoFindUniqueArgs} args - Arguments to find a Verificacao
+     * @example
+     * // Get one Verificacao
+     * const verificacao = await prisma.verificacao.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends verificacaoFindUniqueArgs>(args: SelectSubset<T, verificacaoFindUniqueArgs<ExtArgs>>): Prisma__verificacaoClient<$Result.GetResult<Prisma.$verificacaoPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Verificacao that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {verificacaoFindUniqueOrThrowArgs} args - Arguments to find a Verificacao
+     * @example
+     * // Get one Verificacao
+     * const verificacao = await prisma.verificacao.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends verificacaoFindUniqueOrThrowArgs>(args: SelectSubset<T, verificacaoFindUniqueOrThrowArgs<ExtArgs>>): Prisma__verificacaoClient<$Result.GetResult<Prisma.$verificacaoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Verificacao that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {verificacaoFindFirstArgs} args - Arguments to find a Verificacao
+     * @example
+     * // Get one Verificacao
+     * const verificacao = await prisma.verificacao.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends verificacaoFindFirstArgs>(args?: SelectSubset<T, verificacaoFindFirstArgs<ExtArgs>>): Prisma__verificacaoClient<$Result.GetResult<Prisma.$verificacaoPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Verificacao that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {verificacaoFindFirstOrThrowArgs} args - Arguments to find a Verificacao
+     * @example
+     * // Get one Verificacao
+     * const verificacao = await prisma.verificacao.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends verificacaoFindFirstOrThrowArgs>(args?: SelectSubset<T, verificacaoFindFirstOrThrowArgs<ExtArgs>>): Prisma__verificacaoClient<$Result.GetResult<Prisma.$verificacaoPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Verificacaos that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {verificacaoFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Verificacaos
+     * const verificacaos = await prisma.verificacao.findMany()
+     * 
+     * // Get first 10 Verificacaos
+     * const verificacaos = await prisma.verificacao.findMany({ take: 10 })
+     * 
+     * // Only select the `idVerificacao`
+     * const verificacaoWithIdVerificacaoOnly = await prisma.verificacao.findMany({ select: { idVerificacao: true } })
+     * 
+     */
+    findMany<T extends verificacaoFindManyArgs>(args?: SelectSubset<T, verificacaoFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$verificacaoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Verificacao.
+     * @param {verificacaoCreateArgs} args - Arguments to create a Verificacao.
+     * @example
+     * // Create one Verificacao
+     * const Verificacao = await prisma.verificacao.create({
+     *   data: {
+     *     // ... data to create a Verificacao
+     *   }
+     * })
+     * 
+     */
+    create<T extends verificacaoCreateArgs>(args: SelectSubset<T, verificacaoCreateArgs<ExtArgs>>): Prisma__verificacaoClient<$Result.GetResult<Prisma.$verificacaoPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Verificacaos.
+     * @param {verificacaoCreateManyArgs} args - Arguments to create many Verificacaos.
+     * @example
+     * // Create many Verificacaos
+     * const verificacao = await prisma.verificacao.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends verificacaoCreateManyArgs>(args?: SelectSubset<T, verificacaoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Verificacao.
+     * @param {verificacaoDeleteArgs} args - Arguments to delete one Verificacao.
+     * @example
+     * // Delete one Verificacao
+     * const Verificacao = await prisma.verificacao.delete({
+     *   where: {
+     *     // ... filter to delete one Verificacao
+     *   }
+     * })
+     * 
+     */
+    delete<T extends verificacaoDeleteArgs>(args: SelectSubset<T, verificacaoDeleteArgs<ExtArgs>>): Prisma__verificacaoClient<$Result.GetResult<Prisma.$verificacaoPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Verificacao.
+     * @param {verificacaoUpdateArgs} args - Arguments to update one Verificacao.
+     * @example
+     * // Update one Verificacao
+     * const verificacao = await prisma.verificacao.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends verificacaoUpdateArgs>(args: SelectSubset<T, verificacaoUpdateArgs<ExtArgs>>): Prisma__verificacaoClient<$Result.GetResult<Prisma.$verificacaoPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Verificacaos.
+     * @param {verificacaoDeleteManyArgs} args - Arguments to filter Verificacaos to delete.
+     * @example
+     * // Delete a few Verificacaos
+     * const { count } = await prisma.verificacao.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends verificacaoDeleteManyArgs>(args?: SelectSubset<T, verificacaoDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Verificacaos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {verificacaoUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Verificacaos
+     * const verificacao = await prisma.verificacao.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends verificacaoUpdateManyArgs>(args: SelectSubset<T, verificacaoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Verificacao.
+     * @param {verificacaoUpsertArgs} args - Arguments to update or create a Verificacao.
+     * @example
+     * // Update or create a Verificacao
+     * const verificacao = await prisma.verificacao.upsert({
+     *   create: {
+     *     // ... data to create a Verificacao
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Verificacao we want to update
+     *   }
+     * })
+     */
+    upsert<T extends verificacaoUpsertArgs>(args: SelectSubset<T, verificacaoUpsertArgs<ExtArgs>>): Prisma__verificacaoClient<$Result.GetResult<Prisma.$verificacaoPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Verificacaos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {verificacaoCountArgs} args - Arguments to filter Verificacaos to count.
+     * @example
+     * // Count the number of Verificacaos
+     * const count = await prisma.verificacao.count({
+     *   where: {
+     *     // ... the filter for the Verificacaos we want to count
+     *   }
+     * })
+    **/
+    count<T extends verificacaoCountArgs>(
+      args?: Subset<T, verificacaoCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], VerificacaoCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Verificacao.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VerificacaoAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends VerificacaoAggregateArgs>(args: Subset<T, VerificacaoAggregateArgs>): Prisma.PrismaPromise<GetVerificacaoAggregateType<T>>
+
+    /**
+     * Group by Verificacao.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {verificacaoGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends verificacaoGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: verificacaoGroupByArgs['orderBy'] }
+        : { orderBy?: verificacaoGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, verificacaoGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVerificacaoGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the verificacao model
+   */
+  readonly fields: verificacaoFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for verificacao.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__verificacaoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    usuario<T extends usuarioDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usuarioDefaultArgs<ExtArgs>>): Prisma__usuarioClient<$Result.GetResult<Prisma.$usuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the verificacao model
+   */
+  interface verificacaoFieldRefs {
+    readonly idVerificacao: FieldRef<"verificacao", 'Int'>
+    readonly idUsuario: FieldRef<"verificacao", 'Int'>
+    readonly token: FieldRef<"verificacao", 'String'>
+    readonly tipo: FieldRef<"verificacao", 'String'>
+    readonly criadoEm: FieldRef<"verificacao", 'DateTime'>
+    readonly expiraEm: FieldRef<"verificacao", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * verificacao findUnique
+   */
+  export type verificacaoFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the verificacao
+     */
+    select?: verificacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the verificacao
+     */
+    omit?: verificacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: verificacaoInclude<ExtArgs> | null
+    /**
+     * Filter, which verificacao to fetch.
+     */
+    where: verificacaoWhereUniqueInput
+  }
+
+  /**
+   * verificacao findUniqueOrThrow
+   */
+  export type verificacaoFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the verificacao
+     */
+    select?: verificacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the verificacao
+     */
+    omit?: verificacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: verificacaoInclude<ExtArgs> | null
+    /**
+     * Filter, which verificacao to fetch.
+     */
+    where: verificacaoWhereUniqueInput
+  }
+
+  /**
+   * verificacao findFirst
+   */
+  export type verificacaoFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the verificacao
+     */
+    select?: verificacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the verificacao
+     */
+    omit?: verificacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: verificacaoInclude<ExtArgs> | null
+    /**
+     * Filter, which verificacao to fetch.
+     */
+    where?: verificacaoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of verificacaos to fetch.
+     */
+    orderBy?: verificacaoOrderByWithRelationInput | verificacaoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for verificacaos.
+     */
+    cursor?: verificacaoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` verificacaos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` verificacaos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of verificacaos.
+     */
+    distinct?: VerificacaoScalarFieldEnum | VerificacaoScalarFieldEnum[]
+  }
+
+  /**
+   * verificacao findFirstOrThrow
+   */
+  export type verificacaoFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the verificacao
+     */
+    select?: verificacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the verificacao
+     */
+    omit?: verificacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: verificacaoInclude<ExtArgs> | null
+    /**
+     * Filter, which verificacao to fetch.
+     */
+    where?: verificacaoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of verificacaos to fetch.
+     */
+    orderBy?: verificacaoOrderByWithRelationInput | verificacaoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for verificacaos.
+     */
+    cursor?: verificacaoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` verificacaos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` verificacaos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of verificacaos.
+     */
+    distinct?: VerificacaoScalarFieldEnum | VerificacaoScalarFieldEnum[]
+  }
+
+  /**
+   * verificacao findMany
+   */
+  export type verificacaoFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the verificacao
+     */
+    select?: verificacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the verificacao
+     */
+    omit?: verificacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: verificacaoInclude<ExtArgs> | null
+    /**
+     * Filter, which verificacaos to fetch.
+     */
+    where?: verificacaoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of verificacaos to fetch.
+     */
+    orderBy?: verificacaoOrderByWithRelationInput | verificacaoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing verificacaos.
+     */
+    cursor?: verificacaoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` verificacaos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` verificacaos.
+     */
+    skip?: number
+    distinct?: VerificacaoScalarFieldEnum | VerificacaoScalarFieldEnum[]
+  }
+
+  /**
+   * verificacao create
+   */
+  export type verificacaoCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the verificacao
+     */
+    select?: verificacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the verificacao
+     */
+    omit?: verificacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: verificacaoInclude<ExtArgs> | null
+    /**
+     * The data needed to create a verificacao.
+     */
+    data: XOR<verificacaoCreateInput, verificacaoUncheckedCreateInput>
+  }
+
+  /**
+   * verificacao createMany
+   */
+  export type verificacaoCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many verificacaos.
+     */
+    data: verificacaoCreateManyInput | verificacaoCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * verificacao update
+   */
+  export type verificacaoUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the verificacao
+     */
+    select?: verificacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the verificacao
+     */
+    omit?: verificacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: verificacaoInclude<ExtArgs> | null
+    /**
+     * The data needed to update a verificacao.
+     */
+    data: XOR<verificacaoUpdateInput, verificacaoUncheckedUpdateInput>
+    /**
+     * Choose, which verificacao to update.
+     */
+    where: verificacaoWhereUniqueInput
+  }
+
+  /**
+   * verificacao updateMany
+   */
+  export type verificacaoUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update verificacaos.
+     */
+    data: XOR<verificacaoUpdateManyMutationInput, verificacaoUncheckedUpdateManyInput>
+    /**
+     * Filter which verificacaos to update
+     */
+    where?: verificacaoWhereInput
+    /**
+     * Limit how many verificacaos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * verificacao upsert
+   */
+  export type verificacaoUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the verificacao
+     */
+    select?: verificacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the verificacao
+     */
+    omit?: verificacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: verificacaoInclude<ExtArgs> | null
+    /**
+     * The filter to search for the verificacao to update in case it exists.
+     */
+    where: verificacaoWhereUniqueInput
+    /**
+     * In case the verificacao found by the `where` argument doesn't exist, create a new verificacao with this data.
+     */
+    create: XOR<verificacaoCreateInput, verificacaoUncheckedCreateInput>
+    /**
+     * In case the verificacao was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<verificacaoUpdateInput, verificacaoUncheckedUpdateInput>
+  }
+
+  /**
+   * verificacao delete
+   */
+  export type verificacaoDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the verificacao
+     */
+    select?: verificacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the verificacao
+     */
+    omit?: verificacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: verificacaoInclude<ExtArgs> | null
+    /**
+     * Filter which verificacao to delete.
+     */
+    where: verificacaoWhereUniqueInput
+  }
+
+  /**
+   * verificacao deleteMany
+   */
+  export type verificacaoDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which verificacaos to delete
+     */
+    where?: verificacaoWhereInput
+    /**
+     * Limit how many verificacaos to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * verificacao without action
+   */
+  export type verificacaoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the verificacao
+     */
+    select?: verificacaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the verificacao
+     */
+    omit?: verificacaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: verificacaoInclude<ExtArgs> | null
   }
 
 
@@ -12362,6 +13460,18 @@ export namespace Prisma {
   export type UsuarioScalarFieldEnum = (typeof UsuarioScalarFieldEnum)[keyof typeof UsuarioScalarFieldEnum]
 
 
+  export const VerificacaoScalarFieldEnum: {
+    idVerificacao: 'idVerificacao',
+    idUsuario: 'idUsuario',
+    token: 'token',
+    tipo: 'tipo',
+    criadoEm: 'criadoEm',
+    expiraEm: 'expiraEm'
+  };
+
+  export type VerificacaoScalarFieldEnum = (typeof VerificacaoScalarFieldEnum)[keyof typeof VerificacaoScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -12460,6 +13570,14 @@ export namespace Prisma {
   };
 
   export type usuarioOrderByRelevanceFieldEnum = (typeof usuarioOrderByRelevanceFieldEnum)[keyof typeof usuarioOrderByRelevanceFieldEnum]
+
+
+  export const verificacaoOrderByRelevanceFieldEnum: {
+    token: 'token',
+    tipo: 'tipo'
+  };
+
+  export type verificacaoOrderByRelevanceFieldEnum = (typeof verificacaoOrderByRelevanceFieldEnum)[keyof typeof verificacaoOrderByRelevanceFieldEnum]
 
 
   /**
@@ -13091,6 +14209,7 @@ export namespace Prisma {
     logatividade?: LogatividadeListRelationFilter
     msgchamado?: MsgchamadoListRelationFilter
     notificacao?: NotificacaoListRelationFilter
+    verificacao?: VerificacaoListRelationFilter
     gerencia?: XOR<GerenciaNullableScalarRelationFilter, gerenciaWhereInput> | null
     tipousuario?: XOR<TipousuarioNullableScalarRelationFilter, tipousuarioWhereInput> | null
   }
@@ -13112,6 +14231,7 @@ export namespace Prisma {
     logatividade?: logatividadeOrderByRelationAggregateInput
     msgchamado?: msgchamadoOrderByRelationAggregateInput
     notificacao?: notificacaoOrderByRelationAggregateInput
+    verificacao?: verificacaoOrderByRelationAggregateInput
     gerencia?: gerenciaOrderByWithRelationInput
     tipousuario?: tipousuarioOrderByWithRelationInput
     _relevance?: usuarioOrderByRelevanceInput
@@ -13137,6 +14257,7 @@ export namespace Prisma {
     logatividade?: LogatividadeListRelationFilter
     msgchamado?: MsgchamadoListRelationFilter
     notificacao?: NotificacaoListRelationFilter
+    verificacao?: VerificacaoListRelationFilter
     gerencia?: XOR<GerenciaNullableScalarRelationFilter, gerenciaWhereInput> | null
     tipousuario?: XOR<TipousuarioNullableScalarRelationFilter, tipousuarioWhereInput> | null
   }, "idUsuario" | "matricula" | "email">
@@ -13175,6 +14296,69 @@ export namespace Prisma {
     fotoPerfil?: StringNullableWithAggregatesFilter<"usuario"> | string | null
     idGerencia?: IntNullableWithAggregatesFilter<"usuario"> | number | null
     idTipoUsuario?: IntNullableWithAggregatesFilter<"usuario"> | number | null
+  }
+
+  export type verificacaoWhereInput = {
+    AND?: verificacaoWhereInput | verificacaoWhereInput[]
+    OR?: verificacaoWhereInput[]
+    NOT?: verificacaoWhereInput | verificacaoWhereInput[]
+    idVerificacao?: IntFilter<"verificacao"> | number
+    idUsuario?: IntFilter<"verificacao"> | number
+    token?: StringFilter<"verificacao"> | string
+    tipo?: StringNullableFilter<"verificacao"> | string | null
+    criadoEm?: DateTimeFilter<"verificacao"> | Date | string
+    expiraEm?: DateTimeNullableFilter<"verificacao"> | Date | string | null
+    usuario?: XOR<UsuarioScalarRelationFilter, usuarioWhereInput>
+  }
+
+  export type verificacaoOrderByWithRelationInput = {
+    idVerificacao?: SortOrder
+    idUsuario?: SortOrder
+    token?: SortOrder
+    tipo?: SortOrderInput | SortOrder
+    criadoEm?: SortOrder
+    expiraEm?: SortOrderInput | SortOrder
+    usuario?: usuarioOrderByWithRelationInput
+    _relevance?: verificacaoOrderByRelevanceInput
+  }
+
+  export type verificacaoWhereUniqueInput = Prisma.AtLeast<{
+    idVerificacao?: number
+    token?: string
+    AND?: verificacaoWhereInput | verificacaoWhereInput[]
+    OR?: verificacaoWhereInput[]
+    NOT?: verificacaoWhereInput | verificacaoWhereInput[]
+    idUsuario?: IntFilter<"verificacao"> | number
+    tipo?: StringNullableFilter<"verificacao"> | string | null
+    criadoEm?: DateTimeFilter<"verificacao"> | Date | string
+    expiraEm?: DateTimeNullableFilter<"verificacao"> | Date | string | null
+    usuario?: XOR<UsuarioScalarRelationFilter, usuarioWhereInput>
+  }, "idVerificacao" | "token">
+
+  export type verificacaoOrderByWithAggregationInput = {
+    idVerificacao?: SortOrder
+    idUsuario?: SortOrder
+    token?: SortOrder
+    tipo?: SortOrderInput | SortOrder
+    criadoEm?: SortOrder
+    expiraEm?: SortOrderInput | SortOrder
+    _count?: verificacaoCountOrderByAggregateInput
+    _avg?: verificacaoAvgOrderByAggregateInput
+    _max?: verificacaoMaxOrderByAggregateInput
+    _min?: verificacaoMinOrderByAggregateInput
+    _sum?: verificacaoSumOrderByAggregateInput
+  }
+
+  export type verificacaoScalarWhereWithAggregatesInput = {
+    AND?: verificacaoScalarWhereWithAggregatesInput | verificacaoScalarWhereWithAggregatesInput[]
+    OR?: verificacaoScalarWhereWithAggregatesInput[]
+    NOT?: verificacaoScalarWhereWithAggregatesInput | verificacaoScalarWhereWithAggregatesInput[]
+    idVerificacao?: IntWithAggregatesFilter<"verificacao"> | number
+    idUsuario?: IntWithAggregatesFilter<"verificacao"> | number
+    token?: StringWithAggregatesFilter<"verificacao"> | string
+    tipo?: StringNullableWithAggregatesFilter<"verificacao"> | string | null
+    criadoEm?: DateTimeWithAggregatesFilter<"verificacao"> | Date | string
+    expiraEm?: DateTimeNullableWithAggregatesFilter<"verificacao"> | Date | string | null
   }
 
   export type chamadoCreateInput = {
@@ -13714,6 +14898,7 @@ export namespace Prisma {
     logatividade?: logatividadeCreateNestedManyWithoutUsuarioInput
     msgchamado?: msgchamadoCreateNestedManyWithoutUsuarioInput
     notificacao?: notificacaoCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoCreateNestedManyWithoutUsuarioInput
     gerencia?: gerenciaCreateNestedOneWithoutUsuarioInput
     tipousuario?: tipousuarioCreateNestedOneWithoutUsuarioInput
   }
@@ -13735,6 +14920,7 @@ export namespace Prisma {
     logatividade?: logatividadeUncheckedCreateNestedManyWithoutUsuarioInput
     msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutUsuarioInput
     notificacao?: notificacaoUncheckedCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuarioUpdateInput = {
@@ -13751,6 +14937,7 @@ export namespace Prisma {
     logatividade?: logatividadeUpdateManyWithoutUsuarioNestedInput
     msgchamado?: msgchamadoUpdateManyWithoutUsuarioNestedInput
     notificacao?: notificacaoUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUpdateManyWithoutUsuarioNestedInput
     gerencia?: gerenciaUpdateOneWithoutUsuarioNestedInput
     tipousuario?: tipousuarioUpdateOneWithoutUsuarioNestedInput
   }
@@ -13772,6 +14959,7 @@ export namespace Prisma {
     logatividade?: logatividadeUncheckedUpdateManyWithoutUsuarioNestedInput
     msgchamado?: msgchamadoUncheckedUpdateManyWithoutUsuarioNestedInput
     notificacao?: notificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type usuarioCreateManyInput = {
@@ -13811,6 +14999,65 @@ export namespace Prisma {
     fotoPerfil?: NullableStringFieldUpdateOperationsInput | string | null
     idGerencia?: NullableIntFieldUpdateOperationsInput | number | null
     idTipoUsuario?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type verificacaoCreateInput = {
+    token: string
+    tipo?: string | null
+    criadoEm?: Date | string
+    expiraEm?: Date | string | null
+    usuario: usuarioCreateNestedOneWithoutVerificacaoInput
+  }
+
+  export type verificacaoUncheckedCreateInput = {
+    idVerificacao?: number
+    idUsuario: number
+    token: string
+    tipo?: string | null
+    criadoEm?: Date | string
+    expiraEm?: Date | string | null
+  }
+
+  export type verificacaoUpdateInput = {
+    token?: StringFieldUpdateOperationsInput | string
+    tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiraEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usuario?: usuarioUpdateOneRequiredWithoutVerificacaoNestedInput
+  }
+
+  export type verificacaoUncheckedUpdateInput = {
+    idVerificacao?: IntFieldUpdateOperationsInput | number
+    idUsuario?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiraEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type verificacaoCreateManyInput = {
+    idVerificacao?: number
+    idUsuario: number
+    token: string
+    tipo?: string | null
+    criadoEm?: Date | string
+    expiraEm?: Date | string | null
+  }
+
+  export type verificacaoUpdateManyMutationInput = {
+    token?: StringFieldUpdateOperationsInput | string
+    tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiraEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type verificacaoUncheckedUpdateManyInput = {
+    idVerificacao?: IntFieldUpdateOperationsInput | number
+    idUsuario?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiraEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -14470,6 +15717,12 @@ export namespace Prisma {
     none?: logatividadeWhereInput
   }
 
+  export type VerificacaoListRelationFilter = {
+    every?: verificacaoWhereInput
+    some?: verificacaoWhereInput
+    none?: verificacaoWhereInput
+  }
+
   export type GerenciaNullableScalarRelationFilter = {
     is?: gerenciaWhereInput | null
     isNot?: gerenciaWhereInput | null
@@ -14481,6 +15734,10 @@ export namespace Prisma {
   }
 
   export type logatividadeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type verificacaoOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -14544,6 +15801,49 @@ export namespace Prisma {
     ativo?: SortOrder
     idGerencia?: SortOrder
     idTipoUsuario?: SortOrder
+  }
+
+  export type verificacaoOrderByRelevanceInput = {
+    fields: verificacaoOrderByRelevanceFieldEnum | verificacaoOrderByRelevanceFieldEnum[]
+    sort: SortOrder
+    search: string
+  }
+
+  export type verificacaoCountOrderByAggregateInput = {
+    idVerificacao?: SortOrder
+    idUsuario?: SortOrder
+    token?: SortOrder
+    tipo?: SortOrder
+    criadoEm?: SortOrder
+    expiraEm?: SortOrder
+  }
+
+  export type verificacaoAvgOrderByAggregateInput = {
+    idVerificacao?: SortOrder
+    idUsuario?: SortOrder
+  }
+
+  export type verificacaoMaxOrderByAggregateInput = {
+    idVerificacao?: SortOrder
+    idUsuario?: SortOrder
+    token?: SortOrder
+    tipo?: SortOrder
+    criadoEm?: SortOrder
+    expiraEm?: SortOrder
+  }
+
+  export type verificacaoMinOrderByAggregateInput = {
+    idVerificacao?: SortOrder
+    idUsuario?: SortOrder
+    token?: SortOrder
+    tipo?: SortOrder
+    criadoEm?: SortOrder
+    expiraEm?: SortOrder
+  }
+
+  export type verificacaoSumOrderByAggregateInput = {
+    idVerificacao?: SortOrder
+    idUsuario?: SortOrder
   }
 
   export type usuarioCreateNestedOneWithoutChamado_chamado_idSolicitanteTousuarioInput = {
@@ -15065,6 +16365,13 @@ export namespace Prisma {
     connect?: notificacaoWhereUniqueInput | notificacaoWhereUniqueInput[]
   }
 
+  export type verificacaoCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<verificacaoCreateWithoutUsuarioInput, verificacaoUncheckedCreateWithoutUsuarioInput> | verificacaoCreateWithoutUsuarioInput[] | verificacaoUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: verificacaoCreateOrConnectWithoutUsuarioInput | verificacaoCreateOrConnectWithoutUsuarioInput[]
+    createMany?: verificacaoCreateManyUsuarioInputEnvelope
+    connect?: verificacaoWhereUniqueInput | verificacaoWhereUniqueInput[]
+  }
+
   export type gerenciaCreateNestedOneWithoutUsuarioInput = {
     create?: XOR<gerenciaCreateWithoutUsuarioInput, gerenciaUncheckedCreateWithoutUsuarioInput>
     connectOrCreate?: gerenciaCreateOrConnectWithoutUsuarioInput
@@ -15110,6 +16417,13 @@ export namespace Prisma {
     connectOrCreate?: notificacaoCreateOrConnectWithoutUsuarioInput | notificacaoCreateOrConnectWithoutUsuarioInput[]
     createMany?: notificacaoCreateManyUsuarioInputEnvelope
     connect?: notificacaoWhereUniqueInput | notificacaoWhereUniqueInput[]
+  }
+
+  export type verificacaoUncheckedCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<verificacaoCreateWithoutUsuarioInput, verificacaoUncheckedCreateWithoutUsuarioInput> | verificacaoCreateWithoutUsuarioInput[] | verificacaoUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: verificacaoCreateOrConnectWithoutUsuarioInput | verificacaoCreateOrConnectWithoutUsuarioInput[]
+    createMany?: verificacaoCreateManyUsuarioInputEnvelope
+    connect?: verificacaoWhereUniqueInput | verificacaoWhereUniqueInput[]
   }
 
   export type chamadoUpdateManyWithoutUsuario_chamado_idSolicitanteTousuarioNestedInput = {
@@ -15180,6 +16494,20 @@ export namespace Prisma {
     update?: notificacaoUpdateWithWhereUniqueWithoutUsuarioInput | notificacaoUpdateWithWhereUniqueWithoutUsuarioInput[]
     updateMany?: notificacaoUpdateManyWithWhereWithoutUsuarioInput | notificacaoUpdateManyWithWhereWithoutUsuarioInput[]
     deleteMany?: notificacaoScalarWhereInput | notificacaoScalarWhereInput[]
+  }
+
+  export type verificacaoUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<verificacaoCreateWithoutUsuarioInput, verificacaoUncheckedCreateWithoutUsuarioInput> | verificacaoCreateWithoutUsuarioInput[] | verificacaoUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: verificacaoCreateOrConnectWithoutUsuarioInput | verificacaoCreateOrConnectWithoutUsuarioInput[]
+    upsert?: verificacaoUpsertWithWhereUniqueWithoutUsuarioInput | verificacaoUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: verificacaoCreateManyUsuarioInputEnvelope
+    set?: verificacaoWhereUniqueInput | verificacaoWhereUniqueInput[]
+    disconnect?: verificacaoWhereUniqueInput | verificacaoWhereUniqueInput[]
+    delete?: verificacaoWhereUniqueInput | verificacaoWhereUniqueInput[]
+    connect?: verificacaoWhereUniqueInput | verificacaoWhereUniqueInput[]
+    update?: verificacaoUpdateWithWhereUniqueWithoutUsuarioInput | verificacaoUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: verificacaoUpdateManyWithWhereWithoutUsuarioInput | verificacaoUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: verificacaoScalarWhereInput | verificacaoScalarWhereInput[]
   }
 
   export type gerenciaUpdateOneWithoutUsuarioNestedInput = {
@@ -15270,6 +16598,34 @@ export namespace Prisma {
     update?: notificacaoUpdateWithWhereUniqueWithoutUsuarioInput | notificacaoUpdateWithWhereUniqueWithoutUsuarioInput[]
     updateMany?: notificacaoUpdateManyWithWhereWithoutUsuarioInput | notificacaoUpdateManyWithWhereWithoutUsuarioInput[]
     deleteMany?: notificacaoScalarWhereInput | notificacaoScalarWhereInput[]
+  }
+
+  export type verificacaoUncheckedUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<verificacaoCreateWithoutUsuarioInput, verificacaoUncheckedCreateWithoutUsuarioInput> | verificacaoCreateWithoutUsuarioInput[] | verificacaoUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: verificacaoCreateOrConnectWithoutUsuarioInput | verificacaoCreateOrConnectWithoutUsuarioInput[]
+    upsert?: verificacaoUpsertWithWhereUniqueWithoutUsuarioInput | verificacaoUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: verificacaoCreateManyUsuarioInputEnvelope
+    set?: verificacaoWhereUniqueInput | verificacaoWhereUniqueInput[]
+    disconnect?: verificacaoWhereUniqueInput | verificacaoWhereUniqueInput[]
+    delete?: verificacaoWhereUniqueInput | verificacaoWhereUniqueInput[]
+    connect?: verificacaoWhereUniqueInput | verificacaoWhereUniqueInput[]
+    update?: verificacaoUpdateWithWhereUniqueWithoutUsuarioInput | verificacaoUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: verificacaoUpdateManyWithWhereWithoutUsuarioInput | verificacaoUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: verificacaoScalarWhereInput | verificacaoScalarWhereInput[]
+  }
+
+  export type usuarioCreateNestedOneWithoutVerificacaoInput = {
+    create?: XOR<usuarioCreateWithoutVerificacaoInput, usuarioUncheckedCreateWithoutVerificacaoInput>
+    connectOrCreate?: usuarioCreateOrConnectWithoutVerificacaoInput
+    connect?: usuarioWhereUniqueInput
+  }
+
+  export type usuarioUpdateOneRequiredWithoutVerificacaoNestedInput = {
+    create?: XOR<usuarioCreateWithoutVerificacaoInput, usuarioUncheckedCreateWithoutVerificacaoInput>
+    connectOrCreate?: usuarioCreateOrConnectWithoutVerificacaoInput
+    upsert?: usuarioUpsertWithoutVerificacaoInput
+    connect?: usuarioWhereUniqueInput
+    update?: XOR<XOR<usuarioUpdateToOneWithWhereWithoutVerificacaoInput, usuarioUpdateWithoutVerificacaoInput>, usuarioUncheckedUpdateWithoutVerificacaoInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -15494,6 +16850,7 @@ export namespace Prisma {
     logatividade?: logatividadeCreateNestedManyWithoutUsuarioInput
     msgchamado?: msgchamadoCreateNestedManyWithoutUsuarioInput
     notificacao?: notificacaoCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoCreateNestedManyWithoutUsuarioInput
     gerencia?: gerenciaCreateNestedOneWithoutUsuarioInput
     tipousuario?: tipousuarioCreateNestedOneWithoutUsuarioInput
   }
@@ -15514,6 +16871,7 @@ export namespace Prisma {
     logatividade?: logatividadeUncheckedCreateNestedManyWithoutUsuarioInput
     msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutUsuarioInput
     notificacao?: notificacaoUncheckedCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuarioCreateOrConnectWithoutChamado_chamado_idSolicitanteTousuarioInput = {
@@ -15534,6 +16892,7 @@ export namespace Prisma {
     logatividade?: logatividadeCreateNestedManyWithoutUsuarioInput
     msgchamado?: msgchamadoCreateNestedManyWithoutUsuarioInput
     notificacao?: notificacaoCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoCreateNestedManyWithoutUsuarioInput
     gerencia?: gerenciaCreateNestedOneWithoutUsuarioInput
     tipousuario?: tipousuarioCreateNestedOneWithoutUsuarioInput
   }
@@ -15554,6 +16913,7 @@ export namespace Prisma {
     logatividade?: logatividadeUncheckedCreateNestedManyWithoutUsuarioInput
     msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutUsuarioInput
     notificacao?: notificacaoUncheckedCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuarioCreateOrConnectWithoutChamado_chamado_idAnalistaTousuarioInput = {
@@ -15697,6 +17057,7 @@ export namespace Prisma {
     logatividade?: logatividadeUpdateManyWithoutUsuarioNestedInput
     msgchamado?: msgchamadoUpdateManyWithoutUsuarioNestedInput
     notificacao?: notificacaoUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUpdateManyWithoutUsuarioNestedInput
     gerencia?: gerenciaUpdateOneWithoutUsuarioNestedInput
     tipousuario?: tipousuarioUpdateOneWithoutUsuarioNestedInput
   }
@@ -15717,6 +17078,7 @@ export namespace Prisma {
     logatividade?: logatividadeUncheckedUpdateManyWithoutUsuarioNestedInput
     msgchamado?: msgchamadoUncheckedUpdateManyWithoutUsuarioNestedInput
     notificacao?: notificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type usuarioUpsertWithoutChamado_chamado_idAnalistaTousuarioInput = {
@@ -15743,6 +17105,7 @@ export namespace Prisma {
     logatividade?: logatividadeUpdateManyWithoutUsuarioNestedInput
     msgchamado?: msgchamadoUpdateManyWithoutUsuarioNestedInput
     notificacao?: notificacaoUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUpdateManyWithoutUsuarioNestedInput
     gerencia?: gerenciaUpdateOneWithoutUsuarioNestedInput
     tipousuario?: tipousuarioUpdateOneWithoutUsuarioNestedInput
   }
@@ -15763,6 +17126,7 @@ export namespace Prisma {
     logatividade?: logatividadeUncheckedUpdateManyWithoutUsuarioNestedInput
     msgchamado?: msgchamadoUncheckedUpdateManyWithoutUsuarioNestedInput
     notificacao?: notificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type tipochamadoUpsertWithoutChamadoInput = {
@@ -15912,6 +17276,7 @@ export namespace Prisma {
     logatividade?: logatividadeCreateNestedManyWithoutUsuarioInput
     msgchamado?: msgchamadoCreateNestedManyWithoutUsuarioInput
     notificacao?: notificacaoCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoCreateNestedManyWithoutUsuarioInput
     tipousuario?: tipousuarioCreateNestedOneWithoutUsuarioInput
   }
 
@@ -15931,6 +17296,7 @@ export namespace Prisma {
     logatividade?: logatividadeUncheckedCreateNestedManyWithoutUsuarioInput
     msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutUsuarioInput
     notificacao?: notificacaoUncheckedCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuarioCreateOrConnectWithoutGerenciaInput = {
@@ -15989,6 +17355,7 @@ export namespace Prisma {
     chamado_chamado_idAnalistaTousuario?: chamadoCreateNestedManyWithoutUsuario_chamado_idAnalistaTousuarioInput
     msgchamado?: msgchamadoCreateNestedManyWithoutUsuarioInput
     notificacao?: notificacaoCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoCreateNestedManyWithoutUsuarioInput
     gerencia?: gerenciaCreateNestedOneWithoutUsuarioInput
     tipousuario?: tipousuarioCreateNestedOneWithoutUsuarioInput
   }
@@ -16009,6 +17376,7 @@ export namespace Prisma {
     chamado_chamado_idAnalistaTousuario?: chamadoUncheckedCreateNestedManyWithoutUsuario_chamado_idAnalistaTousuarioInput
     msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutUsuarioInput
     notificacao?: notificacaoUncheckedCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuarioCreateOrConnectWithoutLogatividadeInput = {
@@ -16040,6 +17408,7 @@ export namespace Prisma {
     chamado_chamado_idAnalistaTousuario?: chamadoUpdateManyWithoutUsuario_chamado_idAnalistaTousuarioNestedInput
     msgchamado?: msgchamadoUpdateManyWithoutUsuarioNestedInput
     notificacao?: notificacaoUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUpdateManyWithoutUsuarioNestedInput
     gerencia?: gerenciaUpdateOneWithoutUsuarioNestedInput
     tipousuario?: tipousuarioUpdateOneWithoutUsuarioNestedInput
   }
@@ -16060,6 +17429,7 @@ export namespace Prisma {
     chamado_chamado_idAnalistaTousuario?: chamadoUncheckedUpdateManyWithoutUsuario_chamado_idAnalistaTousuarioNestedInput
     msgchamado?: msgchamadoUncheckedUpdateManyWithoutUsuarioNestedInput
     notificacao?: notificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type chamadoCreateWithoutMsgchamadoInput = {
@@ -16111,6 +17481,7 @@ export namespace Prisma {
     chamado_chamado_idAnalistaTousuario?: chamadoCreateNestedManyWithoutUsuario_chamado_idAnalistaTousuarioInput
     logatividade?: logatividadeCreateNestedManyWithoutUsuarioInput
     notificacao?: notificacaoCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoCreateNestedManyWithoutUsuarioInput
     gerencia?: gerenciaCreateNestedOneWithoutUsuarioInput
     tipousuario?: tipousuarioCreateNestedOneWithoutUsuarioInput
   }
@@ -16131,6 +17502,7 @@ export namespace Prisma {
     chamado_chamado_idAnalistaTousuario?: chamadoUncheckedCreateNestedManyWithoutUsuario_chamado_idAnalistaTousuarioInput
     logatividade?: logatividadeUncheckedCreateNestedManyWithoutUsuarioInput
     notificacao?: notificacaoUncheckedCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuarioCreateOrConnectWithoutMsgchamadoInput = {
@@ -16204,6 +17576,7 @@ export namespace Prisma {
     chamado_chamado_idAnalistaTousuario?: chamadoUpdateManyWithoutUsuario_chamado_idAnalistaTousuarioNestedInput
     logatividade?: logatividadeUpdateManyWithoutUsuarioNestedInput
     notificacao?: notificacaoUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUpdateManyWithoutUsuarioNestedInput
     gerencia?: gerenciaUpdateOneWithoutUsuarioNestedInput
     tipousuario?: tipousuarioUpdateOneWithoutUsuarioNestedInput
   }
@@ -16224,6 +17597,7 @@ export namespace Prisma {
     chamado_chamado_idAnalistaTousuario?: chamadoUncheckedUpdateManyWithoutUsuario_chamado_idAnalistaTousuarioNestedInput
     logatividade?: logatividadeUncheckedUpdateManyWithoutUsuarioNestedInput
     notificacao?: notificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type usuarioCreateWithoutNotificacaoInput = {
@@ -16239,6 +17613,7 @@ export namespace Prisma {
     chamado_chamado_idAnalistaTousuario?: chamadoCreateNestedManyWithoutUsuario_chamado_idAnalistaTousuarioInput
     logatividade?: logatividadeCreateNestedManyWithoutUsuarioInput
     msgchamado?: msgchamadoCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoCreateNestedManyWithoutUsuarioInput
     gerencia?: gerenciaCreateNestedOneWithoutUsuarioInput
     tipousuario?: tipousuarioCreateNestedOneWithoutUsuarioInput
   }
@@ -16259,6 +17634,7 @@ export namespace Prisma {
     chamado_chamado_idAnalistaTousuario?: chamadoUncheckedCreateNestedManyWithoutUsuario_chamado_idAnalistaTousuarioInput
     logatividade?: logatividadeUncheckedCreateNestedManyWithoutUsuarioInput
     msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuarioCreateOrConnectWithoutNotificacaoInput = {
@@ -16326,6 +17702,7 @@ export namespace Prisma {
     chamado_chamado_idAnalistaTousuario?: chamadoUpdateManyWithoutUsuario_chamado_idAnalistaTousuarioNestedInput
     logatividade?: logatividadeUpdateManyWithoutUsuarioNestedInput
     msgchamado?: msgchamadoUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUpdateManyWithoutUsuarioNestedInput
     gerencia?: gerenciaUpdateOneWithoutUsuarioNestedInput
     tipousuario?: tipousuarioUpdateOneWithoutUsuarioNestedInput
   }
@@ -16346,6 +17723,7 @@ export namespace Prisma {
     chamado_chamado_idAnalistaTousuario?: chamadoUncheckedUpdateManyWithoutUsuario_chamado_idAnalistaTousuarioNestedInput
     logatividade?: logatividadeUncheckedUpdateManyWithoutUsuarioNestedInput
     msgchamado?: msgchamadoUncheckedUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type chamadoUpsertWithoutNotificacaoInput = {
@@ -16593,6 +17971,7 @@ export namespace Prisma {
     logatividade?: logatividadeCreateNestedManyWithoutUsuarioInput
     msgchamado?: msgchamadoCreateNestedManyWithoutUsuarioInput
     notificacao?: notificacaoCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoCreateNestedManyWithoutUsuarioInput
     gerencia?: gerenciaCreateNestedOneWithoutUsuarioInput
   }
 
@@ -16612,6 +17991,7 @@ export namespace Prisma {
     logatividade?: logatividadeUncheckedCreateNestedManyWithoutUsuarioInput
     msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutUsuarioInput
     notificacao?: notificacaoUncheckedCreateNestedManyWithoutUsuarioInput
+    verificacao?: verificacaoUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuarioCreateOrConnectWithoutTipousuarioInput = {
@@ -16799,6 +18179,31 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type verificacaoCreateWithoutUsuarioInput = {
+    token: string
+    tipo?: string | null
+    criadoEm?: Date | string
+    expiraEm?: Date | string | null
+  }
+
+  export type verificacaoUncheckedCreateWithoutUsuarioInput = {
+    idVerificacao?: number
+    token: string
+    tipo?: string | null
+    criadoEm?: Date | string
+    expiraEm?: Date | string | null
+  }
+
+  export type verificacaoCreateOrConnectWithoutUsuarioInput = {
+    where: verificacaoWhereUniqueInput
+    create: XOR<verificacaoCreateWithoutUsuarioInput, verificacaoUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type verificacaoCreateManyUsuarioInputEnvelope = {
+    data: verificacaoCreateManyUsuarioInput | verificacaoCreateManyUsuarioInput[]
+    skipDuplicates?: boolean
+  }
+
   export type gerenciaCreateWithoutUsuarioInput = {
     nomeGerencia: string
     ativo?: number
@@ -16919,6 +18324,34 @@ export namespace Prisma {
     data: XOR<notificacaoUpdateManyMutationInput, notificacaoUncheckedUpdateManyWithoutUsuarioInput>
   }
 
+  export type verificacaoUpsertWithWhereUniqueWithoutUsuarioInput = {
+    where: verificacaoWhereUniqueInput
+    update: XOR<verificacaoUpdateWithoutUsuarioInput, verificacaoUncheckedUpdateWithoutUsuarioInput>
+    create: XOR<verificacaoCreateWithoutUsuarioInput, verificacaoUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type verificacaoUpdateWithWhereUniqueWithoutUsuarioInput = {
+    where: verificacaoWhereUniqueInput
+    data: XOR<verificacaoUpdateWithoutUsuarioInput, verificacaoUncheckedUpdateWithoutUsuarioInput>
+  }
+
+  export type verificacaoUpdateManyWithWhereWithoutUsuarioInput = {
+    where: verificacaoScalarWhereInput
+    data: XOR<verificacaoUpdateManyMutationInput, verificacaoUncheckedUpdateManyWithoutUsuarioInput>
+  }
+
+  export type verificacaoScalarWhereInput = {
+    AND?: verificacaoScalarWhereInput | verificacaoScalarWhereInput[]
+    OR?: verificacaoScalarWhereInput[]
+    NOT?: verificacaoScalarWhereInput | verificacaoScalarWhereInput[]
+    idVerificacao?: IntFilter<"verificacao"> | number
+    idUsuario?: IntFilter<"verificacao"> | number
+    token?: StringFilter<"verificacao"> | string
+    tipo?: StringNullableFilter<"verificacao"> | string | null
+    criadoEm?: DateTimeFilter<"verificacao"> | Date | string
+    expiraEm?: DateTimeNullableFilter<"verificacao"> | Date | string | null
+  }
+
   export type gerenciaUpsertWithoutUsuarioInput = {
     update: XOR<gerenciaUpdateWithoutUsuarioInput, gerenciaUncheckedUpdateWithoutUsuarioInput>
     create: XOR<gerenciaCreateWithoutUsuarioInput, gerenciaUncheckedCreateWithoutUsuarioInput>
@@ -16959,6 +18392,96 @@ export namespace Prisma {
   export type tipousuarioUncheckedUpdateWithoutUsuarioInput = {
     idTipoUsuario?: IntFieldUpdateOperationsInput | number
     tipoUsuario?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type usuarioCreateWithoutVerificacaoInput = {
+    matricula: string
+    nomeUsuario: string
+    email: string
+    senha: string
+    dataCadastro?: Date | string
+    ativo?: number
+    ramal?: string | null
+    fotoPerfil?: string | null
+    chamado_chamado_idSolicitanteTousuario?: chamadoCreateNestedManyWithoutUsuario_chamado_idSolicitanteTousuarioInput
+    chamado_chamado_idAnalistaTousuario?: chamadoCreateNestedManyWithoutUsuario_chamado_idAnalistaTousuarioInput
+    logatividade?: logatividadeCreateNestedManyWithoutUsuarioInput
+    msgchamado?: msgchamadoCreateNestedManyWithoutUsuarioInput
+    notificacao?: notificacaoCreateNestedManyWithoutUsuarioInput
+    gerencia?: gerenciaCreateNestedOneWithoutUsuarioInput
+    tipousuario?: tipousuarioCreateNestedOneWithoutUsuarioInput
+  }
+
+  export type usuarioUncheckedCreateWithoutVerificacaoInput = {
+    idUsuario?: number
+    matricula: string
+    nomeUsuario: string
+    email: string
+    senha: string
+    dataCadastro?: Date | string
+    ativo?: number
+    ramal?: string | null
+    fotoPerfil?: string | null
+    idGerencia?: number | null
+    idTipoUsuario?: number | null
+    chamado_chamado_idSolicitanteTousuario?: chamadoUncheckedCreateNestedManyWithoutUsuario_chamado_idSolicitanteTousuarioInput
+    chamado_chamado_idAnalistaTousuario?: chamadoUncheckedCreateNestedManyWithoutUsuario_chamado_idAnalistaTousuarioInput
+    logatividade?: logatividadeUncheckedCreateNestedManyWithoutUsuarioInput
+    msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutUsuarioInput
+    notificacao?: notificacaoUncheckedCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type usuarioCreateOrConnectWithoutVerificacaoInput = {
+    where: usuarioWhereUniqueInput
+    create: XOR<usuarioCreateWithoutVerificacaoInput, usuarioUncheckedCreateWithoutVerificacaoInput>
+  }
+
+  export type usuarioUpsertWithoutVerificacaoInput = {
+    update: XOR<usuarioUpdateWithoutVerificacaoInput, usuarioUncheckedUpdateWithoutVerificacaoInput>
+    create: XOR<usuarioCreateWithoutVerificacaoInput, usuarioUncheckedCreateWithoutVerificacaoInput>
+    where?: usuarioWhereInput
+  }
+
+  export type usuarioUpdateToOneWithWhereWithoutVerificacaoInput = {
+    where?: usuarioWhereInput
+    data: XOR<usuarioUpdateWithoutVerificacaoInput, usuarioUncheckedUpdateWithoutVerificacaoInput>
+  }
+
+  export type usuarioUpdateWithoutVerificacaoInput = {
+    matricula?: StringFieldUpdateOperationsInput | string
+    nomeUsuario?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    senha?: StringFieldUpdateOperationsInput | string
+    dataCadastro?: DateTimeFieldUpdateOperationsInput | Date | string
+    ativo?: IntFieldUpdateOperationsInput | number
+    ramal?: NullableStringFieldUpdateOperationsInput | string | null
+    fotoPerfil?: NullableStringFieldUpdateOperationsInput | string | null
+    chamado_chamado_idSolicitanteTousuario?: chamadoUpdateManyWithoutUsuario_chamado_idSolicitanteTousuarioNestedInput
+    chamado_chamado_idAnalistaTousuario?: chamadoUpdateManyWithoutUsuario_chamado_idAnalistaTousuarioNestedInput
+    logatividade?: logatividadeUpdateManyWithoutUsuarioNestedInput
+    msgchamado?: msgchamadoUpdateManyWithoutUsuarioNestedInput
+    notificacao?: notificacaoUpdateManyWithoutUsuarioNestedInput
+    gerencia?: gerenciaUpdateOneWithoutUsuarioNestedInput
+    tipousuario?: tipousuarioUpdateOneWithoutUsuarioNestedInput
+  }
+
+  export type usuarioUncheckedUpdateWithoutVerificacaoInput = {
+    idUsuario?: IntFieldUpdateOperationsInput | number
+    matricula?: StringFieldUpdateOperationsInput | string
+    nomeUsuario?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    senha?: StringFieldUpdateOperationsInput | string
+    dataCadastro?: DateTimeFieldUpdateOperationsInput | Date | string
+    ativo?: IntFieldUpdateOperationsInput | number
+    ramal?: NullableStringFieldUpdateOperationsInput | string | null
+    fotoPerfil?: NullableStringFieldUpdateOperationsInput | string | null
+    idGerencia?: NullableIntFieldUpdateOperationsInput | number | null
+    idTipoUsuario?: NullableIntFieldUpdateOperationsInput | number | null
+    chamado_chamado_idSolicitanteTousuario?: chamadoUncheckedUpdateManyWithoutUsuario_chamado_idSolicitanteTousuarioNestedInput
+    chamado_chamado_idAnalistaTousuario?: chamadoUncheckedUpdateManyWithoutUsuario_chamado_idAnalistaTousuarioNestedInput
+    logatividade?: logatividadeUncheckedUpdateManyWithoutUsuarioNestedInput
+    msgchamado?: msgchamadoUncheckedUpdateManyWithoutUsuarioNestedInput
+    notificacao?: notificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type msgchamadoCreateManyChamadoInput = {
@@ -17062,6 +18585,7 @@ export namespace Prisma {
     logatividade?: logatividadeUpdateManyWithoutUsuarioNestedInput
     msgchamado?: msgchamadoUpdateManyWithoutUsuarioNestedInput
     notificacao?: notificacaoUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUpdateManyWithoutUsuarioNestedInput
     tipousuario?: tipousuarioUpdateOneWithoutUsuarioNestedInput
   }
 
@@ -17081,6 +18605,7 @@ export namespace Prisma {
     logatividade?: logatividadeUncheckedUpdateManyWithoutUsuarioNestedInput
     msgchamado?: msgchamadoUncheckedUpdateManyWithoutUsuarioNestedInput
     notificacao?: notificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type usuarioUncheckedUpdateManyWithoutGerenciaInput = {
@@ -17300,6 +18825,7 @@ export namespace Prisma {
     logatividade?: logatividadeUpdateManyWithoutUsuarioNestedInput
     msgchamado?: msgchamadoUpdateManyWithoutUsuarioNestedInput
     notificacao?: notificacaoUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUpdateManyWithoutUsuarioNestedInput
     gerencia?: gerenciaUpdateOneWithoutUsuarioNestedInput
   }
 
@@ -17319,6 +18845,7 @@ export namespace Prisma {
     logatividade?: logatividadeUncheckedUpdateManyWithoutUsuarioNestedInput
     msgchamado?: msgchamadoUncheckedUpdateManyWithoutUsuarioNestedInput
     notificacao?: notificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
+    verificacao?: verificacaoUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type usuarioUncheckedUpdateManyWithoutTipousuarioInput = {
@@ -17385,6 +18912,14 @@ export namespace Prisma {
     lida?: number
     dataHora?: Date | string | null
     idChamado?: number | null
+  }
+
+  export type verificacaoCreateManyUsuarioInput = {
+    idVerificacao?: number
+    token: string
+    tipo?: string | null
+    criadoEm?: Date | string
+    expiraEm?: Date | string | null
   }
 
   export type chamadoUpdateWithoutUsuario_chamado_idSolicitanteTousuarioInput = {
@@ -17547,6 +19082,29 @@ export namespace Prisma {
     lida?: IntFieldUpdateOperationsInput | number
     dataHora?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     idChamado?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type verificacaoUpdateWithoutUsuarioInput = {
+    token?: StringFieldUpdateOperationsInput | string
+    tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiraEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type verificacaoUncheckedUpdateWithoutUsuarioInput = {
+    idVerificacao?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiraEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type verificacaoUncheckedUpdateManyWithoutUsuarioInput = {
+    idVerificacao?: IntFieldUpdateOperationsInput | number
+    token?: StringFieldUpdateOperationsInput | string
+    tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    criadoEm?: DateTimeFieldUpdateOperationsInput | Date | string
+    expiraEm?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
 
