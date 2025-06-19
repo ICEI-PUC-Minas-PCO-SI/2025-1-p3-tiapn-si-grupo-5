@@ -1,13 +1,33 @@
 import { Request, Response } from "express";
 import { TicketService } from "../services/ticketService";
+import { uploadFileToCloudinary } from "../services/uploadService";
+import fs from "fs";
 
 const ticketService = new TicketService();
 
 export class TicketController {
     async createTicket(req: Request, res: Response) {
         try {
-            const { assunto, descricao, idSolicitante, idTipoChamado, idPrioridade } = req.body;
-            const ticket = await ticketService.createTicket(assunto, descricao, idSolicitante, idTipoChamado, idPrioridade);
+            const { assunto, descricao, idSolicitante, idTipoChamado, idPrioridade, nomeArquivo } = req.body;
+            let urlAnexo: string | undefined = undefined;
+            let nomeArquivoFinal: string | undefined = nomeArquivo;
+
+            if (req.file) {
+                const result = await uploadFileToCloudinary(req.file.path, req.file.originalname);
+                urlAnexo = result.secure_url;
+                nomeArquivoFinal = req.file.originalname;
+                fs.unlinkSync(req.file.path);
+            }
+
+            const ticket = await ticketService.createTicket(
+                assunto,
+                descricao,
+                idSolicitante,
+                idTipoChamado,
+                idPrioridade,
+                urlAnexo,
+                nomeArquivoFinal
+            );
             res.status(201).json(ticket);
         } catch (error) {
             const err = error as { code?: string; message?: string };

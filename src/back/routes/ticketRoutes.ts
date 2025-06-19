@@ -3,13 +3,15 @@ import { TicketController } from "../controllers/ticketController";
 import { autenticarToken } from "../middlewares/auth-jwt";
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
+import { upload } from "../middlewares/multer";
 
 const ticketCreateSchema = z.object({
     assunto: z.string().min(3),
     descricao: z.string().min(3),
     idSolicitante: z.number(),
     idPrioridade: z.number(),
-    idTipoChamado: z.number()
+    idTipoChamado: z.number(),
+    nomeArquivo: z.string().optional()
 });
 
 const ticketUpdateAnalystSchema = z.object({
@@ -35,6 +37,7 @@ export class TicketRoutes {
     private initializeRoutes() {
         this.router.post(
             "/tickets",
+            upload.single("file"),
             validatePayload(ticketCreateSchema),
             autenticarToken,
             this.ticketController.createTicket.bind(this.ticketController)
