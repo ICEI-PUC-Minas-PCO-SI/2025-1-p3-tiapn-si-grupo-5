@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 import { UserService } from "../services/userService";
 import { sendPasswordResetEmail } from "../services/emailServices";
+import { uploadFileToCloudinary } from "../services/uploadService";
+import fs from "fs";
 
 const userService = new UserService();
 
@@ -236,6 +238,27 @@ export class UserController {
         } catch (error) {
             console.error("Erro ao redefinir senha:", error);
             res.status(500).json({ error: "Erro ao redefinir senha" });
+        }
+    }
+
+    async uploadProfilePhoto(req: Request, res: Response) {
+        try {
+            const idUsuario = Number(req.params.idUsuario);
+            if (!req.file) {
+                return res.status(400).json({ error: "Nenhum arquivo enviado." });
+            }
+            console.log("[UserController] Foto recebida:", req.file.originalname, req.file.path);
+            const result = await uploadFileToCloudinary(req.file.path, req.file.originalname);
+            console.log("[UserController] Resposta do Cloudinary:", result);
+            const fotoPerfilUrl = result.secure_url;
+            fs.unlinkSync(req.file.path);
+
+            const updatedUser = await userService.updateProfilePhoto(idUsuario, fotoPerfilUrl);
+            console.log("[UserController] Usuário atualizado com fotoPerfil:", updatedUser);
+            res.status(200).json({ fotoPerfil: fotoPerfilUrl });
+        } catch (error) {
+            console.error("Erro ao fazer upload da foto de perfil:", error);
+            res.status(500).json({ error: "Erro ao fazer upload da foto de perfil." });
         }
     }
 }

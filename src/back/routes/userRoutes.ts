@@ -3,6 +3,7 @@ import { UserController } from "../controllers/userController";
 import { autenticarToken } from "../middlewares/auth-jwt";
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
+import { upload } from "../middlewares/multer";
 
 // Schemas para validação
 const userRegisterSchema = z.object({
@@ -114,6 +115,16 @@ export class UserRoutes {
             "/users/reset-password",
             validatePayload(resetPasswordSchema),
             this.userController.resetPassword.bind(this.userController)
+        );
+        this.router.post(
+            "/users/:idUsuario/profile-photo",
+            autenticarToken,
+            upload.single("file"),
+            (req, res, next) => {
+                this.userController.uploadProfilePhoto(req, res)
+                    .then(() => undefined)
+                    .catch(next);
+            }
         );
     }
 

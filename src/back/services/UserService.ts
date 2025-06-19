@@ -111,6 +111,13 @@ export class UserService {
         });
     }
 
+    async updateProfilePhoto(idUsuario: number, fotoPerfilUrl: string) {
+        return prisma.usuario.update({
+            where: { idUsuario },
+            data: { fotoPerfil: fotoPerfilUrl }
+        });
+    }
+
     async findUserByEmail(email: string) {
         return prisma.usuario.findFirst({
             where: { email }
