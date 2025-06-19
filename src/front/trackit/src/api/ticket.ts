@@ -22,6 +22,8 @@ export interface INewTicket {
     idSolicitante: number;
     idPrioridade: number;
     idTipoChamado: number;
+    urlAnexo?: string;
+    nomeArquivo?: string;
 }
 
 export async function sendTicket(payload: INewTicket): Promise<Response> {

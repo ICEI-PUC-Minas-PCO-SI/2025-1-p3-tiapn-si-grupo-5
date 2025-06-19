@@ -18,7 +18,11 @@ export class UploadRoutes {
             "/upload",
             autenticarToken,
             upload.single("file"),
-            this.uploadController.uploadFile.bind(this.uploadController)
+            (req, res, next) => {
+                this.uploadController.uploadFile(req, res)
+                    .then(() => undefined)
+                    .catch(next);
+            }
         );
     }
 
