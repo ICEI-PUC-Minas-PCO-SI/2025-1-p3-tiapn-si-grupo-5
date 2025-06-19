@@ -33,13 +33,14 @@ import {
 import { DataTableParams } from "./DataTableParams";
 import type { ColumnDef, Column, Row } from "@tanstack/react-table";
 
-const priorityNameSchema = z.string().min(4, "O nome deve ter pelo menos 4 caracteres");
+const priorityNameSchema = z.string()
+    .min(3, "O nome deve ter pelo menos 3 caracteres")
+    .max(20, "O nome deve ter no máximo 20 caracteres");
 
 export function PriorityParams() {
     const [priorityList, setPriorityList] = useState<IPriority[]>([]);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
-    // Dialog state
     const [dialogOpen, setDialogOpen] = useState(false);
     const [editingPriority, setEditingPriority] = useState<IPriority | null>(null);
     const [name, setName] = useState("");
@@ -47,12 +48,11 @@ export function PriorityParams() {
     const [secondaryColor, setSecondaryColor] = useState("#ffffff");
     const [nameError, setNameError] = useState<string | null>(null);
 
-    // Delete dialog
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
 
-    // Search/filter/sort state
     const [search, setSearch] = useState("");
     const [filtered, setFiltered] = useState<IPriority[]>([]);
+    const [isNameValid, setIsNameValid] = useState(false);
 
     useEffect(() => {
         fetchPriorities();
@@ -87,6 +87,15 @@ export function PriorityParams() {
         }
         setFiltered(data);
     }, [priorityList, search]);
+
+    useEffect(() => {
+        // Validação dinâmica para habilitar/desabilitar o botão Salvar
+        const result = priorityNameSchema.safeParse(name);
+        setIsNameValid(result.success);
+        if (!name) setNameError(null);
+        else if (!result.success) setNameError(result.error.issues[0].message);
+        else setNameError(null);
+    }, [name]);
 
     function openAddDialog() {
         setEditingPriority(null);
@@ -343,7 +352,11 @@ export function PriorityParams() {
                                 </div>
                             </div>
                             <DialogFooter className="mt-2">
-                                <Button type="button" onClick={handleSave} disabled={!name || !!nameError}>
+                                <Button
+                                    type="button"
+                                    onClick={handleSave}
+                                    disabled={!isNameValid}
+                                >
                                     Salvar
                                 </Button>
                                 <DialogClose asChild>
