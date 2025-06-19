@@ -5,14 +5,14 @@ import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
 import { upload } from "../middlewares/multer";
 
-const ticketCreateSchema = z.object({
+/* const ticketCreateSchema = z.object({
     assunto: z.string().min(3),
     descricao: z.string().min(3),
     idSolicitante: z.number(),
     idPrioridade: z.number(),
     idTipoChamado: z.number(),
     nomeArquivo: z.string().optional()
-});
+}); */
 
 const ticketUpdateAnalystSchema = z.object({
     idAnalista: z.union([z.number(), z.string()])
@@ -38,9 +38,12 @@ export class TicketRoutes {
         this.router.post(
             "/tickets",
             upload.single("file"),
-            validatePayload(ticketCreateSchema),
             autenticarToken,
-            this.ticketController.createTicket.bind(this.ticketController)
+            (req, res, next) => {
+                this.ticketController.createTicket(req, res)
+                    .then(() => undefined)
+                    .catch(next);
+            }
         );
         this.router.get("/tickets", autenticarToken, this.ticketController.getAllTickets.bind(this.ticketController));
         this.router.get("/tickets/unassigned", autenticarToken, this.ticketController.getUnassignedTickets.bind(this.ticketController));

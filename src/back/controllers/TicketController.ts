@@ -8,26 +8,44 @@ const ticketService = new TicketService();
 export class TicketController {
     async createTicket(req: Request, res: Response) {
         try {
-            const { assunto, descricao, idSolicitante, idTipoChamado, idPrioridade, nomeArquivo } = req.body;
-            let urlAnexo: string | undefined = undefined;
+            console.log("[TicketController] Content-Type:", req.headers["content-type"]);
+            console.log("[TicketController] req.body:", req.body);
+            console.log("[TicketController] req.file:", req.file);
+            const { assunto, descricao, idSolicitante, idTipoChamado, idPrioridade, nomeArquivo, urlAnexo } = req.body;
+            if (!assunto || !descricao || !idSolicitante || !idTipoChamado || !idPrioridade) {
+                return res.status(400).json({ error: "Campos obrigatórios ausentes." });
+            }
+
+            let urlAnexoFinal: string | undefined = urlAnexo;
             let nomeArquivoFinal: string | undefined = nomeArquivo;
 
+            // Só faz upload se vier arquivo (compatibilidade)
             if (req.file) {
+                console.log("[TicketController] Arquivo recebido:", req.file.originalname, req.file.path);
                 const result = await uploadFileToCloudinary(req.file.path, req.file.originalname);
-                urlAnexo = result.secure_url;
+                console.log("[TicketController] Objeto completo de resposta do Cloudinary:", result);
+                urlAnexoFinal = result.secure_url;
                 nomeArquivoFinal = req.file.originalname;
                 fs.unlinkSync(req.file.path);
+                console.log("[TicketController] urlAnexo definida como:", urlAnexoFinal);
+            } else {
+                console.log("[TicketController] Nenhum arquivo recebido para upload. Usando urlAnexo do body:", urlAnexoFinal);
             }
+
+            console.log("[TicketController] Dados para criar ticket:", {
+                assunto, descricao, idSolicitante, idTipoChamado, idPrioridade, urlAnexo: urlAnexoFinal, nomeArquivoFinal
+            });
 
             const ticket = await ticketService.createTicket(
                 assunto,
                 descricao,
-                idSolicitante,
-                idTipoChamado,
-                idPrioridade,
-                urlAnexo,
+                Number(idSolicitante),
+                Number(idTipoChamado),
+                Number(idPrioridade),
+                urlAnexoFinal,
                 nomeArquivoFinal
             );
+            console.log("[TicketController] Ticket criado:", ticket);
             res.status(201).json(ticket);
         } catch (error) {
             const err = error as { code?: string; message?: string };
