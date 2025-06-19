@@ -21,6 +21,8 @@ model chamado {
   idTipoChamado                          Int?
   idStatus                               Int?
   idPrioridade                           Int?
+  urlAnexo                               String?            @db.Text
+  nomeArquivo                            String?            @db.VarChar(255)
   usuario_chamado_idSolicitanteTousuario usuario?           @relation("chamado_idSolicitanteTousuario", fields: [idSolicitante], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_1")
   usuario_chamado_idAnalistaTousuario    usuario?           @relation("chamado_idAnalistaTousuario", fields: [idAnalista], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_2")
   tipochamado                            tipochamado?       @relation(fields: [idTipoChamado], references: [idTipoChamado], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_3")

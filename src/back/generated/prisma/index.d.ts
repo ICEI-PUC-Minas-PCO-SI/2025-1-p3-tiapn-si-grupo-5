@@ -2022,6 +2022,8 @@ export namespace Prisma {
     idTipoChamado: number | null
     idStatus: number | null
     idPrioridade: number | null
+    urlAnexo: string | null
+    nomeArquivo: string | null
   }
 
   export type ChamadoMaxAggregateOutputType = {
@@ -2037,6 +2039,8 @@ export namespace Prisma {
     idTipoChamado: number | null
     idStatus: number | null
     idPrioridade: number | null
+    urlAnexo: string | null
+    nomeArquivo: string | null
   }
 
   export type ChamadoCountAggregateOutputType = {
@@ -2052,6 +2056,8 @@ export namespace Prisma {
     idTipoChamado: number
     idStatus: number
     idPrioridade: number
+    urlAnexo: number
+    nomeArquivo: number
     _all: number
   }
 
@@ -2087,6 +2093,8 @@ export namespace Prisma {
     idTipoChamado?: true
     idStatus?: true
     idPrioridade?: true
+    urlAnexo?: true
+    nomeArquivo?: true
   }
 
   export type ChamadoMaxAggregateInputType = {
@@ -2102,6 +2110,8 @@ export namespace Prisma {
     idTipoChamado?: true
     idStatus?: true
     idPrioridade?: true
+    urlAnexo?: true
+    nomeArquivo?: true
   }
 
   export type ChamadoCountAggregateInputType = {
@@ -2117,6 +2127,8 @@ export namespace Prisma {
     idTipoChamado?: true
     idStatus?: true
     idPrioridade?: true
+    urlAnexo?: true
+    nomeArquivo?: true
     _all?: true
   }
 
@@ -2219,6 +2231,8 @@ export namespace Prisma {
     idTipoChamado: number | null
     idStatus: number | null
     idPrioridade: number | null
+    urlAnexo: string | null
+    nomeArquivo: string | null
     _count: ChamadoCountAggregateOutputType | null
     _avg: ChamadoAvgAggregateOutputType | null
     _sum: ChamadoSumAggregateOutputType | null
@@ -2253,6 +2267,8 @@ export namespace Prisma {
     idTipoChamado?: boolean
     idStatus?: boolean
     idPrioridade?: boolean
+    urlAnexo?: boolean
+    nomeArquivo?: boolean
     usuario_chamado_idSolicitanteTousuario?: boolean | chamado$usuario_chamado_idSolicitanteTousuarioArgs<ExtArgs>
     usuario_chamado_idAnalistaTousuario?: boolean | chamado$usuario_chamado_idAnalistaTousuarioArgs<ExtArgs>
     tipochamado?: boolean | chamado$tipochamadoArgs<ExtArgs>
@@ -2278,9 +2294,11 @@ export namespace Prisma {
     idTipoChamado?: boolean
     idStatus?: boolean
     idPrioridade?: boolean
+    urlAnexo?: boolean
+    nomeArquivo?: boolean
   }
 
-  export type chamadoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"idChamado" | "protocolo" | "assunto" | "descricao" | "dataAbertura" | "dataAtualizacao" | "dataFechamento" | "idSolicitante" | "idAnalista" | "idTipoChamado" | "idStatus" | "idPrioridade", ExtArgs["result"]["chamado"]>
+  export type chamadoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"idChamado" | "protocolo" | "assunto" | "descricao" | "dataAbertura" | "dataAtualizacao" | "dataFechamento" | "idSolicitante" | "idAnalista" | "idTipoChamado" | "idStatus" | "idPrioridade" | "urlAnexo" | "nomeArquivo", ExtArgs["result"]["chamado"]>
   export type chamadoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     usuario_chamado_idSolicitanteTousuario?: boolean | chamado$usuario_chamado_idSolicitanteTousuarioArgs<ExtArgs>
     usuario_chamado_idAnalistaTousuario?: boolean | chamado$usuario_chamado_idAnalistaTousuarioArgs<ExtArgs>
@@ -2316,6 +2334,8 @@ export namespace Prisma {
       idTipoChamado: number | null
       idStatus: number | null
       idPrioridade: number | null
+      urlAnexo: string | null
+      nomeArquivo: string | null
     }, ExtArgs["result"]["chamado"]>
     composites: {}
   }
@@ -2704,6 +2724,8 @@ export namespace Prisma {
     readonly idTipoChamado: FieldRef<"chamado", 'Int'>
     readonly idStatus: FieldRef<"chamado", 'Int'>
     readonly idPrioridade: FieldRef<"chamado", 'Int'>
+    readonly urlAnexo: FieldRef<"chamado", 'String'>
+    readonly nomeArquivo: FieldRef<"chamado", 'String'>
   }
     
 
@@ -13352,7 +13374,9 @@ export namespace Prisma {
     idAnalista: 'idAnalista',
     idTipoChamado: 'idTipoChamado',
     idStatus: 'idStatus',
-    idPrioridade: 'idPrioridade'
+    idPrioridade: 'idPrioridade',
+    urlAnexo: 'urlAnexo',
+    nomeArquivo: 'nomeArquivo'
   };
 
   export type ChamadoScalarFieldEnum = (typeof ChamadoScalarFieldEnum)[keyof typeof ChamadoScalarFieldEnum]
@@ -13491,7 +13515,9 @@ export namespace Prisma {
   export const chamadoOrderByRelevanceFieldEnum: {
     protocolo: 'protocolo',
     assunto: 'assunto',
-    descricao: 'descricao'
+    descricao: 'descricao',
+    urlAnexo: 'urlAnexo',
+    nomeArquivo: 'nomeArquivo'
   };
 
   export type chamadoOrderByRelevanceFieldEnum = (typeof chamadoOrderByRelevanceFieldEnum)[keyof typeof chamadoOrderByRelevanceFieldEnum]
@@ -13639,6 +13665,8 @@ export namespace Prisma {
     idTipoChamado?: IntNullableFilter<"chamado"> | number | null
     idStatus?: IntNullableFilter<"chamado"> | number | null
     idPrioridade?: IntNullableFilter<"chamado"> | number | null
+    urlAnexo?: StringNullableFilter<"chamado"> | string | null
+    nomeArquivo?: StringNullableFilter<"chamado"> | string | null
     usuario_chamado_idSolicitanteTousuario?: XOR<UsuarioNullableScalarRelationFilter, usuarioWhereInput> | null
     usuario_chamado_idAnalistaTousuario?: XOR<UsuarioNullableScalarRelationFilter, usuarioWhereInput> | null
     tipochamado?: XOR<TipochamadoNullableScalarRelationFilter, tipochamadoWhereInput> | null
@@ -13661,6 +13689,8 @@ export namespace Prisma {
     idTipoChamado?: SortOrderInput | SortOrder
     idStatus?: SortOrderInput | SortOrder
     idPrioridade?: SortOrderInput | SortOrder
+    urlAnexo?: SortOrderInput | SortOrder
+    nomeArquivo?: SortOrderInput | SortOrder
     usuario_chamado_idSolicitanteTousuario?: usuarioOrderByWithRelationInput
     usuario_chamado_idAnalistaTousuario?: usuarioOrderByWithRelationInput
     tipochamado?: tipochamadoOrderByWithRelationInput
@@ -13687,6 +13717,8 @@ export namespace Prisma {
     idTipoChamado?: IntNullableFilter<"chamado"> | number | null
     idStatus?: IntNullableFilter<"chamado"> | number | null
     idPrioridade?: IntNullableFilter<"chamado"> | number | null
+    urlAnexo?: StringNullableFilter<"chamado"> | string | null
+    nomeArquivo?: StringNullableFilter<"chamado"> | string | null
     usuario_chamado_idSolicitanteTousuario?: XOR<UsuarioNullableScalarRelationFilter, usuarioWhereInput> | null
     usuario_chamado_idAnalistaTousuario?: XOR<UsuarioNullableScalarRelationFilter, usuarioWhereInput> | null
     tipochamado?: XOR<TipochamadoNullableScalarRelationFilter, tipochamadoWhereInput> | null
@@ -13709,6 +13741,8 @@ export namespace Prisma {
     idTipoChamado?: SortOrderInput | SortOrder
     idStatus?: SortOrderInput | SortOrder
     idPrioridade?: SortOrderInput | SortOrder
+    urlAnexo?: SortOrderInput | SortOrder
+    nomeArquivo?: SortOrderInput | SortOrder
     _count?: chamadoCountOrderByAggregateInput
     _avg?: chamadoAvgOrderByAggregateInput
     _max?: chamadoMaxOrderByAggregateInput
@@ -13732,6 +13766,8 @@ export namespace Prisma {
     idTipoChamado?: IntNullableWithAggregatesFilter<"chamado"> | number | null
     idStatus?: IntNullableWithAggregatesFilter<"chamado"> | number | null
     idPrioridade?: IntNullableWithAggregatesFilter<"chamado"> | number | null
+    urlAnexo?: StringNullableWithAggregatesFilter<"chamado"> | string | null
+    nomeArquivo?: StringNullableWithAggregatesFilter<"chamado"> | string | null
   }
 
   export type gerenciaWhereInput = {
@@ -14368,6 +14404,8 @@ export namespace Prisma {
     dataAbertura?: Date | string
     dataAtualizacao?: Date | string | null
     dataFechamento?: Date | string | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     usuario_chamado_idSolicitanteTousuario?: usuarioCreateNestedOneWithoutChamado_chamado_idSolicitanteTousuarioInput
     usuario_chamado_idAnalistaTousuario?: usuarioCreateNestedOneWithoutChamado_chamado_idAnalistaTousuarioInput
     tipochamado?: tipochamadoCreateNestedOneWithoutChamadoInput
@@ -14390,6 +14428,8 @@ export namespace Prisma {
     idTipoChamado?: number | null
     idStatus?: number | null
     idPrioridade?: number | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutChamadoInput
     notificacao?: notificacaoUncheckedCreateNestedManyWithoutChamadoInput
   }
@@ -14401,6 +14441,8 @@ export namespace Prisma {
     dataAbertura?: DateTimeFieldUpdateOperationsInput | Date | string
     dataAtualizacao?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     usuario_chamado_idSolicitanteTousuario?: usuarioUpdateOneWithoutChamado_chamado_idSolicitanteTousuarioNestedInput
     usuario_chamado_idAnalistaTousuario?: usuarioUpdateOneWithoutChamado_chamado_idAnalistaTousuarioNestedInput
     tipochamado?: tipochamadoUpdateOneWithoutChamadoNestedInput
@@ -14423,6 +14465,8 @@ export namespace Prisma {
     idTipoChamado?: NullableIntFieldUpdateOperationsInput | number | null
     idStatus?: NullableIntFieldUpdateOperationsInput | number | null
     idPrioridade?: NullableIntFieldUpdateOperationsInput | number | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     msgchamado?: msgchamadoUncheckedUpdateManyWithoutChamadoNestedInput
     notificacao?: notificacaoUncheckedUpdateManyWithoutChamadoNestedInput
   }
@@ -14440,6 +14484,8 @@ export namespace Prisma {
     idTipoChamado?: number | null
     idStatus?: number | null
     idPrioridade?: number | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
   }
 
   export type chamadoUpdateManyMutationInput = {
@@ -14449,6 +14495,8 @@ export namespace Prisma {
     dataAbertura?: DateTimeFieldUpdateOperationsInput | Date | string
     dataAtualizacao?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type chamadoUncheckedUpdateManyInput = {
@@ -14464,6 +14512,8 @@ export namespace Prisma {
     idTipoChamado?: NullableIntFieldUpdateOperationsInput | number | null
     idStatus?: NullableIntFieldUpdateOperationsInput | number | null
     idPrioridade?: NullableIntFieldUpdateOperationsInput | number | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type gerenciaCreateInput = {
@@ -15119,6 +15169,21 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type UsuarioNullableScalarRelationFilter = {
     is?: usuarioWhereInput | null
     isNot?: usuarioWhereInput | null
@@ -15183,6 +15248,8 @@ export namespace Prisma {
     idTipoChamado?: SortOrder
     idStatus?: SortOrder
     idPrioridade?: SortOrder
+    urlAnexo?: SortOrder
+    nomeArquivo?: SortOrder
   }
 
   export type chamadoAvgOrderByAggregateInput = {
@@ -15207,6 +15274,8 @@ export namespace Prisma {
     idTipoChamado?: SortOrder
     idStatus?: SortOrder
     idPrioridade?: SortOrder
+    urlAnexo?: SortOrder
+    nomeArquivo?: SortOrder
   }
 
   export type chamadoMinOrderByAggregateInput = {
@@ -15222,6 +15291,8 @@ export namespace Prisma {
     idTipoChamado?: SortOrder
     idStatus?: SortOrder
     idPrioridade?: SortOrder
+    urlAnexo?: SortOrder
+    nomeArquivo?: SortOrder
   }
 
   export type chamadoSumOrderByAggregateInput = {
@@ -15309,6 +15380,24 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedIntNullableFilter<$PrismaModel>
     _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type UsuarioListRelationFilter = {
@@ -15399,21 +15488,6 @@ export namespace Prisma {
     not?: NestedEnummsgchamado_remetenteFilter<$PrismaModel> | $Enums.msgchamado_remetente
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    search?: string
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type ChamadoScalarRelationFilter = {
     is?: chamadoWhereInput
     isNot?: chamadoWhereInput
@@ -15483,24 +15557,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnummsgchamado_remetenteFilter<$PrismaModel>
     _max?: NestedEnummsgchamado_remetenteFilter<$PrismaModel>
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    search?: string
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type ChamadoNullableScalarRelationFilter = {
@@ -15916,6 +15972,10 @@ export namespace Prisma {
     set?: Date | string | null
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type usuarioUpdateOneWithoutChamado_chamado_idSolicitanteTousuarioNestedInput = {
     create?: XOR<usuarioCreateWithoutChamado_chamado_idSolicitanteTousuarioInput, usuarioUncheckedCreateWithoutChamado_chamado_idSolicitanteTousuarioInput>
     connectOrCreate?: usuarioCreateOrConnectWithoutChamado_chamado_idSolicitanteTousuarioInput
@@ -16110,10 +16170,6 @@ export namespace Prisma {
 
   export type Enummsgchamado_remetenteFieldUpdateOperationsInput = {
     set?: $Enums.msgchamado_remetente
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type chamadoUpdateOneRequiredWithoutMsgchamadoNestedInput = {
@@ -16687,6 +16743,21 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | null
+    notIn?: string[] | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    search?: string
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[]
@@ -16787,38 +16858,6 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedEnummsgchamado_remetenteFilter<$PrismaModel = never> = {
-    equals?: $Enums.msgchamado_remetente | Enummsgchamado_remetenteFieldRefInput<$PrismaModel>
-    in?: $Enums.msgchamado_remetente[]
-    notIn?: $Enums.msgchamado_remetente[]
-    not?: NestedEnummsgchamado_remetenteFilter<$PrismaModel> | $Enums.msgchamado_remetente
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | null
-    notIn?: string[] | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    search?: string
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedEnummsgchamado_remetenteWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.msgchamado_remetente | Enummsgchamado_remetenteFieldRefInput<$PrismaModel>
-    in?: $Enums.msgchamado_remetente[]
-    notIn?: $Enums.msgchamado_remetente[]
-    not?: NestedEnummsgchamado_remetenteWithAggregatesFilter<$PrismaModel> | $Enums.msgchamado_remetente
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedEnummsgchamado_remetenteFilter<$PrismaModel>
-    _max?: NestedEnummsgchamado_remetenteFilter<$PrismaModel>
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | null
@@ -16835,6 +16874,23 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnummsgchamado_remetenteFilter<$PrismaModel = never> = {
+    equals?: $Enums.msgchamado_remetente | Enummsgchamado_remetenteFieldRefInput<$PrismaModel>
+    in?: $Enums.msgchamado_remetente[]
+    notIn?: $Enums.msgchamado_remetente[]
+    not?: NestedEnummsgchamado_remetenteFilter<$PrismaModel> | $Enums.msgchamado_remetente
+  }
+
+  export type NestedEnummsgchamado_remetenteWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.msgchamado_remetente | Enummsgchamado_remetenteFieldRefInput<$PrismaModel>
+    in?: $Enums.msgchamado_remetente[]
+    notIn?: $Enums.msgchamado_remetente[]
+    not?: NestedEnummsgchamado_remetenteWithAggregatesFilter<$PrismaModel> | $Enums.msgchamado_remetente
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnummsgchamado_remetenteFilter<$PrismaModel>
+    _max?: NestedEnummsgchamado_remetenteFilter<$PrismaModel>
   }
 
   export type usuarioCreateWithoutChamado_chamado_idSolicitanteTousuarioInput = {
@@ -17439,6 +17495,8 @@ export namespace Prisma {
     dataAbertura?: Date | string
     dataAtualizacao?: Date | string | null
     dataFechamento?: Date | string | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     usuario_chamado_idSolicitanteTousuario?: usuarioCreateNestedOneWithoutChamado_chamado_idSolicitanteTousuarioInput
     usuario_chamado_idAnalistaTousuario?: usuarioCreateNestedOneWithoutChamado_chamado_idAnalistaTousuarioInput
     tipochamado?: tipochamadoCreateNestedOneWithoutChamadoInput
@@ -17460,6 +17518,8 @@ export namespace Prisma {
     idTipoChamado?: number | null
     idStatus?: number | null
     idPrioridade?: number | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     notificacao?: notificacaoUncheckedCreateNestedManyWithoutChamadoInput
   }
 
@@ -17528,6 +17588,8 @@ export namespace Prisma {
     dataAbertura?: DateTimeFieldUpdateOperationsInput | Date | string
     dataAtualizacao?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     usuario_chamado_idSolicitanteTousuario?: usuarioUpdateOneWithoutChamado_chamado_idSolicitanteTousuarioNestedInput
     usuario_chamado_idAnalistaTousuario?: usuarioUpdateOneWithoutChamado_chamado_idAnalistaTousuarioNestedInput
     tipochamado?: tipochamadoUpdateOneWithoutChamadoNestedInput
@@ -17549,6 +17611,8 @@ export namespace Prisma {
     idTipoChamado?: NullableIntFieldUpdateOperationsInput | number | null
     idStatus?: NullableIntFieldUpdateOperationsInput | number | null
     idPrioridade?: NullableIntFieldUpdateOperationsInput | number | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     notificacao?: notificacaoUncheckedUpdateManyWithoutChamadoNestedInput
   }
 
@@ -17649,6 +17713,8 @@ export namespace Prisma {
     dataAbertura?: Date | string
     dataAtualizacao?: Date | string | null
     dataFechamento?: Date | string | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     usuario_chamado_idSolicitanteTousuario?: usuarioCreateNestedOneWithoutChamado_chamado_idSolicitanteTousuarioInput
     usuario_chamado_idAnalistaTousuario?: usuarioCreateNestedOneWithoutChamado_chamado_idAnalistaTousuarioInput
     tipochamado?: tipochamadoCreateNestedOneWithoutChamadoInput
@@ -17670,6 +17736,8 @@ export namespace Prisma {
     idTipoChamado?: number | null
     idStatus?: number | null
     idPrioridade?: number | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutChamadoInput
   }
 
@@ -17744,6 +17812,8 @@ export namespace Prisma {
     dataAbertura?: DateTimeFieldUpdateOperationsInput | Date | string
     dataAtualizacao?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     usuario_chamado_idSolicitanteTousuario?: usuarioUpdateOneWithoutChamado_chamado_idSolicitanteTousuarioNestedInput
     usuario_chamado_idAnalistaTousuario?: usuarioUpdateOneWithoutChamado_chamado_idAnalistaTousuarioNestedInput
     tipochamado?: tipochamadoUpdateOneWithoutChamadoNestedInput
@@ -17765,6 +17835,8 @@ export namespace Prisma {
     idTipoChamado?: NullableIntFieldUpdateOperationsInput | number | null
     idStatus?: NullableIntFieldUpdateOperationsInput | number | null
     idPrioridade?: NullableIntFieldUpdateOperationsInput | number | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     msgchamado?: msgchamadoUncheckedUpdateManyWithoutChamadoNestedInput
   }
 
@@ -17775,6 +17847,8 @@ export namespace Prisma {
     dataAbertura?: Date | string
     dataAtualizacao?: Date | string | null
     dataFechamento?: Date | string | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     usuario_chamado_idSolicitanteTousuario?: usuarioCreateNestedOneWithoutChamado_chamado_idSolicitanteTousuarioInput
     usuario_chamado_idAnalistaTousuario?: usuarioCreateNestedOneWithoutChamado_chamado_idAnalistaTousuarioInput
     tipochamado?: tipochamadoCreateNestedOneWithoutChamadoInput
@@ -17795,6 +17869,8 @@ export namespace Prisma {
     idAnalista?: number | null
     idTipoChamado?: number | null
     idStatus?: number | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutChamadoInput
     notificacao?: notificacaoUncheckedCreateNestedManyWithoutChamadoInput
   }
@@ -17841,6 +17917,8 @@ export namespace Prisma {
     idTipoChamado?: IntNullableFilter<"chamado"> | number | null
     idStatus?: IntNullableFilter<"chamado"> | number | null
     idPrioridade?: IntNullableFilter<"chamado"> | number | null
+    urlAnexo?: StringNullableFilter<"chamado"> | string | null
+    nomeArquivo?: StringNullableFilter<"chamado"> | string | null
   }
 
   export type chamadoCreateWithoutStatuschamadoInput = {
@@ -17850,6 +17928,8 @@ export namespace Prisma {
     dataAbertura?: Date | string
     dataAtualizacao?: Date | string | null
     dataFechamento?: Date | string | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     usuario_chamado_idSolicitanteTousuario?: usuarioCreateNestedOneWithoutChamado_chamado_idSolicitanteTousuarioInput
     usuario_chamado_idAnalistaTousuario?: usuarioCreateNestedOneWithoutChamado_chamado_idAnalistaTousuarioInput
     tipochamado?: tipochamadoCreateNestedOneWithoutChamadoInput
@@ -17870,6 +17950,8 @@ export namespace Prisma {
     idAnalista?: number | null
     idTipoChamado?: number | null
     idPrioridade?: number | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutChamadoInput
     notificacao?: notificacaoUncheckedCreateNestedManyWithoutChamadoInput
   }
@@ -17907,6 +17989,8 @@ export namespace Prisma {
     dataAbertura?: Date | string
     dataAtualizacao?: Date | string | null
     dataFechamento?: Date | string | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     usuario_chamado_idSolicitanteTousuario?: usuarioCreateNestedOneWithoutChamado_chamado_idSolicitanteTousuarioInput
     usuario_chamado_idAnalistaTousuario?: usuarioCreateNestedOneWithoutChamado_chamado_idAnalistaTousuarioInput
     statuschamado?: statuschamadoCreateNestedOneWithoutChamadoInput
@@ -17927,6 +18011,8 @@ export namespace Prisma {
     idAnalista?: number | null
     idStatus?: number | null
     idPrioridade?: number | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutChamadoInput
     notificacao?: notificacaoUncheckedCreateNestedManyWithoutChamadoInput
   }
@@ -18027,6 +18113,8 @@ export namespace Prisma {
     dataAbertura?: Date | string
     dataAtualizacao?: Date | string | null
     dataFechamento?: Date | string | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     usuario_chamado_idAnalistaTousuario?: usuarioCreateNestedOneWithoutChamado_chamado_idAnalistaTousuarioInput
     tipochamado?: tipochamadoCreateNestedOneWithoutChamadoInput
     statuschamado?: statuschamadoCreateNestedOneWithoutChamadoInput
@@ -18047,6 +18135,8 @@ export namespace Prisma {
     idTipoChamado?: number | null
     idStatus?: number | null
     idPrioridade?: number | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutChamadoInput
     notificacao?: notificacaoUncheckedCreateNestedManyWithoutChamadoInput
   }
@@ -18068,6 +18158,8 @@ export namespace Prisma {
     dataAbertura?: Date | string
     dataAtualizacao?: Date | string | null
     dataFechamento?: Date | string | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     usuario_chamado_idSolicitanteTousuario?: usuarioCreateNestedOneWithoutChamado_chamado_idSolicitanteTousuarioInput
     tipochamado?: tipochamadoCreateNestedOneWithoutChamadoInput
     statuschamado?: statuschamadoCreateNestedOneWithoutChamadoInput
@@ -18088,6 +18180,8 @@ export namespace Prisma {
     idTipoChamado?: number | null
     idStatus?: number | null
     idPrioridade?: number | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
     msgchamado?: msgchamadoUncheckedCreateNestedManyWithoutChamadoInput
     notificacao?: notificacaoUncheckedCreateNestedManyWithoutChamadoInput
   }
@@ -18633,6 +18727,8 @@ export namespace Prisma {
     idAnalista?: number | null
     idTipoChamado?: number | null
     idStatus?: number | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
   }
 
   export type chamadoUpdateWithoutPrioridadechamadoInput = {
@@ -18642,6 +18738,8 @@ export namespace Prisma {
     dataAbertura?: DateTimeFieldUpdateOperationsInput | Date | string
     dataAtualizacao?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     usuario_chamado_idSolicitanteTousuario?: usuarioUpdateOneWithoutChamado_chamado_idSolicitanteTousuarioNestedInput
     usuario_chamado_idAnalistaTousuario?: usuarioUpdateOneWithoutChamado_chamado_idAnalistaTousuarioNestedInput
     tipochamado?: tipochamadoUpdateOneWithoutChamadoNestedInput
@@ -18662,6 +18760,8 @@ export namespace Prisma {
     idAnalista?: NullableIntFieldUpdateOperationsInput | number | null
     idTipoChamado?: NullableIntFieldUpdateOperationsInput | number | null
     idStatus?: NullableIntFieldUpdateOperationsInput | number | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     msgchamado?: msgchamadoUncheckedUpdateManyWithoutChamadoNestedInput
     notificacao?: notificacaoUncheckedUpdateManyWithoutChamadoNestedInput
   }
@@ -18678,6 +18778,8 @@ export namespace Prisma {
     idAnalista?: NullableIntFieldUpdateOperationsInput | number | null
     idTipoChamado?: NullableIntFieldUpdateOperationsInput | number | null
     idStatus?: NullableIntFieldUpdateOperationsInput | number | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type chamadoCreateManyStatuschamadoInput = {
@@ -18692,6 +18794,8 @@ export namespace Prisma {
     idAnalista?: number | null
     idTipoChamado?: number | null
     idPrioridade?: number | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
   }
 
   export type chamadoUpdateWithoutStatuschamadoInput = {
@@ -18701,6 +18805,8 @@ export namespace Prisma {
     dataAbertura?: DateTimeFieldUpdateOperationsInput | Date | string
     dataAtualizacao?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     usuario_chamado_idSolicitanteTousuario?: usuarioUpdateOneWithoutChamado_chamado_idSolicitanteTousuarioNestedInput
     usuario_chamado_idAnalistaTousuario?: usuarioUpdateOneWithoutChamado_chamado_idAnalistaTousuarioNestedInput
     tipochamado?: tipochamadoUpdateOneWithoutChamadoNestedInput
@@ -18721,6 +18827,8 @@ export namespace Prisma {
     idAnalista?: NullableIntFieldUpdateOperationsInput | number | null
     idTipoChamado?: NullableIntFieldUpdateOperationsInput | number | null
     idPrioridade?: NullableIntFieldUpdateOperationsInput | number | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     msgchamado?: msgchamadoUncheckedUpdateManyWithoutChamadoNestedInput
     notificacao?: notificacaoUncheckedUpdateManyWithoutChamadoNestedInput
   }
@@ -18737,6 +18845,8 @@ export namespace Prisma {
     idAnalista?: NullableIntFieldUpdateOperationsInput | number | null
     idTipoChamado?: NullableIntFieldUpdateOperationsInput | number | null
     idPrioridade?: NullableIntFieldUpdateOperationsInput | number | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type chamadoCreateManyTipochamadoInput = {
@@ -18751,6 +18861,8 @@ export namespace Prisma {
     idAnalista?: number | null
     idStatus?: number | null
     idPrioridade?: number | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
   }
 
   export type chamadoUpdateWithoutTipochamadoInput = {
@@ -18760,6 +18872,8 @@ export namespace Prisma {
     dataAbertura?: DateTimeFieldUpdateOperationsInput | Date | string
     dataAtualizacao?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     usuario_chamado_idSolicitanteTousuario?: usuarioUpdateOneWithoutChamado_chamado_idSolicitanteTousuarioNestedInput
     usuario_chamado_idAnalistaTousuario?: usuarioUpdateOneWithoutChamado_chamado_idAnalistaTousuarioNestedInput
     statuschamado?: statuschamadoUpdateOneWithoutChamadoNestedInput
@@ -18780,6 +18894,8 @@ export namespace Prisma {
     idAnalista?: NullableIntFieldUpdateOperationsInput | number | null
     idStatus?: NullableIntFieldUpdateOperationsInput | number | null
     idPrioridade?: NullableIntFieldUpdateOperationsInput | number | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     msgchamado?: msgchamadoUncheckedUpdateManyWithoutChamadoNestedInput
     notificacao?: notificacaoUncheckedUpdateManyWithoutChamadoNestedInput
   }
@@ -18796,6 +18912,8 @@ export namespace Prisma {
     idAnalista?: NullableIntFieldUpdateOperationsInput | number | null
     idStatus?: NullableIntFieldUpdateOperationsInput | number | null
     idPrioridade?: NullableIntFieldUpdateOperationsInput | number | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type usuarioCreateManyTipousuarioInput = {
@@ -18873,6 +18991,8 @@ export namespace Prisma {
     idTipoChamado?: number | null
     idStatus?: number | null
     idPrioridade?: number | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
   }
 
   export type chamadoCreateManyUsuario_chamado_idAnalistaTousuarioInput = {
@@ -18887,6 +19007,8 @@ export namespace Prisma {
     idTipoChamado?: number | null
     idStatus?: number | null
     idPrioridade?: number | null
+    urlAnexo?: string | null
+    nomeArquivo?: string | null
   }
 
   export type logatividadeCreateManyUsuarioInput = {
@@ -18929,6 +19051,8 @@ export namespace Prisma {
     dataAbertura?: DateTimeFieldUpdateOperationsInput | Date | string
     dataAtualizacao?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     usuario_chamado_idAnalistaTousuario?: usuarioUpdateOneWithoutChamado_chamado_idAnalistaTousuarioNestedInput
     tipochamado?: tipochamadoUpdateOneWithoutChamadoNestedInput
     statuschamado?: statuschamadoUpdateOneWithoutChamadoNestedInput
@@ -18949,6 +19073,8 @@ export namespace Prisma {
     idTipoChamado?: NullableIntFieldUpdateOperationsInput | number | null
     idStatus?: NullableIntFieldUpdateOperationsInput | number | null
     idPrioridade?: NullableIntFieldUpdateOperationsInput | number | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     msgchamado?: msgchamadoUncheckedUpdateManyWithoutChamadoNestedInput
     notificacao?: notificacaoUncheckedUpdateManyWithoutChamadoNestedInput
   }
@@ -18965,6 +19091,8 @@ export namespace Prisma {
     idTipoChamado?: NullableIntFieldUpdateOperationsInput | number | null
     idStatus?: NullableIntFieldUpdateOperationsInput | number | null
     idPrioridade?: NullableIntFieldUpdateOperationsInput | number | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type chamadoUpdateWithoutUsuario_chamado_idAnalistaTousuarioInput = {
@@ -18974,6 +19102,8 @@ export namespace Prisma {
     dataAbertura?: DateTimeFieldUpdateOperationsInput | Date | string
     dataAtualizacao?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     usuario_chamado_idSolicitanteTousuario?: usuarioUpdateOneWithoutChamado_chamado_idSolicitanteTousuarioNestedInput
     tipochamado?: tipochamadoUpdateOneWithoutChamadoNestedInput
     statuschamado?: statuschamadoUpdateOneWithoutChamadoNestedInput
@@ -18994,6 +19124,8 @@ export namespace Prisma {
     idTipoChamado?: NullableIntFieldUpdateOperationsInput | number | null
     idStatus?: NullableIntFieldUpdateOperationsInput | number | null
     idPrioridade?: NullableIntFieldUpdateOperationsInput | number | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
     msgchamado?: msgchamadoUncheckedUpdateManyWithoutChamadoNestedInput
     notificacao?: notificacaoUncheckedUpdateManyWithoutChamadoNestedInput
   }
@@ -19010,6 +19142,8 @@ export namespace Prisma {
     idTipoChamado?: NullableIntFieldUpdateOperationsInput | number | null
     idStatus?: NullableIntFieldUpdateOperationsInput | number | null
     idPrioridade?: NullableIntFieldUpdateOperationsInput | number | null
+    urlAnexo?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeArquivo?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type logatividadeUpdateWithoutUsuarioInput = {
