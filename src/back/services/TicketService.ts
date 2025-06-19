@@ -7,8 +7,13 @@ export class TicketService {
         descricao: string,
         idSolicitante: number,
         idTipoChamado: number,
-        idPrioridade: number
+        idPrioridade: number,
+        urlAnexo?: string,
+        nomeArquivo?: string
     ) {
+        console.log("[TicketService] Recebido para criar ticket:", {
+            assunto, descricao, idSolicitante, idTipoChamado, idPrioridade, urlAnexo, nomeArquivo
+        });
         const dataAbertura = new Date();
         const ticket = await prisma.chamado.create({
             data: {
@@ -20,16 +25,21 @@ export class TicketService {
                 idTipoChamado,
                 idPrioridade,
                 idStatus: null,
+                urlAnexo: urlAnexo ?? null,
+                nomeArquivo: nomeArquivo ?? null
             },
         });
+        console.log("[TicketService] Ticket criado no banco (pré-protocolo):", ticket);
         const ano = dataAbertura.getFullYear().toString().slice(-2);
         const idZero = ticket.idChamado.toString().padStart(6, "0");
         const protocolo = `${idZero}${ano}`;
 
-        return prisma.chamado.update({
+        const updatedTicket = await prisma.chamado.update({
             where: { idChamado: ticket.idChamado },
             data: { protocolo }
         });
+        console.log("[TicketService] Ticket atualizado com protocolo:", updatedTicket);
+        return updatedTicket;
     }
 
     async getAllTickets() {

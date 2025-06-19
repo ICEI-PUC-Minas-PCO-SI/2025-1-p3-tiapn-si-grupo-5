@@ -11,6 +11,7 @@ import { PriorityRoutes } from "./routes/priorityRoutes";
 import { DashboardRoutes } from "./routes/dashboardRoutes";
 import { ChatRoutes } from "./routes/chatRoutes";
 import { NotificationRoutes } from "./routes/notificationRoutes";
+import { UploadRoutes } from "./routes/uploadRoutes";
 
 export class App {
     private app: Express;
@@ -38,6 +39,7 @@ export class App {
         const dashboardRoutes = new DashboardRoutes();
         const chatRoutes = new ChatRoutes();
         const notificationRoutes = new NotificationRoutes();
+        const uploadRoutes = new UploadRoutes();
 
         this.app.use("/", userRoutes.getRouter());
         this.app.use("/", managementRoutes.getRouter());
@@ -49,6 +51,7 @@ export class App {
         this.app.use("/", dashboardRoutes.getRouter());
         this.app.use("/", chatRoutes.getRouter());
         this.app.use("/", notificationRoutes.getRouter());
+        this.app.use("/", uploadRoutes.getRouter());
     }
 
     public getInstance(): Express {

@@ -132,7 +132,9 @@ exports.Prisma.ChamadoScalarFieldEnum = {
   idAnalista: 'idAnalista',
   idTipoChamado: 'idTipoChamado',
   idStatus: 'idStatus',
-  idPrioridade: 'idPrioridade'
+  idPrioridade: 'idPrioridade',
+  urlAnexo: 'urlAnexo',
+  nomeArquivo: 'nomeArquivo'
 };
 
 exports.Prisma.GerenciaScalarFieldEnum = {
@@ -232,7 +234,9 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.chamadoOrderByRelevanceFieldEnum = {
   protocolo: 'protocolo',
   assunto: 'assunto',
-  descricao: 'descricao'
+  descricao: 'descricao',
+  urlAnexo: 'urlAnexo',
+  nomeArquivo: 'nomeArquivo'
 };
 
 exports.Prisma.gerenciaOrderByRelevanceFieldEnum = {

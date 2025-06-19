@@ -14,6 +14,8 @@ export interface ITicket {
     idTipoChamado: number;
     idStatus?: number | null;
     idPrioridade: number;
+    urlAnexo?: string | null;
+    nomeArquivo?: string | null;
 }
 
 export interface INewTicket {
@@ -22,6 +24,8 @@ export interface INewTicket {
     idSolicitante: number;
     idPrioridade: number;
     idTipoChamado: number;
+    urlAnexo?: string;
+    nomeArquivo?: string;
 }
 
 export async function sendTicket(payload: INewTicket): Promise<Response> {
@@ -103,6 +107,14 @@ export async function getTicketsBySolicitanteId(idSolicitante: number): Promise<
 }
 
 export async function getTicketById(idChamado: number) {
+    const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}`, {
+        headers: authHeaders()
+    });
+    if (!response.ok) throw new Error("Erro ao buscar chamado por id");
+    return response.json();
+}
+
+export async function getTicketByIdFull(idChamado: number): Promise<ITicket> {
     const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}`, {
         headers: authHeaders()
     });

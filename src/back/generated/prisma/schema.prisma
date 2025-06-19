@@ -21,6 +21,8 @@ model chamado {
   idTipoChamado                          Int?
   idStatus                               Int?
   idPrioridade                           Int?
+  urlAnexo                               String?            @db.Text
+  nomeArquivo                            String?            @db.VarChar(255)
   usuario_chamado_idSolicitanteTousuario usuario?           @relation("chamado_idSolicitanteTousuario", fields: [idSolicitante], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_1")
   usuario_chamado_idAnalistaTousuario    usuario?           @relation("chamado_idAnalistaTousuario", fields: [idAnalista], references: [idUsuario], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_2")
   tipochamado                            tipochamado?       @relation(fields: [idTipoChamado], references: [idTipoChamado], onDelete: NoAction, onUpdate: NoAction, map: "chamado_ibfk_3")
@@ -132,11 +134,24 @@ model usuario {
   logatividade                           logatividade[]
   msgchamado                             msgchamado[]
   notificacao                            notificacao[]
+  verificacao                            verificacao[]
   gerencia                               gerencia?      @relation(fields: [idGerencia], references: [idGerencia], onDelete: NoAction, onUpdate: NoAction, map: "usuario_ibfk_1")
   tipousuario                            tipousuario?   @relation(fields: [idTipoUsuario], references: [idTipoUsuario], onDelete: NoAction, onUpdate: NoAction, map: "usuario_ibfk_2")
 
   @@index([idGerencia], map: "idGerencia")
   @@index([idTipoUsuario], map: "idTipoUsuario")
+}
+
+model verificacao {
+  idVerificacao Int       @id @default(autoincrement())
+  idUsuario     Int
+  token         String    @unique @db.Char(36)
+  tipo          String?   @db.VarChar(30)
+  criadoEm      DateTime  @default(now()) @db.DateTime(0)
+  expiraEm      DateTime?
+  usuario       usuario   @relation(fields: [idUsuario], references: [idUsuario], onDelete: Cascade, onUpdate: NoAction, map: "verificacao_ibfk_1")
+
+  @@index([idUsuario], map: "idUsuario_verificacao")
 }
 
 enum msgchamado_remetente {

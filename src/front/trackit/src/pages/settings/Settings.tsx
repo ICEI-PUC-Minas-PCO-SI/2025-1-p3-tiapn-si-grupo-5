@@ -1,13 +1,11 @@
 import { useUser } from "@/contexts/UserContext"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ImagePlus, CircleCheckBig } from "lucide-react";
-{/* import { UploadButton } from "@/components/ui/UploadButton";
- */}
+import { ImagePlus, CircleCheckBig } from "lucide-react";   
 import { SettingsUserForm } from "@/components/settings/SettingsUserForm";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export function Settings() {
     const { user } = useUser();
@@ -15,6 +13,9 @@ export function Settings() {
     const avatarUrl = user?.fotoPerfil || undefined;
 
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [lastSavedPreview, setLastSavedPreview] = useState<string | null>(null);
 
     useEffect(() => {
         if (alert) {
@@ -22,6 +23,38 @@ export function Settings() {
             return () => clearTimeout(timer);
         }
     }, [alert]);
+
+    useEffect(() => {
+        if (selectedFile) {
+            const url = URL.createObjectURL(selectedFile);
+            setPreviewUrl(url);
+            // Dispara evento global para sidebar/menu
+            window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: url } }));
+            return () => {
+                URL.revokeObjectURL(url);
+                // Limpa preview global ao remover seleção
+                window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: null } }));
+            };
+        } else {
+            setPreviewUrl(null);
+            // Limpa preview global se não houver seleção
+            window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: null } }));
+        }
+    }, [selectedFile]);
+
+    // Quando o usuário salva o formulário, mantenha o preview como a foto exibida
+    const handleProfilePhotoUploaded = () => {
+        setLastSavedPreview(previewUrl);
+        window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: previewUrl || lastSavedPreview } }));
+    };
+
+    // Se o usuário cancelar a seleção, volta para a última salva
+    const handleCancelPhoto = () => {
+        setSelectedFile(null);
+        setPreviewUrl(lastSavedPreview);
+        // Atualiza preview global para última salva
+        window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: lastSavedPreview } }));
+    };
 
     return (
         <div className="flex flex-col gap-10">
@@ -50,29 +83,44 @@ export function Settings() {
                 <h2 className="title-h3 text-slate-700 dark:text-slate-300">Aqui você pode editar os dados da sua conta.</h2>
             </div>
             <header className="flex items-center gap-4">
-                <Avatar className="h-24 w-24">
-                    {avatarUrl ? (
-                        <AvatarImage src={avatarUrl} alt={name} />
-                    ) : (
-                        <AvatarFallback>
-                            {name
-                                .split(" ")
-                                .map((n: string) => n[0])
-                                .join("")
-                                .toUpperCase()
-                                .slice(0, 2)}
-                        </AvatarFallback>
-                    )}
-                </Avatar>
+                <div className="relative">
+                    <Avatar className="h-24 w-24">
+                        {previewUrl
+                            ? <AvatarImage src={previewUrl} alt={name} />
+                            : lastSavedPreview
+                                ? <AvatarImage src={lastSavedPreview} alt={name} />
+                                : avatarUrl
+                                    ? <AvatarImage src={avatarUrl} alt={name} />
+                                    : (
+                                        <AvatarFallback>
+                                            {
+                                                name
+                                                    .split(" ")
+                                                    .map((n: string) => n[0])
+                                                    .join("")
+                                                    .toUpperCase()
+                                                    .slice(0, 2)
+                                            }
+                                        </AvatarFallback>
+                                    )
+                        }
+                    </Avatar>
+                    <label className="absolute bottom-0 right-0 cursor-pointer bg-white rounded-full p-1 shadow-md border border-slate-200">
+                        <ImagePlus className="w-5 h-5 text-slate-700" />
+                        <Input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={e => {
+                                handleCancelPhoto(); // limpa preview anterior se trocar a foto antes de salvar
+                                if (e.target.files && e.target.files[0]) {
+                                    setSelectedFile(e.target.files[0]);
+                                }
+                            }}
+                        />
+                    </label>
+                </div>
                 <div className="flex flex-col gap-4">
-                    {/*<UploadButton size="fit" variant="outlineDisabled">
-                        <ImagePlus className="mr-2" />
-                        Enviar foto
-                    </UploadButton>*/}
-                    <Button size="fit" variant="outlineDisabled">
-                        <ImagePlus className="mr-2" />
-                        Enviar foto
-                    </Button>
                     <div className="flex gap-3 items-center">
                         {user?.tipo === 1 ? (
                             <>
@@ -93,7 +141,12 @@ export function Settings() {
                 </div>
             </header>
             <main className="flex flex-col">
-                <SettingsUserForm onFeedback={(type, message) => setAlert({ type, message })} />
+                <SettingsUserForm
+                    onFeedback={(type, message) => setAlert({ type, message })}
+                    profilePhotoFile={selectedFile}
+                    onProfilePhotoUploaded={handleProfilePhotoUploaded}
+                    setPreviewUrl={setPreviewUrl}
+                />
             </main>
         </div>
     )
