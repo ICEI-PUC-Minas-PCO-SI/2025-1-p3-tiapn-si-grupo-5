@@ -192,7 +192,11 @@ export class TicketController {
             if (!ticket) {
                 return res.status(404).json({ error: "Chamado não encontrado" });
             }
-            res.json(ticket);
+            res.json({
+                ...ticket,
+                urlAnexo: ticket.urlAnexo ?? null,
+                nomeArquivo: ticket.nomeArquivo ?? null
+            });
         } catch (error) {
             console.error("Erro ao buscar chamado por id:", error);
             res.status(500).json({ error: "Erro ao buscar chamado por id" });

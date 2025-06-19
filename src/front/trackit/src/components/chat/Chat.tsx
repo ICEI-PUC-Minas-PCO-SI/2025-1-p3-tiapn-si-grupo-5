@@ -1,21 +1,25 @@
 /* Componente Chat: exibe o chat de um chamado, histórico de mensagens, envia mensagens e integra com socket.io para chat em tempo real. */
 import { useEffect, useState, useRef } from "react";
 import type { FormEvent } from "react";
+import { Paperclip, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Paperclip, Send, ChevronsRight, ChevronsLeft } from "lucide-react";
+import { Send, ChevronsRight, ChevronsLeft } from "lucide-react";
 import { Message } from "@/components/ui/Message";
 import { useUser } from "@/contexts/UserContext";
 import { useChatSocket } from "@/hooks/useChatSocket";
 import type { ChatMessage } from "@/api/chat";
 import { getChatMessages } from "@/api/chat";
 import { markAllNotificationsAsRead } from "@/api/notifications";
+import { getTicketByIdFull } from "@/api/ticket";
 
 interface ChatProps {
-    descricao: string;
+    descricao?: string;
+    urlAnexo?: string | null;
+    nomeArquivo?: string | null;
 }
 
-export default function Chat({ descricao }: ChatProps) {
+export default function Chat(props: ChatProps) {
     const { user } = useUser();
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState("");
@@ -26,6 +30,34 @@ export default function Chat({ descricao }: ChatProps) {
     // Obtém o idChamado da URL
     const searchParams = new URLSearchParams(window.location.search);
     const idChamado = Number(searchParams.get("idChamado"));
+
+    // Estado para dados do chamado
+    const [ticketInfo, setTicketInfo] = useState<{ descricao: string; urlAnexo?: string | null; nomeArquivo?: string | null }>({
+        descricao: props.descricao || "",
+        urlAnexo: props.urlAnexo,
+        nomeArquivo: props.nomeArquivo,
+    });
+
+    // Busca o chamado ao abrir o chat
+    useEffect(() => {
+        if (!idChamado) return;
+        getTicketByIdFull(idChamado)
+            .then(ticket => {
+                setTicketInfo({
+                    descricao: ticket.descricao,
+                    urlAnexo: ticket.urlAnexo,
+                    nomeArquivo: ticket.nomeArquivo,
+                });
+            })
+            .catch(() => {
+                setTicketInfo({
+                    descricao: props.descricao || "",
+                    urlAnexo: props.urlAnexo,
+                    nomeArquivo: props.nomeArquivo,
+                });
+            });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [idChamado]);
 
     // Busca o histórico de mensagens ao abrir o chat
     useEffect(() => {
@@ -277,9 +309,35 @@ export default function Chat({ descricao }: ChatProps) {
                             />
                         </div>
                         <div className="flex-1 p-6 overflow-y-auto">
-                            <div className="whitespace-pre-line text-slate-900 text-sm dark:text-slate-200">
-                                {descricao}
+                            <div className="whitespace-pre-line text-slate-900 text-sm dark:text-slate-200 mb-4">
+                                {ticketInfo.descricao}
                             </div>
+                            {ticketInfo.urlAnexo && ticketInfo.nomeArquivo && (
+                                <a
+                                    href={ticketInfo.urlAnexo}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    download={ticketInfo.nomeArquivo}
+                                    className="mt-4 flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800 p-2 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                                    style={{ textDecoration: "none" }}
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <Paperclip className="w-4 h-4 text-sky-700 dark:text-sky-400" />
+                                        <span className="font-medium text-slate-900 dark:text-slate-100 text-xs">{ticketInfo.nomeArquivo}</span>
+                                    </div>
+                                    <Button
+                                        asChild
+                                        variant="icon"
+                                        size="sm"
+                                        className="px-2 py-0.5 text-sm h-7 min-w-2 pointer-events-none"
+                                        tabIndex={-1}
+                                    >
+                                        <span>
+                                            <Download />
+                                        </span>
+                                    </Button>
+                                </a>
+                            )}
                         </div>
                     </div>
                 )}
