@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import React, { useState, useEffect, useMemo } from "react";
+import { Pencil, Trash2, Plus, ArrowUpDown } from "lucide-react";
 import type { IPriority } from "@/api/priority";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import {
     getAllPriorities,
     addPriority,
@@ -11,6 +12,15 @@ import {
     deletePriority,
 } from "@/api/priority";
 import { z } from "zod";
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+    DialogClose,
+} from "@/components/ui/dialog";
 import {
     AlertDialog,
     AlertDialogContent,
@@ -20,43 +30,42 @@ import {
     AlertDialogDescription,
     AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
-
-interface PriorityParamsProps {
-    isAdding: boolean;
-    setIsAdding: (isAdding: boolean) => void;
-}
-
-function getErrorMessage(error: unknown): string {
-    if (error instanceof Error) return error.message;
-    if (typeof error === "string") return error;
-    return "Erro desconhecido";
-}
+import { DataTableParams } from "./DataTableParams";
+import type { ColumnDef, Column, Row } from "@tanstack/react-table";
 
 const priorityNameSchema = z.string().min(4, "O nome deve ter pelo menos 4 caracteres");
 
-export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
+export function PriorityParams() {
     const [priorityList, setPriorityList] = useState<IPriority[]>([]);
-    const [newPriorityName, setNewPriorityName] = useState("");
-    const [newPriorityColor, setNewPriorityColor] = useState("#000000");
-    const [editingPriorityId, setEditingPriorityId] = useState<number | null>(null);
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
-    const [nameError, setNameError] = useState<string | null>(null);
-    const [touched, setTouched] = useState(false);
 
+    // Dialog state
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [editingPriority, setEditingPriority] = useState<IPriority | null>(null);
+    const [name, setName] = useState("");
+    const [primaryColor, setPrimaryColor] = useState("#2563eb");
+    const [secondaryColor, setSecondaryColor] = useState("#ffffff");
+    const [nameError, setNameError] = useState<string | null>(null);
+
+    // Delete dialog
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
 
-    const fetchPriorities = async () => {
+    // Search/filter/sort state
+    const [search, setSearch] = useState("");
+    const [filtered, setFiltered] = useState<IPriority[]>([]);
+
+    useEffect(() => {
+        fetchPriorities();
+    }, []);
+
+    async function fetchPriorities() {
         try {
             const data = await getAllPriorities();
             setPriorityList(data);
         } catch {
             setAlert({ type: "error", message: "Erro ao buscar prioridades." });
         }
-    };
-
-    useEffect(() => {
-        fetchPriorities();
-    }, []);
+    }
 
     useEffect(() => {
         if (alert) {
@@ -66,148 +75,298 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
     }, [alert]);
 
     useEffect(() => {
-        if (!isAdding) {
-            setNameError(null);
-            setTouched(false);
-            return;
+        let data = [...priorityList];
+        if (search.trim()) {
+            const q = search.trim().toLowerCase();
+            data = data.filter(
+                (p) =>
+                    p.nomePrioridade.toLowerCase().includes(q) ||
+                    p.hexCorPrimaria.toLowerCase().includes(q) ||
+                    p.hexCorSecundaria.toLowerCase().includes(q)
+            );
         }
-        if (touched) {
-            const result = priorityNameSchema.safeParse(newPriorityName);
-            setNameError(result.success ? null : result.error.issues[0].message);
-        } else {
-            setNameError(null);
-        }
-    }, [newPriorityName, isAdding, touched]);
+        setFiltered(data);
+    }, [priorityList, search]);
 
-    const handleAddOrEditPriority = async () => {
-        const result = priorityNameSchema.safeParse(newPriorityName);
-        if (!result.success || !newPriorityColor) {
-            setNameError(result.success ? null : result.error.issues[0].message);
-            setAlert({ type: "error", message: "Preencha o nome (mín. 8 caracteres) e a cor da prioridade." });
+    function openAddDialog() {
+        setEditingPriority(null);
+        setName("");
+        setPrimaryColor("#2563eb");
+        setSecondaryColor("#ffffff");
+        setNameError(null);
+        setDialogOpen(true);
+    }
+
+    function openEditDialog(priority: IPriority) {
+        setEditingPriority(priority);
+        setName(priority.nomePrioridade);
+        setPrimaryColor(priority.hexCorPrimaria || "#2563eb");
+        setSecondaryColor(priority.hexCorSecundaria || "#ffffff");
+        setNameError(null);
+        setDialogOpen(true);
+    }
+
+    async function handleSave() {
+        const result = priorityNameSchema.safeParse(name);
+        if (!result.success) {
+            setNameError(result.error.issues[0].message);
             return;
         }
+        setNameError(null);
         try {
-            if (editingPriorityId !== null) {
-                const updated = await updatePriority(editingPriorityId, newPriorityName, newPriorityColor);
+            if (editingPriority) {
+                const updated = await updatePriority(
+                    editingPriority.idPrioridade,
+                    name,
+                    primaryColor,
+                    secondaryColor
+                );
                 setPriorityList((prev) =>
-                    prev.map((p) => (p.idPrioridade === editingPriorityId ? updated : p))
+                    prev.map((p) => (p.idPrioridade === editingPriority.idPrioridade ? updated : p))
                 );
                 setAlert({ type: "success", message: "Prioridade atualizada com sucesso!" });
             } else {
-                const created = await addPriority(newPriorityName, newPriorityColor);
+                const created = await addPriority(name, primaryColor, secondaryColor);
                 setPriorityList((prev) => [...prev, created]);
                 setAlert({ type: "success", message: "Prioridade adicionada com sucesso!" });
             }
-        } catch (error) {
-            setAlert({ type: "error", message: getErrorMessage(error) || "Erro ao salvar prioridade." });
+            setDialogOpen(false);
+        } catch {
+            setAlert({ type: "error", message: "Erro ao salvar prioridade." });
         }
-        setNewPriorityName("");
-        setNewPriorityColor("#000000");
-        setEditingPriorityId(null);
-        setIsAdding(false);
-    };
+    }
 
-    const handleEditPriority = (idPrioridade: number) => {
-        const priorityToEdit = priorityList.find((p) => p.idPrioridade === idPrioridade);
-        if (!priorityToEdit) return;
-        setNewPriorityName(priorityToEdit.nomePrioridade);
-        setNewPriorityColor(priorityToEdit.hexCorPrimaria || "#000000");
-        setEditingPriorityId(idPrioridade);
-        setIsAdding(true);
-    };
-
-    const handleDeletePriority = (idPrioridade: number) => {
-        setDeleteDialog({ open: true, id: idPrioridade });
-    };
-
-    const confirmDeletePriority = async () => {
+    async function confirmDeletePriority() {
         if (!deleteDialog.id) return;
         try {
             await deletePriority(deleteDialog.id);
             setPriorityList((prev) => prev.filter((p) => p.idPrioridade !== deleteDialog.id));
             setAlert({ type: "success", message: "Prioridade excluída com sucesso!" });
-        } catch (error) {
-            setAlert({ type: "error", message: getErrorMessage(error) || "Prioridade associada a um chamado existente." });
+        } catch {
+            setAlert({ type: "error", message: "Prioridade associada a um chamado existente." });
         }
         setDeleteDialog({ open: false, id: null });
-    };
+    }
 
-    const isSaveDisabled = !newPriorityName || !!nameError;
+    // DataTable columns
+    const columns = useMemo<ColumnDef<IPriority>[]>(() => [
+        {
+            accessorKey: "nomePrioridade",
+            header: ({ column }: { column: Column<IPriority, unknown> }) => (
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Nome
+                    <ArrowUpDown
+                        className={`ml-2 ${column.getIsSorted() === "asc"
+                            ? "rotate-0"
+                            : column.getIsSorted() === "desc"
+                                ? "rotate-180"
+                                : ""
+                            }`}
+                    />
+                </Button>
+            ),
+            cell: ({ row }: { row: Row<IPriority> }) => row.original.nomePrioridade,
+            enableHiding: true,
+        },
+        {
+            accessorKey: "badge",
+            header: "Badge (Preview)",
+            cell: ({ row }) => (
+                <Badge
+                    style={{
+                        backgroundColor: row.original.hexCorPrimaria,
+                        color: row.original.hexCorSecundaria,
+                        border: "1px solid #e5e7eb",
+                    }}
+                    className="text-xs px-3 py-1 rounded"
+                >
+                    {row.original.nomePrioridade}
+                </Badge>
+            ),
+        },
+        {
+            accessorKey: "hexCorPrimaria",
+            header: ({ column }: { column: Column<IPriority, unknown> }) => (
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Cor Primária
+                    <ArrowUpDown
+                        className={`ml-2 ${column.getIsSorted() === "asc"
+                            ? "rotate-0"
+                            : column.getIsSorted() === "desc"
+                                ? "rotate-180"
+                                : ""
+                            }`}
+                    />
+                </Button>
+            ),
+            cell: ({ row }) => (
+                <span className="flex items-center justify-center gap-2">
+                    <span
+                        className="inline-block w-6 h-6 rounded-full border"
+                        style={{ backgroundColor: row.original.hexCorPrimaria }}
+                        title={row.original.hexCorPrimaria}
+                    />
+                    <span className="text-xs">{row.original.hexCorPrimaria}</span>
+                </span>
+            ),
+        },
+        {
+            accessorKey: "hexCorSecundaria",
+            header: ({ column }: { column: Column<IPriority, unknown> }) => (
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Cor Secundária
+                    <ArrowUpDown
+                        className={`ml-2 ${column.getIsSorted() === "asc"
+                            ? "rotate-0"
+                            : column.getIsSorted() === "desc"
+                                ? "rotate-180"
+                                : ""
+                            }`}
+                    />
+                </Button>
+            ),
+            cell: ({ row }) => (
+                <span className="flex items-center justify-center gap-2">
+                    <span
+                        className="inline-block w-6 h-6 rounded-full border"
+                        style={{ backgroundColor: row.original.hexCorSecundaria }}
+                        title={row.original.hexCorSecundaria}
+                    />
+                    <span className="text-xs">{row.original.hexCorSecundaria}</span>
+                </span>
+            ),
+        },
+        {
+            id: "actions",
+            header: "Ações",
+            cell: ({ row }) => (
+                <div className="flex justify-center gap-2">
+                    <Button size="icon" variant="outline" onClick={() => openEditDialog(row.original)} aria-label="Editar">
+                        <Pencil />
+                    </Button>
+                    <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: row.original.idPrioridade })} aria-label="Excluir">
+                        <Trash2 />
+                    </Button>
+                </div>
+            ),
+        },
+    ], []);
 
     return (
-        <div className="p-6">
+        <div className="space-y-4">
             {alert && (
-                <GlobalAlert
-                    type={alert.type}
-                    message={alert.message}
-                    onClose={() => setAlert(null)}
-                />
-            )}
-            <ul className="divide-y divide-gray-200">
-                {priorityList.map((priority) => (
-                    <li
-                        key={priority.idPrioridade}
-                        className="flex justify-between items-center py-2"
-                    >
-                        <div className="flex items-center gap-2">
-                            <span
-                                className="w-5 h-5 rounded-full"
-                                style={{ backgroundColor: priority.hexCorPrimaria || "transparent" }}
-                            ></span>
-                            <span className="paragraph text-slate-700 dark:text-slate-300">{priority.nomePrioridade}</span>
-                        </div>
-                        <div className="flex gap-2">
-                            <Button variant="delete" size="icon" onClick={() => handleDeletePriority(priority.idPrioridade)}>
-                                <Trash2 />
-                            </Button>
-                            <Button size="icon" onClick={() => handleEditPriority(priority.idPrioridade)}>
-                                <Pencil />
-                            </Button>
-                        </div>
-                    </li>
-                ))}
-            </ul>
-            {isAdding && (
-                <div className="mt-4 flex gap-2 items-center">
-                    <Input
-                        type="text"
-                        placeholder="Nome da prioridade"
-                        value={newPriorityName}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                            setNewPriorityName(e.target.value);
-                            setTouched(true);
-                        }}
+                <div className="fixed bottom-4 right-4 z-50">
+                    <GlobalAlert
+                        type={alert.type}
+                        message={alert.message}
+                        onClose={() => setAlert(null)}
                     />
-                    <Input
-                        type="color"
-                        value={newPriorityColor}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPriorityColor(e.target.value)}
-                        className="w-12 h-10"
-                    />
-                    <Button
-                        onClick={handleAddOrEditPriority}
-                        variant={isSaveDisabled ? "disabled" : "default"}
-                        disabled={isSaveDisabled}
-                    >
-                        Salvar
-                    </Button>
-                    <Button
-                        onClick={() => {
-                            setIsAdding(false);
-                            setNewPriorityName("");
-                            setNewPriorityColor("#000000");
-                            setEditingPriorityId(null);
-                            setTouched(false);
-                        }}
-                        variant="outline"
-                    >
-                        Cancelar
-                    </Button>
-                    {nameError && touched && (
-                        <span className="text-red-500 text-sm">{nameError}</span>
-                    )}
                 </div>
             )}
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
+                <div className="flex-1">
+                    <Input
+                        placeholder="Pesquise pelo nome ou cor"
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                        className="max-w-xs"
+                    />
+                </div>
+                <div className="flex items-center gap-2">
+                    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                        <DialogTrigger asChild>
+                            <Button variant="default" size="icon" aria-label="Nova prioridade" onClick={openAddDialog}>
+                                <Plus className="w-4 h-4" />
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>
+                                    {editingPriority ? "Editar prioridade" : "Nova prioridade"}
+                                </DialogTitle>
+                            </DialogHeader>
+                            <div className="flex flex-col gap-4">
+                                <Input
+                                    placeholder="Nome da prioridade"
+                                    value={name}
+                                    onChange={e => setName(e.target.value)}
+                                />
+                                {nameError && (
+                                    <span className="text-red-500 text-xs">{nameError}</span>
+                                )}
+                                <div className="flex gap-4 items-center justify-between">
+                                    <div className="flex gap-4">
+                                        <div>
+                                        <label className="block text-xs mb-1">Cor primária</label>
+                                        <Input
+                                            type="color"
+                                            value={primaryColor}
+                                            onChange={e => setPrimaryColor(e.target.value)}
+                                            className="w-12 h-10 p-0 border-none"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs mb-1">Cor secundária</label>
+                                        <Input
+                                            type="color"
+                                            value={secondaryColor}
+                                            onChange={e => setSecondaryColor(e.target.value)}
+                                            className="w-12 h-10 p-0 border-none"
+                                        />
+                                    </div>
+                                    </div>
+                                    <div className="flex flex-col items-center ml-4">
+                                        <label className="block text-xs mb-1">Preview</label>
+                                        <Badge
+                                            style={{
+                                                backgroundColor: primaryColor,
+                                                color: secondaryColor,
+                                                border: "1px solid #e5e7eb",
+                                            }}
+                                            className="text-xs px-3 py-1 rounded"
+                                        >
+                                            {name || "Prioridade"}
+                                        </Badge>
+                                    </div>
+                                </div>
+                            </div>
+                            <DialogFooter className="mt-2">
+                                <Button type="button" onClick={handleSave} disabled={!name || !!nameError}>
+                                    Salvar
+                                </Button>
+                                <DialogClose asChild>
+                                    <Button type="button" variant="outline">
+                                        Cancelar
+                                    </Button>
+                                </DialogClose>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </div>
+            <DataTableParams
+                data={filtered}
+                columns={columns}
+                visibleColumns={{
+                    nomePrioridade: true,
+                    badge: true,
+                    hexCorPrimaria: true,
+                    hexCorSecundaria: true,
+                    actions: true,
+                }}
+            />
             <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, id: open ? deleteDialog.id : null })}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -233,3 +392,4 @@ export function PriorityParams({ isAdding, setIsAdding }: PriorityParamsProps) {
         </div>
     );
 }
+

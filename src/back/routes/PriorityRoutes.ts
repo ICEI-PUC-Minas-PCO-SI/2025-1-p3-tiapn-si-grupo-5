@@ -6,12 +6,14 @@ import { autenticarToken } from "../middlewares/auth-jwt";
 // Schemas para validação
 const priorityCreateSchema = z.object({
     nomePrioridade: z.string().min(3),
-    color: z.string().min(3)
+    hexCorPrimaria: z.string().min(3),
+    hexCorSecundaria: z.string().min(3)
 });
 const priorityUpdateSchema = z.object({
     idPrioridade: z.union([z.number(), z.string()]),
     nomePrioridade: z.string().min(3),
-    color: z.string().min(3)
+    hexCorPrimaria: z.string().min(3),
+    hexCorSecundaria: z.string().min(3)
 });
 
 export class PriorityRoutes {

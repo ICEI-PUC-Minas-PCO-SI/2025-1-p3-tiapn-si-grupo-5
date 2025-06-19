@@ -6,24 +6,24 @@ export class PriorityService {
         return prisma.prioridadechamado.findMany();
     }
 
-    async createPriority(nomePrioridade: string, color: string) {
+    async createPriority(nomePrioridade: string, hexCorPrimaria: string, hexCorSecundaria: string) {
         return prisma.prioridadechamado.create({
             data: {
                 nomePrioridade,
-                hexCorPrimaria: color,
-                hexCorSecundaria: color,
+                hexCorPrimaria,
+                hexCorSecundaria,
                 ativo: 1
             }
         });
     }
 
-    async updatePriority(idPrioridade: number, nomePrioridade: string, color: string) {
+    async updatePriority(idPrioridade: number, nomePrioridade: string, hexCorPrimaria: string, hexCorSecundaria: string) {
         return prisma.prioridadechamado.update({
             where: { idPrioridade: Number(idPrioridade) },
             data: {
                 nomePrioridade,
-                hexCorPrimaria: color,
-                hexCorSecundaria: color
+                hexCorPrimaria,
+                hexCorSecundaria
             }
         });
     }
