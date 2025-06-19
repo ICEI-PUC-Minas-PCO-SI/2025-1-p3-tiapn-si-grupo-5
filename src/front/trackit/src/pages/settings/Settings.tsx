@@ -15,6 +15,7 @@ export function Settings() {
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [lastSavedPreview, setLastSavedPreview] = useState<string | null>(null);
 
     useEffect(() => {
         if (alert) {
@@ -27,16 +28,32 @@ export function Settings() {
         if (selectedFile) {
             const url = URL.createObjectURL(selectedFile);
             setPreviewUrl(url);
-            return () => URL.revokeObjectURL(url);
+            // Dispara evento global para sidebar/menu
+            window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: url } }));
+            return () => {
+                URL.revokeObjectURL(url);
+                // Limpa preview global ao remover seleção
+                window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: null } }));
+            };
         } else {
             setPreviewUrl(null);
+            // Limpa preview global se não houver seleção
+            window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: null } }));
         }
     }, [selectedFile]);
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setSelectedFile(e.target.files[0]);
-        }
+    // Quando o usuário salva o formulário, mantenha o preview como a foto exibida
+    const handleProfilePhotoUploaded = () => {
+        setLastSavedPreview(previewUrl);
+        window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: previewUrl || lastSavedPreview } }));
+    };
+
+    // Se o usuário cancelar a seleção, volta para a última salva
+    const handleCancelPhoto = () => {
+        setSelectedFile(null);
+        setPreviewUrl(lastSavedPreview);
+        // Atualiza preview global para última salva
+        window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: lastSavedPreview } }));
     };
 
     return (
@@ -68,22 +85,25 @@ export function Settings() {
             <header className="flex items-center gap-4">
                 <div className="relative">
                     <Avatar className="h-24 w-24">
-                        {previewUrl ? (
-                            <AvatarImage src={previewUrl} alt={name} />
-                        ) : avatarUrl ? (
-                            <AvatarImage src={avatarUrl} alt={name} />
-                        ) : (
-                            <AvatarFallback>
-                                {
-                                    name
-                                        .split(" ")
-                                        .map((n: string) => n[0])
-                                        .join("")
-                                        .toUpperCase()
-                                        .slice(0, 2)
-                                }
-                            </AvatarFallback>
-                        )}
+                        {previewUrl
+                            ? <AvatarImage src={previewUrl} alt={name} />
+                            : lastSavedPreview
+                                ? <AvatarImage src={lastSavedPreview} alt={name} />
+                                : avatarUrl
+                                    ? <AvatarImage src={avatarUrl} alt={name} />
+                                    : (
+                                        <AvatarFallback>
+                                            {
+                                                name
+                                                    .split(" ")
+                                                    .map((n: string) => n[0])
+                                                    .join("")
+                                                    .toUpperCase()
+                                                    .slice(0, 2)
+                                            }
+                                        </AvatarFallback>
+                                    )
+                        }
                     </Avatar>
                     <label className="absolute bottom-0 right-0 cursor-pointer bg-white rounded-full p-1 shadow-md border border-slate-200">
                         <ImagePlus className="w-5 h-5 text-slate-700" />
@@ -91,7 +111,12 @@ export function Settings() {
                             type="file"
                             accept="image/*"
                             className="hidden"
-                            onChange={handleFileChange}
+                            onChange={e => {
+                                handleCancelPhoto(); // limpa preview anterior se trocar a foto antes de salvar
+                                if (e.target.files && e.target.files[0]) {
+                                    setSelectedFile(e.target.files[0]);
+                                }
+                            }}
                         />
                     </label>
                 </div>
@@ -119,7 +144,7 @@ export function Settings() {
                 <SettingsUserForm
                     onFeedback={(type, message) => setAlert({ type, message })}
                     profilePhotoFile={selectedFile}
-                    onProfilePhotoUploaded={() => setSelectedFile(null)}
+                    onProfilePhotoUploaded={handleProfilePhotoUploaded}
                     setPreviewUrl={setPreviewUrl}
                 />
             </main>

@@ -28,10 +28,11 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { UserProfileSection } from "./UserProfileSection";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getUnreadChamados } from "@/api/notifications";
 import { useUser } from "@/contexts/UserContext";
 import { ThemeToggle } from "../theme/theme-toggle";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 export function Sidebar() {
     const location = useLocation();
@@ -83,6 +84,28 @@ export function Sidebar() {
     const displayEmail = user?.email || "Não localizado";
     const displayDepartment = user?.nomeGerencia || "Não localizado";
     const displayAvatar = user?.fotoPerfil || undefined;
+
+    // Preview global da foto de perfil
+    const [previewProfilePhoto, setPreviewProfilePhoto] = useState<string | null>(null);
+    const previewRef = useRef<string | null>(null);
+
+    useEffect(() => {
+        // Handler tipado corretamente
+        function handleProfilePhotoPreview(e: CustomEvent<{ previewUrl?: string | null }>) {
+            if (e.detail?.previewUrl) {
+                setPreviewProfilePhoto(e.detail.previewUrl);
+                previewRef.current = e.detail.previewUrl;
+            } else if (e.detail?.previewUrl === null) {
+                setPreviewProfilePhoto(null);
+                previewRef.current = null;
+            }
+        }
+        // Use addEventListener com tipo correto
+        window.addEventListener("profile-photo-preview", handleProfilePhotoPreview as EventListener);
+        return () => {
+            window.removeEventListener("profile-photo-preview", handleProfilePhotoPreview as EventListener);
+        };
+    }, []);
 
     return (
         <UISidebar>
@@ -395,6 +418,7 @@ export function Sidebar() {
                         department={displayDepartment}
                         onLogout={handleLogout}
                         avatarUrl={displayAvatar}
+                        previewProfilePhoto={previewProfilePhoto}
                     />
                 )}
             </SidebarFooter>

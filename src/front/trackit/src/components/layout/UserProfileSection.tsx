@@ -15,6 +15,7 @@ type UserProfileSectionProps = {
     role: string;
     department: string;
     avatarUrl?: string;
+    previewProfilePhoto?: string | null;
 };
 
 export function UserProfileSection({
@@ -24,6 +25,7 @@ export function UserProfileSection({
     role,
     department,
     avatarUrl,
+    previewProfilePhoto, // <-- adicione aqui
 }: UserProfileSectionProps) {
     function getInitials(name: string): string {
         return name
@@ -47,7 +49,9 @@ export function UserProfileSection({
             <DropdownMenuTrigger asChild>
                 <div className="flex items-center gap-3 p-2 rounded-md cursor-pointer hover:bg-sidebar-accent transition-colors">
                     <Avatar className="h-8 w-8">
-                        {avatarUrl ? (
+                        {previewProfilePhoto ? (
+                            <AvatarImage src={previewProfilePhoto} alt={name} />
+                        ) : avatarUrl ? (
                             <AvatarImage src={avatarUrl} alt={name} />
                         ) : (
                             <AvatarFallback>
@@ -68,7 +72,9 @@ export function UserProfileSection({
             <DropdownMenuContent align="start" sideOffset={5} className="w-64">
                 <div className="flex items-center gap-3 p-2">
                     <Avatar className="h-10 w-10">
-                        {avatarUrl ? (
+                        {previewProfilePhoto ? (
+                            <AvatarImage src={previewProfilePhoto} alt={name} />
+                        ) : avatarUrl ? (
                             <AvatarImage src={avatarUrl} alt={name} />
                         ) : (
                             <AvatarFallback>

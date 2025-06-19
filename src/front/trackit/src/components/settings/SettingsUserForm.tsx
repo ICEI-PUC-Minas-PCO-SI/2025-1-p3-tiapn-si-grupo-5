@@ -59,12 +59,14 @@ export function SettingsUserForm({
         setIsSubmitting(true);
         try {
             let fotoPerfilUrl = user?.fotoPerfil ?? null;
+            let skipUserContextPhotoUpdate = false;
 
             // Se o usuário selecionou uma nova foto, faz o upload antes de atualizar o perfil
             if (profilePhotoFile && user) {
                 const result = await uploadProfilePhoto(user.id, profilePhotoFile);
                 fotoPerfilUrl = result.fotoPerfil;
-                if (setUser) setUser({ ...user, fotoPerfil: fotoPerfilUrl });
+                // NÃO atualize o contexto do usuário com a nova foto para manter o preview até o usuário navegar
+                skipUserContextPhotoUpdate = true;
                 onProfilePhotoUploaded();
                 setPreviewUrl(null);
             }
@@ -83,9 +85,15 @@ export function SettingsUserForm({
                 return;
             }
 
-            // Atualiza o contexto do usuário com os novos dados
+            // Atualiza o contexto do usuário com os novos dados, mas NÃO atualize fotoPerfil se skipUserContextPhotoUpdate for true
             const updated = await response.json();
-            if (setUser) setUser({ ...user!, ...updated, fotoPerfil: fotoPerfilUrl });
+            if (setUser) {
+                setUser({
+                    ...user!,
+                    ...updated,
+                    fotoPerfil: skipUserContextPhotoUpdate ? user!.fotoPerfil : fotoPerfilUrl
+                });
+            }
 
             onFeedback("success", "Perfil atualizado com sucesso!");
             setIsChanged(false);
