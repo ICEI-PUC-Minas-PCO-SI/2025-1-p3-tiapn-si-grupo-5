@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { Pencil, Trash2, Plus, ArrowUpDown } from "lucide-react";
+import type { IManagement } from "../../api/management";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { Pencil, Trash2 } from "lucide-react";
-import type { IManagement } from "../../api/management";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
 import {
   getAllActiveManagements,
@@ -12,6 +12,15 @@ import {
 } from "../../api/management";
 import { z } from "zod";
 import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogHeader,
@@ -20,10 +29,13 @@ import {
   AlertDialogDescription,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
+import { DataTableParams } from "./DataTableParams";
+import type { ColumnDef, Column, Row } from "@tanstack/react-table";
 
-const managementNameSchema = z.string().min(4, "O nome deve ter pelo menos 4 caracteres");
+const managementNameSchema = z.string()
+  .min(3, "O nome deve ter pelo menos 3 caracteres")
+  .max(20, "O nome deve ter no máximo 20 caracteres");
 
-// Tipagem para erros desconhecidos
 function getErrorMessage(error: unknown): string {
   if (error instanceof Error) return error.message;
   if (typeof error === "string") return error;
@@ -37,26 +49,33 @@ interface ManagementParamsProps {
 
 export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProps) {
   const [managementList, setManagementList] = useState<IManagement[]>([]);
-  const [newManagementName, setNewManagementName] = useState("");
-  const [editingManagementId, setEditingManagementId] = useState<number | null>(null);
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
-  const [nameError, setNameError] = useState<string | null>(null);
-  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
-  const [touched, setTouched] = useState(false);
 
-  const fetchManagement = async () => {
-    try {
-      const data = await getAllActiveManagements();
-      setManagementList(data);
-    } catch (error) {
-      console.error(error);
-      setAlert({ type: "error", message: "Erro ao buscar as gerências." });
-    }
-  };
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingManagement, setEditingManagement] = useState<IManagement | null>(null);
+  const [name, setName] = useState("");
+  const [nameError, setNameError] = useState<string | null>(null);
+  const [isNameValid, setIsNameValid] = useState(false);
+
+  // Delete dialog
+  const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
+
+  // Search/filter/sort state
+  const [search, setSearch] = useState("");
+  const [filtered, setFiltered] = useState<IManagement[]>([]);
 
   useEffect(() => {
     fetchManagement();
   }, []);
+
+  async function fetchManagement() {
+    try {
+      const data = await getAllActiveManagements();
+      setManagementList(data);
+    } catch (error) {
+      setAlert({ type: "error", message: "Erro ao buscar as gerências." });
+    }
+  }
 
   useEffect(() => {
     if (alert) {
@@ -66,59 +85,65 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
   }, [alert]);
 
   useEffect(() => {
-    if (!isAdding) {
-      setNameError(null);
-      setTouched(false);
-      return;
+    let data = [...managementList];
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      data = data.filter(
+        (g) => g.nomeGerencia.toLowerCase().includes(q)
+      );
     }
-    if (touched) {
-      const result = managementNameSchema.safeParse(newManagementName);
-      setNameError(result.success ? null : result.error.issues[0].message);
-    } else {
-      setNameError(null);
-    }
-  }, [newManagementName, isAdding, touched]);
+    setFiltered(data);
+  }, [managementList, search]);
 
-  const handleAddOrEditManagement = async () => {
-    const result = managementNameSchema.safeParse(newManagementName);
+  useEffect(() => {
+    // Validação dinâmica para habilitar/desabilitar o botão Salvar
+    const result = managementNameSchema.safeParse(name);
+    setIsNameValid(result.success);
+    if (!name) setNameError(null);
+    else if (!result.success) setNameError(result.error.issues[0].message);
+    else setNameError(null);
+  }, [name]);
+
+  function openAddDialog() {
+    setEditingManagement(null);
+    setName("");
+    setNameError(null);
+    setDialogOpen(true);
+  }
+
+  function openEditDialog(management: IManagement) {
+    setEditingManagement(management);
+    setName(management.nomeGerencia);
+    setNameError(null);
+    setDialogOpen(true);
+  }
+
+  async function handleSave() {
+    const result = managementNameSchema.safeParse(name);
     if (!result.success) {
-      setNameError(result.success ? null : result.error.issues[0].message);
-      setAlert({ type: "error", message: "Preencha o nome (mín. 8 caracteres)." });
+      setNameError(result.error.issues[0].message);
       return;
     }
+    setNameError(null);
     try {
-      if (editingManagementId !== null) {
-        const updated = await updateManagement(editingManagementId, newManagementName);
+      if (editingManagement) {
+        const updated = await updateManagement(editingManagement.idGerencia, name);
         setManagementList((prev) =>
-          prev.map((g) => (g.idGerencia === editingManagementId ? updated : g))
+          prev.map((g) => (g.idGerencia === editingManagement.idGerencia ? updated : g))
         );
         setAlert({ type: "success", message: "Gerência atualizada com sucesso!" });
       } else {
-        const created = await addManagement(newManagementName);
+        const created = await addManagement(name);
         setManagementList((prev) => [...prev, created]);
         setAlert({ type: "success", message: "Gerência adicionada com sucesso!" });
       }
+      setDialogOpen(false);
     } catch (error) {
       setAlert({ type: "error", message: getErrorMessage(error) || "Erro ao salvar gerência." });
     }
-    setNewManagementName("");
-    setEditingManagementId(null);
-    setIsAdding(false);
-  };
+  }
 
-  const handleEditManagement = (idGerencia: number) => {
-    const managementToEdit = managementList.find((g) => g.idGerencia === idGerencia);
-    if (!managementToEdit) return;
-    setNewManagementName(managementToEdit.nomeGerencia);
-    setEditingManagementId(idGerencia);
-    setIsAdding(true);
-  };
-
-  const handleDeleteManagement = (idGerencia: number) => {
-    setDeleteDialog({ open: true, id: idGerencia });
-  };
-
-  const confirmDeleteManagement = async () => {
+  async function confirmDeleteManagement() {
     if (!deleteDialog.id) return;
     try {
       await deleteManagement(deleteDialog.id);
@@ -128,77 +153,117 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
       setAlert({ type: "error", message: getErrorMessage(error) || "Gerência associada a um usuário existente." });
     }
     setDeleteDialog({ open: false, id: null });
-  };
+  }
 
-  const isSaveDisabled = !newManagementName || !!nameError;
+  // DataTable columns
+  const columns = useMemo<ColumnDef<IManagement>[]>(() => [
+    {
+      accessorKey: "nomeGerencia",
+      header: ({ column }: { column: Column<IManagement, unknown> }) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Nome
+          <ArrowUpDown
+            className={`ml-2 ${column.getIsSorted() === "asc"
+              ? "rotate-0"
+              : column.getIsSorted() === "desc"
+                ? "rotate-180"
+                : ""
+              }`}
+          />
+        </Button>
+      ),
+      cell: ({ row }: { row: Row<IManagement> }) => row.original.nomeGerencia,
+      enableHiding: true,
+    },
+    {
+      id: "actions",
+      header: "Ações",
+      cell: ({ row }) => (
+        <div className="flex justify-center gap-2">
+          <Button size="icon" variant="outline" onClick={() => openEditDialog(row.original)} aria-label="Editar">
+            <Pencil />
+          </Button>
+          <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: row.original.idGerencia })} aria-label="Excluir">
+            <Trash2 />
+          </Button>
+        </div>
+      ),
+    },
+  ], []);
 
   return (
-    <div className="p-6">
+    <div className="space-y-4">
       {alert && (
-        <GlobalAlert
-          type={alert.type}
-          message={alert.message}
-          onClose={() => setAlert(null)}
-        />
-      )}
-      <ul className="divide-y divide-gray-200">
-        {managementList.map((gerencia) => (
-          <li
-            key={gerencia.idGerencia}
-            className="flex justify-between items-center py-2"
-          >
-            <div className="flex items-center gap-2">
-              <span className="paragraph text-slate-700 dark:text-slate-300">{gerencia.nomeGerencia}</span>
-            </div>
-            <div className="flex gap-2 ">
-              <Button variant="delete" size="icon"
-                onClick={() => handleDeleteManagement(gerencia.idGerencia)}
-              >
-                <Trash2 />
-              </Button>
-              <Button size="icon"
-                onClick={() => handleEditManagement(gerencia.idGerencia)}
-              >
-                <Pencil />
-              </Button>
-            </div>
-          </li>
-        ))}
-      </ul>
-      {isAdding && (
-        <div className="mt-4 flex gap-2 items-center">
-          <Input
-            type="text"
-            placeholder="Nome do status"
-            value={newManagementName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setNewManagementName(e.target.value);
-              setTouched(true);
-            }}
+        <div className="fixed bottom-4 right-4 z-50">
+          <GlobalAlert
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert(null)}
           />
-          <Button
-            onClick={handleAddOrEditManagement}
-            variant={isSaveDisabled ? "disabled" : "default"}
-            disabled={isSaveDisabled}
-          >
-            Salvar
-          </Button>
-          <Button
-            onClick={() => {
-              setIsAdding(false);
-              setNewManagementName("");
-              setEditingManagementId(null);
-              setTouched(false);
-            }}
-            variant="outline"
-          >
-            Cancelar
-          </Button>
-          {nameError && touched && (
-            <span className="text-red-500 text-sm">{nameError}</span>
-          )}
         </div>
       )}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
+        <div className="flex-1">
+          <Input
+            placeholder="Pesquise pelo nome"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="max-w-xs"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="default" size="icon" aria-label="Nova gerência" onClick={openAddDialog}>
+                <Plus className="w-4 h-4" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  {editingManagement ? "Editar gerência" : "Nova gerência"}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="flex flex-col gap-4">
+                <Input
+                  placeholder="Nome da gerência"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                />
+                {nameError && (
+                  <span className="text-red-500 text-xs">{nameError}</span>
+                )}
+              </div>
+              <DialogFooter className="mt-2">
+                <Button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={!isNameValid}
+                >
+                  Salvar
+                </Button>
+                <DialogClose asChild>
+                  <Button type="button" variant="outline">
+                    Cancelar
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+      <DataTableParams
+        data={filtered}
+        columns={columns}
+        visibleColumns={{
+          nomeGerencia: true,
+          actions: true,
+        }}
+      />
       <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, id: open ? deleteDialog.id : null })}>
         <AlertDialogContent>
           <AlertDialogHeader>
