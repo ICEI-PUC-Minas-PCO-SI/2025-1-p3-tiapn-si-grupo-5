@@ -5,6 +5,7 @@ import { Shield } from "lucide-react";
 import { useState, useEffect } from "react";
 import { updateProfileUser } from "@/api/users";
 import { uploadProfilePhoto } from "@/api/upload";
+import { useNavigate } from "react-router-dom";
 
 export function SettingsUserForm({
     onFeedback,
@@ -17,7 +18,8 @@ export function SettingsUserForm({
     onProfilePhotoUploaded: () => void;
     setPreviewUrl: (url: string | null) => void;
 }) {
-    const { user, setUser } = useUser();
+    const { user, setUser, logout } = useUser();
+    const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formValues, setFormValues] = useState({
         nome: user?.nome || "",
@@ -172,8 +174,13 @@ export function SettingsUserForm({
             <div className="flex gap-4 items-center">
                 <Button
                     type="button"
-                    variant="outlineDisabled"
+                    variant="outline"
                     size="fit"
+                    onClick={() => {
+                        logout();
+                        navigate("/forgot-password");
+                    }}
+                    tabIndex={0}
                 >
                     <Shield />
                     Trocar senha
