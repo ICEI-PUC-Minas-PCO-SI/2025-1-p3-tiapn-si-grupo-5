@@ -15,8 +15,6 @@ import { Filter } from "lucide-react";
 import type { User, ActionButton } from "@/interfaces/InterfacesDataTableUsers";
 import type { IUpdateUser } from "@/api/users";
 import { getAllUsers } from "@/api/users";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { X } from "lucide-react";
 import { PutActiveUser } from "@/components/management-users/PutActiveUser";
 import { useUser } from "@/contexts/UserContext";
 import {
@@ -31,6 +29,7 @@ import { XCircle } from "lucide-react";
 import { TableSpinner } from "@/components/ui/spinner";
 import { Plus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { GlobalAlert } from "@/components/ui/GlobalAlert";
 
 export function ManagementUsers() {
   const [Data, setData] = useState<User[]>([]);
@@ -299,22 +298,11 @@ export function ManagementUsers() {
     <div className="space-y-4">
       {alert && (
         <div className="fixed bottom-4 right-4 z-50">
-          <Alert
-            variant={alert.type === "success" ? "success" : "destructive"}
-            className="flex items-center justify-between space-x-4"
-          >
-            <div>
-              <AlertTitle>{alert.type === "success" ? "Sucesso" : "Erro"}</AlertTitle>
-              <AlertDescription>{alert.message}</AlertDescription>
-            </div>
-            <button
-              onClick={() => setAlert(null)}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="Fechar alerta"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </Alert>
+          <GlobalAlert
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert(null)}
+          />
         </div>
       )}
       <h1 className="title-h1">Gerenciar Usuários</h1>

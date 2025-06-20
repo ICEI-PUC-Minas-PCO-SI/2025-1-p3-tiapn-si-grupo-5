@@ -6,7 +6,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { LogOut, User, Building } from "lucide-react";
+import { LogOut, User, Building, Settings } from "lucide-react";
 
 type UserProfileSectionProps = {
     onLogout?: () => void;
@@ -16,6 +16,7 @@ type UserProfileSectionProps = {
     department: string;
     avatarUrl?: string;
     previewProfilePhoto?: string | null;
+    onSettingsClick?: () => void;
 };
 
 export function UserProfileSection({
@@ -25,7 +26,8 @@ export function UserProfileSection({
     role,
     department,
     avatarUrl,
-    previewProfilePhoto, // <-- adicione aqui
+    previewProfilePhoto,
+    onSettingsClick,
 }: UserProfileSectionProps) {
     function getInitials(name: string): string {
         return name
@@ -99,6 +101,14 @@ export function UserProfileSection({
                 <DropdownMenuItem className="flex items-center gap-2 cursor-default">
                     <Building className="h-4 w-4 mr-2" />
                     <span>Gerência: {department}</span>
+                </DropdownMenuItem>
+                {/* NOVO: Adiciona item de configurações */}
+                <DropdownMenuItem
+                    className="flex items-center gap-2 cursor-pointer"
+                    onClick={onSettingsClick}
+                >
+                    <Settings className="h-4 w-4 mr-2" />
+                    <span>Configurações</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
