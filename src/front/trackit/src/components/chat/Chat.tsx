@@ -12,6 +12,7 @@ import type { ChatMessage } from "@/api/chat";
 import { getChatMessages } from "@/api/chat";
 import { markAllNotificationsAsRead } from "@/api/notifications";
 import { getTicketByIdFull } from "@/api/ticket";
+import { GlobalAlert } from "@/components/ui/GlobalAlert";
 
 interface ChatProps {
     descricao?: string;
@@ -26,6 +27,7 @@ export default function Chat(props: ChatProps) {
     const [showDescricao, setShowDescricao] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [globalAlert, setGlobalAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
     // Obtém o idChamado da URL
     const searchParams = new URLSearchParams(window.location.search);
@@ -56,7 +58,7 @@ export default function Chat(props: ChatProps) {
                     nomeArquivo: props.nomeArquivo,
                 });
             });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [idChamado]);
 
     // Busca o histórico de mensagens ao abrir o chat
@@ -313,30 +315,36 @@ export default function Chat(props: ChatProps) {
                                 {ticketInfo.descricao}
                             </div>
                             {ticketInfo.urlAnexo && ticketInfo.nomeArquivo && (
-                                <a
-                                    href={ticketInfo.urlAnexo}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    download={ticketInfo.nomeArquivo}
+                                <Button
+                                    type="button"
+                                    variant="outline"
                                     className="mt-4 flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800 p-2 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                                     style={{ textDecoration: "none" }}
+                                    onClick={async () => {
+                                        try {
+                                            const response = await fetch(ticketInfo.urlAnexo!);
+                                            if (!response.ok) throw new Error("Erro ao baixar arquivo");
+                                            const blob = await response.blob();
+                                            const url = window.URL.createObjectURL(blob);
+                                            const link = document.createElement("a");
+                                            link.href = url;
+                                            link.download = ticketInfo.nomeArquivo!;
+                                            document.body.appendChild(link);
+                                            link.click();
+                                            document.body.removeChild(link);
+                                            window.URL.revokeObjectURL(url);
+                                        } catch (e) {
+                                            setGlobalAlert({ type: "error", message: "Erro ao baixar o arquivo." });
+                                            console.error("Erro ao baixar o arquivo:", e);
+                                        }
+                                    }}
                                 >
                                     <div className="flex items-center gap-2">
                                         <Paperclip className="w-4 h-4 text-sky-700 dark:text-sky-400" />
                                         <span className="font-medium text-slate-900 dark:text-slate-100 text-xs">{ticketInfo.nomeArquivo}</span>
                                     </div>
-                                    <Button
-                                        asChild
-                                        variant="icon"
-                                        size="sm"
-                                        className="px-2 py-0.5 text-sm h-7 min-w-2 pointer-events-none"
-                                        tabIndex={-1}
-                                    >
-                                        <span>
-                                            <Download />
-                                        </span>
-                                    </Button>
-                                </a>
+                                    <Download />
+                                </Button>
                             )}
                         </div>
                     </div>
@@ -363,6 +371,13 @@ export default function Chat(props: ChatProps) {
                     <Send className="w-5 h-5" />
                 </Button>
             </form>
+            {globalAlert && (
+                <GlobalAlert
+                    type={globalAlert.type}
+                    message={globalAlert.message}
+                    onClose={() => setGlobalAlert(null)}
+                />
+            )}
         </div>
     );
 }
