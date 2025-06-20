@@ -12,6 +12,7 @@ export interface User {
     nomeUsuario: string;
     email: string;
     ramal: string;
+    matricula: string;
 }
 
 export interface DataTableProps<T> {

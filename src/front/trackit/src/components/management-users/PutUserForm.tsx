@@ -49,7 +49,7 @@ export function PutUserForm({
     onClose,
 }: {
     user: IUpdateUser;
-    onSuccess: () => void;
+    onSuccess: (updatedUser: IUpdateUser) => void;
     onError: () => void;
     onClose: () => void;
 }) {
@@ -112,7 +112,7 @@ export function PutUserForm({
         watchedTipoUsuario !== String(user.tipoUsuario);
 
     const handleFormSubmit = async (data: PutUserSchema) => {
-        const payload = {
+        const payload: IUpdateUser = {
             idUsuario: user.idUsuario,
             matricula: data.matricula,
             gerencia: Number(data.gerencia),
@@ -138,7 +138,7 @@ export function PutUserForm({
                     logout();
                     return;
                 }
-                onSuccess();
+                onSuccess(payload);
             } else {
                 onError();
             }

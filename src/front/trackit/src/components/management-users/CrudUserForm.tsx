@@ -25,6 +25,7 @@ import { getAllActiveManagements } from "@/api/management";
 import { getAllUserTypes } from "../../api/usertypes";
 import { registerNewUser } from "@/api/users";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
+import type { User } from "@/interfaces/InterfacesDataTableUsers";
 
 const crudUserSchema = z.object({
     name: z
@@ -75,7 +76,7 @@ export function CrudUserForm({
 }: {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    onSuccess: () => void;
+    onSuccess: (newUser: User) => void;
 }) {
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [managements, setManagements] = useState<{ idGerencia: number; nomeGerencia: string }[]>([]);
@@ -176,7 +177,28 @@ export function CrudUserForm({
             if (response.ok) {
                 setAlert({ type: "success", message: "Usuário criado com sucesso!" });
                 onOpenChange(false);
-                onSuccess();
+                // Crie um objeto User para passar ao onSuccess
+                const newUser: User = {
+                    id: String(Math.random()), // ou pegue o id da resposta se disponível
+                    name: payload.nomeUsuario,
+                    accessType:
+                        payload.tipoUsuario === 1
+                            ? "Gestor"
+                            : payload.tipoUsuario === 2
+                                ? "Analista"
+                                : "Usuário",
+                    management: {
+                        idGerencia: payload.gerencia,
+                        nomeGerencia:
+                            managements.find((m) => m.idGerencia === payload.gerencia)?.nomeGerencia || "",
+                    },
+                    ativo: 1,
+                    nomeUsuario: payload.nomeUsuario,
+                    email: payload.email,
+                    ramal: payload.ramal,
+                    matricula: payload.matricula,
+                };
+                onSuccess(newUser);
             } else {
                 setAlert({ type: "error", message: "Erro ao criar usuário. Verifique os dados e tente novamente." });
             }
