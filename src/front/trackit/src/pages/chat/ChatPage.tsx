@@ -169,43 +169,48 @@ export function ChatPage() {
             )}
             <header className="flex flex-col gap-4">
                 <div className="flex justify-between items-center mb-4">
-                    <div className="flex gap-4 items-center">
-                        <h1 className="title-h1 text-slate-950 dark:text-white">
-                            {ticket?.assunto
-                                ? ticket.assunto.length > 30
-                                    ? ticket.assunto.slice(0, 30) + "..."
-                                    : ticket.assunto
-                                : "Assunto da demanda"}
-                        </h1>
-                        <Badge variant="outline" className="h-10 dark:bg-slate-800 dark:text-white dark:border-slate-700">
-                            {ticket?.protocolo && ticket.protocolo.length === 8
-                                ? `#${ticket.protocolo.slice(0, 6)}/${ticket.protocolo.slice(6, 8)}`
-                                : ticket?.protocolo
-                                    ? `#${ticket.protocolo}`
-                                    : "#XXXXXXXX/YY"}
-                        </Badge>
-                    </div>
-                    <div className="flex gap-4 items-center">
-                        <Badge
-                            className="text-sm px-3 py-1 rounded h-10"
-                            style={{
-                                backgroundColor: ticket?.prioridadechamado?.hexCorPrimaria,
-                                color: ticket?.prioridadechamado?.hexCorSecundaria,
-                                border: "1px solid #e5e7eb"
-                            }}
-                        >
-                            {ticket?.prioridadechamado?.nomePrioridade || "Prioridade"}
-                        </Badge>
-                        <Badge
-                            className="text-sm px-3 py-1 rounded h-10"
-                            style={{
-                                backgroundColor: ticket?.statuschamado?.hexCorPrimaria || "#888",
-                                color: ticket?.statuschamado?.hexCorSecundaria,
-                                border: "1px solid #e5e7eb"
-                            }}
-                        >
-                            {ticket?.statuschamado?.nomeStatus || "Em aberto"}
-                        </Badge>
+                    {/* Pai: justify-between */}
+                    <div className="flex flex-1 justify-between items-center gap-4">
+                        {/* Esquerda: Assunto + Protocolo */}
+                        <div className="flex items-center gap-3">
+                            <h1 className="title-h1 text-slate-950 dark:text-white">
+                                {ticket?.assunto
+                                    ? ticket.assunto.length > 30
+                                        ? ticket.assunto.slice(0, 30) + "..."
+                                        : ticket.assunto
+                                    : "Assunto da demanda"}
+                            </h1>
+                            <Badge variant="outline" className="h-10 dark:bg-slate-800 dark:text-white dark:border-slate-700 align-top">
+                                {ticket?.protocolo && ticket.protocolo.length === 8
+                                    ? `#${ticket.protocolo.slice(0, 6)}/${ticket.protocolo.slice(6, 8)}`
+                                    : ticket?.protocolo
+                                        ? `#${ticket.protocolo}`
+                                        : "#XXXXXXXX/YY"}
+                            </Badge>
+                        </div>
+                        {/* Direita: Prioridade + Status */}
+                        <div className="flex gap-4 items-center">
+                            <Badge
+                                className="text-sm px-3 py-1 rounded h-10"
+                                style={{
+                                    backgroundColor: ticket?.prioridadechamado?.hexCorPrimaria,
+                                    color: ticket?.prioridadechamado?.hexCorSecundaria,
+                                    border: "1px solid #e5e7eb"
+                                }}
+                            >
+                                {ticket?.prioridadechamado?.nomePrioridade || "Prioridade"}
+                            </Badge>
+                            <Badge
+                                className="text-sm px-3 py-1 rounded h-10"
+                                style={{
+                                    backgroundColor: ticket?.statuschamado?.hexCorPrimaria || "#888",
+                                    color: ticket?.statuschamado?.hexCorSecundaria,
+                                    border: "1px solid #e5e7eb"
+                                }}
+                            >
+                                {ticket?.statuschamado?.nomeStatus || "Em aberto"}
+                            </Badge>
+                        </div>
                     </div>
                 </div>
                 <div className="mb-4 flex items-center justify-between">
@@ -455,6 +460,12 @@ export function ChatPage() {
                     )}
                 </div>
                 <div className="flex justify-between items-center mb-4">
+                    <span className="paragraph text-slate-700 dark:text-slate-300">
+                        {ticket?.usuario_chamado_idSolicitanteTousuario?.nomeUsuario
+                            ? `Aberto por: ${ticket.usuario_chamado_idSolicitanteTousuario.nomeUsuario}` : ""}
+                        {ticket?.usuario_chamado_idSolicitanteTousuario?.gerencia?.nomeGerencia
+                            ? ` | ${ticket.usuario_chamado_idSolicitanteTousuario.gerencia.nomeGerencia}` : ""}
+                    </span>
                     <span className="paragraph text-slate-700 dark:text-slate-300">
                         Analista Responsável: {ticket?.usuario_chamado_idAnalistaTousuario?.nomeUsuario || "-"}
                     </span>
