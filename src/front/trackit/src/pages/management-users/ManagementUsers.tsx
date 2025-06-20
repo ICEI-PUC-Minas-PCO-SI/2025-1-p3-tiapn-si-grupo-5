@@ -76,6 +76,7 @@ export function ManagementUsers() {
           email: "",
           ramal: "",
           matricula: u.matricula,
+          fotoPerfil: u.fotoPerfil,
         };
       });
       setData(mappedUsers);
@@ -415,6 +416,7 @@ export function ManagementUsers() {
               email: true,
               ramal: true,
               matricula: false,
+              fotoPerfil: true, // Adicionado para evitar erro de propriedade obrigatória
             }}
           />
         )}

@@ -11,8 +11,11 @@ import {
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, ChevronLeft, ChevronRight, Pencil, Trash2, CheckCircle2 } from "lucide-react";
-import type { User, ActionButton } from "../../interfaces/InterfacesDataTableUsers";
+import type { User as UserBase, ActionButton } from "../../interfaces/InterfacesDataTableUsers";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+type User = UserBase & { fotoPerfil?: string };
 
 export function DataTableUsers({
   data,
@@ -43,7 +46,28 @@ export function DataTableUsers({
           />
         </Button>
       ),
-      cell: ({ row }: { row: Row<User> }) => <span>{row.original.name}</span>,
+      cell: ({ row }: { row: Row<User> }) => {
+        const name = row.original.name || "";
+        const displayName = name.length > 22 ? name.slice(0, 22) + "..." : name;
+        // Pega as iniciais
+        const initials = name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        // Foto de perfil se existir
+        const fotoPerfil = row.original.fotoPerfil || undefined;
+        return (
+          <div className="flex items-center gap-6">
+            <Avatar className="w-8 h-8">
+              <AvatarImage src={fotoPerfil} alt={name} />
+              <AvatarFallback>{initials}</AvatarFallback>
+            </Avatar>
+            <span>{displayName}</span>
+          </div>
+        );
+      },
       enableHiding: true,
     },
     {
