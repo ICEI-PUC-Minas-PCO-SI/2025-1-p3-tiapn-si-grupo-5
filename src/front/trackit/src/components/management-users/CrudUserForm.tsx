@@ -17,7 +17,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Dialog,
-    DialogTrigger,
     DialogContent,
     DialogHeader,
     DialogTitle,
@@ -26,7 +25,6 @@ import { getAllActiveManagements } from "@/api/management";
 import { getAllUserTypes } from "../../api/usertypes";
 import { registerNewUser } from "@/api/users";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
-import { Plus } from "lucide-react";
 
 const crudUserSchema = z.object({
     name: z
@@ -70,8 +68,15 @@ const crudUserSchema = z.object({
 
 type CrudUserSchema = z.infer<typeof crudUserSchema>;
 
-export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+export function CrudUserForm({
+    open,
+    onOpenChange,
+    onSuccess,
+}: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onSuccess: () => void;
+}) {
     const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [managements, setManagements] = useState<{ idGerencia: number; nomeGerencia: string }[]>([]);
     const [userTypes, setUserTypes] = useState<{ idTipoUsuario: number; tipoUsuario: string }[]>([]);
@@ -109,7 +114,7 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
         handleSubmit,
         control,
         reset,
-        formState: { errors },
+        formState: { errors, isValid },
     } = useForm<CrudUserSchema>({
         resolver: zodResolver(crudUserSchema),
         defaultValues: {
@@ -122,10 +127,30 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
         }
     });
 
+    useEffect(() => {
+        if (open) {
+            reset({
+                name: "",
+                matricula: "",
+                ramal: "",
+                email: "",
+                accessType: "",
+                management: "",
+            });
+        }
+    }, [open, reset]);
+
     const handleModalOpenChange = (isOpen: boolean) => {
-        setIsModalOpen(isOpen);
+        onOpenChange(isOpen);
         if (isOpen) {
-            reset();
+            reset({
+                name: "",
+                matricula: "",
+                ramal: "",
+                email: "",
+                accessType: "",
+                management: "",
+            });
         }
     };
 
@@ -150,7 +175,7 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
             const response = await registerNewUser(payload);
             if (response.ok) {
                 setAlert({ type: "success", message: "Usuário criado com sucesso!" });
-                setIsModalOpen(false);
+                onOpenChange(false);
                 onSuccess();
             } else {
                 setAlert({ type: "error", message: "Erro ao criar usuário. Verifique os dados e tente novamente." });
@@ -170,12 +195,7 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
                     onClose={() => setAlert(null)}
                 />
             )}
-            <Dialog open={isModalOpen} onOpenChange={handleModalOpenChange}>
-                <DialogTrigger asChild>
-                    <Button size="icon">
-                        <Plus className="w-4 h-4"/>
-                    </Button>
-                </DialogTrigger>
+            <Dialog open={open} onOpenChange={handleModalOpenChange}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Criar Usuário</DialogTitle>
@@ -305,7 +325,7 @@ export function CrudUserForm({ onSuccess }: { onSuccess: () => void }) {
                                 </span>
                             )}
                         </div>
-                        <Button type="submit">Criar</Button>
+                        <Button type="submit" disabled={!isValid}>Criar</Button>
                     </form>
                 </DialogContent>
             </Dialog>

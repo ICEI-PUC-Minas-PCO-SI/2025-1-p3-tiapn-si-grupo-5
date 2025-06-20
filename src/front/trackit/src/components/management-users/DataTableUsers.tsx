@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, ChevronLeft, ChevronRight, Pencil, Trash2, CheckCircle2 } from "lucide-react";
 import type { User, ActionButton } from "../../interfaces/InterfacesDataTableUsers";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function DataTableUsers({
   data,
@@ -128,34 +129,45 @@ export function DataTableUsers({
       cell: ({ row }: { row: Row<User> }) => (
         <div className="flex justify-center gap-2">
           {/* Editar */}
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => actions[0].onClick(row.original)}
-            aria-label="Editar"
-          >
-            <Pencil className="w-4 h-4" />
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => actions[0].onClick(row.original)}
+                  aria-label="Editar"
+                >
+                  <Pencil className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Editar
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           {/* Ativar/Desativar */}
-          {row.original.ativo === 1 ? (
-            <Button
-              variant="delete"
-              size="icon"
-              onClick={() => actions[1].onClick(row.original)}
-              aria-label="Desativar"
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-          ) : (
-            <Button
-              variant="active"
-              size="icon"
-              onClick={() => actions[1].onClick(row.original)}
-              aria-label="Ativar"
-            >
-              <CheckCircle2 className="w-4 h-4" />
-            </Button>
-          )}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant={row.original.ativo === 1 ? "delete" : "active"}
+                  size="icon"
+                  onClick={() => actions[1].onClick(row.original)}
+                  aria-label={row.original.ativo === 1 ? "Desativar" : "Ativar"}
+                >
+                  {row.original.ativo === 1 ? (
+                    <Trash2 className="w-4 h-4" />
+                  ) : (
+                    <CheckCircle2 className="w-4 h-4" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {row.original.ativo === 1 ? "Desativar" : "Ativar"}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       ),
     },

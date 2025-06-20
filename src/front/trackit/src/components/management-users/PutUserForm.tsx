@@ -24,7 +24,6 @@ import { getAllUserTypes } from "@/api/usertypes";
 import { updateUser } from "@/api/users";
 import type { IUpdateUser } from "@/api/users";
 import { useUser } from "@/contexts/UserContext";
-import { GlobalAlert } from "@/components/ui/GlobalAlert";
 
 const putUserSchema = z.object({
     matricula: z
@@ -56,18 +55,18 @@ export function PutUserForm({
 }) {
     const { user: loggedInUser, logout } = useUser();
     const [isModalOpen] = useState(true);
-    const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+    // const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
     const [managements, setManagements] = useState<{ idGerencia: number; nomeGerencia: string }[]>([]);
     const [userTypes, setUserTypes] = useState<{ idTipoUsuario: number; tipoUsuario: string }[]>([]);
 
     useEffect(() => {
-        if (alert) {
-            const timer = setTimeout(() => {
-                setAlert(null);
-            }, 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [alert]);
+        // if (alert) {
+        //     const timer = setTimeout(() => {
+        //         setAlert(null);
+        //     }, 3000);
+        //     return () => clearTimeout(timer);
+        // }
+    }, [/* alert */]);
 
     useEffect(() => {
         async function fetchManagements() {
@@ -94,7 +93,8 @@ export function PutUserForm({
         register,
         handleSubmit,
         control,
-        formState: { errors },
+        formState: { errors, isValid },
+        watch,
     } = useForm<PutUserSchema>({
         resolver: zodResolver(putUserSchema),
         defaultValues: {
@@ -103,6 +103,13 @@ export function PutUserForm({
             tipoUsuario: String(user.tipoUsuario),
         },
     });
+
+    // Validação: só permite submit se algum valor for diferente do original
+    const watchedGerencia = watch("gerencia");
+    const watchedTipoUsuario = watch("tipoUsuario");
+    const isChanged =
+        watchedGerencia !== String(user.gerencia) ||
+        watchedTipoUsuario !== String(user.tipoUsuario);
 
     const handleFormSubmit = async (data: PutUserSchema) => {
         const payload = {
@@ -120,7 +127,7 @@ export function PutUserForm({
             payload.gerencia === user.gerencia &&
             payload.tipoUsuario === user.tipoUsuario
         ) {
-            setAlert({ type: "error", message: "Os dados informados são os mesmos já registrados. Nenhuma alteração foi feita." });
+            // Não faz nada se não houver alteração
             return;
         }
 
@@ -143,7 +150,6 @@ export function PutUserForm({
 
     const handleModalOpenChange = (isOpen: boolean) => {
         if (!isOpen) {
-            setAlert(null);
             onClose();
         }
     };
@@ -153,13 +159,6 @@ export function PutUserForm({
 
     return (
         <>
-            {alert && (
-                <GlobalAlert
-                    type={alert.type}
-                    message={alert.message}
-                    onClose={() => setAlert(null)}
-                />
-            )}
             <Dialog open={isModalOpen} onOpenChange={handleModalOpenChange}>
                 <DialogContent>
                     <DialogHeader>
@@ -241,7 +240,7 @@ export function PutUserForm({
                                 <span className="text-red-500 text-sm">{errors.tipoUsuario.message}</span>
                             )}
                         </div>
-                        <Button type="submit">Atualizar</Button>
+                        <Button type="submit" disabled={!isValid || !isChanged}>Atualizar</Button>
                     </form>
                 </DialogContent>
             </Dialog>

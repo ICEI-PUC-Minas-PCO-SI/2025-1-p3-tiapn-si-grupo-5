@@ -29,6 +29,8 @@ import {
 } from "@/components/ui/select";
 import { XCircle } from "lucide-react";
 import { TableSpinner } from "@/components/ui/spinner";
+import { Plus } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function ManagementUsers() {
   const [Data, setData] = useState<User[]>([]);
@@ -44,6 +46,7 @@ export function ManagementUsers() {
     newStatus: number;
   }>({ open: false, user: null, newStatus: 0 });
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
 
   // Spinner state
   const [loading, setLoading] = useState(true);
@@ -154,6 +157,32 @@ export function ManagementUsers() {
 
   const handleError = () => {
     setAlert({ type: "error", message: "Erro ao atualizar usuário. Verifique os dados e tente novamente." });
+  };
+
+  // Adicione esta função para adicionar usuário na tabela sem fetch bruto
+  const handleAddUser = (newUser: User) => {
+    setData(prev => [...prev, newUser]);
+    setAlert({ type: "success", message: "Usuário criado com sucesso!" });
+  };
+
+  // Atualize apenas o usuário alterado na tabela
+  const handleUpdateUser = (updatedUser: User) => {
+    setData(prev =>
+      prev.map(u => u.id === updatedUser.id ? updatedUser : u)
+    );
+    setAlert({ type: "success", message: "Usuário atualizado com sucesso!" });
+    closeEditModal();
+  };
+
+  // Atualize apenas o status do usuário alterado
+  const handleStatusChange = (userId: string | number, newStatus: number) => {
+    setData(prev =>
+      prev.map(u => u.id === userId ? { ...u, ativo: newStatus } : u)
+    );
+    setAlert({
+      type: "success",
+      message: `Usuário ${newStatus === 0 ? "desativado" : "ativado"} com sucesso!`,
+    });
   };
 
   const actions: ActionButton[] = [
@@ -277,7 +306,18 @@ export function ManagementUsers() {
       <div className="flex justify-between">
         <Searchbar onSearch={handleSearch} />
         <div className="flex gap-3">
-          <CrudUserForm onSuccess={fetchUsers} />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="icon" onClick={() => setCreateModalOpen(true)}>
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Criar usuário
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <DropdownMenu open={filterMenuOpen} onOpenChange={setFilterMenuOpen}>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon">
@@ -366,11 +406,19 @@ export function ManagementUsers() {
           />
         )}
       </div>
+      <CrudUserForm
+        open={createModalOpen}
+        onOpenChange={setCreateModalOpen}
+        onSuccess={(createdUser) => {
+          setCreateModalOpen(false);
+          if (createdUser) handleAddUser(createdUser);
+        }}
+      />
       <Dialog open={editModalState.isOpen} onOpenChange={(isOpen) => !isOpen && closeEditModal()}>
         {editModalState.user && (
           <PutUserForm
             user={editModalState.user}
-            onSuccess={handleSuccess}
+            onSuccess={(updatedUser) => handleUpdateUser(updatedUser)}
             onError={handleError}
             onClose={closeEditModal}
           />
@@ -383,11 +431,7 @@ export function ManagementUsers() {
           open={statusDialog.open}
           onOpenChange={(open) => setStatusDialog((prev) => ({ ...prev, open }))}
           onSuccess={() => {
-            fetchUsers();
-            setAlert({
-              type: "success",
-              message: `Usuário ${statusDialog.newStatus === 0 ? "desativado" : "ativado"} com sucesso!`,
-            });
+            handleStatusChange(statusDialog.user!.id, statusDialog.newStatus);
           }}
           onError={() => {
             setAlert({
