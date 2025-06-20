@@ -193,7 +193,7 @@ export function PriorityParams() {
                         color: info.row.original.hexCorSecundaria,
                         border: "1px solid #e5e7eb",
                     }}
-                    className="text-xs px-3 py-1 rounded"
+                    className="text-sm px-3 py-1 rounded"
                 >
                     {info.row.original.nomePrioridade}
                 </Badge>
@@ -225,7 +225,7 @@ export function PriorityParams() {
                         style={{ backgroundColor: info.row.original.hexCorPrimaria }}
                         title={info.row.original.hexCorPrimaria}
                     />
-                    <span className="text-xs">{info.row.original.hexCorPrimaria}</span>
+                    <span className="text-sm">{info.row.original.hexCorPrimaria}</span>
                 </span>
             ),
         },
@@ -255,7 +255,7 @@ export function PriorityParams() {
                         style={{ backgroundColor: info.row.original.hexCorSecundaria }}
                         title={info.row.original.hexCorSecundaria}
                     />
-                    <span className="text-xs">{info.row.original.hexCorSecundaria}</span>
+                    <span className="text-sm">{info.row.original.hexCorSecundaria}</span>
                 </span>
             ),
         },
@@ -321,12 +321,12 @@ export function PriorityParams() {
                                     onChange={e => setName(e.target.value)}
                                 />
                                 {nameError && (
-                                    <span className="text-red-500 text-xs">{nameError}</span>
+                                    <span className="text-red-500 text-sm">{nameError}</span>
                                 )}
                                 <div className="flex gap-4 items-center justify-between">
                                     <div className="flex gap-4">
                                         <div>
-                                            <label className="block text-xs mb-1">Cor primária</label>
+                                            <label className="block text-sm mb-1">Cor primária</label>
                                             <Input
                                                 type="color"
                                                 value={primaryColor}
@@ -335,7 +335,7 @@ export function PriorityParams() {
                                             />
                                         </div>
                                         <div>
-                                            <label className="block text-xs mb-1">Cor secundária</label>
+                                            <label className="block text-sm mb-1">Cor secundária</label>
                                             <Input
                                                 type="color"
                                                 value={secondaryColor}
@@ -345,14 +345,14 @@ export function PriorityParams() {
                                         </div>
                                     </div>
                                     <div className="flex flex-col items-center ml-4">
-                                        <label className="block text-xs mb-1">Preview</label>
+                                        <label className="block text-sm mb-1">Preview</label>
                                         <Badge
                                             style={{
                                                 backgroundColor: primaryColor,
                                                 color: secondaryColor,
                                                 border: "1px solid #e5e7eb",
                                             }}
-                                            className="text-xs px-3 py-1 rounded"
+                                            className="text-sm px-3 py-1 rounded"
                                         >
                                             {name || "Prioridade"}
                                         </Badge>

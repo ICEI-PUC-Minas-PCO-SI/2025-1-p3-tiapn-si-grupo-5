@@ -163,19 +163,21 @@ export function ChatPage() {
                     </div>
                     <div className="flex gap-4 items-center">
                         <Badge
-                            className="h-10"
+                            className="text-sm px-3 py-1 rounded h-10"
                             style={{
                                 backgroundColor: ticket?.prioridadechamado?.hexCorPrimaria,
-                                color: "#fff"
+                                color: ticket?.prioridadechamado?.hexCorSecundaria,
+                                border: "1px solid #e5e7eb"
                             }}
                         >
                             {ticket?.prioridadechamado?.nomePrioridade || "Prioridade"}
                         </Badge>
                         <Badge
-                            className="h-10"
+                            className="text-sm px-3 py-1 rounded h-10"
                             style={{
                                 backgroundColor: ticket?.statuschamado?.hexCorPrimaria || "#888",
-                                color: "#fff"
+                                color: ticket?.statuschamado?.hexCorSecundaria,
+                                border: "1px solid #e5e7eb"
                             }}
                         >
                             {ticket?.statuschamado?.nomeStatus || "Em aberto"}

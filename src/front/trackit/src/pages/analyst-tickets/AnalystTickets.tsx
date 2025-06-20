@@ -34,6 +34,13 @@ export function AnalystTickets() {
       idStatus: number;
       nomeStatus: string;
       hexCorPrimaria: string;
+      hexCorSecundaria: string;
+    };
+    prioridade: {
+      idPrioridade: number;
+      nomePrioridade: string;
+      hexCorPrimaria: string;
+      hexCorSecundaria: string;
     };
   };
 
@@ -88,12 +95,14 @@ export function AnalystTickets() {
           const prioridadeObj = priorityMap.get(t.idPrioridade) || {
             idPrioridade: t.idPrioridade,
             nomePrioridade: "Não Definida",
-            hexCorPrimaria: "#888"
+            hexCorPrimaria: "#888",
+            hexCorSecundaria: "#fff"
           };
           const statusObj = statuses.find(s => s.idStatus === t.idStatus) || {
             idStatus: t.idStatus ?? 0,
             nomeStatus: t.idStatus ? "Não Definido" : "-",
-            hexCorPrimaria: "#888"
+            hexCorPrimaria: "#888",
+            hexCorSecundaria: "#fff"
           };
           return {
             idChamado: t.idChamado,
@@ -103,12 +112,14 @@ export function AnalystTickets() {
             prioridade: {
               idPrioridade: prioridadeObj.idPrioridade,
               nomePrioridade: prioridadeObj.nomePrioridade,
-              hexCorPrimaria: prioridadeObj.hexCorPrimaria
+              hexCorPrimaria: prioridadeObj.hexCorPrimaria,
+              hexCorSecundaria: prioridadeObj.hexCorSecundaria || "#fff"
             },
             status: {
               idStatus: statusObj.idStatus,
               nomeStatus: statusObj.nomeStatus,
-              hexCorPrimaria: statusObj.hexCorPrimaria
+              hexCorPrimaria: statusObj.hexCorPrimaria,
+              hexCorSecundaria: statusObj.hexCorSecundaria || "#fff"
             }
           };
         });
