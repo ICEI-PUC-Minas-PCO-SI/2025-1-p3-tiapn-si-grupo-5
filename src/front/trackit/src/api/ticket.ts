@@ -158,17 +158,20 @@ export interface ITicketFull extends ITicket {
     prioridadechamado?: {
         idPrioridade: number;
         nomePrioridade: string;
+        ativo: number;
         hexCorPrimaria: string;
         hexCorSecundaria: string;
     } | null;
     statuschamado?: {
         idStatus: number;
         nomeStatus: string;
+        ativo: number;
         hexCorPrimaria: string;
         hexCorSecundaria: string;
     } | null;
     tipochamado?: {
         idTipoChamado: number;
         nomeTipo: string;
+        ativo: number;
     } | null;
 }

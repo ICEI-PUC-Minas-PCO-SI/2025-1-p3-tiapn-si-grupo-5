@@ -74,7 +74,8 @@ export function AnalystAssignTickets() {
           const prioridadeObj = priorityMap.get(t.idPrioridade) || {
             idPrioridade: t.idPrioridade,
             nomePrioridade: "Não Definida",
-            hexCorPrimaria: "#888"
+            hexCorPrimaria: "#888",
+            hexCorSecundaria: "#fff"
           };
           return {
             idChamado: t.idChamado,
@@ -84,7 +85,8 @@ export function AnalystAssignTickets() {
             prioridade: {
               idPrioridade: prioridadeObj.idPrioridade,
               nomePrioridade: prioridadeObj.nomePrioridade,
-              hexCorPrimaria: prioridadeObj.hexCorPrimaria
+              hexCorPrimaria: prioridadeObj.hexCorPrimaria,
+              hexCorSecundaria: prioridadeObj.hexCorSecundaria || "#fff"
             }
           };
         });

@@ -244,7 +244,7 @@ export function ManagementParams() {
                   onChange={e => setName(e.target.value)}
                 />
                 {nameError && (
-                  <span className="text-red-500 text-xs">{nameError}</span>
+                  <span className="text-red-500 text-sm">{nameError}</span>
                 )}
               </div>
               <DialogFooter className="mt-2">

@@ -22,6 +22,7 @@ export interface AssignTicketTableRow {
         idPrioridade: number;
         nomePrioridade: string;
         hexCorPrimaria: string;
+        hexCorSecundaria: string;
     };
 }
 
@@ -167,10 +168,11 @@ export function DataTableAssignTickets({
                     <div className="flex justify-center">
                         {p ? (
                             <Badge
-                                className="w-[110px] max-w-[110px] min-w-[110px] inline-block overflow-hidden text-ellipsis whitespace-nowrap"
+                                className="text-sm px-3 py-1 rounded w-[110px] max-w-[110px] min-w-[110px] inline-block overflow-hidden text-ellipsis whitespace-nowrap"
                                 style={{
                                     backgroundColor: p.hexCorPrimaria,
-                                    color: "#fff"
+                                    color: p.hexCorSecundaria,
+                                    border: "1px solid #e5e7eb"
                                 }}
                                 title={p.nomePrioridade}
                             >
@@ -178,7 +180,7 @@ export function DataTableAssignTickets({
                             </Badge>
                         ) : (
                             <Badge
-                                className="w-[110px] max-w-[110px] min-w-[110px] font-bold bg-gray-200 text-slate-700"
+                                className="text-sm px-3 py-1 rounded w-[110px] max-w-[110px] min-w-[110px] font-bold bg-gray-200 text-slate-700"
                             >-</Badge>
                         )}
                     </div>
