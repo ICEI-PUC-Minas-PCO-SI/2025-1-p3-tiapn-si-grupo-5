@@ -37,8 +37,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     async function fetchUserAndManagement() {
       try {
         const data: IMeResponse | null = await getMe();
+        console.log('getMe() response:', data);
         if (data && data.usuario) {
           const usuario = data.usuario;
+          console.log('usuario extraído:', usuario);
+          console.log('usuario.nomeGerencia:', usuario.nomeGerencia);
           setUserState({
             id: usuario.id,
             nome: usuario.nome,
@@ -73,7 +76,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     setLogoutLoading(true);
     try {
       await logoutApi();
-    } catch (error) { 
+    } catch (error) {
       console.error("Erro ao fazer logout:", error);
     }
     setUserState(null);
