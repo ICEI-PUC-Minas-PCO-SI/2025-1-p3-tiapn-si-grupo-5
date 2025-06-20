@@ -115,9 +115,28 @@ export class TicketService {
                         }
                     }
                 },
-                prioridadechamado: true,
-                statuschamado: true,
-                tipochamado: true,
+                prioridadechamado: {
+                    select: {
+                        idPrioridade: true,
+                        nomePrioridade: true,
+                        hexCorPrimaria: true,
+                        hexCorSecundaria: true
+                    }
+                },
+                statuschamado: {
+                    select: {
+                        idStatus: true,
+                        nomeStatus: true,
+                        hexCorPrimaria: true,
+                        hexCorSecundaria: true
+                    }
+                },
+                tipochamado: {
+                    select: {
+                        idTipoChamado: true,
+                        nomeTipo: true
+                    }
+                },
             }
         });
     }
