@@ -34,6 +34,7 @@ import type { ColumnDef, HeaderContext, CellContext } from "@tanstack/react-tabl
 import { useUser } from "@/contexts/UserContext";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { TableSpinner } from "@/components/ui/spinner";
+import { Searchbar } from "@/components/ui/SearchBar";
 
 const managementNameSchema = z.string()
   .min(3, "O nome deve ter pelo menos 3 caracteres")
@@ -246,11 +247,9 @@ export function ManagementParams() {
       )}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
         <div className="flex-1">
-          <Input
+          <Searchbar
             placeholder="Pesquise pelo nome"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="max-w-xs"
+            onSearch={setSearch}
           />
         </div>
         <div className="flex items-center gap-2">

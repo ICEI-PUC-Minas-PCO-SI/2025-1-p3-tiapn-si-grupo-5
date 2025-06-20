@@ -16,6 +16,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getUnreadChamados } from "@/api/notifications";
 import { useUser } from "@/contexts/UserContext";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface DataTableUserTicketsProps {
     data: UserTicketTableRow[];
@@ -271,32 +272,41 @@ export function DataTableUserTickets({
             header: "Ações",
             cell: ({ row }: { row: Row<UserTicketTableRow> }) => (
                 <div className="flex justify-center gap-2">
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => {
-                            const prefix = getRoutePrefix();
-                            navigate(`${prefix}/chat?idChamado=${row.original.idChamado}`);
-                        }}
-                        style={{ position: "relative" }}
-                    >
-                        <Eye className="w-4 h-4" />
-                        {unreadChamados.includes(row.original.idChamado) && (
-                            <span
-                                style={{
-                                    position: "absolute",
-                                    top: 6,
-                                    right: 6,
-                                    width: 10,
-                                    height: 10,
-                                    borderRadius: "50%",
-                                    background: "#2563eb", // azul-600
-                                    display: "inline-block"
-                                }}
-                                aria-label="Notificações não lidas"
-                            />
-                        )}
-                    </Button>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={() => {
+                                        const prefix = getRoutePrefix();
+                                        navigate(`${prefix}/chat?idChamado=${row.original.idChamado}`);
+                                    }}
+                                    style={{ position: "relative" }}
+                                >
+                                    <Eye className="w-4 h-4" />
+                                    {unreadChamados.includes(row.original.idChamado) && (
+                                        <span
+                                            style={{
+                                                position: "absolute",
+                                                top: 6,
+                                                right: 6,
+                                                width: 10,
+                                                height: 10,
+                                                borderRadius: "50%",
+                                                background: "#2563eb",
+                                                display: "inline-block"
+                                            }}
+                                            aria-label="Notificações não lidas"
+                                        />
+                                    )}
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                Visualizar chat
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 </div>
             ),
             enableHiding: false,

@@ -3,6 +3,7 @@ import { Pencil, Trash2, Plus, ArrowUpDown } from "lucide-react";
 import type { ITicketType } from "@/api/tickettype";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Searchbar } from "@/components/ui/SearchBar";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
 import {
     getAllTicketTypes,
@@ -235,11 +236,9 @@ export function TicketTypeParams() {
             )}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
                 <div className="flex-1">
-                    <Input
+                    <Searchbar
                         placeholder="Pesquise pelo nome"
-                        value={search}
-                        onChange={e => setSearch(e.target.value)}
-                        className="max-w-xs"
+                        onSearch={setSearch}
                     />
                 </div>
                 <div className="flex items-center gap-2">
@@ -268,7 +267,7 @@ export function TicketTypeParams() {
                                 <Input
                                     placeholder="Nome do tipo de demanda"
                                     value={name}
-                                    onChange={e => setName(e.target.value)}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
                                 />
                                 {nameError && (
                                     <span className="text-red-500 text-sm">{nameError}</span>

@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown, Eye, ClipboardList, ChevronRight, ChevronLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export interface AssignTicketTableRow {
     idChamado: number;
@@ -199,25 +200,52 @@ export function DataTableAssignTickets({
             cell: ({ row }: { row: Row<AssignTicketTableRow> }) => (
                 <div className="flex justify-center gap-2">
                     {actionsType === "analyst" && onAssign && (
-                        <Button size="icon" onClick={() => onAssign(row.original.idChamado)}>
-                            <ClipboardList className="w-4 h-4" />
-                        </Button>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button size="icon" onClick={() => onAssign(row.original.idChamado)}>
+                                        <ClipboardList className="w-4 h-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    Atribuir chamado
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                     )}
                     {actionsType === "admin" && onOpenAssignModal && (
-                        <Button size="icon" onClick={() => onOpenAssignModal(row.original)}>
-                            <ClipboardList className="w-4 h-4" />
-                        </Button>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button size="icon" onClick={() => onOpenAssignModal(row.original)}>
+                                        <ClipboardList className="w-4 h-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    Atribuir chamado
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                     )}
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => {
-                            const prefix = getRoutePrefix();
-                            navigate(`${prefix}/chat?idChamado=${row.original.idChamado}`);
-                        }}
-                    >
-                        <Eye className="w-4 h-4" />
-                    </Button>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    onClick={() => {
+                                        const prefix = getRoutePrefix();
+                                        navigate(`${prefix}/chat?idChamado=${row.original.idChamado}`);
+                                    }}
+                                >
+                                    <Eye className="w-4 h-4" />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                Visualizar chat
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 </div>
             ),
             enableHiding: false,

@@ -319,7 +319,7 @@ export function ManagementUsers() {
       )}
       <h1 className="title-h1">Gerenciar Usuários</h1>
       <div className="flex justify-between">
-        <Searchbar onSearch={handleSearch} />
+        <Searchbar onSearch={handleSearch} placeholder="Pesquise pelo nome ou matrícula" />
         <div className="flex gap-3">
           <TooltipProvider>
             <Tooltip>

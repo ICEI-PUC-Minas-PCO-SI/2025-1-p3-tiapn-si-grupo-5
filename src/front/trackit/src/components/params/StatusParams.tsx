@@ -34,6 +34,7 @@ import { DataTableParams } from "./DataTableParams";
 import type { ColumnDef, HeaderContext, CellContext } from "@tanstack/react-table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { TableSpinner } from "@/components/ui/spinner";
+import { Searchbar } from "@/components/ui/SearchBar";
 
 const statusNameSchema = z.string()
   .min(5, "O nome deve ter pelo menos 5 caracteres")
@@ -321,11 +322,9 @@ export function StatusParams() {
       )}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
         <div className="flex-1">
-          <Input
-            placeholder="Pesquise pelo nome ou cor"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="max-w-xs"
+          <Searchbar
+            placeholder="Pesquise pelo nome ou hexadecimal da cor"
+            onSearch={setSearch}
           />
         </div>
         <div className="flex items-center gap-2">
