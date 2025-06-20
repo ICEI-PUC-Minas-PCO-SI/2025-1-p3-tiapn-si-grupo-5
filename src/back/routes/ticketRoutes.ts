@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { TicketController } from "../controllers/ticketController";
+import { TicketController } from "../controllers/TicketController";
 import { autenticarToken } from "../middlewares/auth-jwt";
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
@@ -111,6 +111,15 @@ export class TicketRoutes {
             validatePayload(ticketCloseSchema),
             (req, res, next) => {
                 this.ticketController.closeTicket(req, res)
+                    .then(() => undefined)
+                    .catch(next);
+            }
+        );
+        this.router.patch(
+            "/tickets/:idChamado/reopen",
+            autenticarToken,
+            (req, res, next) => {
+                this.ticketController.reopenTicket(req, res)
                     .then(() => undefined)
                     .catch(next);
             }

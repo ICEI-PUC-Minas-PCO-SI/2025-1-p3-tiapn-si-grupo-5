@@ -1,4 +1,7 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Paperclip, Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 interface MessageProps {
     nome: string;
@@ -7,6 +10,9 @@ interface MessageProps {
     text: string;
     isCurrentUser: boolean;
     avatarImg?: string | null;
+    anexoUrl?: string | null;
+    anexoNome?: string | null;
+    onDownloadAnexo?: () => void;
 }
 
 function getInitials(nome: string) {
@@ -19,7 +25,42 @@ function getInitials(nome: string) {
         .slice(0, 2);
 }
 
-export function Message({ nome, gerencia, horaFormatada, text, isCurrentUser, avatarImg }: MessageProps) {
+export function Message({
+    nome,
+    gerencia,
+    horaFormatada,
+    text,
+    isCurrentUser,
+    avatarImg,
+    anexoUrl,
+    anexoNome,
+    onDownloadAnexo,
+}: MessageProps) {
+    const [downloading, setDownloading] = useState(false);
+
+    async function handleDownload() {
+        if (!anexoUrl || !anexoNome) return;
+        setDownloading(true);
+        try {
+            const response = await fetch(anexoUrl);
+            if (!response.ok) throw new Error("Erro ao baixar arquivo");
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = anexoNome;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (e) {
+            if (onDownloadAnexo) onDownloadAnexo();
+            console.error("Erro ao baixar anexo:", e);
+        } finally {
+            setDownloading(false);
+        }
+    }
+
     return (
         <div className={`flex flex-col gap-1 ${isCurrentUser ? "items-end" : "items-start"}`}>
             <div className={`flex items-start gap-3 ${isCurrentUser ? "flex-row-reverse" : ""}`}>
@@ -39,6 +80,28 @@ export function Message({ nome, gerencia, horaFormatada, text, isCurrentUser, av
                         style={{ display: "inline-block" }}
                     >
                         {text}
+                        {anexoUrl && anexoNome && (
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="mt-3 flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer transition-colors w-fit min-h-0 h-8 px-3 py-0 hover:bg-slate-100 dark:hover:bg-slate-700"
+                                style={{
+                                    textDecoration: "none",
+                                    boxShadow: "none",
+                                    fontWeight: 500,
+                                }}
+                                onClick={handleDownload}
+                                disabled={downloading}
+                            >
+                                <div className="flex items-center gap-2">
+                                    <Paperclip className="w-4 h-4 text-sky-700 dark:text-sky-400" />
+                                    <span className="font-medium text-slate-900 dark:text-slate-100 text-xs truncate max-w-[90px]">
+                                        {anexoNome}
+                                    </span>
+                                </div>
+                                <Download className="w-4 h-4" />
+                            </Button>
+                        )}
                     </div>
                 </div>
             </div>

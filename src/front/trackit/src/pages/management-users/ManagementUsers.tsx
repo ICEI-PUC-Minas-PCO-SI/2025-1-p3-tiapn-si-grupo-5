@@ -15,8 +15,6 @@ import { Filter } from "lucide-react";
 import type { User, ActionButton } from "@/interfaces/InterfacesDataTableUsers";
 import type { IUpdateUser } from "@/api/users";
 import { getAllUsers } from "@/api/users";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { X } from "lucide-react";
 import { PutActiveUser } from "@/components/management-users/PutActiveUser";
 import { useUser } from "@/contexts/UserContext";
 import {
@@ -29,6 +27,9 @@ import {
 } from "@/components/ui/select";
 import { XCircle } from "lucide-react";
 import { TableSpinner } from "@/components/ui/spinner";
+import { Plus } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { GlobalAlert } from "@/components/ui/GlobalAlert";
 
 export function ManagementUsers() {
   const [Data, setData] = useState<User[]>([]);
@@ -44,6 +45,7 @@ export function ManagementUsers() {
     newStatus: number;
   }>({ open: false, user: null, newStatus: 0 });
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
 
   // Spinner state
   const [loading, setLoading] = useState(true);
@@ -74,6 +76,7 @@ export function ManagementUsers() {
           email: "",
           ramal: "",
           matricula: u.matricula,
+          fotoPerfil: u.fotoPerfil,
         };
       });
       setData(mappedUsers);
@@ -103,7 +106,8 @@ export function ManagementUsers() {
     if (search) {
       const lowerCaseQuery = search.toLowerCase();
       data = data.filter((user) =>
-        user.name.toLowerCase().includes(lowerCaseQuery)
+        user.name.toLowerCase().includes(lowerCaseQuery) ||
+        (user.matricula && user.matricula.toLowerCase().includes(lowerCaseQuery))
       );
     }
     setFilteredData(data);
@@ -146,10 +150,50 @@ export function ManagementUsers() {
     setEditModalState({ isOpen: false, user: null });
   };
 
-  const handleSuccess = () => {
-    fetchUsers();
+  // Função para atualizar usuário na tabela, mantendo os campos extras
+  const handleUpdateUser = (updatedUser: IUpdateUser) => {
+    setData(prev =>
+      prev.map(u => {
+        if (u.id === String(updatedUser.idUsuario)) {
+          return {
+            ...u,
+            accessType:
+              updatedUser.tipoUsuario === 1
+                ? "Gestor"
+                : updatedUser.tipoUsuario === 2
+                  ? "Analista"
+                  : "Usuário",
+            management: {
+              ...u.management,
+              idGerencia: updatedUser.gerencia,
+            },
+            nomeUsuario: updatedUser.nomeUsuario,
+            email: updatedUser.email,
+            ramal: updatedUser.ramal,
+            matricula: updatedUser.matricula,
+          } as User;
+        }
+        return u;
+      })
+    );
     setAlert({ type: "success", message: "Usuário atualizado com sucesso!" });
     closeEditModal();
+  };
+
+  const handleAddUser = (newUser: User) => {
+    setData(prev => [...prev, newUser]);
+    setAlert({ type: "success", message: "Usuário criado com sucesso!" });
+    setCreateModalOpen(false);
+  };
+
+  const handleUpdateUserStatus = (userId: string | number, newStatus: number) => {
+    setData(prev =>
+      prev.map(u => u.id === userId ? { ...u, ativo: newStatus } : u)
+    );
+    setAlert({
+      type: "success",
+      message: `Usuário ${newStatus === 0 ? "desativado" : "ativado"} com sucesso!`,
+    });
   };
 
   const handleError = () => {
@@ -255,34 +299,43 @@ export function ManagementUsers() {
     <div className="space-y-4">
       {alert && (
         <div className="fixed bottom-4 right-4 z-50">
-          <Alert
-            variant={alert.type === "success" ? "success" : "destructive"}
-            className="flex items-center justify-between space-x-4"
-          >
-            <div>
-              <AlertTitle>{alert.type === "success" ? "Sucesso" : "Erro"}</AlertTitle>
-              <AlertDescription>{alert.message}</AlertDescription>
-            </div>
-            <button
-              onClick={() => setAlert(null)}
-              className="text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="Fechar alerta"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </Alert>
+          <GlobalAlert
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert(null)}
+          />
         </div>
       )}
       <h1 className="title-h1">Gerenciar Usuários</h1>
       <div className="flex justify-between">
-        <Searchbar onSearch={handleSearch} />
+        <Searchbar onSearch={handleSearch} placeholder="Pesquise pelo nome ou matrícula" />
         <div className="flex gap-3">
-          <CrudUserForm onSuccess={fetchUsers} />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="icon" onClick={() => setCreateModalOpen(true)}>
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Criar usuário
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <DropdownMenu open={filterMenuOpen} onOpenChange={setFilterMenuOpen}>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Filter className="w-4 h-4 mr-1" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="outline" size="icon">
+                      <Filter className="w-4 h-4 mr-1" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Filtrar
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[260px]">
               {/* Filtro por tipo de acesso */}
@@ -362,6 +415,8 @@ export function ManagementUsers() {
               nomeUsuario: true,
               email: true,
               ramal: true,
+              matricula: false,
+              fotoPerfil: true, // Adicionado para evitar erro de propriedade obrigatória
             }}
           />
         )}
@@ -369,8 +424,27 @@ export function ManagementUsers() {
       <Dialog open={editModalState.isOpen} onOpenChange={(isOpen) => !isOpen && closeEditModal()}>
         {editModalState.user && (
           <PutUserForm
-            user={editModalState.user}
-            onSuccess={handleSuccess}
+            user={
+              (() => {
+                const current = Data.find(u => String(u.id) === String(editModalState.user?.idUsuario));
+                if (!current) return editModalState.user;
+                return {
+                  ...editModalState.user,
+                  gerencia: current.management.idGerencia,
+                  tipoUsuario:
+                    current.accessType === "Gestor"
+                      ? 1
+                      : current.accessType === "Analista"
+                        ? 2
+                        : 3,
+                  nomeUsuario: current.nomeUsuario,
+                  email: current.email,
+                  ramal: current.ramal,
+                  matricula: current.matricula,
+                };
+              })()
+            }
+            onSuccess={handleUpdateUser}
             onError={handleError}
             onClose={closeEditModal}
           />
@@ -383,11 +457,7 @@ export function ManagementUsers() {
           open={statusDialog.open}
           onOpenChange={(open) => setStatusDialog((prev) => ({ ...prev, open }))}
           onSuccess={() => {
-            fetchUsers();
-            setAlert({
-              type: "success",
-              message: `Usuário ${statusDialog.newStatus === 0 ? "desativado" : "ativado"} com sucesso!`,
-            });
+            handleUpdateUserStatus(statusDialog.user!.id, statusDialog.newStatus);
           }}
           onError={() => {
             setAlert({
@@ -397,6 +467,11 @@ export function ManagementUsers() {
           }}
         />
       )}
+      <CrudUserForm
+        open={createModalOpen}
+        onOpenChange={setCreateModalOpen}
+        onSuccess={handleAddUser}
+      />
     </div>
   );
 }

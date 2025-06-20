@@ -11,7 +11,11 @@ import {
 } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown, ChevronLeft, ChevronRight, Pencil, Trash2, CheckCircle2 } from "lucide-react";
-import type { User, ActionButton } from "../../interfaces/InterfacesDataTableUsers";
+import type { User as UserBase, ActionButton } from "../../interfaces/InterfacesDataTableUsers";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+type User = UserBase & { fotoPerfil?: string };
 
 export function DataTableUsers({
   data,
@@ -42,7 +46,28 @@ export function DataTableUsers({
           />
         </Button>
       ),
-      cell: ({ row }: { row: Row<User> }) => <span>{row.original.name}</span>,
+      cell: ({ row }: { row: Row<User> }) => {
+        const name = row.original.name || "";
+        const displayName = name.length > 22 ? name.slice(0, 22) + "..." : name;
+        // Pega as iniciais
+        const initials = name
+          .split(" ")
+          .map((n) => n[0])
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        // Foto de perfil se existir
+        const fotoPerfil = row.original.fotoPerfil || undefined;
+        return (
+          <div className="flex items-center gap-6">
+            <Avatar className="w-8 h-8">
+              <AvatarImage src={fotoPerfil} alt={name} />
+              <AvatarFallback>{initials}</AvatarFallback>
+            </Avatar>
+            <span>{displayName}</span>
+          </div>
+        );
+      },
       enableHiding: true,
     },
     {
@@ -128,34 +153,45 @@ export function DataTableUsers({
       cell: ({ row }: { row: Row<User> }) => (
         <div className="flex justify-center gap-2">
           {/* Editar */}
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => actions[0].onClick(row.original)}
-            aria-label="Editar"
-          >
-            <Pencil className="w-4 h-4" />
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() => actions[0].onClick(row.original)}
+                  aria-label="Editar"
+                >
+                  <Pencil className="w-4 h-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Editar
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           {/* Ativar/Desativar */}
-          {row.original.ativo === 1 ? (
-            <Button
-              variant="delete"
-              size="icon"
-              onClick={() => actions[1].onClick(row.original)}
-              aria-label="Desativar"
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
-          ) : (
-            <Button
-              variant="active"
-              size="icon"
-              onClick={() => actions[1].onClick(row.original)}
-              aria-label="Ativar"
-            >
-              <CheckCircle2 className="w-4 h-4" />
-            </Button>
-          )}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant={row.original.ativo === 1 ? "delete" : "active"}
+                  size="icon"
+                  onClick={() => actions[1].onClick(row.original)}
+                  aria-label={row.original.ativo === 1 ? "Desativar" : "Ativar"}
+                >
+                  {row.original.ativo === 1 ? (
+                    <Trash2 className="w-4 h-4" />
+                  ) : (
+                    <CheckCircle2 className="w-4 h-4" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {row.original.ativo === 1 ? "Desativar" : "Ativar"}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       ),
     },

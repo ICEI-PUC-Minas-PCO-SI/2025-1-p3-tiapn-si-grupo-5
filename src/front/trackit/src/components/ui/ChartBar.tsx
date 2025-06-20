@@ -30,6 +30,7 @@ import {
     DropdownMenuTrigger,
     DropdownMenuContent,
 } from "@/components/ui/dropdown-menu"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useState } from "react"
 
 export const description = "A bar chart"
@@ -72,11 +73,20 @@ export function ChartBar({
                             open={filterMenuOpen}
                             onOpenChange={setFilterMenuOpen}
                         >
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="icon">
-                                    <Filter className="w-4 h-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline" size="icon">
+                                                <Filter className="w-4 h-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        Filtrar
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                             <DropdownMenuContent
                                 align="end"
                                 className="min-w-[120px]"

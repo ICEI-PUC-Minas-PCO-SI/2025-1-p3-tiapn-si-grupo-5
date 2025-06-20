@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 
-export function Searchbar({ onSearch }: { onSearch: (query: string) => void }) {
+export function Searchbar({
+  onSearch,
+  placeholder = "Pesquise pelo nome ou palavra chave",
+}: {
+  onSearch: (query: string) => void;
+  placeholder?: string;
+}) {
   const [searchValue, setSearchValue] = useState("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -15,7 +21,7 @@ export function Searchbar({ onSearch }: { onSearch: (query: string) => void }) {
     <div className="relative w-full max-w-[41rem] flex items-center ">
       <Input
         type="text"
-        placeholder="Pesquise pelo nome ou palavra chave"
+        placeholder={placeholder}
         value={searchValue}
         onChange={handleInputChange}
         className="pl-10 pr-4 py-2 w-full"

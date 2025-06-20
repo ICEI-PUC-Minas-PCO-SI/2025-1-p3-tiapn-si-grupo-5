@@ -1,6 +1,6 @@
 import { useUser } from "@/contexts/UserContext"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ImagePlus, CircleCheckBig } from "lucide-react";   
+import { ImagePlus, CircleCheckBig } from "lucide-react";
 import { SettingsUserForm } from "@/components/settings/SettingsUserForm";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { X } from "lucide-react";
@@ -62,11 +62,15 @@ export function Settings() {
                 <div className="fixed bottom-4 right-4 z-50">
                     <Alert
                         variant={alert.type === "success" ? "success" : "destructive"}
-                        className="flex items-center justify-between space-x-4"
+                        className={`flex items-center justify-between space-x-4 bg-white dark:bg-slate-900 ${alert.type === "success"
+                                ? "border-green-600"
+                                : "border-slate-200 dark:border-slate-700"
+                            }`}
+                        style={alert.type === "success" ? { borderWidth: 2 } : {}}
                     >
                         <div>
-                            <AlertTitle>{alert.type === "success" ? "Sucesso" : "Erro"}</AlertTitle>
-                            <AlertDescription>{alert.message}</AlertDescription>
+                            <AlertTitle className="text-slate-900 dark:text-white">{alert.type === "success" ? "Sucesso" : "Erro"}</AlertTitle>
+                            <AlertDescription className="text-slate-700 dark:text-slate-300">{alert.message}</AlertDescription>
                         </div>
                         <button
                             onClick={() => setAlert(null)}
@@ -105,8 +109,8 @@ export function Settings() {
                                     )
                         }
                     </Avatar>
-                    <label className="absolute bottom-0 right-0 cursor-pointer bg-white rounded-full p-1 shadow-md border border-slate-200">
-                        <ImagePlus className="w-5 h-5 text-slate-700" />
+                    <label className="absolute bottom-0 right-0 cursor-pointer bg-white dark:bg-slate-800 rounded-full p-1 shadow-md border border-slate-200 dark:border-slate-700">
+                        <ImagePlus className="w-5 h-5 text-slate-700 dark:text-slate-200" />
                         <Input
                             type="file"
                             accept="image/*"

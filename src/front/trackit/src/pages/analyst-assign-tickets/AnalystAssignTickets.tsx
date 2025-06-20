@@ -32,6 +32,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function AnalystAssignTickets() {
   const [tickets, setTickets] = useState<AssignTicketTableRow[]>([]);
@@ -213,9 +214,18 @@ export function AnalystAssignTickets() {
         <div className="flex gap-3">
           <DropdownMenu open={priorityFilterOpen} onOpenChange={setPriorityFilterOpen}>
             <DropdownMenuTrigger asChild>
-              <Button size="icon" variant="outline">
-                <Filter className="w-4 h-4 mr-1" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button size="icon" variant="outline">
+                      <Filter className="w-4 h-4 mr-1" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Filtrar
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[220px]">
               <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Prioridade</div>

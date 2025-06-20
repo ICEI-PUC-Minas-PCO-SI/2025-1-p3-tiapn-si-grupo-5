@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
-import { TicketService } from "../services/ticketService";
+import { TicketService } from "../services/TicketService";
 import { uploadFileToCloudinary } from "../services/uploadService";
 import fs from "fs";
+import { sendTicketStatusChangeEmail } from "../services/emailServices";
 
-const ticketService = new TicketService();
+export const ticketService = new TicketService();
 
 export class TicketController {
     async createTicket(req: Request, res: Response) {
@@ -126,6 +127,17 @@ export class TicketController {
                 return res.status(400).json({ error: "idStatus é obrigatório para atualizar o status." });
             }
             const ticket = await ticketService.updateTicketStatus(idChamado, Number(idStatus));
+            // Notificar usuário sobre a alteração de status
+            const fullTicket = await ticketService.getTicketById(idChamado);
+            if (fullTicket && fullTicket.usuario_chamado_idSolicitanteTousuario?.email) {
+                await sendTicketStatusChangeEmail({
+                    to: fullTicket.usuario_chamado_idSolicitanteTousuario.email,
+                    nomeUsuario: fullTicket.usuario_chamado_idSolicitanteTousuario.nomeUsuario,
+                    idChamado: fullTicket.idChamado,
+                    assunto: fullTicket.assunto,
+                    novoStatus: fullTicket.statuschamado?.nomeStatus || "Atualizado"
+                });
+            }
             res.status(200).json(ticket);
         } catch (error) {
             console.error("Erro ao atualizar status do chamado:", error);
@@ -141,6 +153,17 @@ export class TicketController {
                 return res.status(400).json({ error: "dataFechamento é obrigatório para encerrar o chamado." });
             }
             const ticket = await ticketService.closeTicket(idChamado, new Date(dataFechamento));
+            // Notificar usuário sobre o fechamento
+            const fullTicket = await ticketService.getTicketById(idChamado);
+            if (fullTicket && fullTicket.usuario_chamado_idSolicitanteTousuario?.email) {
+                await sendTicketStatusChangeEmail({
+                    to: fullTicket.usuario_chamado_idSolicitanteTousuario.email,
+                    nomeUsuario: fullTicket.usuario_chamado_idSolicitanteTousuario.nomeUsuario,
+                    idChamado: fullTicket.idChamado,
+                    assunto: fullTicket.assunto,
+                    novoStatus: "Fechado"
+                });
+            }
             res.status(200).json(ticket);
         } catch (error) {
             console.error("Erro ao encerrar chamado:", error);
@@ -200,6 +223,31 @@ export class TicketController {
         } catch (error) {
             console.error("Erro ao buscar chamado por id:", error);
             res.status(500).json({ error: "Erro ao buscar chamado por id" });
+        }
+    }
+
+    async reopenTicket(req: Request, res: Response) {
+        try {
+            const idChamado = Number(req.params.idChamado);
+            if (!idChamado) {
+                return res.status(400).json({ error: "idChamado é obrigatório para reabrir o chamado." });
+            }
+            const ticket = await ticketService.reopenTicket(idChamado);
+            // Notificar usuário sobre a reabertura
+            const fullTicket = await ticketService.getTicketById(idChamado);
+            if (fullTicket && fullTicket.usuario_chamado_idSolicitanteTousuario?.email) {
+                await sendTicketStatusChangeEmail({
+                    to: fullTicket.usuario_chamado_idSolicitanteTousuario.email,
+                    nomeUsuario: fullTicket.usuario_chamado_idSolicitanteTousuario.nomeUsuario,
+                    idChamado: fullTicket.idChamado,
+                    assunto: fullTicket.assunto,
+                    novoStatus: "Reaberto"
+                });
+            }
+            res.status(200).json(ticket);
+        } catch (error) {
+            console.error("Erro ao reabrir chamado:", error);
+            res.status(500).json({ error: "Erro ao reabrir chamado" });
         }
     }
 }

@@ -1,4 +1,4 @@
-import  { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Pencil, Trash2, Plus, ArrowUpDown } from "lucide-react";
 import type { IPriority } from "@/api/priority";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
@@ -32,6 +32,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import { DataTableParams } from "./DataTableParams";
 import type { ColumnDef, HeaderContext, CellContext } from "@tanstack/react-table";
+import { TableSpinner } from "@/components/ui/spinner";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Searchbar } from "@/components/ui/SearchBar";
 
 const priorityNameSchema = z.string()
     .min(3, "O nome deve ter pelo menos 3 caracteres")
@@ -55,18 +58,21 @@ export function PriorityParams() {
     const [search, setSearch] = useState("");
     const [filtered, setFiltered] = useState<IPriority[]>([]);
     const [isNameValid, setIsNameValid] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchPriorities();
     }, []);
 
     async function fetchPriorities() {
+        setLoading(true);
         try {
             const data = await getAllPriorities();
             setPriorityList(data);
         } catch {
             setAlert({ type: "error", message: "Erro ao buscar prioridades." });
         }
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -91,7 +97,6 @@ export function PriorityParams() {
     }, [priorityList, search]);
 
     useEffect(() => {
-        // Validação dinâmica para habilitar/desabilitar o botão Salvar
         const result = priorityNameSchema.safeParse(name);
         setIsNameValid(result.success);
         if (!name) setNameError(null);
@@ -264,12 +269,30 @@ export function PriorityParams() {
             header: "Ações",
             cell: (info: CellContext<PriorityRow, unknown>) => (
                 <div className="flex justify-center gap-2">
-                    <Button size="icon" variant="outline" onClick={() => openEditDialog(info.row.original)} aria-label="Editar">
-                        <Pencil />
-                    </Button>
-                    <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: info.row.original.idPrioridade })} aria-label="Excluir">
-                        <Trash2 />
-                    </Button>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button size="icon" variant="outline" onClick={() => openEditDialog(info.row.original)} aria-label="Editar">
+                                    <Pencil />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                Editar
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: info.row.original.idPrioridade })} aria-label="Excluir">
+                                    <Trash2 />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                Deletar
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 </div>
             ),
         },
@@ -280,6 +303,14 @@ export function PriorityParams() {
         ...item,
         id: item.idPrioridade,
     }));
+
+    const isEditingChanged =
+        editingPriority == null ||
+        name !== editingPriority.nomePrioridade ||
+        primaryColor !== (editingPriority.hexCorPrimaria || "#2563eb") ||
+        secondaryColor !== (editingPriority.hexCorSecundaria || "#ffffff");
+
+    const canSave = isNameValid && (!editingPriority || isEditingChanged);
 
     return (
         <div className="space-y-4">
@@ -294,19 +325,26 @@ export function PriorityParams() {
             )}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
                 <div className="flex-1">
-                    <Input
-                        placeholder="Pesquise pelo nome ou cor"
-                        value={search}
-                        onChange={e => setSearch(e.target.value)}
-                        className="max-w-xs"
+                    <Searchbar
+                        placeholder="Pesquise pelo nome ou hexadecimal da cor"
+                        onSearch={setSearch}
                     />
                 </div>
                 <div className="flex items-center gap-2">
                     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                         <DialogTrigger asChild>
-                            <Button variant="default" size="icon" aria-label="Nova prioridade" onClick={openAddDialog}>
-                                <Plus className="w-4 h-4" />
-                            </Button>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button variant="default" size="icon" aria-label="Nova prioridade" onClick={openAddDialog}>
+                                            <Plus className="w-4 h-4" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        Criar prioridade
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
@@ -363,7 +401,7 @@ export function PriorityParams() {
                                 <Button
                                     type="button"
                                     onClick={handleSave}
-                                    disabled={!isNameValid}
+                                    disabled={!canSave}
                                 >
                                     Salvar
                                 </Button>
@@ -377,17 +415,59 @@ export function PriorityParams() {
                     </Dialog>
                 </div>
             </div>
-            <DataTableParams
-                data={filteredWithId}
-                columns={columns}
-                visibleColumns={{
-                    nomePrioridade: true,
-                    badge: true,
-                    hexCorPrimaria: true,
-                    hexCorSecundaria: true,
-                    actions: true,
-                }}
-            />
+            {loading ? (
+                <TableSpinner />
+            ) : (
+                <DataTableParams
+                    data={filteredWithId}
+                    columns={
+                        // Adiciona tooltips nos botões de editar e deletar
+                        columns.map(col => {
+                            if (col.id === "actions") {
+                                return {
+                                    ...col,
+                                    cell: (info: CellContext<PriorityRow, unknown>) => (
+                                        <div className="flex justify-center gap-2">
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button size="icon" variant="outline" onClick={() => openEditDialog(info.row.original)} aria-label="Editar">
+                                                            <Pencil />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        Editar
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: info.row.original.idPrioridade })} aria-label="Excluir">
+                                                            <Trash2 />
+                                                        </Button>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        Deletar
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        </div>
+                                    ),
+                                };
+                            }
+                            return col;
+                        })
+                    }
+                    visibleColumns={{
+                        nomePrioridade: true,
+                        badge: true,
+                        hexCorPrimaria: true,
+                        hexCorSecundaria: true,
+                        actions: true,
+                    }}
+                />
+            )}
             <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, id: open ? deleteDialog.id : null })}>
                 <AlertDialogContent>
                     <AlertDialogHeader>

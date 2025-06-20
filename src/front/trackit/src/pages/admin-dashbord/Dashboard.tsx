@@ -209,7 +209,7 @@ export function Dashboard() {
                     Dashboard
                 </h1>
                 <h3 className="title-h3 text-slate-700 dark:text-slate-300">
-                    Indicadores por status de demandas
+                    Indicadores históricos por status de demandas
                 </h3>
             </div>
             {loading ? (

@@ -118,6 +118,7 @@ export class TicketService {
                     select: {
                         idUsuario: true,
                         nomeUsuario: true,
+                        email: true,
                         gerencia: {
                             select: {
                                 nomeGerencia: true
@@ -173,6 +174,33 @@ export class TicketService {
         return prisma.chamado.update({
             where: { idChamado },
             data: { dataFechamento }
+        });
+    }
+
+    async reopenTicket(idChamado: number) {
+        return prisma.chamado.update({
+            where: { idChamado },
+            data: { dataFechamento: null }
+        });
+    }
+
+    async createChatMessage(
+        idChamado: number,
+        idRemetente: number,
+        mensagem: string,
+        remetente: "usuario" | "analista" | "gestor",
+        urlAnexo?: string,
+        nomeArquivo?: string
+    ) {
+        return prisma.msgchamado.create({
+            data: {
+                idChamado,
+                idRemetente,
+                mensagem,
+                remetente,
+                urlAnexo: urlAnexo ?? null,
+                nomeArquivo: nomeArquivo ?? null,
+            }
         });
     }
 }

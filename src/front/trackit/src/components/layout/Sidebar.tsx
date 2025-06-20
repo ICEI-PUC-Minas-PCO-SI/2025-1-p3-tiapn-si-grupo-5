@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/sidebar";
 import {
     Home,
-    Settings,
     PlusCircle,
     Ticket,
     BarChart4,
@@ -26,7 +25,7 @@ import {
     Building,
     Clock
 } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { UserProfileSection } from "./UserProfileSection";
 import { useEffect, useState, useRef } from "react";
 import { getUnreadChamados } from "@/api/notifications";
@@ -35,6 +34,7 @@ import { ThemeToggle } from "../theme/theme-toggle";
 
 export function Sidebar() {
     const location = useLocation();
+    const navigate = useNavigate();
     const [isParamsOpen, setIsParamsOpen] = useState(false);
     const [hasUnread, setHasUnread] = useState(false);
     const { user, logout } = useUser();
@@ -64,7 +64,7 @@ export function Sidebar() {
         return () => {
             window.removeEventListener("refresh-unread-notifications", handleRefreshUnread);
         };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user?.id]);
 
     let userRole: "admin" | "analyst" | "user" | undefined;
@@ -180,10 +180,6 @@ export function Sidebar() {
                                     variant="default"
                                     size="default"
                                 >
-                                    <Link to="/user/settings">
-                                        <Settings className="mr-2" />
-                                        <span>Configurações</span>
-                                    </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         </>
@@ -253,10 +249,6 @@ export function Sidebar() {
                                     variant="default"
                                     size="default"
                                 >
-                                    <Link to="/analyst/settings">
-                                        <Settings className="mr-2" />
-                                        <span>Configurações</span>
-                                    </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         </>
@@ -389,10 +381,6 @@ export function Sidebar() {
                                     variant="default"
                                     size="default"
                                 >
-                                    <Link to="/admin/settings">
-                                        <Settings className="mr-2" />
-                                        <span>Configurações</span>
-                                    </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         </>
@@ -416,6 +404,11 @@ export function Sidebar() {
                         onLogout={handleLogout}
                         avatarUrl={displayAvatar}
                         previewProfilePhoto={previewProfilePhoto}
+                        onSettingsClick={() => {
+                            if (userRole === "admin") navigate("/admin/settings");
+                            else if (userRole === "analyst") navigate("/analyst/settings");
+                            else if (userRole === "user") navigate("/user/settings");
+                        }}
                     />
                 )}
             </SidebarFooter>

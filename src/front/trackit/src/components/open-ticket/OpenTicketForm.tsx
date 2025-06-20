@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { sendTicket } from "@/api/ticket";
+import type { INewTicket } from "@/api/ticket";
 import { useUser } from "@/contexts/UserContext";
 import { getAllTicketTypes } from "@/api/tickettype";
 import { getAllPriorities } from "@/api/priority";
@@ -25,9 +26,9 @@ import { Progress } from "@/components/ui/progress";
 import { uploadFile } from "@/api/upload";
 
 const openTicket = z.object({
-    subject: z.string().min(1, {
-        message: "O assunto é obrigatório!"
-    }),
+    subject: z.string()
+        .min(1, { message: "O assunto é obrigatório!" })
+        .max(30, { message: "O assunto deve ter no máximo 30 caracteres!" }),
     priority: z.string().min(1, {
         message: "A prioridade é obrigatória!"
     }),
@@ -140,7 +141,7 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
             return;
         }
 
-        const payload: INewTicket  = {
+        const payload: INewTicket = {
             assunto: data.subject,
             descricao: data.description,
             idSolicitante: user.id,
@@ -220,7 +221,7 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                                                 height: 12,
                                                 borderRadius: "50%",
                                                 backgroundColor: priority.hexCorPrimaria,
-                                            }} /> 
+                                            }} />
                                             {priority.nomePrioridade}
                                         </SelectItem>
                                     ))}

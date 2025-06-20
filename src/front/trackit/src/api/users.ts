@@ -18,6 +18,7 @@ export interface IUserListItem {
         nomeGerencia: string;
     };
     ativo: number;
+    fotoPerfil?: string;
 }
 
 export interface ILoginUserPayload {
@@ -85,7 +86,16 @@ export async function getAllUsers(): Promise<IUserListItem[]> {
         if (!response.ok) {
             throw new Error("Erro ao buscar usuários");
         }
-        const users: IGetUser[] = await response.json();
+        type RawUser = {
+            idUsuario: number;
+            nomeUsuario: string;
+            matricula: string;
+            idTipoUsuario?: number;
+            idGerencia: number;
+            ativo: number;
+            fotoPerfil?: string;
+        };
+        const users: RawUser[] = await response.json();
         const managements = await getAllActiveManagements();
         return users.map((user) => {
             const matchedManagement = managements.find(
@@ -105,6 +115,7 @@ export async function getAllUsers(): Promise<IUserListItem[]> {
                     nomeGerencia: matchedManagement?.nomeGerencia || "Não informado",
                 },
                 ativo: user.ativo,
+                fotoPerfil: user.fotoPerfil || undefined
             };
             return mapped;
         });

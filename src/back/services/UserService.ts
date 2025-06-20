@@ -57,7 +57,19 @@ export class UserService {
     }
 
     async getAllUsers() {
-        return prisma.usuario.findMany();
+        return prisma.usuario.findMany({
+            select: {
+                idUsuario: true,
+                nomeUsuario: true,
+                matricula: true,
+                idTipoUsuario: true,
+                idGerencia: true,
+                ativo: true,
+                email: true,
+                ramal: true,
+                fotoPerfil: true // Adicionado
+            }
+        });
     }
 
     async updateUser(idUsuario: number, data: { matricula?: string; gerencia?: number; tipoUsuario?: number }) {
