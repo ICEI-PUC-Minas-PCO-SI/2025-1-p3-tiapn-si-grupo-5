@@ -37,11 +37,13 @@ export interface UserTicketTableRow {
         idPrioridade: number;
         nomePrioridade: string;
         hexCorPrimaria: string;
+        hexCorSecundaria: string;
     };
     status: {
         idStatus: number;
         nomeStatus: string;
         hexCorPrimaria: string;
+        hexCorSecundaria: string;
     };
     analista?: string;
 }
@@ -113,12 +115,14 @@ export function UserTickets() {
                     const prioridadeObj = priorities.find(p => p.idPrioridade === t.idPrioridade) || {
                         idPrioridade: t.idPrioridade,
                         nomePrioridade: "Não Definida",
-                        hexCorPrimaria: "#888"
+                        hexCorPrimaria: "#888",
+                        hexCorSecundaria: "#fff"
                     };
                     const statusObj = statuses.find(s => s.idStatus === t.idStatus) || {
                         idStatus: t.idStatus ?? 0,
                         nomeStatus: "Em aberto",
-                        hexCorPrimaria: "#888"
+                        hexCorPrimaria: "#888",
+                        hexCorSecundaria: "#fff"
                     };
                     const analistaName = t.idAnalista
                         ? (users.find(u => u.id === String(t.idAnalista))?.name ?? "-")
@@ -131,12 +135,14 @@ export function UserTickets() {
                         prioridade: {
                             idPrioridade: prioridadeObj.idPrioridade,
                             nomePrioridade: prioridadeObj.nomePrioridade,
-                            hexCorPrimaria: prioridadeObj.hexCorPrimaria
+                            hexCorPrimaria: prioridadeObj.hexCorPrimaria,
+                            hexCorSecundaria: prioridadeObj.hexCorSecundaria || "#fff"
                         },
                         status: {
                             idStatus: statusObj.idStatus,
                             nomeStatus: statusObj.nomeStatus,
-                            hexCorPrimaria: statusObj.hexCorPrimaria
+                            hexCorPrimaria: statusObj.hexCorPrimaria,
+                            hexCorSecundaria: statusObj.hexCorSecundaria || "#fff"
                         },
                         analista: analistaName
                     };

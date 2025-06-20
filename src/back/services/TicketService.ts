@@ -43,24 +43,41 @@ export class TicketService {
     }
 
     async getAllTickets() {
-        return prisma.chamado.findMany();
+        return prisma.chamado.findMany({
+            include: {
+                statuschamado: true,
+                prioridadechamado: true
+            }
+        });
     }
 
     async getUnassignedTickets() {
         return prisma.chamado.findMany({
-            where: { idAnalista: null }
+            where: { idAnalista: null },
+            include: {
+                statuschamado: true,
+                prioridadechamado: true
+            }
         });
     }
 
     async getTicketsByAnalystId(idAnalista: number) {
         return prisma.chamado.findMany({
-            where: { idAnalista }
+            where: { idAnalista },
+            include: {
+                statuschamado: true,
+                prioridadechamado: true
+            }
         });
     }
 
     async getTicketsBySolicitanteId(idSolicitante: number) {
         return prisma.chamado.findMany({
-            where: { idSolicitante }
+            where: { idSolicitante },
+            include: {
+                statuschamado: true,
+                prioridadechamado: true
+            }
         });
     }
 
@@ -85,6 +102,10 @@ export class TicketService {
                 usuario_chamado_idAnalistaTousuario: {
                     idGerencia: idGerencia
                 }
+            },
+            include: {
+                statuschamado: true,
+                prioridadechamado: true
             }
         });
     }
@@ -115,9 +136,28 @@ export class TicketService {
                         }
                     }
                 },
-                prioridadechamado: true,
-                statuschamado: true,
-                tipochamado: true,
+                prioridadechamado: {
+                    select: {
+                        idPrioridade: true,
+                        nomePrioridade: true,
+                        hexCorPrimaria: true,
+                        hexCorSecundaria: true
+                    }
+                },
+                statuschamado: {
+                    select: {
+                        idStatus: true,
+                        nomeStatus: true,
+                        hexCorPrimaria: true,
+                        hexCorSecundaria: true
+                    }
+                },
+                tipochamado: {
+                    select: {
+                        idTipoChamado: true,
+                        nomeTipo: true
+                    }
+                },
             }
         });
     }

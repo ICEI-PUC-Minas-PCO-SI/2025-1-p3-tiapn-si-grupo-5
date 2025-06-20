@@ -16,8 +16,8 @@ export class PriorityController {
 
     async createPriority(req: Request, res: Response) {
         try {
-            const { nomePrioridade, color } = req.body;
-            const novaPrioridade = await priorityService.createPriority(nomePrioridade, color);
+            const { nomePrioridade, hexCorPrimaria, hexCorSecundaria } = req.body;
+            const novaPrioridade = await priorityService.createPriority(nomePrioridade, hexCorPrimaria, hexCorSecundaria);
             res.status(201).json(novaPrioridade);
         } catch (error) {
             console.error("Erro ao criar prioridade:", error);
@@ -27,8 +27,8 @@ export class PriorityController {
 
     async updatePriority(req: Request, res: Response) {
         try {
-            const { idPrioridade, nomePrioridade, color } = req.body;
-            const prioridadeAtualizada = await priorityService.updatePriority(idPrioridade, nomePrioridade, color);
+            const { idPrioridade, nomePrioridade, hexCorPrimaria, hexCorSecundaria } = req.body;
+            const prioridadeAtualizada = await priorityService.updatePriority(idPrioridade, nomePrioridade, hexCorPrimaria, hexCorSecundaria);
             res.json(prioridadeAtualizada);
         } catch (error) {
             console.error("Erro ao atualizar prioridade:", error);

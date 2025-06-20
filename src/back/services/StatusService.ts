@@ -6,24 +6,24 @@ export class StatusService {
         return prisma.statuschamado.findMany();
     }
 
-    async createStatus(nomeStatus: string, color: string) {
+    async createStatus(nomeStatus: string, hexCorPrimaria: string, hexCorSecundaria: string) {
         return prisma.statuschamado.create({
             data: {
                 nomeStatus,
-                hexCorPrimaria: color,
-                hexCorSecundaria: color,
+                hexCorPrimaria,
+                hexCorSecundaria,
                 ativo: 1
             }
         });
     }
 
-    async updateStatus(idStatus: number, nomeStatus: string, color: string) {
+    async updateStatus(idStatus: number, nomeStatus: string, hexCorPrimaria: string, hexCorSecundaria: string) {
         return prisma.statuschamado.update({
             where: { idStatus: Number(idStatus) },
             data: {
                 nomeStatus,
-                hexCorPrimaria: color,
-                hexCorSecundaria: color
+                hexCorPrimaria,
+                hexCorSecundaria
             }
         });
     }
