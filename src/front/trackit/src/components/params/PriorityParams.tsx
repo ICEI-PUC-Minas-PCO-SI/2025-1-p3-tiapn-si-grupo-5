@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import  { useState, useEffect, useMemo } from "react";
 import { Pencil, Trash2, Plus, ArrowUpDown } from "lucide-react";
 import type { IPriority } from "@/api/priority";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
@@ -31,11 +31,13 @@ import {
     AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 import { DataTableParams } from "./DataTableParams";
-import type { ColumnDef, Column, Row } from "@tanstack/react-table";
+import type { ColumnDef, HeaderContext, CellContext } from "@tanstack/react-table";
 
 const priorityNameSchema = z.string()
     .min(3, "O nome deve ter pelo menos 3 caracteres")
     .max(20, "O nome deve ter no máximo 20 caracteres");
+
+type PriorityRow = IPriority & { id: number };
 
 export function PriorityParams() {
     const [priorityList, setPriorityList] = useState<IPriority[]>([]);
@@ -158,120 +160,126 @@ export function PriorityParams() {
     }
 
     // DataTable columns
-    const columns = useMemo<ColumnDef<IPriority>[]>(() => [
+    const columns = useMemo<ColumnDef<PriorityRow>[]>(() => [
         {
             accessorKey: "nomePrioridade",
-            header: ({ column }: { column: Column<IPriority, unknown> }) => (
+            header: (info: HeaderContext<PriorityRow, unknown>) => (
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    onClick={() => info.column.toggleSorting(info.column.getIsSorted() === "asc")}
                 >
                     Nome
                     <ArrowUpDown
-                        className={`ml-2 ${column.getIsSorted() === "asc"
+                        className={`ml-2 ${info.column.getIsSorted() === "asc"
                             ? "rotate-0"
-                            : column.getIsSorted() === "desc"
+                            : info.column.getIsSorted() === "desc"
                                 ? "rotate-180"
                                 : ""
                             }`}
                     />
                 </Button>
             ),
-            cell: ({ row }: { row: Row<IPriority> }) => row.original.nomePrioridade,
+            cell: (info: CellContext<PriorityRow, unknown>) => info.row.original.nomePrioridade,
             enableHiding: true,
         },
         {
             accessorKey: "badge",
             header: "Badge (Preview)",
-            cell: ({ row }) => (
+            cell: (info: CellContext<PriorityRow, unknown>) => (
                 <Badge
                     style={{
-                        backgroundColor: row.original.hexCorPrimaria,
-                        color: row.original.hexCorSecundaria,
+                        backgroundColor: info.row.original.hexCorPrimaria,
+                        color: info.row.original.hexCorSecundaria,
                         border: "1px solid #e5e7eb",
                     }}
                     className="text-xs px-3 py-1 rounded"
                 >
-                    {row.original.nomePrioridade}
+                    {info.row.original.nomePrioridade}
                 </Badge>
             ),
         },
         {
             accessorKey: "hexCorPrimaria",
-            header: ({ column }: { column: Column<IPriority, unknown> }) => (
+            header: (info: HeaderContext<PriorityRow, unknown>) => (
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    onClick={() => info.column.toggleSorting(info.column.getIsSorted() === "asc")}
                 >
                     Cor Primária
                     <ArrowUpDown
-                        className={`ml-2 ${column.getIsSorted() === "asc"
+                        className={`ml-2 ${info.column.getIsSorted() === "asc"
                             ? "rotate-0"
-                            : column.getIsSorted() === "desc"
+                            : info.column.getIsSorted() === "desc"
                                 ? "rotate-180"
                                 : ""
                             }`}
                     />
                 </Button>
             ),
-            cell: ({ row }) => (
+            cell: (info: CellContext<PriorityRow, unknown>) => (
                 <span className="flex items-center justify-center gap-2">
                     <span
                         className="inline-block w-6 h-6 rounded-full border"
-                        style={{ backgroundColor: row.original.hexCorPrimaria }}
-                        title={row.original.hexCorPrimaria}
+                        style={{ backgroundColor: info.row.original.hexCorPrimaria }}
+                        title={info.row.original.hexCorPrimaria}
                     />
-                    <span className="text-xs">{row.original.hexCorPrimaria}</span>
+                    <span className="text-xs">{info.row.original.hexCorPrimaria}</span>
                 </span>
             ),
         },
         {
             accessorKey: "hexCorSecundaria",
-            header: ({ column }: { column: Column<IPriority, unknown> }) => (
+            header: (info: HeaderContext<PriorityRow, unknown>) => (
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    onClick={() => info.column.toggleSorting(info.column.getIsSorted() === "asc")}
                 >
                     Cor Secundária
                     <ArrowUpDown
-                        className={`ml-2 ${column.getIsSorted() === "asc"
+                        className={`ml-2 ${info.column.getIsSorted() === "asc"
                             ? "rotate-0"
-                            : column.getIsSorted() === "desc"
+                            : info.column.getIsSorted() === "desc"
                                 ? "rotate-180"
                                 : ""
                             }`}
                     />
                 </Button>
             ),
-            cell: ({ row }) => (
+            cell: (info: CellContext<PriorityRow, unknown>) => (
                 <span className="flex items-center justify-center gap-2">
                     <span
                         className="inline-block w-6 h-6 rounded-full border"
-                        style={{ backgroundColor: row.original.hexCorSecundaria }}
-                        title={row.original.hexCorSecundaria}
+                        style={{ backgroundColor: info.row.original.hexCorSecundaria }}
+                        title={info.row.original.hexCorSecundaria}
                     />
-                    <span className="text-xs">{row.original.hexCorSecundaria}</span>
+                    <span className="text-xs">{info.row.original.hexCorSecundaria}</span>
                 </span>
             ),
         },
         {
             id: "actions",
             header: "Ações",
-            cell: ({ row }) => (
+            cell: (info: CellContext<PriorityRow, unknown>) => (
                 <div className="flex justify-center gap-2">
-                    <Button size="icon" variant="outline" onClick={() => openEditDialog(row.original)} aria-label="Editar">
+                    <Button size="icon" variant="outline" onClick={() => openEditDialog(info.row.original)} aria-label="Editar">
                         <Pencil />
                     </Button>
-                    <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: row.original.idPrioridade })} aria-label="Excluir">
+                    <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: info.row.original.idPrioridade })} aria-label="Excluir">
                         <Trash2 />
                     </Button>
                 </div>
             ),
         },
     ], []);
+
+    // Adapte o array para garantir o campo id
+    const filteredWithId: PriorityRow[] = filtered.map((item) => ({
+        ...item,
+        id: item.idPrioridade,
+    }));
 
     return (
         <div className="space-y-4">
@@ -318,23 +326,23 @@ export function PriorityParams() {
                                 <div className="flex gap-4 items-center justify-between">
                                     <div className="flex gap-4">
                                         <div>
-                                        <label className="block text-xs mb-1">Cor primária</label>
-                                        <Input
-                                            type="color"
-                                            value={primaryColor}
-                                            onChange={e => setPrimaryColor(e.target.value)}
-                                            className="w-12 h-10 p-0 border-none"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-xs mb-1">Cor secundária</label>
-                                        <Input
-                                            type="color"
-                                            value={secondaryColor}
-                                            onChange={e => setSecondaryColor(e.target.value)}
-                                            className="w-12 h-10 p-0 border-none"
-                                        />
-                                    </div>
+                                            <label className="block text-xs mb-1">Cor primária</label>
+                                            <Input
+                                                type="color"
+                                                value={primaryColor}
+                                                onChange={e => setPrimaryColor(e.target.value)}
+                                                className="w-12 h-10 p-0 border-none"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs mb-1">Cor secundária</label>
+                                            <Input
+                                                type="color"
+                                                value={secondaryColor}
+                                                onChange={e => setSecondaryColor(e.target.value)}
+                                                className="w-12 h-10 p-0 border-none"
+                                            />
+                                        </div>
                                     </div>
                                     <div className="flex flex-col items-center ml-4">
                                         <label className="block text-xs mb-1">Preview</label>
@@ -370,7 +378,7 @@ export function PriorityParams() {
                 </div>
             </div>
             <DataTableParams
-                data={filtered}
+                data={filteredWithId}
                 columns={columns}
                 visibleColumns={{
                     nomePrioridade: true,

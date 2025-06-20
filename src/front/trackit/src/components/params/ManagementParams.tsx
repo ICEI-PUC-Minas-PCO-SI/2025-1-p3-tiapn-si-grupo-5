@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Pencil, Trash2, Plus, ArrowUpDown } from "lucide-react";
 import type { IManagement } from "../../api/management";
 import { Button } from "../ui/button";
@@ -30,7 +30,8 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 import { DataTableParams } from "./DataTableParams";
-import type { ColumnDef, Column, Row } from "@tanstack/react-table";
+import type { ColumnDef, HeaderContext, CellContext } from "@tanstack/react-table";
+import { useUser } from "@/contexts/UserContext";
 
 const managementNameSchema = z.string()
   .min(3, "O nome deve ter pelo menos 3 caracteres")
@@ -42,12 +43,9 @@ function getErrorMessage(error: unknown): string {
   return "Erro desconhecido";
 }
 
-interface ManagementParamsProps {
-  isAdding: boolean;
-  setIsAdding: (isAdding: boolean) => void;
-}
+type ManagementRow = IManagement & { id: number };
 
-export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProps) {
+export function ManagementParams() {
   const [managementList, setManagementList] = useState<IManagement[]>([]);
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
@@ -57,12 +55,12 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
   const [nameError, setNameError] = useState<string | null>(null);
   const [isNameValid, setIsNameValid] = useState(false);
 
-  // Delete dialog
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
 
-  // Search/filter/sort state
   const [search, setSearch] = useState("");
   const [filtered, setFiltered] = useState<IManagement[]>([]);
+
+  const { user, setUser } = useUser();
 
   useEffect(() => {
     fetchManagement();
@@ -74,6 +72,7 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
       setManagementList(data);
     } catch (error) {
       setAlert({ type: "error", message: "Erro ao buscar as gerências." });
+      console.error("Erro ao buscar gerências:", error);
     }
   }
 
@@ -96,7 +95,6 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
   }, [managementList, search]);
 
   useEffect(() => {
-    // Validação dinâmica para habilitar/desabilitar o botão Salvar
     const result = managementNameSchema.safeParse(name);
     setIsNameValid(result.success);
     if (!name) setNameError(null);
@@ -131,6 +129,12 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
         setManagementList((prev) =>
           prev.map((g) => (g.idGerencia === editingManagement.idGerencia ? updated : g))
         );
+        if (user?.gerencia === editingManagement.idGerencia) {
+          setUser({
+            ...user,
+            nomeGerencia: name,
+          });
+        }
         setAlert({ type: "success", message: "Gerência atualizada com sucesso!" });
       } else {
         const created = await addManagement(name);
@@ -155,45 +159,50 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
     setDeleteDialog({ open: false, id: null });
   }
 
-  // DataTable columns
-  const columns = useMemo<ColumnDef<IManagement>[]>(() => [
+  const columns = useMemo<ColumnDef<ManagementRow>[]>(() => [
     {
       accessorKey: "nomeGerencia",
-      header: ({ column }: { column: Column<IManagement, unknown> }) => (
+      header: (info: HeaderContext<ManagementRow, unknown>) => (
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => info.column.toggleSorting(info.column.getIsSorted() === "asc")}
         >
           Nome
           <ArrowUpDown
-            className={`ml-2 ${column.getIsSorted() === "asc"
+            className={`ml-2 ${info.column.getIsSorted() === "asc"
               ? "rotate-0"
-              : column.getIsSorted() === "desc"
+              : info.column.getIsSorted() === "desc"
                 ? "rotate-180"
                 : ""
               }`}
           />
         </Button>
       ),
-      cell: ({ row }: { row: Row<IManagement> }) => row.original.nomeGerencia,
+      cell: (info: CellContext<ManagementRow, unknown>) => info.row.original.nomeGerencia,
       enableHiding: true,
     },
     {
       id: "actions",
       header: "Ações",
-      cell: ({ row }) => (
+      cell: (info: CellContext<ManagementRow, unknown>) => (
         <div className="flex justify-center gap-2">
-          <Button size="icon" variant="outline" onClick={() => openEditDialog(row.original)} aria-label="Editar">
+          <Button size="icon" variant="outline" onClick={() => openEditDialog(info.row.original)} aria-label="Editar">
             <Pencil />
           </Button>
-          <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: row.original.idGerencia })} aria-label="Excluir">
+          <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: info.row.original.idGerencia })} aria-label="Excluir">
             <Trash2 />
           </Button>
         </div>
       ),
     },
   ], []);
+
+  // Ajuste o tipo do array para ManagementRow
+  const filteredWithId: ManagementRow[] = filtered.map((item) => ({
+    ...item,
+    id: item.idGerencia,
+  }));
 
   return (
     <div className="space-y-4">
@@ -257,7 +266,7 @@ export function ManagementParams({ isAdding, setIsAdding }: ManagementParamsProp
         </div>
       </div>
       <DataTableParams
-        data={filtered}
+        data={filteredWithId}
         columns={columns}
         visibleColumns={{
           nomeGerencia: true,

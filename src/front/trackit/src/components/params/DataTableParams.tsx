@@ -27,11 +27,12 @@ export function DataTableParams<T extends { id?: string | number }>({
   visibleColumns = {},
   pageSize = 10,
 }: DataTableParamsProps<T>) {
-  // Filtra colunas conforme visibilidade
   const filteredColumns = columns.filter(
     (column) =>
-      !column.accessorKey ||
-      visibleColumns[column.accessorKey as string] !== false
+    (("accessorKey" in column &&
+      column.accessorKey &&
+      visibleColumns[column.accessorKey as string] !== false) ||
+      ("id" in column && column.id === "actions"))
   );
 
   const table = useReactTable({
@@ -46,19 +47,8 @@ export function DataTableParams<T extends { id?: string | number }>({
         pageSize: pageSize,
       },
     },
-    state: {
-      pagination: {
-        pageIndex: 0,
-        pageSize: pageSize,
-      },
-    },
     manualPagination: false,
   });
-
-  // Atualiza pageSize dinamicamente
-  if (table.getState().pagination.pageSize !== pageSize) {
-    table.setPageSize(pageSize);
-  }
 
   return (
     <div className="w-full">

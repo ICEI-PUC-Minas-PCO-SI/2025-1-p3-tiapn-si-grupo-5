@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Pencil, Trash2, Plus, ArrowUpDown } from "lucide-react";
 import type { ITicketType } from "@/api/tickettype";
 import { Button } from "@/components/ui/button";
@@ -30,11 +30,13 @@ import {
     AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
 import { DataTableParams } from "./DataTableParams";
-import type { ColumnDef, Column, Row } from "@tanstack/react-table";
+import type { ColumnDef, HeaderContext, CellContext } from "@tanstack/react-table";
 
 const ticketTypeNameSchema = z.string()
     .min(3, "O nome deve ter pelo menos 3 caracteres")
     .max(20, "O nome deve ter no máximo 20 caracteres");
+
+type TicketTypeRow = ITicketType & { id: number };
 
 export function TicketTypeParams() {
     const [ticketTypes, setTicketTypes] = useState<ITicketType[]>([]);
@@ -149,44 +151,50 @@ export function TicketTypeParams() {
     }
 
     // DataTable columns
-    const columns = useMemo<ColumnDef<ITicketType>[]>(() => [
+    const columns = useMemo<ColumnDef<TicketTypeRow>[]>(() => [
         {
             accessorKey: "nomeTipo",
-            header: ({ column }: { column: Column<ITicketType, unknown> }) => (
+            header: (info: HeaderContext<TicketTypeRow, unknown>) => (
                 <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                    onClick={() => info.column.toggleSorting(info.column.getIsSorted() === "asc")}
                 >
                     Nome
                     <ArrowUpDown
-                        className={`ml-2 ${column.getIsSorted() === "asc"
+                        className={`ml-2 ${info.column.getIsSorted() === "asc"
                             ? "rotate-0"
-                            : column.getIsSorted() === "desc"
+                            : info.column.getIsSorted() === "desc"
                                 ? "rotate-180"
                                 : ""
                             }`}
                     />
                 </Button>
             ),
-            cell: ({ row }: { row: Row<ITicketType> }) => row.original.nomeTipo,
+            cell: (info: CellContext<TicketTypeRow, unknown>) => info.row.original.nomeTipo,
             enableHiding: true,
         },
         {
             id: "actions",
             header: "Ações",
-            cell: ({ row }) => (
+            cell: (info: CellContext<TicketTypeRow, unknown>) => (
                 <div className="flex justify-center gap-2">
-                    <Button size="icon" variant="outline" onClick={() => openEditDialog(row.original)} aria-label="Editar">
+                    <Button size="icon" variant="outline" onClick={() => openEditDialog(info.row.original)} aria-label="Editar">
                         <Pencil />
                     </Button>
-                    <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: row.original.idTipoChamado })} aria-label="Excluir">
+                    <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: info.row.original.idTipoChamado })} aria-label="Excluir">
                         <Trash2 />
                     </Button>
                 </div>
             ),
         },
     ], []);
+
+    // Adapte o array para garantir o campo id
+    const filteredWithId: TicketTypeRow[] = filtered.map((item) => ({
+        ...item,
+        id: item.idTipoChamado,
+    }));
 
     return (
         <div className="space-y-4">
@@ -250,7 +258,7 @@ export function TicketTypeParams() {
                 </div>
             </div>
             <DataTableParams
-                data={filtered}
+                data={filteredWithId}
                 columns={columns}
                 visibleColumns={{
                     nomeTipo: true,
