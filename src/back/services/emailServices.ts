@@ -103,6 +103,33 @@ export async function sendPasswordResetEmail({
     return sendEmail({ to, subject, html });
 }
 
+export async function sendTicketStatusChangeEmail({
+    to,
+    nomeUsuario,
+    idChamado,
+    assunto,
+    novoStatus
+}: {
+    to: string;
+    nomeUsuario: string;
+    idChamado: number;
+    assunto: string;
+    novoStatus: string;
+}) {
+    const subject = `Atualização no chamado #${idChamado}`;
+    const html = `
+        <div style="font-family: Arial, sans-serif; color: #222;">
+            <h2>Olá, ${nomeUsuario}!</h2>
+            <p>O status do seu chamado <b>#${idChamado}</b> foi alterado.</p>
+            <p><b>Assunto:</b> ${assunto}</p>
+            <p><b>Novo status:</b> ${novoStatus}</p>
+            <p>Acesse o sistema para mais detalhes.</p>
+            <p style="font-size:12px;color:#888;">Esta é uma notificação automática do sistema TrackIt.</p>
+        </div>
+    `;
+    return sendEmail({ to, subject, html });
+}
+
 if (require.main === module) {
     (async () => {
         await sendEmail({

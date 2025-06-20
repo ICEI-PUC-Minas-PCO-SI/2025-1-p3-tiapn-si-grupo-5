@@ -118,6 +118,7 @@ export class TicketService {
                     select: {
                         idUsuario: true,
                         nomeUsuario: true,
+                        email: true,
                         gerencia: {
                             select: {
                                 nomeGerencia: true

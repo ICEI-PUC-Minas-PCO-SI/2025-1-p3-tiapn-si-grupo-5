@@ -171,7 +171,11 @@ export function ChatPage() {
                 <div className="flex justify-between items-center mb-4">
                     <div className="flex gap-4 items-center">
                         <h1 className="title-h1 text-slate-950 dark:text-white">
-                            {ticket?.assunto || "Assunto da demanda"}
+                            {ticket?.assunto
+                                ? ticket.assunto.length > 30
+                                    ? ticket.assunto.slice(0, 30) + "..."
+                                    : ticket.assunto
+                                : "Assunto da demanda"}
                         </h1>
                         <Badge variant="outline" className="h-10 dark:bg-slate-800 dark:text-white dark:border-slate-700">
                             {ticket?.protocolo && ticket.protocolo.length === 8
