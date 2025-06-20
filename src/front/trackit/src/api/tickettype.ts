@@ -1,5 +1,4 @@
 import { API_BASE_URL } from "@/api/config";
-import { authHeaders } from "@/contexts/helperCookies";
 
 export interface ITicketType {
     idTipoChamado: number;
@@ -9,7 +8,7 @@ export interface ITicketType {
 
 export async function getAllTicketTypes(): Promise<ITicketType[]> {
     const response = await fetch(`${API_BASE_URL}/ticket-types`, {
-        headers: authHeaders()
+        credentials: 'include'
     });
     if (!response.ok) throw new Error("Erro ao buscar tipos de chamado");
     return response.json();
@@ -18,7 +17,8 @@ export async function getAllTicketTypes(): Promise<ITicketType[]> {
 export async function createTicketType(nomeTipo: string): Promise<ITicketType> {
     const response = await fetch(`${API_BASE_URL}/ticket-types`, {
         method: "POST",
-        headers: authHeaders({ "Content-Type": "application/json" }),
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nomeTipo }),
     });
     if (!response.ok) throw new Error("Erro ao criar tipo de chamado");
@@ -28,7 +28,8 @@ export async function createTicketType(nomeTipo: string): Promise<ITicketType> {
 export async function updateTicketType(idTipoChamado: number, nomeTipo: string): Promise<ITicketType> {
     const response = await fetch(`${API_BASE_URL}/ticket-types/${idTipoChamado}`, {
         method: "PUT",
-        headers: authHeaders({ "Content-Type": "application/json" }),
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             idTipoChamado,
             nomeTipo
@@ -41,7 +42,8 @@ export async function updateTicketType(idTipoChamado: number, nomeTipo: string):
 export async function deleteTicketType(idTipoChamado: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/ticket-types/${idTipoChamado}`, {
         method: "DELETE",
-        headers: authHeaders({ "Content-Type": "application/json" }),
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
     });
     if (!response.ok) {
         let errorMsg = "Erro ao deletar tipo de chamado";

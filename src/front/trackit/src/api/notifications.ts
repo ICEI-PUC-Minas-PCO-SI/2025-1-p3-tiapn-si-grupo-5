@@ -1,12 +1,12 @@
 import { API_BASE_URL } from "@/api/config";
-import { authHeaders } from "@/contexts/helperCookies";
 
 export async function markAllNotificationsAsRead(idUsuario: number, idChamado: number): Promise<void> {
     const response = await fetch(
         `${API_BASE_URL}/notifications/read-all/${idUsuario}/${idChamado}`,
         {
             method: "PATCH",
-            headers: authHeaders({ "Content-Type": "application/json" }),
+            credentials: 'include',
+            headers: { "Content-Type": "application/json" },
         }
     );
     if (!response.ok) {
@@ -19,7 +19,7 @@ export async function getUnreadChamados(idUsuario: number): Promise<number[]> {
     const response = await fetch(
         `${API_BASE_URL}/notifications/unread-chamados/${idUsuario}`,
         {
-            headers: authHeaders()
+            credentials: 'include'
         }
     );
     if (!response.ok) {

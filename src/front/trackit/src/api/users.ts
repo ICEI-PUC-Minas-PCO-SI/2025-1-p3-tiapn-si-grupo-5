@@ -1,6 +1,5 @@
 import { getAllActiveManagements } from "@/api/management";
 import { API_BASE_URL } from "@/api/config";
-import { authHeaders } from "@/contexts/helperCookies";
 
 export interface IUpdateProfileUserPayload {
     nome: string;
@@ -81,7 +80,7 @@ export async function registerNewUser(payload: IRegisterUserPayload): Promise<Re
 export async function getAllUsers(): Promise<IUserListItem[]> {
     try {
         const response = await fetch(`${API_BASE_URL}/users`, {
-            headers: authHeaders()
+            credentials: 'include'
         });
         if (!response.ok) {
             throw new Error("Erro ao buscar usuários");
@@ -128,7 +127,8 @@ export async function getAllUsers(): Promise<IUserListItem[]> {
 export async function updateUser(payload: IUpdateUser): Promise<Response> {
     return fetch(`${API_BASE_URL}/users/${payload.idUsuario}`, {
         method: "PUT",
-        headers: authHeaders({ "Content-Type": "application/json" }),
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             matricula: payload.matricula,
             gerencia: payload.gerencia,
@@ -140,7 +140,8 @@ export async function updateUser(payload: IUpdateUser): Promise<Response> {
 export async function updateUserStatus(idUsuario: string, ativo: number): Promise<Response> {
     return fetch(`${API_BASE_URL}/users/${idUsuario}/status`, {
         method: "PATCH",
-        headers: authHeaders({ "Content-Type": "application/json" }),
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ativo }),
     });
 }
@@ -151,6 +152,7 @@ export async function loginUser(payload: ILoginUserPayload): Promise<Response> {
         headers: {
             "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify(payload),
     });
 }
@@ -161,14 +163,15 @@ export async function updateProfileUser(
 ): Promise<Response> {
     return fetch(`${API_BASE_URL}/users/profile/${userId}`, {
         method: "PUT",
-        headers: authHeaders({ "Content-Type": "application/json" }),
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
     });
 }
 
 export async function getAllAnalysts(): Promise<IAnalyst[]> {
     const response = await fetch(`${API_BASE_URL}/users/analysts`, {
-        headers: authHeaders()
+        credentials: 'include'
     });
     if (!response.ok) throw new Error("Erro ao buscar analistas");
     return response.json();

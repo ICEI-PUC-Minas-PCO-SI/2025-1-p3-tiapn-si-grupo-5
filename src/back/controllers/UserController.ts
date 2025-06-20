@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
-import { UserService } from "../services/userService";
+import { UserService } from "../services/UserService";
 import { sendPasswordResetEmail } from "../services/emailServices";
 import { uploadFileToCloudinary } from "../services/uploadService";
 import fs from "fs";
@@ -45,12 +45,10 @@ export class UserController {
             const { error, usuario } = await userService.loginUser(email, senha);
             if (!usuario) {
                 res.status(401).json({ error: error || "Email ou senha inválidos" });
-                console.error(error || "Usuário não encontrado.");
                 return;
             }
             if (!usuario.ativo) {
                 res.status(403).json({ error: "Sua conta está desativada. Entre em contato com o administrador." });
-                console.error("Usuário inativo.");
                 return;
             }
             let nomeGerencia: string | undefined = undefined;
@@ -62,6 +60,13 @@ export class UserController {
                 process.env.JWT_SECRET as string,
                 { expiresIn: '30m' }
             );
+            // Set cookie HTTP Only
+            res.cookie("trackit_token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite: "lax",
+                maxAge: 30 * 60 * 1000
+            });
             res.status(200).json({
                 message: "Login realizado com sucesso",
                 usuario: {
@@ -75,8 +80,8 @@ export class UserController {
                     ativo: usuario.ativo,
                     fotoPerfil: usuario.fotoPerfil,
                     nomeGerencia
-                },
-                token
+                }
+                // NÃO envie o token no corpo!
             });
         } catch (error) {
             console.error("Erro no login:", error);

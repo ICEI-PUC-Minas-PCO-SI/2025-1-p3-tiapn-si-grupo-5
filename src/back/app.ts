@@ -7,11 +7,12 @@ import { TicketRoutes } from "./routes/ticketRoutes";
 import { StatusRoutes } from "./routes/statusRoutes";
 import { TicketTypeRoutes } from "./routes/ticketTypeRoutes";
 import { errorHandler } from "./middlewares/error-handler";
-import { PriorityRoutes } from "./routes/priorityRoutes";
+import { PriorityRoutes } from "./routes/PriorityRoutes";
 import { DashboardRoutes } from "./routes/dashboardRoutes";
 import { ChatRoutes } from "./routes/chatRoutes";
 import { NotificationRoutes } from "./routes/notificationRoutes";
 import { UploadRoutes } from "./routes/uploadRoutes";
+import cookieParser from "cookie-parser";
 
 export class App {
     private app: Express;
@@ -25,7 +26,11 @@ export class App {
 
     private config() {
         this.app.use(express.json());
-        this.app.use(cors());
+        this.app.use(cors({
+            origin: process.env.FRONTEND_URL || "http://localhost:5173",
+            credentials: true
+        }));
+        this.app.use(cookieParser());
     }
 
     private routes() {

@@ -1,5 +1,4 @@
 import { API_BASE_URL } from "@/api/config";
-import { authHeaders } from "@/contexts/helperCookies";
 
 export interface ITicket {
     idChamado: number;
@@ -31,14 +30,15 @@ export interface INewTicket {
 export async function sendTicket(payload: INewTicket): Promise<Response> {
     return fetch(`${API_BASE_URL}/tickets`, {
         method: "POST",
-        headers: authHeaders({ "Content-Type": "application/json" }),
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
     });
 }
 
 export async function getAllTickets(): Promise<ITicket[]> {
     const response = await fetch(`${API_BASE_URL}/tickets`, {
-        headers: authHeaders()
+        credentials: 'include'
     });
     if (!response.ok) throw new Error("Erro ao buscar chamados");
     return response.json();
@@ -46,7 +46,7 @@ export async function getAllTickets(): Promise<ITicket[]> {
 
 export async function getUnassignedTickets(): Promise<ITicket[]> {
     const response = await fetch(`${API_BASE_URL}/tickets/unassigned`, {
-        headers: authHeaders()
+        credentials: 'include'
     });
     if (!response.ok) throw new Error("Erro ao buscar chamados não atribuídos");
     return response.json();
@@ -54,7 +54,7 @@ export async function getUnassignedTickets(): Promise<ITicket[]> {
 
 export async function getMyTickets(): Promise<ITicket[]> {
     const response = await fetch(`${API_BASE_URL}/tickets/my`, {
-        headers: authHeaders()
+        credentials: 'include'
     });
     if (!response.ok) throw new Error("Erro ao buscar meus chamados");
     return response.json();
@@ -63,7 +63,7 @@ export async function getMyTickets(): Promise<ITicket[]> {
 export async function assignTicket(idChamado: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}/assign`, {
         method: "PATCH",
-        headers: authHeaders()
+        credentials: 'include'
     });
     if (!response.ok) throw new Error("Erro ao assumir chamado");
 }
@@ -74,9 +74,8 @@ export async function updateTicketAnalyst(
 ): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}/analyst`, {
         method: "PATCH",
-        headers: authHeaders({
-            "Content-Type": "application/json"
-        }),
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idAnalista }),
     });
     if (!response.ok) throw new Error("Erro ao atualizar analista do chamado");
@@ -84,7 +83,7 @@ export async function updateTicketAnalyst(
 
 export async function getTeamTickets(): Promise<ITicket[]> {
     const response = await fetch(`${API_BASE_URL}/tickets/team`, {
-        headers: authHeaders()
+        credentials: 'include'
     });
     if (!response.ok) throw new Error("Erro ao buscar chamados da equipe");
     return response.json();
@@ -92,7 +91,7 @@ export async function getTeamTickets(): Promise<ITicket[]> {
 
 export async function getTicketsByAnalystId(idAnalista: number): Promise<ITicket[]> {
     const response = await fetch(`${API_BASE_URL}/tickets/analyst/${idAnalista}`, {
-        headers: authHeaders()
+        credentials: 'include'
     });
     if (!response.ok) throw new Error("Erro ao buscar chamados do analista");
     return response.json();
@@ -100,7 +99,7 @@ export async function getTicketsByAnalystId(idAnalista: number): Promise<ITicket
 
 export async function getTicketsBySolicitanteId(idSolicitante: number): Promise<ITicket[]> {
     const response = await fetch(`${API_BASE_URL}/tickets/user/${idSolicitante}`, {
-        headers: authHeaders()
+        credentials: 'include'
     });
     if (!response.ok) throw new Error("Erro ao buscar chamados do usuário");
     return response.json();
@@ -108,7 +107,7 @@ export async function getTicketsBySolicitanteId(idSolicitante: number): Promise<
 
 export async function getTicketById(idChamado: number) {
     const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}`, {
-        headers: authHeaders()
+        credentials: 'include'
     });
     if (!response.ok) throw new Error("Erro ao buscar chamado por id");
     return response.json();
@@ -116,7 +115,7 @@ export async function getTicketById(idChamado: number) {
 
 export async function getTicketByIdFull(idChamado: number): Promise<ITicket> {
     const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}`, {
-        headers: authHeaders()
+        credentials: 'include'
     });
     if (!response.ok) throw new Error("Erro ao buscar chamado por id");
     return response.json();
@@ -125,7 +124,8 @@ export async function getTicketByIdFull(idChamado: number): Promise<ITicket> {
 export async function updateTicketStatus(idChamado: number, idStatus: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}/status`, {
         method: "PATCH",
-        headers: authHeaders({ "Content-Type": "application/json" }),
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idStatus }),
     });
     if (!response.ok) throw new Error("Erro ao atualizar status do chamado");
@@ -134,7 +134,8 @@ export async function updateTicketStatus(idChamado: number, idStatus: number): P
 export async function closeTicket(idChamado: number, dataFechamento: string): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}/close`, {
         method: "PATCH",
-        headers: authHeaders({ "Content-Type": "application/json" }),
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dataFechamento }),
     });
     if (!response.ok) throw new Error("Erro ao encerrar chamado");
@@ -143,7 +144,8 @@ export async function closeTicket(idChamado: number, dataFechamento: string): Pr
 export async function reopenTicket(idChamado: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}/reopen`, {
         method: "PATCH",
-        headers: authHeaders({ "Content-Type": "application/json" }),
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
     });
     if (!response.ok) throw new Error("Erro ao reabrir chamado");
 }

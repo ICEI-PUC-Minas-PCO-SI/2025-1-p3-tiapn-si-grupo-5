@@ -16,9 +16,9 @@ export interface IMeResponse {
     } | null;
 }
 
-export async function getMe(token: string): Promise<IMeResponse | null> {
+export async function getMe(): Promise<IMeResponse | null> {
     const response = await fetch(`${API_BASE_URL}/users/me`, {
-        headers: { Authorization: `Bearer ${token}` }
+        credentials: 'include'
     });
     if (!response.ok) return null;
     return response.json();
@@ -46,4 +46,11 @@ export async function resetPassword(token: string, senha: string): Promise<void>
         const err = await response.json().catch(() => ({}));
         throw new Error(err?.error || "Erro ao redefinir senha");
     }
+}
+
+export async function logoutApi(): Promise<void> {
+    await fetch(`${API_BASE_URL}/logout`, {
+        method: 'POST',
+        credentials: 'include'
+    });
 }
