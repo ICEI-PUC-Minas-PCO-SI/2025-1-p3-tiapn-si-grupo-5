@@ -31,6 +31,7 @@ import { getAllAnalysts, type IAnalyst } from "@/api/users";
 import { getDashboardSummary } from "@/api/dashboard";
 import type { ITicket } from "@/api/ticket";
 import type { ITicketType } from "@/api/tickettype";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type AnalystRow = {
     name: string;
@@ -329,11 +330,20 @@ export function DashboardDataTable() {
                 <Searchbar onSearch={setSearch} />
                 <div className="flex gap-3">
                     <DropdownMenu open={filterMenuOpen} onOpenChange={setFilterMenuOpen}>
-                        <DropdownMenuTrigger asChild>
-                            <Button size="icon" variant="outline">
-                                <Filter className="w-4 h-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button size="icon" variant="outline">
+                                            <Filter className="w-4 h-4" />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    Filtrar
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                         <DropdownMenuContent align="end" className="min-w-[220px]">
                             <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Principal Atividade</div>
                             <Select

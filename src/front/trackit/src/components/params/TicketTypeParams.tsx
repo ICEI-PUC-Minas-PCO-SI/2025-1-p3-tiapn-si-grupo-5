@@ -31,6 +31,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { DataTableParams } from "./DataTableParams";
 import type { ColumnDef, HeaderContext, CellContext } from "@tanstack/react-table";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { TableSpinner } from "@/components/ui/spinner";
 
 const ticketTypeNameSchema = z.string()
     .min(3, "O nome deve ter pelo menos 3 caracteres")
@@ -48,22 +50,28 @@ export function TicketTypeParams() {
     const [nameError, setNameError] = useState<string | null>(null);
     const [isNameValid, setIsNameValid] = useState(false);
 
+    const isEditingChanged = editingType == null || name !== editingType.nomeTipo;
+    const canSave = isNameValid && (!editingType || isEditingChanged);
+
     const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
 
     const [search, setSearch] = useState("");
     const [filtered, setFiltered] = useState<ITicketType[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         fetchTicketTypes();
     }, []);
 
     async function fetchTicketTypes() {
+        setLoading(true);
         try {
             const data = await getAllTicketTypes();
             setTicketTypes(data);
         } catch {
             setAlert({ type: "error", message: "Erro ao buscar tipos de demanda." });
         }
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -179,12 +187,30 @@ export function TicketTypeParams() {
             header: "Ações",
             cell: (info: CellContext<TicketTypeRow, unknown>) => (
                 <div className="flex justify-center gap-2">
-                    <Button size="icon" variant="outline" onClick={() => openEditDialog(info.row.original)} aria-label="Editar">
-                        <Pencil />
-                    </Button>
-                    <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: info.row.original.idTipoChamado })} aria-label="Excluir">
-                        <Trash2 />
-                    </Button>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button size="icon" variant="outline" onClick={() => openEditDialog(info.row.original)} aria-label="Editar">
+                                    <Pencil />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                Editar
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: info.row.original.idTipoChamado })} aria-label="Excluir">
+                                    <Trash2 />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                Deletar
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 </div>
             ),
         },
@@ -219,9 +245,18 @@ export function TicketTypeParams() {
                 <div className="flex items-center gap-2">
                     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                         <DialogTrigger asChild>
-                            <Button variant="default" size="icon" aria-label="Novo tipo de demanda" onClick={openAddDialog}>
-                                <Plus className="w-4 h-4" />
-                            </Button>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button variant="default" size="icon" aria-label="Novo tipo de demanda" onClick={openAddDialog}>
+                                            <Plus className="w-4 h-4" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        Criar tipo de demanda
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
@@ -243,7 +278,7 @@ export function TicketTypeParams() {
                                 <Button
                                     type="button"
                                     onClick={handleSave}
-                                    disabled={!isNameValid}
+                                    disabled={!canSave}
                                 >
                                     Salvar
                                 </Button>
@@ -257,14 +292,18 @@ export function TicketTypeParams() {
                     </Dialog>
                 </div>
             </div>
-            <DataTableParams
-                data={filteredWithId}
-                columns={columns}
-                visibleColumns={{
-                    nomeTipo: true,
-                    actions: true,
-                }}
-            />
+            {loading ? (
+                <TableSpinner />
+            ) : (
+                <DataTableParams
+                    data={filteredWithId}
+                    columns={columns}
+                    visibleColumns={{
+                        nomeTipo: true,
+                        actions: true,
+                    }}
+                />
+            )}
             <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, id: open ? deleteDialog.id : null })}>
                 <AlertDialogContent>
                     <AlertDialogHeader>

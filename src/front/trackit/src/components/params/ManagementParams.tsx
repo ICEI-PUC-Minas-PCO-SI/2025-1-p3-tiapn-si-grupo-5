@@ -32,6 +32,8 @@ import {
 import { DataTableParams } from "./DataTableParams";
 import type { ColumnDef, HeaderContext, CellContext } from "@tanstack/react-table";
 import { useUser } from "@/contexts/UserContext";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { TableSpinner } from "@/components/ui/spinner";
 
 const managementNameSchema = z.string()
   .min(3, "O nome deve ter pelo menos 3 caracteres")
@@ -54,6 +56,13 @@ export function ManagementParams() {
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState<string | null>(null);
   const [isNameValid, setIsNameValid] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Adicione a validação para só permitir salvar se houver alteração ao editar
+  const isEditingChanged =
+    editingManagement == null ||
+    name !== editingManagement.nomeGerencia;
+  const canSave = isNameValid && (!editingManagement || isEditingChanged);
 
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
 
@@ -67,6 +76,7 @@ export function ManagementParams() {
   }, []);
 
   async function fetchManagement() {
+    setLoading(true);
     try {
       const data = await getAllActiveManagements();
       setManagementList(data);
@@ -74,6 +84,7 @@ export function ManagementParams() {
       setAlert({ type: "error", message: "Erro ao buscar as gerências." });
       console.error("Erro ao buscar gerências:", error);
     }
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -187,12 +198,30 @@ export function ManagementParams() {
       header: "Ações",
       cell: (info: CellContext<ManagementRow, unknown>) => (
         <div className="flex justify-center gap-2">
-          <Button size="icon" variant="outline" onClick={() => openEditDialog(info.row.original)} aria-label="Editar">
-            <Pencil />
-          </Button>
-          <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: info.row.original.idGerencia })} aria-label="Excluir">
-            <Trash2 />
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="icon" variant="outline" onClick={() => openEditDialog(info.row.original)} aria-label="Editar">
+                  <Pencil />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Editar
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: info.row.original.idGerencia })} aria-label="Excluir">
+                  <Trash2 />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Deletar
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       ),
     },
@@ -227,9 +256,18 @@ export function ManagementParams() {
         <div className="flex items-center gap-2">
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="default" size="icon" aria-label="Nova gerência" onClick={openAddDialog}>
-                <Plus className="w-4 h-4" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="default" size="icon" aria-label="Nova gerência" onClick={openAddDialog}>
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Criar gerência
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -251,7 +289,7 @@ export function ManagementParams() {
                 <Button
                   type="button"
                   onClick={handleSave}
-                  disabled={!isNameValid}
+                  disabled={!canSave}
                 >
                   Salvar
                 </Button>
@@ -265,14 +303,18 @@ export function ManagementParams() {
           </Dialog>
         </div>
       </div>
-      <DataTableParams
-        data={filteredWithId}
-        columns={columns}
-        visibleColumns={{
-          nomeGerencia: true,
-          actions: true,
-        }}
-      />
+      {loading ? (
+        <TableSpinner />
+      ) : (
+        <DataTableParams
+          data={filteredWithId}
+          columns={columns}
+          visibleColumns={{
+            nomeGerencia: true,
+            actions: true,
+          }}
+        />
+      )}
       <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, id: open ? deleteDialog.id : null })}>
         <AlertDialogContent>
           <AlertDialogHeader>

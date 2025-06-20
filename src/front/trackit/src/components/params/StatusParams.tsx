@@ -32,6 +32,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { DataTableParams } from "./DataTableParams";
 import type { ColumnDef, HeaderContext, CellContext } from "@tanstack/react-table";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { TableSpinner } from "@/components/ui/spinner";
 
 const statusNameSchema = z.string()
   .min(5, "O nome deve ter pelo menos 5 caracteres")
@@ -55,18 +57,28 @@ export function StatusParams() {
   const [search, setSearch] = useState("");
   const [filtered, setFiltered] = useState<IStatus[]>([]);
   const [isNameValid, setIsNameValid] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  const isEditingChanged =
+    editingStatus == null ||
+    name !== editingStatus.nomeStatus ||
+    primaryColor !== (editingStatus.hexCorPrimaria || "#000000") ||
+    secondaryColor !== (editingStatus.hexCorSecundaria || "#ffffff");
+  const canSave = isNameValid && (!editingStatus || isEditingChanged);
 
   useEffect(() => {
     fetchStatuses();
   }, []);
 
   async function fetchStatuses() {
+    setLoading(true);
     try {
       const data = await getAllStatus();
       setStatusList(data);
     } catch {
       setAlert({ type: "error", message: "Erro ao buscar status." });
     }
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -262,12 +274,30 @@ export function StatusParams() {
       header: "Ações",
       cell: (info: CellContext<StatusRow, unknown>) => (
         <div className="flex justify-center gap-2">
-          <Button size="icon" variant="outline" onClick={() => openEditDialog(info.row.original)} aria-label="Editar">
-            <Pencil />
-          </Button>
-          <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: info.row.original.idStatus })} aria-label="Excluir">
-            <Trash2 />
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="icon" variant="outline" onClick={() => openEditDialog(info.row.original)} aria-label="Editar">
+                  <Pencil />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Editar
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: info.row.original.idStatus })} aria-label="Excluir">
+                  <Trash2 />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                Deletar
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       ),
     },
@@ -301,9 +331,18 @@ export function StatusParams() {
         <div className="flex items-center gap-2">
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="default" size="icon" aria-label="Novo status" onClick={openAddDialog}>
-                <Plus className="w-4 h-4" />
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="default" size="icon" aria-label="Novo status" onClick={openAddDialog}>
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Criar status
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -360,7 +399,7 @@ export function StatusParams() {
                 <Button
                   type="button"
                   onClick={handleSave}
-                  disabled={!isNameValid}
+                  disabled={!canSave}
                 >
                   Salvar
                 </Button>
@@ -374,17 +413,21 @@ export function StatusParams() {
           </Dialog>
         </div>
       </div>
-      <DataTableParams
-        data={filteredWithId}
-        columns={columns}
-        visibleColumns={{
-          nomeStatus: true,
-          badge: true,
-          hexCorPrimaria: true,
-          hexCorSecundaria: true,
-          actions: true,
-        }}
-      />
+      {loading ? (
+        <TableSpinner />
+      ) : (
+        <DataTableParams
+          data={filteredWithId}
+          columns={columns}
+          visibleColumns={{
+            nomeStatus: true,
+            badge: true,
+            hexCorPrimaria: true,
+            hexCorSecundaria: true,
+            actions: true,
+          }}
+        />
+      )}
       <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, id: open ? deleteDialog.id : null })}>
         <AlertDialogContent>
           <AlertDialogHeader>

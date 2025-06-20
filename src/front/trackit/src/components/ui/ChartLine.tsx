@@ -29,6 +29,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { useState } from "react"
 import type { ChartConfig } from "@/components/ui/chart"
 
@@ -72,11 +73,20 @@ export function ChartLine({
                             open={filterMenuOpen}
                             onOpenChange={setFilterMenuOpen}
                         >
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="icon">
-                                    <Filter className="w-4 h-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline" size="icon">
+                                                <Filter className="w-4 h-4" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        Filtrar
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
                             <DropdownMenuContent
                                 align="end"
                                 className="min-w-[120px]"
