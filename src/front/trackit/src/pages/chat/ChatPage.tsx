@@ -4,7 +4,7 @@ import Chat from "@/components/chat/Chat";
 import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getTicketById, assignTicket, closeTicket, updateTicketStatus } from "@/api/ticket";
+import { getTicketById, assignTicket, closeTicket, updateTicketStatus, reopenTicket } from "@/api/ticket";
 import { useUser } from "@/contexts/UserContext";
 import { SecondarySpinner } from "@/components/ui/spinner";
 import { updateTicketAnalyst } from "@/api/ticket";
@@ -41,6 +41,9 @@ export function ChatPage() {
     const [analysts, setAnalysts] = useState<IAnalyst[]>([]);
     const [selectedAnalyst, setSelectedAnalyst] = useState<string>("");
     const [assigningToAnalyst, setAssigningToAnalyst] = useState(false);
+    // Novo estado para controlar reabertura
+    const [reopening, setReopening] = useState(false);
+    const [reopenModalOpen, setReopenModalOpen] = useState(false);
 
     const { user } = useUser();
 
@@ -130,6 +133,23 @@ export function ChatPage() {
         }
     }
 
+    // Função para reabrir chamado (status = 1, por exemplo "Em aberto")
+    async function handleReopenTicket() {
+        if (!ticket) return;
+        setReopening(true);
+        try {
+            await reopenTicket(ticket.idChamado);
+            const updated = await getTicketById(ticket.idChamado);
+            setTicket(updated);
+            setAlert({ type: "success", message: "Chamado reaberto com sucesso!" });
+            setReopenModalOpen(false);
+        } catch {
+            setAlert({ type: "error", message: "Erro ao reabrir chamado." });
+        } finally {
+            setReopening(false);
+        }
+    }
+
     if (loading) {
         return (
             <div className="max-w-full">
@@ -189,69 +209,182 @@ export function ChatPage() {
                         {ticket?.tipochamado?.nomeTipo || "Tipo de demanda"}
                     </h2>
                     {isAnalyst && (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                                setSelectedStatus(ticket?.idStatus ? String(ticket.idStatus) : "");
-                                setStatusModalOpen(true);
-                            }}
-                            className="dark:border-slate-700 dark:text-white"
-                        >
-                            Alterar status
-                        </Button>
-                    )}
-                    <Dialog open={statusModalOpen} onOpenChange={setStatusModalOpen}>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Alterar status do chamado</DialogTitle>
-                            </DialogHeader>
-                            <form
-                                onSubmit={e => {
-                                    e.preventDefault();
-                                    handleUpdateStatus();
+                        <div className="flex gap-2">
+                            {/* Botão de reabrir chamado se fechado */}
+                            {ticket?.dataFechamento && (
+                                <>
+                                    <Button
+                                        className="bg-green-600 hover:bg-green-700 text-white border-green-700"
+                                        variant="default"
+                                        size="sm"
+                                        onClick={() => setReopenModalOpen(true)}
+                                        disabled={reopening}
+                                    >
+                                        Reabrir
+                                    </Button>
+                                    <Dialog open={reopenModalOpen} onOpenChange={setReopenModalOpen}>
+                                        <DialogContent>
+                                            <DialogHeader>
+                                                <DialogTitle>Reabrir chamado</DialogTitle>
+                                            </DialogHeader>
+                                            <form
+                                                onSubmit={e => {
+                                                    e.preventDefault();
+                                                    handleReopenTicket();
+                                                }}
+                                                className="flex flex-col gap-4"
+                                            >
+                                                <div>
+                                                    Tem certeza que deseja reabrir o chamado{" "}
+                                                    <b>
+                                                        {ticket?.protocolo && ticket.protocolo.length === 8
+                                                            ? `#${ticket.protocolo.slice(0, 6)}/${ticket.protocolo.slice(6, 8)}`
+                                                            : ticket?.protocolo
+                                                                ? `#${ticket.protocolo}`
+                                                                : "#XXXXXXXX/YY"}
+                                                    </b>
+                                                    ?
+                                                </div>
+                                                <DialogFooter>
+                                                    <Button
+                                                        type="submit"
+                                                        disabled={reopening}
+                                                    >
+                                                        {reopening ? "Reabrindo..." : "Confirmar"}
+                                                    </Button>
+                                                    <Button
+                                                        type="button"
+                                                        variant="outline"
+                                                        onClick={() => setReopenModalOpen(false)}
+                                                    >
+                                                        Cancelar
+                                                    </Button>
+                                                </DialogFooter>
+                                            </form>
+                                        </DialogContent>
+                                    </Dialog>
+                                </>
+                            )}
+                            {/* Botão de alterar status sempre disponível */}
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                    setSelectedStatus(ticket?.idStatus ? String(ticket.idStatus) : "");
+                                    setStatusModalOpen(true);
                                 }}
-                                className="flex flex-col gap-4"
+                                className="dark:border-slate-700 dark:text-white"
                             >
-                                <Select
-                                    value={selectedStatus}
-                                    onValueChange={setSelectedStatus}
-                                >
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder="Selecione o status" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            {allStatus.map(status => (
-                                                <SelectItem key={status.idStatus} value={String(status.idStatus)}>
-                                                    <span
-                                                        className="inline-block w-3 h-3 rounded-full mr-2"
-                                                        style={{ backgroundColor: status.hexCorPrimaria }}
-                                                    />
-                                                    {status.nomeStatus}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                                <DialogFooter>
-                                    <Button
-                                        type="submit"
-                                        disabled={!selectedStatus || updatingStatus}
+                                Alterar status
+                            </Button>
+                            <Dialog open={statusModalOpen} onOpenChange={setStatusModalOpen}>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Alterar status do chamado</DialogTitle>
+                                    </DialogHeader>
+                                    <form
+                                        onSubmit={e => {
+                                            e.preventDefault();
+                                            handleUpdateStatus();
+                                        }}
+                                        className="flex flex-col gap-4"
                                     >
-                                        {updatingStatus ? "Salvando..." : "Confirmar"}
-                                    </Button>
+                                        <Select
+                                            value={selectedStatus}
+                                            onValueChange={setSelectedStatus}
+                                        >
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Selecione o status" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    {allStatus.map(status => (
+                                                        <SelectItem key={status.idStatus} value={String(status.idStatus)}>
+                                                            <span
+                                                                className="inline-block w-3 h-3 rounded-full mr-2"
+                                                                style={{ backgroundColor: status.hexCorPrimaria }}
+                                                            />
+                                                            {status.nomeStatus}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                        <DialogFooter>
+                                            <Button
+                                                type="submit"
+                                                disabled={!selectedStatus || updatingStatus}
+                                            >
+                                                {updatingStatus ? "Salvando..." : "Confirmar"}
+                                            </Button>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                onClick={() => setStatusModalOpen(false)}
+                                            >
+                                                Cancelar
+                                            </Button>
+                                        </DialogFooter>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
+                            {/* Botão de encerrar chamado, só aparece se não estiver fechado */}
+                            {!ticket?.dataFechamento && (
+                                <>
                                     <Button
-                                        type="button"
-                                        variant="outline"
-                                        onClick={() => setStatusModalOpen(false)}
+                                        className="dark:bg-red-700 dark:text-white"
+                                        variant="delete"
+                                        size="sm"
+                                        onClick={() => setCloseModalOpen(true)}
                                     >
-                                        Cancelar
+                                        Encerrar
                                     </Button>
-                                </DialogFooter>
-                            </form>
-                        </DialogContent>
-                    </Dialog>
+                                    <Dialog open={closeModalOpen} onOpenChange={setCloseModalOpen}>
+                                        <DialogContent>
+                                            <DialogHeader>
+                                                <DialogTitle>Encerrar chamado</DialogTitle>
+                                            </DialogHeader>
+                                            <form
+                                                onSubmit={e => {
+                                                    e.preventDefault();
+                                                    handleConfirmCloseTicket();
+                                                }}
+                                                className="flex flex-col gap-4"
+                                            >
+                                                <div>
+                                                    Tem certeza que deseja encerrar o chamado{" "}
+                                                    <b>
+                                                        {ticket?.protocolo && ticket.protocolo.length === 8
+                                                            ? `#${ticket.protocolo.slice(0, 6)}/${ticket.protocolo.slice(6, 8)}`
+                                                            : ticket?.protocolo
+                                                                ? `#${ticket.protocolo}`
+                                                                : "#XXXXXXXX/YY"}
+                                                    </b>
+                                                    ?
+                                                </div>
+                                                <DialogFooter>
+                                                    <Button
+                                                        type="submit"
+                                                        disabled={closing}
+                                                        variant="delete"
+                                                    >
+                                                        {closing ? "Encerrando..." : "Confirmar"}
+                                                    </Button>
+                                                    <Button
+                                                        type="button"
+                                                        variant="outline"
+                                                        onClick={() => setCloseModalOpen(false)}
+                                                    >
+                                                        Cancelar
+                                                    </Button>
+                                                </DialogFooter>
+                                            </form>
+                                        </DialogContent>
+                                    </Dialog>
+                                </>
+                            )}
+                        </div>
+                    )}
                     {isManager && !ticket?.usuario_chamado_idAnalistaTousuario && (
                         <>
                             <Button
@@ -324,119 +457,66 @@ export function ChatPage() {
                     <span className="paragraph text-slate-700 dark:text-slate-300">
                         Data de Abertura: {ticket?.dataAbertura ? new Date(ticket.dataAbertura).toLocaleDateString("pt-BR") : "-"}
                     </span>
-                    {isAnalyst ? (
-                        !ticket?.usuario_chamado_idAnalistaTousuario ? (
-                            <>
-                                <Button
-                                    className="dark:bg-sky-700 dark:text-white"
-                                    variant="default"
-                                    size="sm"
-                                    onClick={() => setAssignModalOpen(true)}
-                                    disabled={assigning}
-                                >
-                                    Atender
-                                </Button>
-                                <Dialog open={assignModalOpen} onOpenChange={setAssignModalOpen}>
-                                    <DialogContent>
-                                        <DialogHeader>
-                                            <DialogTitle>Assumir chamado</DialogTitle>
-                                        </DialogHeader>
-                                        <form
-                                            onSubmit={e => {
-                                                e.preventDefault();
-                                                handleConfirmAssignTicket();
-                                            }}
-                                            className="flex flex-col gap-4"
-                                        >
-                                            <div>
-                                                Tem certeza que deseja assumir o chamado{" "}
-                                                <b>
-                                                    {ticket?.protocolo && ticket.protocolo.length === 8
-                                                        ? `#${ticket.protocolo.slice(0, 6)}/${ticket.protocolo.slice(6, 8)}`
-                                                        : ticket?.protocolo
-                                                            ? `#${ticket.protocolo}`
-                                                            : "#XXXXXXXX/YY"}
-                                                </b>
-                                                ?
-                                            </div>
-                                            <DialogFooter>
-                                                <Button
-                                                    type="submit"
-                                                    disabled={assigning}
-                                                >
-                                                    {assigning ? "Assumindo..." : "Confirmar"}
-                                                </Button>
-                                                <Button
-                                                    type="button"
-                                                    variant="outline"
-                                                    onClick={() => setAssignModalOpen(false)}
-                                                >
-                                                    Cancelar
-                                                </Button>
-                                            </DialogFooter>
-                                        </form>
-                                    </DialogContent>
-                                </Dialog>
-                            </>
-                        ) : ticket?.dataFechamento ? (
-                            <span className="paragraph text-slate-700 dark:text-slate-300">
-                                Data de Fechamento: {new Date(ticket.dataFechamento).toLocaleDateString("pt-BR")}
-                            </span>
-                        ) : (
-                            <>
-                                <Button
-                                    className="dark:bg-red-700 dark:text-white"
-                                    variant="delete"
-                                    size="sm"
-                                    onClick={() => setCloseModalOpen(true)}
-                                >
-                                    Encerrar
-                                </Button>
-                                <Dialog open={closeModalOpen} onOpenChange={setCloseModalOpen}>
-                                    <DialogContent>
-                                        <DialogHeader>
-                                            <DialogTitle>Encerrar chamado</DialogTitle>
-                                        </DialogHeader>
-                                        <form
-                                            onSubmit={e => {
-                                                e.preventDefault();
-                                                handleConfirmCloseTicket();
-                                            }}
-                                            className="flex flex-col gap-4"
-                                        >
-                                            <div>
-                                                Tem certeza que deseja encerrar o chamado{" "}
-                                                <b>
-                                                    {ticket?.protocolo && ticket.protocolo.length === 8
-                                                        ? `#${ticket.protocolo.slice(0, 6)}/${ticket.protocolo.slice(6, 8)}`
-                                                        : ticket?.protocolo
-                                                            ? `#${ticket.protocolo}`
-                                                            : "#XXXXXXXX/YY"}
-                                                </b>
-                                                ?
-                                            </div>
-                                            <DialogFooter>
-                                                <Button
-                                                    type="submit"
-                                                    disabled={closing}
-                                                    variant="delete"
-                                                >
-                                                    {closing ? "Encerrando..." : "Confirmar"}
-                                                </Button>
-                                                <Button
-                                                    type="button"
-                                                    variant="outline"
-                                                    onClick={() => setCloseModalOpen(false)}
-                                                >
-                                                    Cancelar
-                                                </Button>
-                                            </DialogFooter>
-                                        </form>
-                                    </DialogContent>
-                                </Dialog>
-                            </>
-                        )
-                    ) : (
+                    {isAnalyst && !ticket?.usuario_chamado_idAnalistaTousuario && (
+                        <>
+                            <Button
+                                className="dark:bg-sky-700 dark:text-white"
+                                variant="default"
+                                size="sm"
+                                onClick={() => setAssignModalOpen(true)}
+                                disabled={assigning}
+                            >
+                                Atender
+                            </Button>
+                            <Dialog open={assignModalOpen} onOpenChange={setAssignModalOpen}>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Assumir chamado</DialogTitle>
+                                    </DialogHeader>
+                                    <form
+                                        onSubmit={e => {
+                                            e.preventDefault();
+                                            handleConfirmAssignTicket();
+                                        }}
+                                        className="flex flex-col gap-4"
+                                    >
+                                        <div>
+                                            Tem certeza que deseja assumir o chamado{" "}
+                                            <b>
+                                                {ticket?.protocolo && ticket.protocolo.length === 8
+                                                    ? `#${ticket.protocolo.slice(0, 6)}/${ticket.protocolo.slice(6, 8)}`
+                                                    : ticket?.protocolo
+                                                        ? `#${ticket.protocolo}`
+                                                        : "#XXXXXXXX/YY"}
+                                            </b>
+                                            ?
+                                        </div>
+                                        <DialogFooter>
+                                            <Button
+                                                type="submit"
+                                                disabled={assigning}
+                                            >
+                                                {assigning ? "Assumindo..." : "Confirmar"}
+                                            </Button>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                onClick={() => setAssignModalOpen(false)}
+                                            >
+                                                Cancelar
+                                            </Button>
+                                        </DialogFooter>
+                                    </form>
+                                </DialogContent>
+                            </Dialog>
+                        </>
+                    )}
+                    {isAnalyst && ticket?.usuario_chamado_idAnalistaTousuario && (
+                        <span className="paragraph text-slate-700 dark:text-slate-300">
+                            Data de Fechamento: {ticket?.dataFechamento ? new Date(ticket.dataFechamento).toLocaleDateString("pt-BR") : "-"}
+                        </span>
+                    )}
+                    {!isAnalyst && (
                         <span className="paragraph text-slate-700 dark:text-slate-300">
                             Data de Fechamento: {ticket?.dataFechamento ? new Date(ticket.dataFechamento).toLocaleDateString("pt-BR") : "-"}
                         </span>

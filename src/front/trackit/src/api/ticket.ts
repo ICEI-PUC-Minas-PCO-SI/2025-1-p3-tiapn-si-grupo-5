@@ -140,6 +140,14 @@ export async function closeTicket(idChamado: number, dataFechamento: string): Pr
     if (!response.ok) throw new Error("Erro ao encerrar chamado");
 }
 
+export async function reopenTicket(idChamado: number): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/tickets/${idChamado}/reopen`, {
+        method: "PATCH",
+        headers: authHeaders({ "Content-Type": "application/json" }),
+    });
+    if (!response.ok) throw new Error("Erro ao reabrir chamado");
+}
+
 export interface ITicketFull extends ITicket {
     usuario_chamado_idSolicitanteTousuario?: {
         idUsuario: number;

@@ -176,6 +176,13 @@ export class TicketService {
         });
     }
 
+    async reopenTicket(idChamado: number) {
+        return prisma.chamado.update({
+            where: { idChamado },
+            data: { dataFechamento: null }
+        });
+    }
+
     async createChatMessage(
         idChamado: number,
         idRemetente: number,

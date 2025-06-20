@@ -202,4 +202,18 @@ export class TicketController {
             res.status(500).json({ error: "Erro ao buscar chamado por id" });
         }
     }
+
+    async reopenTicket(req: Request, res: Response) {
+        try {
+            const idChamado = Number(req.params.idChamado);
+            if (!idChamado) {
+                return res.status(400).json({ error: "idChamado é obrigatório para reabrir o chamado." });
+            }
+            const ticket = await ticketService.reopenTicket(idChamado);
+            res.status(200).json(ticket);
+        } catch (error) {
+            console.error("Erro ao reabrir chamado:", error);
+            res.status(500).json({ error: "Erro ao reabrir chamado" });
+        }
+    }
 }
