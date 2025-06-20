@@ -175,4 +175,24 @@ export class TicketService {
             data: { dataFechamento }
         });
     }
+
+    async createChatMessage(
+        idChamado: number,
+        idRemetente: number,
+        mensagem: string,
+        remetente: "usuario" | "analista" | "gestor",
+        urlAnexo?: string,
+        nomeArquivo?: string
+    ) {
+        return prisma.msgchamado.create({
+            data: {
+                idChamado,
+                idRemetente,
+                mensagem,
+                remetente,
+                urlAnexo: urlAnexo ?? null,
+                nomeArquivo: nomeArquivo ?? null,
+            }
+        });
+    }
 }

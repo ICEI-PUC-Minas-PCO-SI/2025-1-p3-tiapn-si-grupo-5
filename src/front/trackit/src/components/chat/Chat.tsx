@@ -13,12 +13,25 @@ import { getChatMessages } from "@/api/chat";
 import { markAllNotificationsAsRead } from "@/api/notifications";
 import { getTicketByIdFull } from "@/api/ticket";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
+import { uploadFile } from "@/api/upload";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Progress } from "@/components/ui/progress";
+import { z } from "zod";
 
 interface ChatProps {
     descricao?: string;
     urlAnexo?: string | null;
     nomeArquivo?: string | null;
 }
+
+// Schema Zod para validação do dialog de anexo
+const attachSchema = z.object({
+    nomeArquivo: z.string()
+        .min(3, "O nome do arquivo deve ter pelo menos 3 caracteres")
+        .max(15, "O nome do arquivo deve ter no máximo 15 caracteres"),
+    file: z.instanceof(File, { message: "Selecione um arquivo para anexar" })
+});
 
 export default function Chat(props: ChatProps) {
     const { user } = useUser();
@@ -28,6 +41,12 @@ export default function Chat(props: ChatProps) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [globalAlert, setGlobalAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [dialogNomeArquivo, setDialogNomeArquivo] = useState("");
+    const [dialogFile, setDialogFile] = useState<File | null>(null);
+    const [dialogErrors, setDialogErrors] = useState<{ nomeArquivo?: string; file?: string }>({});
+    const [uploading, setUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState<number>(0);
 
     // Obtém o idChamado da URL
     const searchParams = new URLSearchParams(window.location.search);
@@ -152,31 +171,86 @@ export default function Chat(props: ChatProps) {
         };
     }, [idChamado, user, socketRef]);
 
-    // Envia mensagem para o socket e limpa o input
-    function handleSend(e: FormEvent) {
+    // Handler para abrir dialog de anexo
+    function handleAttachClick(e: React.MouseEvent) {
         e.preventDefault();
-        if (!input.trim() || !user || !socketRef.current) return;
+        setOpenDialog(true);
+    }
+
+    // Handler para selecionar arquivo no dialog
+    function handleDialogFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+        if (e.target.files && e.target.files[0]) {
+            setDialogFile(e.target.files[0]);
+        }
+    }
+
+    // Handler para anexar arquivo no dialog
+    async function handleDialogAttach() {
+        // Validação com Zod
+        const result = attachSchema.safeParse({
+            nomeArquivo: dialogNomeArquivo,
+            file: dialogFile,
+        });
+        if (!result.success) {
+            const errors: { nomeArquivo?: string; file?: string } = {};
+            for (const err of result.error.errors) {
+                if (err.path[0] === "nomeArquivo") errors.nomeArquivo = err.message;
+                if (err.path[0] === "file") errors.file = err.message;
+            }
+            setDialogErrors(errors);
+            return;
+        }
+        setDialogErrors({});
+
+        setUploading(true);
+        try {
+            const resultUpload = await uploadFile(dialogFile!, undefined, setUploadProgress);
+            setInput(prev => prev); // força rerender
+            setAnexoUrl(resultUpload.url);
+            setAnexoNome(dialogNomeArquivo || dialogFile!.name);
+            setOpenDialog(false);
+            setDialogNomeArquivo("");
+            setDialogFile(null);
+            setAnexoReady(true);
+        } catch (error) {
+            setGlobalAlert({ type: "error", message: "Erro ao anexar arquivo" });
+            console.error("Erro ao fazer upload:", error);
+        } finally {
+            setUploading(false);
+            setUploadProgress(0);
+        }
+    }
+
+    // Estados para armazenar url/nome do anexo após upload
+    const [anexoUrl, setAnexoUrl] = useState<string | null>(null);
+    const [anexoNome, setAnexoNome] = useState<string | null>(null);
+    const [anexoReady, setAnexoReady] = useState(false); // novo estado para indicar pronto para envio
+
+    // Atualize o handler de envio para resetar o estado de pronto após envio
+    async function handleSend(e: FormEvent) {
+        e.preventDefault();
+        if (!input.trim()) return;
+        if (!user || !socketRef.current) return;
 
         let remetente: "usuario" | "analista" | "gestor" = "usuario";
         const tipo = user.idTipoUsuario ?? user.tipo;
-        if (tipo === 1) {
-            remetente = "gestor";
-        } else if (tipo === 2) {
-            remetente = "analista";
-        } else {
-            remetente = "usuario";
-        }
+        if (tipo === 1) remetente = "gestor";
+        else if (tipo === 2) remetente = "analista";
 
         socketRef.current.emit("chat:send", {
             idChamado,
             idRemetente: user.id,
             mensagem: input,
             remetente,
+            urlAnexo: anexoUrl || undefined,
+            nomeArquivo: anexoNome || undefined,
         });
+
         setInput("");
-        if (textareaRef.current) {
-            textareaRef.current.focus();
-        }
+        setAnexoUrl(null);
+        setAnexoNome(null);
+        setAnexoReady(false); // reset após envio
+        if (textareaRef.current) textareaRef.current.focus();
     }
 
     // Formata o timestamp da mensagem para o horário brasileiro, mostrando data se necessário
@@ -281,15 +355,23 @@ export default function Chat(props: ChatProps) {
                                         }
 
                                         return (
-                                            <Message
-                                                key={msg.idMensagem}
-                                                nome={nome}
-                                                gerencia={gerencia}
-                                                horaFormatada={formatToBrazilTime(msg.timestamp)}
-                                                text={msg.mensagem}
-                                                isCurrentUser={msg.idRemetente === user?.id}
-                                                avatarImg={avatarImg}
-                                            />
+                                            <div key={msg.idMensagem}>
+                                                <div className="flex flex-col gap-2">
+                                                    <Message
+                                                        nome={nome}
+                                                        gerencia={gerencia}
+                                                        horaFormatada={formatToBrazilTime(msg.timestamp)}
+                                                        text={msg.mensagem}
+                                                        isCurrentUser={msg.idRemetente === user?.id}
+                                                        avatarImg={avatarImg}
+                                                        anexoUrl={msg.urlAnexo}
+                                                        anexoNome={msg.nomeArquivo}
+                                                        onDownloadAnexo={() =>
+                                                            setGlobalAlert({ type: "error", message: "Erro ao baixar o arquivo." })
+                                                        }
+                                                    />
+                                                </div>
+                                            </div>
                                         );
                                     })}
                                     <div ref={messagesEndRef} />
@@ -351,9 +433,21 @@ export default function Chat(props: ChatProps) {
                 )}
             </div>
             <form className="flex items-end gap-2 border-t px-4 py-3 bg-white dark:bg-slate-900 dark:border-slate-800" onSubmit={handleSend}>
-                <Button className="h-11" type="button" variant="outlineDisabled" size="icon" disabled>
+                {/* Botão de anexo que abre dialog */}
+                <Button
+                    className={`h-11 ${anexoReady ? "bg-green-600 hover:bg-green-700 text-white border-green-700" : ""}`}
+                    type="button"
+                    variant={anexoUrl && !anexoReady ? "default" : "outline"}
+                    size="icon"
+                    onClick={handleAttachClick}
+                    disabled={uploading}
+                >
                     <Paperclip className="w-5 h-5" />
                 </Button>
+                {/* Exibe nome do arquivo anexado apenas se NÃO estiver pronto para envio */}
+                {!anexoReady && anexoNome && (
+                    <span className="text-xs text-sky-700 dark:text-sky-400 max-w-[120px] truncate">{anexoNome}</span>
+                )}
                 <Textarea
                     className="resize-none min-h-[44px] max-h-32 flex-1 dark:bg-slate-800 dark:text-slate-200"
                     placeholder="Digite sua mensagem..."
@@ -367,10 +461,74 @@ export default function Chat(props: ChatProps) {
                     type="submit"
                     className="h-11 w-11 p-0 rounded-full"
                     variant="default"
+                    disabled={!input.trim()}
                 >
                     <Send className="w-5 h-5" />
                 </Button>
             </form>
+            {/* Dialog de anexo */}
+            <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Anexar arquivo</DialogTitle>
+                    </DialogHeader>
+                    <div className="flex flex-col gap-3">
+                        <Input
+                            placeholder="Nome do arquivo"
+                            value={dialogNomeArquivo}
+                            onChange={e => setDialogNomeArquivo(e.target.value)}
+                            disabled={uploading}
+                        />
+                        {dialogErrors.nomeArquivo && (
+                            <span className="text-red-500 text-xs mb-1">{dialogErrors.nomeArquivo}</span>
+                        )}
+                        <div>
+                            <Input
+                                type="file"
+                                accept="image/*,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
+                                onChange={handleDialogFileChange}
+                                disabled={uploading}
+                                className="flex-1"
+                            />
+                            {dialogFile && (
+                                <span className="block text-xs text-slate-700 mt-1 truncate max-w-[180px]">
+                                    {dialogFile.name}
+                                </span>
+                            )}
+                            <span className="text-xs text-slate-500 block mt-1">
+                                Imagens, PDFs ou planilhas. Tamanho máximo: 10MB.
+                            </span>
+                            {dialogErrors.file && (
+                                <span className="text-red-500 text-xs">{dialogErrors.file}</span>
+                            )}
+                        </div>
+                        {uploading && (
+                            <Progress value={uploadProgress} className="w-full mt-2" />
+                        )}
+                    </div>
+                    <DialogFooter className="mt-2">
+                        <Button
+                            type="button"
+                            onClick={handleDialogAttach}
+                            disabled={
+                                uploading ||
+                                !dialogFile ||
+                                !dialogNomeArquivo.trim()
+                            }
+                        >
+                            Anexar
+                        </Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setOpenDialog(false)}
+                            disabled={uploading}
+                        >
+                            Cancelar
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
             {globalAlert && (
                 <GlobalAlert
                     type={globalAlert.type}

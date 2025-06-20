@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { TicketService } from "../services/ticketService";
+import { TicketService } from "../services/TicketService";
 import { uploadFileToCloudinary } from "../services/uploadService";
 import fs from "fs";
 
-const ticketService = new TicketService();
+export const ticketService = new TicketService();
 
 export class TicketController {
     async createTicket(req: Request, res: Response) {
