@@ -25,11 +25,11 @@ export async function getAllStatus(): Promise<IStatus[]> {
     }
 }
 
-export async function addStatus(nomeStatus: string, color: string): Promise<IStatus> {
+export async function addStatus(nomeStatus: string, hexCorPrimaria: string, hexCorSecundaria: string): Promise<IStatus> {
     const response = await fetch(`${API_BASE_URL}/statuses`, {
         method: "POST",
         headers: authHeaders({ "Content-Type": "application/json" }),
-        body: JSON.stringify({ nomeStatus, color }),
+        body: JSON.stringify({ nomeStatus, hexCorPrimaria, hexCorSecundaria }),
     });
     if (!response.ok) {
         const errorData = await response.json();
@@ -38,14 +38,15 @@ export async function addStatus(nomeStatus: string, color: string): Promise<ISta
     return response.json();
 }
 
-export async function updateStatus(idStatus: number, nomeStatus: string, color: string): Promise<IStatus> {
+export async function updateStatus(idStatus: number, nomeStatus: string, hexCorPrimaria: string, hexCorSecundaria: string): Promise<IStatus> {
     const response = await fetch(`${API_BASE_URL}/statuses/${idStatus}`, {
         method: "PUT",
         headers: authHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify({
             idStatus,
             nomeStatus,
-            color
+            hexCorPrimaria,
+            hexCorSecundaria
         }),
     });
     if (!response.ok) {

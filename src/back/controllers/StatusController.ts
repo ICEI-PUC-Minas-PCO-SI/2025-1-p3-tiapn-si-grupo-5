@@ -16,8 +16,8 @@ export class StatusController {
 
     async createStatus(req: Request, res: Response) {
         try {
-            const { nomeStatus, color } = req.body;
-            const novoStatus = await statusService.createStatus(nomeStatus, color);
+            const { nomeStatus, hexCorPrimaria, hexCorSecundaria } = req.body;
+            const novoStatus = await statusService.createStatus(nomeStatus, hexCorPrimaria, hexCorSecundaria);
             res.status(201).json(novoStatus);
         } catch (error) {
             console.error("Erro ao criar status:", error);
@@ -27,8 +27,8 @@ export class StatusController {
 
     async updateStatus(req: Request, res: Response) {
         try {
-            const { idStatus, nomeStatus, color } = req.body;
-            const statusAtualizado = await statusService.updateStatus(idStatus, nomeStatus, color);
+            const { idStatus, nomeStatus, hexCorPrimaria, hexCorSecundaria } = req.body;
+            const statusAtualizado = await statusService.updateStatus(idStatus, nomeStatus, hexCorPrimaria, hexCorSecundaria);
             res.json(statusAtualizado);
         } catch (error) {
             console.error("Erro ao atualizar status:", error);

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Pencil, Trash2 } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { Pencil, Trash2, Plus, ArrowUpDown } from "lucide-react";
 import type { IStatus } from "@/api/status";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import {
   getAllStatus,
   addStatus,
@@ -11,6 +12,15 @@ import {
   deleteStatus,
 } from "@/api/status";
 import { z } from "zod";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -20,45 +30,44 @@ import {
   AlertDialogDescription,
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog";
+import { DataTableParams } from "./DataTableParams";
+import type { ColumnDef, HeaderContext, CellContext } from "@tanstack/react-table";
 
-interface StatusParamsProps {
-  isAdding: boolean;
-  setIsAdding: (isAdding: boolean) => void;
-}
+const statusNameSchema = z.string()
+  .min(5, "O nome deve ter pelo menos 5 caracteres")
+  .max(40, "O nome deve ter no máximo 40 caracteres");
 
-// Tipagem para erros desconhecidos
-function getErrorMessage(error: unknown): string {
-  if (error instanceof Error) return error.message;
-  if (typeof error === "string") return error;
-  return "Erro desconhecido";
-}
+type StatusRow = IStatus & { id: number };
 
-const statusNameSchema = z.string().min(8, "O nome deve ter pelo menos 8 caracteres");
-
-export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
+export function StatusParams() {
   const [statusList, setStatusList] = useState<IStatus[]>([]);
-  const [newStatusName, setNewStatusName] = useState("");
-  const [newStatusColor, setNewStatusColor] = useState("#000000"); // Cor padrão
-  const [editingStatusId, setEditingStatusId] = useState<number | null>(null);
   const [alert, setAlert] = useState<{ type: "success" | "error"; message: string } | null>(null);
+
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingStatus, setEditingStatus] = useState<IStatus | null>(null);
+  const [name, setName] = useState("");
+  const [primaryColor, setPrimaryColor] = useState("#000000");
+  const [secondaryColor, setSecondaryColor] = useState("#ffffff");
   const [nameError, setNameError] = useState<string | null>(null);
-  const [touched, setTouched] = useState(false);
 
   const [deleteDialog, setDeleteDialog] = useState<{ open: boolean; id: number | null }>({ open: false, id: null });
 
-  const fetchStatuses = async () => {
-    try {
-      const data = await getAllStatus();
-      setStatusList(data);
-    } catch (error) {
-      console.error(error);
-      setAlert({ type: "error", message: "Erro ao buscar os status." });
-    }
-  };
+  const [search, setSearch] = useState("");
+  const [filtered, setFiltered] = useState<IStatus[]>([]);
+  const [isNameValid, setIsNameValid] = useState(false);
 
   useEffect(() => {
     fetchStatuses();
   }, []);
+
+  async function fetchStatuses() {
+    try {
+      const data = await getAllStatus();
+      setStatusList(data);
+    } catch {
+      setAlert({ type: "error", message: "Erro ao buscar status." });
+    }
+  }
 
   useEffect(() => {
     if (alert) {
@@ -68,148 +77,314 @@ export function StatusParams({ isAdding, setIsAdding }: StatusParamsProps) {
   }, [alert]);
 
   useEffect(() => {
-    if (!isAdding) {
-      setNameError(null);
-      setTouched(false);
-      return;
+    let data = [...statusList];
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      data = data.filter(
+        (s) =>
+          s.nomeStatus.toLowerCase().includes(q) ||
+          s.hexCorPrimaria.toLowerCase().includes(q) ||
+          s.hexCorSecundaria.toLowerCase().includes(q)
+      );
     }
-    if (touched) {
-      const result = statusNameSchema.safeParse(newStatusName);
-      setNameError(result.success ? null : result.error.issues[0].message);
-    } else {
-      setNameError(null);
-    }
-  }, [newStatusName, isAdding, touched]);
+    setFiltered(data);
+  }, [statusList, search]);
 
-  const handleAddOrEditStatus = async () => {
-    const result = statusNameSchema.safeParse(newStatusName);
-    if (!result.success || !newStatusColor) {
-      setNameError(result.success ? null : result.error.issues[0].message);
-      setAlert({ type: "error", message: "Preencha o nome (mín. 8 caracteres) e a cor do status." });
+  useEffect(() => {
+    const result = statusNameSchema.safeParse(name);
+    setIsNameValid(result.success);
+    if (!name) setNameError(null);
+    else if (!result.success) setNameError(result.error.issues[0].message);
+    else setNameError(null);
+  }, [name]);
+
+  function openAddDialog() {
+    setEditingStatus(null);
+    setName("");
+    setPrimaryColor("#000000");
+    setSecondaryColor("#ffffff");
+    setNameError(null);
+    setDialogOpen(true);
+  }
+
+  function openEditDialog(status: IStatus) {
+    setEditingStatus(status);
+    setName(status.nomeStatus);
+    setPrimaryColor(status.hexCorPrimaria || "#000000");
+    setSecondaryColor(status.hexCorSecundaria || "#ffffff");
+    setNameError(null);
+    setDialogOpen(true);
+  }
+
+  async function handleSave() {
+    const result = statusNameSchema.safeParse(name);
+    if (!result.success) {
+      setNameError(result.error.issues[0].message);
       return;
     }
+    setNameError(null);
     try {
-      if (editingStatusId !== null) {
-        const updated = await updateStatus(editingStatusId, newStatusName, newStatusColor);
+      if (editingStatus) {
+        const updated = await updateStatus(
+          editingStatus.idStatus,
+          name,
+          primaryColor,
+          secondaryColor
+        );
         setStatusList((prev) =>
-          prev.map((s) => (s.idStatus === editingStatusId ? updated : s))
+          prev.map((s) => (s.idStatus === editingStatus.idStatus ? updated : s))
         );
         setAlert({ type: "success", message: "Status atualizado com sucesso!" });
       } else {
-        const created = await addStatus(newStatusName, newStatusColor);
+        const created = await addStatus(name, primaryColor, secondaryColor);
         setStatusList((prev) => [...prev, created]);
         setAlert({ type: "success", message: "Status adicionado com sucesso!" });
       }
-    } catch (error) {
-      setAlert({ type: "error", message: getErrorMessage(error) || "Erro ao salvar status." });
+      setDialogOpen(false);
+    } catch {
+      setAlert({ type: "error", message: "Erro ao salvar status." });
     }
-    setNewStatusName("");
-    setNewStatusColor("#000000");
-    setEditingStatusId(null);
-    setIsAdding(false);
-  };
+  }
 
-  const handleEditStatus = (idStatus: number) => {
-    const statusToEdit = statusList.find((status) => status.idStatus === idStatus);
-    if (!statusToEdit) return;
-    setNewStatusName(statusToEdit.nomeStatus);
-    setNewStatusColor(statusToEdit.hexCorPrimaria || "#000000");
-    setEditingStatusId(idStatus);
-    setIsAdding(true);
-  };
-
-  const handleDeleteStatus = (idStatus: number) => {
-    setDeleteDialog({ open: true, id: idStatus });
-  };
-
-  const confirmDeleteStatus = async () => {
+  async function confirmDeleteStatus() {
     if (!deleteDialog.id) return;
     try {
       await deleteStatus(deleteDialog.id);
       setStatusList((prev) => prev.filter((s) => s.idStatus !== deleteDialog.id));
       setAlert({ type: "success", message: "Status excluído com sucesso!" });
-    } catch (error) {
-      setAlert({ type: "error", message: getErrorMessage(error) || "Status associado a um chamado existente." });
+    } catch {
+      setAlert({ type: "error", message: "Não é possível excluir um status associado a um chamado existente." });
     }
     setDeleteDialog({ open: false, id: null });
-  };
+  }
 
-  const isSaveDisabled = !newStatusName || !!nameError;
+  const columns = useMemo<ColumnDef<StatusRow>[]>(() => [
+    {
+      accessorKey: "nomeStatus",
+      header: (info: HeaderContext<StatusRow, unknown>) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => info.column.toggleSorting(info.column.getIsSorted() === "asc")}
+        >
+          Nome
+          <ArrowUpDown
+            className={`ml-2 ${info.column.getIsSorted() === "asc"
+              ? "rotate-0"
+              : info.column.getIsSorted() === "desc"
+                ? "rotate-180"
+                : ""
+              }`}
+          />
+        </Button>
+      ),
+      cell: (info: CellContext<StatusRow, unknown>) => info.row.original.nomeStatus,
+      enableHiding: true,
+    },
+    {
+      accessorKey: "badge",
+      header: "Badge (Preview)",
+      cell: (info: CellContext<StatusRow, unknown>) => (
+        <Badge
+          style={{
+            backgroundColor: info.row.original.hexCorPrimaria,
+            color: info.row.original.hexCorSecundaria,
+            border: "1px solid #e5e7eb",
+          }}
+          className="text-xs px-3 py-1 rounded"
+        >
+          {info.row.original.nomeStatus}
+        </Badge>
+      ),
+    },
+    {
+      accessorKey: "hexCorPrimaria",
+      header: (info: HeaderContext<StatusRow, unknown>) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => info.column.toggleSorting(info.column.getIsSorted() === "asc")}
+        >
+          Cor Primária
+          <ArrowUpDown
+            className={`ml-2 ${info.column.getIsSorted() === "asc"
+              ? "rotate-0"
+              : info.column.getIsSorted() === "desc"
+                ? "rotate-180"
+                : ""
+              }`}
+          />
+        </Button>
+      ),
+      cell: (info: CellContext<StatusRow, unknown>) => (
+        <span className="flex items-center justify-center gap-2">
+          <span
+            className="inline-block w-6 h-6 rounded-full border"
+            style={{ backgroundColor: info.row.original.hexCorPrimaria }}
+            title={info.row.original.hexCorPrimaria}
+          />
+          <span className="text-xs">{info.row.original.hexCorPrimaria}</span>
+        </span>
+      ),
+    },
+    {
+      accessorKey: "hexCorSecundaria",
+      header: (info: HeaderContext<StatusRow, unknown>) => (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => info.column.toggleSorting(info.column.getIsSorted() === "asc")}
+        >
+          Cor Secundária
+          <ArrowUpDown
+            className={`ml-2 ${info.column.getIsSorted() === "asc"
+              ? "rotate-0"
+              : info.column.getIsSorted() === "desc"
+                ? "rotate-180"
+                : ""
+              }`}
+          />
+        </Button>
+      ),
+      cell: (info: CellContext<StatusRow, unknown>) => (
+        <span className="flex items-center justify-center gap-2">
+          <span
+            className="inline-block w-6 h-6 rounded-full border"
+            style={{ backgroundColor: info.row.original.hexCorSecundaria }}
+            title={info.row.original.hexCorSecundaria}
+          />
+          <span className="text-xs">{info.row.original.hexCorSecundaria}</span>
+        </span>
+      ),
+    },
+    {
+      id: "actions",
+      header: "Ações",
+      cell: (info: CellContext<StatusRow, unknown>) => (
+        <div className="flex justify-center gap-2">
+          <Button size="icon" variant="outline" onClick={() => openEditDialog(info.row.original)} aria-label="Editar">
+            <Pencil />
+          </Button>
+          <Button size="icon" variant="delete" onClick={() => setDeleteDialog({ open: true, id: info.row.original.idStatus })} aria-label="Excluir">
+            <Trash2 />
+          </Button>
+        </div>
+      ),
+    },
+  ], []);
+
+  const filteredWithId: StatusRow[] = filtered.map((item) => ({
+    ...item,
+    id: item.idStatus,
+  }));
 
   return (
-    <div className="p-6">
+    <div className="space-y-4">
       {alert && (
-        <GlobalAlert
-          type={alert.type}
-          message={alert.message}
-          onClose={() => setAlert(null)}
-        />
-      )}
-      <ul className="divide-y divide-gray-200">
-        {statusList.map((status) => (
-          <li
-            key={status.idStatus}
-            className="flex justify-between items-center py-2"
-          >
-            <div className="flex items-center gap-2">
-              <span
-                className="w-5 h-5 rounded-full"
-                style={{ backgroundColor: status.hexCorPrimaria || "transparent" }}
-              ></span>
-              <span className="paragraph text-slate-700 dark:text-slate-300">{status.nomeStatus}</span>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="delete" size="icon" onClick={() => handleDeleteStatus(status.idStatus)}>
-                <Trash2 />
-              </Button>
-              <Button size="icon" onClick={() => handleEditStatus(status.idStatus)}>
-                <Pencil />
-              </Button>
-            </div>
-          </li>
-        ))}
-      </ul>
-      {isAdding && (
-        <div className="mt-4 flex gap-2 items-center">
-          <Input
-            type="text"
-            placeholder="Nome do status"
-            value={newStatusName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setNewStatusName(e.target.value);
-              setTouched(true);
-            }}
+        <div className="fixed bottom-4 right-4 z-50">
+          <GlobalAlert
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert(null)}
           />
-          <Input
-            type="color"
-            value={newStatusColor}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewStatusColor(e.target.value)}
-            className="w-12 h-10"
-          />
-          <Button
-            onClick={handleAddOrEditStatus}
-            variant={isSaveDisabled ? "disabled" : "default"}
-            disabled={isSaveDisabled}
-          >
-            Salvar
-          </Button>
-          <Button
-            onClick={() => {
-              setIsAdding(false);
-              setNewStatusName("");
-              setNewStatusColor("#000000");
-              setEditingStatusId(null);
-              setTouched(false);
-            }}
-            variant="outline"
-          >
-            Cancelar
-          </Button>
-          {nameError && touched && (
-            <span className="text-red-500 text-sm">{nameError}</span>
-          )}
         </div>
       )}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
+        <div className="flex-1">
+          <Input
+            placeholder="Pesquise pelo nome ou cor"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="max-w-xs"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="default" size="icon" aria-label="Novo status" onClick={openAddDialog}>
+                <Plus className="w-4 h-4" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  {editingStatus ? "Editar status" : "Novo status"}
+                </DialogTitle>
+              </DialogHeader>
+              <div className="flex flex-col gap-4">
+                <Input
+                  placeholder="Nome do status"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                />
+                {nameError && (
+                  <span className="text-red-500 text-xs">{nameError}</span>
+                )}
+                <div className="flex gap-4 items-center justify-between">
+                  <div className="flex gap-4">
+                    <div>
+                      <label className="block text-xs mb-1">Cor primária</label>
+                      <Input
+                        type="color"
+                        value={primaryColor}
+                        onChange={e => setPrimaryColor(e.target.value)}
+                        className="w-12 h-10 p-0 border-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs mb-1">Cor secundária</label>
+                      <Input
+                        type="color"
+                        value={secondaryColor}
+                        onChange={e => setSecondaryColor(e.target.value)}
+                        className="w-12 h-10 p-0 border-none"
+                      />
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center ml-4">
+                    <label className="block text-xs mb-1">Preview</label>
+                    <Badge
+                      style={{
+                        backgroundColor: primaryColor,
+                        color: secondaryColor,
+                        border: "1px solid #e5e7eb",
+                      }}
+                      className="text-xs px-3 py-1 rounded"
+                    >
+                      {name || "Status"}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+              <DialogFooter className="mt-2">
+                <Button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={!isNameValid}
+                >
+                  Salvar
+                </Button>
+                <DialogClose asChild>
+                  <Button type="button" variant="outline">
+                    Cancelar
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+      <DataTableParams
+        data={filteredWithId}
+        columns={columns}
+        visibleColumns={{
+          nomeStatus: true,
+          badge: true,
+          hexCorPrimaria: true,
+          hexCorSecundaria: true,
+          actions: true,
+        }}
+      />
       <AlertDialog open={deleteDialog.open} onOpenChange={(open) => setDeleteDialog({ open, id: open ? deleteDialog.id : null })}>
         <AlertDialogContent>
           <AlertDialogHeader>
