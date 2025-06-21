@@ -1,10 +1,10 @@
 import { PrismaClient } from "../generated/prisma";
-import { hashPassword } from "../services/hashPasswordService";
+import { hashPassword } from "../services/HashPasswordService";
 
 const prisma = new PrismaClient();
 
 async function main() {
-    const email = "admin@trackit.com";
+    const email = "notifications.trackit@gmail.com";
     const exists = await prisma.usuario.findFirst({
         where: { email }
     });
@@ -19,9 +19,9 @@ async function main() {
 
     const usuario = await prisma.usuario.create({
         data: {
-            nomeUsuario: "Usuário TrackIT",
+            nomeUsuario: "Admin TrackIT",
             matricula: "000000000123456",
-            ramal: "3199998888",
+            ramal: "0000000000",
             email,
             senha: senhaHasheada,
             idTipoUsuario: 1,

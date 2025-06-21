@@ -2,7 +2,7 @@ import { PrismaClient } from "../generated/prisma";
 
 const prisma = new PrismaClient();
 
-async function createStatusIfNotExists(nomeStatus: string, hexCor: string) {
+async function createStatusIfNotExists(nomeStatus: string, hexCorPrimaria: string, hexCorSecundaria: string) {
     if (nomeStatus.length > 50) {
         throw new Error(`O nomeStatus "${nomeStatus}" excede o limite de 50 caracteres.`);
     }
@@ -13,8 +13,8 @@ async function createStatusIfNotExists(nomeStatus: string, hexCor: string) {
         await prisma.statuschamado.create({
             data: {
                 nomeStatus,
-                hexCorPrimaria: hexCor,
-                hexCorSecundaria: hexCor,
+                hexCorPrimaria,
+                hexCorSecundaria,
                 ativo: 1
             }
         });
@@ -24,17 +24,27 @@ async function createStatusIfNotExists(nomeStatus: string, hexCor: string) {
     }
 }
 
+function getContrastColor(hex: string): string {
+    hex = hex.replace('#', '');
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+    return luminance > 0.5 ? '#000000' : '#FFFFFF';
+}
+
 async function main() {
     const statuses = [
-        { nomeStatus: "Cancelado", hexCor: "#B0BEC5" },
-        { nomeStatus: "Em análise", hexCor: "#1976D2" },
-        { nomeStatus: "Em execução", hexCor: "#FB8C00" },
-        { nomeStatus: "Concluído", hexCor: "#43A047" },
-        { nomeStatus: "Aguardando resposta", hexCor: "#8E24AA" },
+        { nomeStatus: "Cancelado", hexCorPrimaria: "#B0BEC5" },
+        { nomeStatus: "Em análise", hexCorPrimaria: "#1976D2" },
+        { nomeStatus: "Em execução", hexCorPrimaria: "#FB8C00" },
+        { nomeStatus: "Concluído", hexCorPrimaria: "#43A047" },
+        { nomeStatus: "Aguardando resposta", hexCorPrimaria: "#8E24AA" },
     ];
 
     for (const status of statuses) {
-        await createStatusIfNotExists(status.nomeStatus, status.hexCor);
+        const hexCorSecundaria = getContrastColor(status.hexCorPrimaria);
+        await createStatusIfNotExists(status.nomeStatus, status.hexCorPrimaria, hexCorSecundaria);
     }
 }
 

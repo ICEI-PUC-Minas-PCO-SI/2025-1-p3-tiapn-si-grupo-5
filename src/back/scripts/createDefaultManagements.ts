@@ -28,12 +28,6 @@ async function main() {
         { nomeGerencia: "GESFO" },
         { nomeGerencia: "ASPE" },
         { nomeGerencia: "GECEA" },
-        { nomeGerencia: "GESDE" },
-        { nomeGerencia: "GESER" },
-        { nomeGerencia: "GGDES" },
-        { nomeGerencia: "GPFOT" },
-        { nomeGerencia: "GPREB" },
-        { nomeGerencia: "GSTRA" },
     ];
 
     for (const mgmt of managements) {

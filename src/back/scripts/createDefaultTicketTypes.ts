@@ -31,8 +31,8 @@ async function main() {
         { nomeTipo: "Relatórios" },
         { nomeTipo: "Projetos" },
         { nomeTipo: "IF Ponto" },
-        { nomeTipo: "Análise/Correção de processos" },
-        { nomeTipo: "Ativação/criação/configuração/exclusão" },
+        { nomeTipo: "Análise de processos" },
+        { nomeTipo: "Ativação/Configuração" },
     ];
 
     for (const type of ticketTypes) {

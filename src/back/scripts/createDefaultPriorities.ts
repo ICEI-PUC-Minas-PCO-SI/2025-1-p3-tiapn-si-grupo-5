@@ -2,7 +2,7 @@ import { PrismaClient } from "../generated/prisma";
 
 const prisma = new PrismaClient();
 
-async function createPriorityIfNotExists(nomePrioridade: string, hexCor: string) {
+async function createPriorityIfNotExists(nomePrioridade: string, hexCorPrimaria: string, hexCorSecundaria: string) {
     if (nomePrioridade.length > 50) {
         throw new Error(`O nomePrioridade "${nomePrioridade}" excede o limite de 50 caracteres.`);
     }
@@ -13,8 +13,8 @@ async function createPriorityIfNotExists(nomePrioridade: string, hexCor: string)
         await prisma.prioridadechamado.create({
             data: {
                 nomePrioridade,
-                hexCorPrimaria: hexCor,
-                hexCorSecundaria: hexCor,
+                hexCorPrimaria,
+                hexCorSecundaria,
                 ativo: 1
             }
         });
@@ -26,14 +26,14 @@ async function createPriorityIfNotExists(nomePrioridade: string, hexCor: string)
 
 async function main() {
     const priorities = [
-        { nomePrioridade: "Urgente", hexCor: "#E53935" },
-        { nomePrioridade: "Alta", hexCor: "#FB8C00" },
-        { nomePrioridade: "Média", hexCor: "#FDD835" },
-        { nomePrioridade: "Baixa", hexCor: "#43A047" },
+        { nomePrioridade: "Urgente", hexCorPrimaria: "#E53935", hexCorSecundaria: "#FFFFFF" },
+        { nomePrioridade: "Alta", hexCorPrimaria: "#FB8C00", hexCorSecundaria: "#000000" },
+        { nomePrioridade: "Média", hexCorPrimaria: "#FDD835", hexCorSecundaria: "#000000" },
+        { nomePrioridade: "Baixa", hexCorPrimaria: "#43A047", hexCorSecundaria: "#FFFFFF" },
     ];
 
     for (const priority of priorities) {
-        await createPriorityIfNotExists(priority.nomePrioridade, priority.hexCor);
+        await createPriorityIfNotExists(priority.nomePrioridade, priority.hexCorPrimaria, priority.hexCorSecundaria);
     }
 }
 
