@@ -2,8 +2,7 @@ import { useUser } from "@/contexts/UserContext"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ImagePlus, CircleCheckBig } from "lucide-react";
 import { SettingsUserForm } from "@/components/settings/SettingsUserForm";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { X } from "lucide-react";
+import { GlobalAlert } from "@/components/ui/GlobalAlert";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 
@@ -28,31 +27,37 @@ export function Settings() {
         if (selectedFile) {
             const url = URL.createObjectURL(selectedFile);
             setPreviewUrl(url);
-            // Dispara evento global para sidebar/menu
             window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: url } }));
             return () => {
                 URL.revokeObjectURL(url);
-                // Limpa preview global ao remover seleção
                 window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: null } }));
             };
         } else {
             setPreviewUrl(null);
-            // Limpa preview global se não houver seleção
             window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: null } }));
         }
     }, [selectedFile]);
 
-    // Quando o usuário salva o formulário, mantenha o preview como a foto exibida
-    const handleProfilePhotoUploaded = () => {
-        setLastSavedPreview(previewUrl);
-        window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: previewUrl || lastSavedPreview } }));
+    const handleProfilePhotoUploaded = (fotoPerfilUrl?: string, previewUrl?: string) => {
+        if (fotoPerfilUrl && previewUrl) {
+            setLastSavedPreview(previewUrl);
+            setSelectedFile(null);
+            setPreviewUrl(previewUrl);
+            window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl } }));
+        } else if (fotoPerfilUrl) {
+            setLastSavedPreview(fotoPerfilUrl);
+            setSelectedFile(null);
+            setPreviewUrl(null);
+            window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: fotoPerfilUrl } }));
+        } else {
+            setLastSavedPreview(previewUrl ?? null);
+            window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: previewUrl || lastSavedPreview } }));
+        }
     };
 
-    // Se o usuário cancelar a seleção, volta para a última salva
     const handleCancelPhoto = () => {
         setSelectedFile(null);
         setPreviewUrl(lastSavedPreview);
-        // Atualiza preview global para última salva
         window.dispatchEvent(new CustomEvent("profile-photo-preview", { detail: { previewUrl: lastSavedPreview } }));
     };
 
@@ -60,26 +65,11 @@ export function Settings() {
         <div className="flex flex-col gap-10">
             {alert && (
                 <div className="fixed bottom-4 right-4 z-50">
-                    <Alert
-                        variant={alert.type === "success" ? "success" : "destructive"}
-                        className={`flex items-center justify-between space-x-4 bg-white dark:bg-slate-900 ${alert.type === "success"
-                                ? "border-green-600"
-                                : "border-slate-200 dark:border-slate-700"
-                            }`}
-                        style={alert.type === "success" ? { borderWidth: 2 } : {}}
-                    >
-                        <div>
-                            <AlertTitle className="text-slate-900 dark:text-white">{alert.type === "success" ? "Sucesso" : "Erro"}</AlertTitle>
-                            <AlertDescription className="text-slate-700 dark:text-slate-300">{alert.message}</AlertDescription>
-                        </div>
-                        <button
-                            onClick={() => setAlert(null)}
-                            className="text-muted-foreground hover:text-foreground transition-colors"
-                            aria-label="Fechar alerta"
-                        >
-                            <X className="w-4 h-4" />
-                        </button>
-                    </Alert>
+                    <GlobalAlert
+                        type={alert.type}
+                        message={alert.message}
+                        onClose={() => setAlert(null)}
+                    />
                 </div>
             )}
             <div>

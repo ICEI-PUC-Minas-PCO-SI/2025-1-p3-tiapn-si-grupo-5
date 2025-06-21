@@ -37,11 +37,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     async function fetchUserAndManagement() {
       try {
         const data: IMeResponse | null = await getMe();
-        console.log('getMe() response:', data);
         if (data && data.usuario) {
           const usuario = data.usuario;
-          console.log('usuario extraído:', usuario);
-          console.log('usuario.nomeGerencia:', usuario.nomeGerencia);
           setUserState({
             id: usuario.id,
             nome: usuario.nome,
@@ -66,9 +63,29 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   function setUser(user: User | null) {
-    setUserState(user);
-    if (!user) {
-      // Não é mais necessário remover token do cookie
+    if (user && user.nomeGerencia === undefined) {
+      // Busca do backend para garantir nomeGerencia atualizado
+      getMe().then((data) => {
+        if (data && data.usuario) {
+          setUserState({
+            id: data.usuario.id,
+            nome: data.usuario.nome,
+            email: data.usuario.email,
+            ramal: data.usuario.ramal,
+            matricula: data.usuario.matricula,
+            gerencia: data.usuario.gerencia ?? undefined,
+            tipo: data.usuario.tipo ?? undefined,
+            ativo: data.usuario.ativo,
+            fotoPerfil: data.usuario.fotoPerfil ?? undefined,
+            nomeGerencia: data.usuario.nomeGerencia ?? undefined,
+            idTipoUsuario: data.usuario.idTipoUsuario ?? undefined,
+          });
+        } else {
+          setUserState(user);
+        }
+      });
+    } else {
+      setUserState(user);
     }
   }
 
