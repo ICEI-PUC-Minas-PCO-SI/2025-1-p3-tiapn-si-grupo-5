@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { TicketTypeController } from '../controllers/ticketTypeController';
+import { TicketTypeController } from '../controllers/TicketTypeController';
 import { autenticarToken } from '../middlewares/auth-jwt';
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
@@ -25,24 +25,24 @@ export class TicketTypeRoutes {
 
     private initializeRoutes() {
         this.router.get(
-            '/ticket-types',
+            '/',
             autenticarToken,
             this.ticketTypeController.getTicketTypes.bind(this.ticketTypeController)
         );
         this.router.post(
-            '/ticket-types',
+            '/',
             autenticarToken,
             validatePayload(ticketTypeCreateSchema),
             this.ticketTypeController.createTicketType.bind(this.ticketTypeController)
         );
         this.router.put(
-            '/ticket-types/:id',
+            '/:id',
             autenticarToken,
             validatePayload(ticketTypeUpdateSchema),
             this.ticketTypeController.updateTicketType.bind(this.ticketTypeController)
         );
         this.router.delete(
-            '/ticket-types/:id',
+            '/:id',
             autenticarToken,
             this.ticketTypeController.deleteTicketType.bind(this.ticketTypeController)
         );

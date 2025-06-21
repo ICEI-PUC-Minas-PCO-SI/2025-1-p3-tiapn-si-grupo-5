@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { getAllActiveManagements } from "@/api/management";
 import { getAllUserTypes } from "../../api/usertypes";
-import { registerNewUser } from "@/api/users";
+import { registerNewUser } from "@/api/auth";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
 import type { User } from "@/interfaces/InterfacesDataTableUsers";
 

@@ -14,7 +14,7 @@ export class NotificationRoutes {
 
     private initializeRoutes() {
         this.router.get(
-            "/notifications/:idUsuario",
+            "/:idUsuario",
             autenticarToken,
             (req, res, next) => {
                 this.notificationController.getUserNotifications(req, res)
@@ -23,7 +23,7 @@ export class NotificationRoutes {
             }
         );
         this.router.patch(
-            "/notifications/read-all/:idUsuario/:idChamado",
+            "/read-all/:idUsuario/:idChamado",
             autenticarToken,
             (req, res, next) => {
                 this.notificationController.markAllAsReadForChamado(req, res)
@@ -32,7 +32,7 @@ export class NotificationRoutes {
             }
         );
         this.router.get(
-            "/notifications/unread-chamados/:idUsuario",
+            "/unread-chamados/:idUsuario",
             autenticarToken,
             (req, res, next) => {
                 this.notificationController.getUnreadChamados(req, res)

@@ -1,12 +1,12 @@
 import { PrismaClient } from "../generated/prisma";
 const prisma = new PrismaClient();
 
-export class ManagementService {
-    async getAllActiveManagement() {
+export class DepartmentsService {
+    async getAllActiveDepartments() {
         return prisma.gerencia.findMany({ where: { ativo: 1 } });
     }
 
-    async createManagement(nomeGerencia: string) {
+    async createDepartments(nomeGerencia: string) {
         return prisma.gerencia.create({
             data: {
                 nomeGerencia,
@@ -15,14 +15,14 @@ export class ManagementService {
         });
     }
 
-    async updateManagement(idGerencia: number, nomeGerencia: string) {
+    async updateDepartments(idGerencia: number, nomeGerencia: string) {
         return prisma.gerencia.update({
             where: { idGerencia: Number(idGerencia) },
             data: { nomeGerencia }
         });
     }
 
-    async deleteManagement(idGerencia: number): Promise<unknown> {
+    async deleteDepartments(idGerencia: number): Promise<unknown> {
         const userCount = await prisma.usuario.count({
             where: { idGerencia: Number(idGerencia) }
         });

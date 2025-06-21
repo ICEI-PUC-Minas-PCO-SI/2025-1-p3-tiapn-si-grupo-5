@@ -13,7 +13,7 @@ export class UserTypeRoutes {
     }
 
     private initializeRoutes() {
-        this.router.get("/user-types",
+        this.router.get("/",
             autenticarToken, 
             this.userTypeController.getUserTypes.bind(this.userTypeController));
     }

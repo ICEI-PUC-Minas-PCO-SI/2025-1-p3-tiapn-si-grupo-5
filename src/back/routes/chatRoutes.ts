@@ -14,7 +14,7 @@ export class ChatRoutes {
 
     private initializeRoutes() {
         this.router.get(
-            "/chats/:idChamado/messages",
+            "/:idChamado/messages",
             autenticarToken,
             (req, res, next) => {
                 this.chatController.getMessagesByChamado(req, res)

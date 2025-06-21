@@ -14,27 +14,27 @@ export class DashboardRoutes {
 
     private initializeRoutes() {
 /*        this.router.get(
-            "/dashboard/tickets-by-type",
+            "/tickets-by-type",
             autenticarToken,
             this.dashboardController.getTicketsByType.bind(this.dashboardController)
         );
         this.router.get(
-            "/dashboard/tickets-by-status",
+            "/tickets-by-status",
             autenticarToken,
             this.dashboardController.getTicketsByStatus.bind(this.dashboardController)
         );
         this.router.get(
-            "/dashboard/tickets-by-priority",
+            "/tickets-by-priority",
             autenticarToken,
             this.dashboardController.getTicketsByPriority.bind(this.dashboardController)
         ); */
         this.router.get(
-            "/dashboard/tickets-by-analyst",
+            "/tickets-by-analyst",
             autenticarToken,
             this.dashboardController.getTicketsByAnalyst.bind(this.dashboardController)
         );
         this.router.get(
-            "/dashboard/summary",
+            "/summary",
             autenticarToken,
             this.dashboardController.getDashboardSummary.bind(this.dashboardController)
         );

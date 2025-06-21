@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { PriorityController } from "../controllers/priorityController";
+import { PriorityController } from "../controllers/PriorityController";
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
 import { autenticarToken } from "../middlewares/auth-jwt";
@@ -28,23 +28,23 @@ export class PriorityRoutes {
 
     private initializeRoutes() {
         this.router.get(
-            '/priorities',
+            '/',
             this.priorityController.getPriorities.bind(this.priorityController)
         );
         this.router.post(
-            '/priorities',
+            '/',
             validatePayload(priorityCreateSchema),
             autenticarToken,
             this.priorityController.createPriority.bind(this.priorityController)
         );
         this.router.put(
-            '/priorities/:id',
+            '/:id',
             validatePayload(priorityUpdateSchema),
             autenticarToken,
             this.priorityController.updatePriority.bind(this.priorityController)
         );
         this.router.delete(
-            '/priorities/:id',
+            '/:id',
             autenticarToken,
             this.priorityController.deletePriority.bind(this.priorityController)
         );

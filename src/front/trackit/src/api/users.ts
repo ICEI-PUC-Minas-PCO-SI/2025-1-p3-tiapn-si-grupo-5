@@ -20,11 +20,6 @@ export interface IUserListItem {
     fotoPerfil?: string;
 }
 
-export interface ILoginUserPayload {
-    email: string;
-    senha: string;
-}
-
 export interface IUpdateUser {
     idUsuario: number;
     nomeUsuario: string;
@@ -33,16 +28,6 @@ export interface IUpdateUser {
     matricula?: string;
     gerencia?: number;
     tipoUsuario?: number;
-}
-
-export interface IRegisterUserPayload {
-    nomeUsuario: string;
-    matricula: string;
-    ramal: string;
-    email: string;
-    senha: string;
-    gerencia: number;
-    tipoUsuario: number;
 }
 
 export interface IGetUser {
@@ -65,16 +50,6 @@ export interface IAnalyst {
     email: string;
     ramal: string;
     dataCadastro: string;
-}
-
-export async function registerNewUser(payload: IRegisterUserPayload): Promise<Response> {
-    return fetch(`${API_BASE_URL}/users/register`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-    });
 }
 
 export async function getAllUsers(): Promise<IUserListItem[]> {
@@ -143,17 +118,6 @@ export async function updateUserStatus(idUsuario: string, ativo: number): Promis
         credentials: 'include',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ativo }),
-    });
-}
-
-export async function loginUser(payload: ILoginUserPayload): Promise<Response> {
-    return fetch(`${API_BASE_URL}/users/login`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        credentials: 'include',
-        body: JSON.stringify(payload),
     });
 }
 

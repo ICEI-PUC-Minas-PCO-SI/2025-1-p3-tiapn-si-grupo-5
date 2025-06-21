@@ -1,6 +1,7 @@
 import { Express } from "express";
 import { UserRoutes } from "./routes/UserRoutes";
-import { ManagementRoutes } from "./routes/ManagementRoutes";
+import { AuthRoutes } from "./routes/AuthRoutes";
+import { DepartmentsRoutes } from "./routes/DepartmentsRoutes";
 import { UserTypeRoutes } from "./routes/UserTypesRoutes";
 import { TicketRoutes } from "./routes/TicketRoutes";
 import { StatusRoutes } from "./routes/StatusRoutes";
@@ -13,16 +14,17 @@ import { UploadRoutes } from "./routes/UploadRoutes";
 
 export class RouteConfig {
     public static register(app: Express) {
-        app.use("/", new UserRoutes().getRouter());
-        app.use("/", new ManagementRoutes().getRouter());
-        app.use("/", new UserTypeRoutes().getRouter());
-        app.use("/", new TicketRoutes().getRouter());
-        app.use("/", new StatusRoutes().getRouter());
-        app.use("/", new TicketTypeRoutes().getRouter());
-        app.use("/", new PriorityRoutes().getRouter());
-        app.use("/", new DashboardRoutes().getRouter());
-        app.use("/", new ChatRoutes().getRouter());
-        app.use("/", new NotificationRoutes().getRouter());
-        app.use("/", new UploadRoutes().getRouter());
+        app.use("/auth", new AuthRoutes().getRouter());
+        app.use("/users", new UserRoutes().getRouter());
+        app.use("/departments", new DepartmentsRoutes().getRouter());
+        app.use("/user-types", new UserTypeRoutes().getRouter());
+        app.use("/tickets", new TicketRoutes().getRouter());
+        app.use("/statuses", new StatusRoutes().getRouter());
+        app.use("/ticket-types", new TicketTypeRoutes().getRouter());
+        app.use("/priorities", new PriorityRoutes().getRouter());
+        app.use("/dashboard", new DashboardRoutes().getRouter());
+        app.use("/chats", new ChatRoutes().getRouter());
+        app.use("/notifications", new NotificationRoutes().getRouter());
+        app.use("/upload", new UploadRoutes().getRouter());
     }
 }

@@ -15,7 +15,7 @@ export class UploadRoutes {
 
     private initializeRoutes() {
         this.router.post(
-            "/upload",
+            "/",
             autenticarToken,
             upload.single("file"),
             (req, res, next) => {

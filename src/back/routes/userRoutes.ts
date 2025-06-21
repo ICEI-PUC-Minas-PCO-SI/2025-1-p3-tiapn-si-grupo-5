@@ -32,40 +32,40 @@ export class UserRoutes {
 
     private initializeRoutes() {
         this.router.get(
-            "/users",
+            "/",
             autenticarToken,
             this.userController.getAllUsers.bind(this.userController)
         );
         this.router.get(
-            "/users/analysts",
+            "/analysts",
             autenticarToken,
             this.userController.getAnalysts.bind(this.userController)
         );
         this.router.put(
-            "/users/:idUsuario",
+            "/:idUsuario",
             validatePayload(userUpdateSchema),
             autenticarToken,
             this.userController.updateUser.bind(this.userController)
         );
         this.router.patch(
-            "/users/:idUsuario/status",
+            "/:idUsuario/status",
             validatePayload(userStatusSchema),
             autenticarToken,
             this.userController.changeUserStatus.bind(this.userController)
         );
         this.router.get(
-            "/users/me",
+            "/me",
             autenticarToken,
             this.userController.getMe.bind(this.userController)
         );
         this.router.put(
-            "/users/profile/:idUsuario",
+            "/profile/:idUsuario",
             validatePayload(userProfileUpdateSchema),
             autenticarToken,
             this.userController.updateProfileUser.bind(this.userController)
         );
         this.router.get(
-            "/users/check-email/:email",
+            "/check-email/:email",
             async (req, res, next) => {
                 try {
                     await this.userController.checkEmailExists(req, res);

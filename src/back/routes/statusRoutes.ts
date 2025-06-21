@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { StatusController } from '../controllers/statusController';
+import { StatusController } from '../controllers/StatusController';
 import { validatePayload } from "../middlewares/validate-payload";
 import { z } from "zod";
 import { autenticarToken } from "../middlewares/auth-jwt";
@@ -29,24 +29,24 @@ export class StatusRoutes {
 
     private initializeRoutes() {
         this.router.get(
-            "/statuses",
+            "/",
             autenticarToken,
             this.statusController.getStatus.bind(this.statusController)
         );
         this.router.post(
-            "/statuses",
+            "/",
             autenticarToken,
             validatePayload(statusCreateSchema),
             this.statusController.createStatus.bind(this.statusController)
         );
         this.router.put(
-            "/statuses/:idStatus",
+            "/:idStatus",
             autenticarToken,
             validatePayload(statusUpdateSchema),
             this.statusController.updateStatus.bind(this.statusController)
         );
         this.router.delete(
-            "/statuses/:idStatus",
+            "/:idStatus",
             autenticarToken,
             this.statusController.deleteStatus.bind(this.statusController)
         );

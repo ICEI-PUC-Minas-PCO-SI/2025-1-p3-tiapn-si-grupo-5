@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useUser } from "@/contexts/UserContext";
-import { loginUser } from "@/api/users";
+import { loginUser } from "@/api/auth";
 
 type LoginFormData = {
     email: string;
@@ -81,7 +81,7 @@ export function LoginUser() {
             }
             if (response.status === 200) {
                 const resData = await response.json();
-                setUser(resData.usuario, resData.token);
+                setUser(resData.usuario);
                 if (resData.usuario.tipo === 1) {
                     navigate("/admin");
                 } else if (resData.usuario.tipo === 2) {
