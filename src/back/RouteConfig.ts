@@ -1,16 +1,16 @@
 import { Express } from "express";
-import { UserRoutes } from "./routes/UserRoutes";
-import { AuthRoutes } from "./routes/AuthRoutes";
-import { DepartmentsRoutes } from "./routes/DepartmentsRoutes";
-import { UserTypeRoutes } from "./routes/UserTypesRoutes";
-import { TicketRoutes } from "./routes/TicketRoutes";
-import { StatusRoutes } from "./routes/StatusRoutes";
-import { TicketTypeRoutes } from "./routes/TicketTypeRoutes";
-import { PriorityRoutes } from "./routes/PriorityRoutes";
-import { DashboardRoutes } from "./routes/DashboardRoutes";
-import { ChatRoutes } from "./routes/ChatRoutes";
-import { NotificationRoutes } from "./routes/NotificationRoutes";
-import { UploadRoutes } from "./routes/UploadRoutes";
+import { UserRoutes } from "./routes/userRoutes";
+import { AuthRoutes } from "./routes/authRoutes";
+import { DepartmentsRoutes } from "./routes/departmentsRoutes";
+import { UserTypeRoutes } from "./routes/userTypesRoutes";
+import { TicketRoutes } from "./routes/ticketRoutes";
+import { StatusRoutes } from "./routes/statusRoutes";
+import { TicketTypeRoutes } from "./routes/ticketTypeRoutes";
+import { PriorityRoutes } from "./routes/priorityRoutes";
+import { DashboardRoutes } from "./routes/dashboardRoutes";
+import { ChatRoutes } from "./routes/chatRoutes";
+import { NotificationRoutes } from "./routes/notificationRoutes";
+import { UploadRoutes } from "./routes/uploadRoutes";
 
 export class RouteConfig {
     public static register(app: Express) {

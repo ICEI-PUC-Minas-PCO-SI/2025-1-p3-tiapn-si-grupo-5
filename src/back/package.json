@@ -3,12 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engine": {
+    "node": "22"
+  },
   "scripts": {
     "start": "ts-node server.ts",
     "test": "jest --passWithNoTests",
     "dev": "nodemon --watch . --ext ts,js,json --exec ts-node server.ts",
     "lint": "eslint . --ext .ts",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "build": "tsup server.ts"
   },
   "keywords": [],
   "author": "",
@@ -52,6 +56,7 @@
     "prisma": "^6.8.2",
     "ts-jest": "^29.3.2",
     "ts-node": "^10.9.2",
+    "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.1"
   },
