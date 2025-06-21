@@ -17,7 +17,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from 'react-router-dom';
 import { getAllActiveManagementsPublic } from "@/api/management";
-import { registerNewUser } from "@/api/users";
+import { registerNewUser } from "@/api/auth";
 import { GlobalAlert } from "@/components/ui/GlobalAlert";
 
 const registerUserSchema = z.object({

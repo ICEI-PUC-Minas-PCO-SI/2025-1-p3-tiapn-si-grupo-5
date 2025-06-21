@@ -36,7 +36,7 @@ export class TicketRoutes {
 
     private initializeRoutes() {
         this.router.post(
-            "/tickets",
+            "/",
             upload.single("file"),
             autenticarToken,
             (req, res, next) => {
@@ -45,12 +45,12 @@ export class TicketRoutes {
                     .catch(next);
             }
         );
-        this.router.get("/tickets", autenticarToken, this.ticketController.getAllTickets.bind(this.ticketController));
-        this.router.get("/tickets/unassigned", autenticarToken, this.ticketController.getUnassignedTickets.bind(this.ticketController));
-        this.router.get("/tickets/my", autenticarToken, this.ticketController.getMyTickets.bind(this.ticketController));
-        this.router.patch("/tickets/:idChamado/assign", autenticarToken, this.ticketController.assignTicket.bind(this.ticketController));
+        this.router.get("/", autenticarToken, this.ticketController.getAllTickets.bind(this.ticketController));
+        this.router.get("/unassigned", autenticarToken, this.ticketController.getUnassignedTickets.bind(this.ticketController));
+        this.router.get("/my", autenticarToken, this.ticketController.getMyTickets.bind(this.ticketController));
+        this.router.patch("/:idChamado/assign", autenticarToken, this.ticketController.assignTicket.bind(this.ticketController));
         this.router.patch(
-            "/tickets/:idChamado/analyst",
+            "/:idChamado/analyst",
             autenticarToken,
             validatePayload(ticketUpdateAnalystSchema),
             (req, res, next) => {
@@ -60,7 +60,7 @@ export class TicketRoutes {
             }
         );
         this.router.get(
-            "/tickets/team",
+            "/team",
             autenticarToken,
             (req, res, next) => {
                 this.ticketController.getTeamTickets(req, res)
@@ -69,7 +69,7 @@ export class TicketRoutes {
             }
         );
         this.router.get(
-            "/tickets/analyst/:idAnalista",
+            "/analyst/:idAnalista",
             autenticarToken,
             (req, res, next) => {
                 this.ticketController.getTicketsByAnalystId(req, res)
@@ -78,7 +78,7 @@ export class TicketRoutes {
             }
         );
         this.router.get(
-            "/tickets/user/:idSolicitante",
+            "/user/:idSolicitante",
             autenticarToken,
             (req, res, next) => {
                 this.ticketController.getTicketsBySolicitanteId(req, res)
@@ -87,7 +87,7 @@ export class TicketRoutes {
             }
         );
         this.router.get(
-            "/tickets/:idChamado",
+            "/:idChamado",
             autenticarToken,
             (req, res, next) => {
                 this.ticketController.getTicketById(req, res)
@@ -96,7 +96,7 @@ export class TicketRoutes {
             }
         );
         this.router.patch(
-            "/tickets/:idChamado/status",
+            "/:idChamado/status",
             autenticarToken,
             validatePayload(ticketUpdateStatusSchema),
             (req, res, next) => {
@@ -106,7 +106,7 @@ export class TicketRoutes {
             }
         );
         this.router.patch(
-            "/tickets/:idChamado/close",
+            "/:idChamado/close",
             autenticarToken,
             validatePayload(ticketCloseSchema),
             (req, res, next) => {
@@ -116,7 +116,7 @@ export class TicketRoutes {
             }
         );
         this.router.patch(
-            "/tickets/:idChamado/reopen",
+            "/:idChamado/reopen",
             autenticarToken,
             (req, res, next) => {
                 this.ticketController.reopenTicket(req, res)

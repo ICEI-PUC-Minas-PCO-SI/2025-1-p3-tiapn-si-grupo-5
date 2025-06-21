@@ -1,8 +1,8 @@
 import { Server as SocketIOServer, Socket } from "socket.io";
 import { PrismaClient } from "../generated/prisma";
-import { ChatService } from "../services/chatService";
-import { sendNotificationEmail } from "../services/emailServices";
-import { NotificationService } from "../services/notificationService";
+import { ChatService } from "../services/ChatService";
+import { sendNotificationEmail } from "../services/EmailServices";
+import { NotificationService } from "../services/NotificationService";
 
 const prisma = new PrismaClient();
 const chatService = new ChatService();

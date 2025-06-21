@@ -15,7 +15,7 @@ export function SettingsUserForm({
 }: {
     onFeedback: (type: "success" | "error", message: string) => void;
     profilePhotoFile: File | null;
-    onProfilePhotoUploaded: () => void;
+    onProfilePhotoUploaded: (fotoPerfilUrl?: string, previewUrl?: string) => void;
     setPreviewUrl: (url: string | null) => void;
 }) {
     const { user, setUser, logout } = useUser();
@@ -27,6 +27,7 @@ export function SettingsUserForm({
         ramal: user?.ramal || "",
     });
     const [isChanged, setIsChanged] = useState(false);
+    const [lastSavedPhoto, setLastSavedPhoto] = useState<string | null>(user?.fotoPerfil || null);
 
     // Atualiza formValues quando user muda (ex: ao logar)
     useEffect(() => {
@@ -35,7 +36,15 @@ export function SettingsUserForm({
             email: user?.email || "",
             ramal: user?.ramal || "",
         });
+        setLastSavedPhoto(user?.fotoPerfil || null);
     }, [user]);
+
+    // Atualiza lastSavedPhoto quando profilePhotoFile for limpo após upload
+    useEffect(() => {
+        if (!profilePhotoFile && user?.fotoPerfil && lastSavedPhoto !== user.fotoPerfil) {
+            setLastSavedPhoto(user.fotoPerfil);
+        }
+    }, [profilePhotoFile, user?.fotoPerfil, lastSavedPhoto]);
 
     // Detecta mudanças nos campos do formulário ou na foto de perfil
     useEffect(() => {
@@ -61,16 +70,14 @@ export function SettingsUserForm({
         setIsSubmitting(true);
         try {
             let fotoPerfilUrl = user?.fotoPerfil ?? null;
-            let skipUserContextPhotoUpdate = false;
+            let fotoPerfilFoiAtualizada = false;
 
-            // Se o usuário selecionou uma nova foto, faz o upload antes de atualizar o perfil
             if (profilePhotoFile && user) {
                 const result = await uploadProfilePhoto(user.id, profilePhotoFile);
                 fotoPerfilUrl = result.fotoPerfil;
-                // NÃO atualize o contexto do usuário com a nova foto para manter o preview até o usuário navegar
-                skipUserContextPhotoUpdate = true;
-                onProfilePhotoUploaded();
+                onProfilePhotoUploaded(fotoPerfilUrl, URL.createObjectURL(profilePhotoFile));
                 setPreviewUrl(null);
+                fotoPerfilFoiAtualizada = true;
             }
 
             // Atualiza os dados do perfil (nome, email, ramal)
@@ -93,8 +100,12 @@ export function SettingsUserForm({
                 setUser({
                     ...user!,
                     ...updated,
-                    fotoPerfil: skipUserContextPhotoUpdate ? user!.fotoPerfil : fotoPerfilUrl
+                    fotoPerfil: fotoPerfilUrl // sempre atualiza a foto no contexto
                 });
+            }
+
+            if (fotoPerfilFoiAtualizada && fotoPerfilUrl) {
+                setLastSavedPhoto(fotoPerfilUrl);
             }
 
             onFeedback("success", "Perfil atualizado com sucesso!");

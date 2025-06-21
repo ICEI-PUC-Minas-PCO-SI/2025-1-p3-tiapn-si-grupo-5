@@ -1,5 +1,4 @@
 import { API_BASE_URL } from "@/api/config";
-import { authHeaders } from "@/contexts/helperCookies";
 
 export interface ChatMessage {
     idMensagem: number;
@@ -20,7 +19,7 @@ export interface ChatMessage {
 
 export async function getChatMessages(idChamado: number): Promise<ChatMessage[]> {
     const response = await fetch(`${API_BASE_URL}/chats/${idChamado}/messages`, {
-        headers: authHeaders()
+        credentials: 'include'
     });
     if (!response.ok) {
         const err = await response.json().catch(() => ({}));

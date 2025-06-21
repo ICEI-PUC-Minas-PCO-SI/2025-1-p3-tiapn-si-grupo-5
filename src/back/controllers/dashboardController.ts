@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { DashboardService } from "../services/dashboardService";
+import { DashboardService } from "../services/DashboardService";
 
 const dashboardService = new DashboardService();
 

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { ChatController } from "../controllers/chatController";
+import { ChatController } from "../controllers/ChatController";
 import { autenticarToken } from "../middlewares/auth-jwt";
 
 export class ChatRoutes {
@@ -14,7 +14,7 @@ export class ChatRoutes {
 
     private initializeRoutes() {
         this.router.get(
-            "/chats/:idChamado/messages",
+            "/:idChamado/messages",
             autenticarToken,
             (req, res, next) => {
                 this.chatController.getMessagesByChamado(req, res)

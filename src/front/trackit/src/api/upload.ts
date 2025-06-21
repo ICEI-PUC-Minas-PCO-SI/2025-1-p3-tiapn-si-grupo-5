@@ -1,5 +1,4 @@
 import { API_BASE_URL } from "@/api/config";
-import { authHeaders } from "@/contexts/helperCookies";
 
 export interface UploadResponse {
     url: string;
@@ -18,7 +17,7 @@ export async function uploadFile(
     if (!onProgress) {
         const response = await fetch(`${API_BASE_URL}/upload`, {
             method: "POST",
-            headers: authHeaders(), // NÃO adicionar Content-Type, o browser define
+            credentials: 'include',
             body: formData,
             signal,
         });
@@ -30,9 +29,7 @@ export async function uploadFile(
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open("POST", `${API_BASE_URL}/upload`);
-        Object.entries(authHeaders()).forEach(([key, value]) => {
-            xhr.setRequestHeader(key, value as string);
-        });
+        xhr.withCredentials = true;
         xhr.upload.onprogress = (event) => {
             if (event.lengthComputable && onProgress) {
                 onProgress(Math.round((event.loaded / event.total) * 100));
@@ -68,9 +65,7 @@ export async function uploadProfilePhoto(
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.open("POST", `${API_BASE_URL}/users/${userId}/profile-photo`);
-        Object.entries(authHeaders()).forEach(([key, value]) => {
-            xhr.setRequestHeader(key, value as string);
-        });
+        xhr.withCredentials = true;
         xhr.upload.onprogress = (event) => {
             if (event.lengthComputable && onProgress) {
                 onProgress(Math.round((event.loaded / event.total) * 100));
@@ -87,5 +82,3 @@ export async function uploadProfilePhoto(
         xhr.send(formData);
     });
 }
-
-// Remova uploadFileHelper se não for usada em nenhum lugar do projeto

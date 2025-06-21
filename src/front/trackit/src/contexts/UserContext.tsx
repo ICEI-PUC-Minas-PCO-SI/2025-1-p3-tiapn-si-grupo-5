@@ -1,8 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { DefaultSpinner } from "@/components/ui/spinner";
-import { getMe } from "@/api/auth";
+import { getMe, logoutApi } from "@/api/auth";
 import type { IMeResponse } from "@/api/auth";
-import Cookies from "js-cookie";
 
 export interface User {
   id: number;
@@ -21,8 +20,8 @@ export interface User {
 
 type UserContextType = {
   user: User | null;
-  setUser: (user: User | null, token?: string) => void;
-  logout: () => void;
+  setUser: (user: User | null) => void;
+  logout: () => Promise<void>;
   loading: boolean;
   logoutLoading: boolean;
 };
@@ -35,46 +34,9 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const [logoutLoading, setLogoutLoading] = useState(false);
 
   useEffect(() => {
-    const token = Cookies.get("token");
     async function fetchUserAndManagement() {
-      if (token) {
-        try {
-          const data: IMeResponse | null = await getMe(token);
-          if (data && data.usuario) {
-            const usuario = data.usuario;
-            setUserState({
-              id: usuario.id,
-              nome: usuario.nome,
-              email: usuario.email,
-              ramal: usuario.ramal,
-              matricula: usuario.matricula,
-              gerencia: usuario.gerencia ?? undefined,
-              tipo: usuario.tipo ?? undefined,
-              ativo: usuario.ativo,
-              fotoPerfil: usuario.fotoPerfil ?? undefined,
-              nomeGerencia: usuario.nomeGerencia ?? undefined,
-              idTipoUsuario: usuario.idTipoUsuario ?? undefined,
-            });
-          } else {
-            logout();
-          }
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        setLoading(false);
-      }
-    }
-    fetchUserAndManagement();
-  }, []);
-
-  function setUser(user: User | null, token?: string) {
-    setUserState(user);
-    if (token) {
-      const expires = new Date(Date.now() + 60 * 60 * 1000); // 60 minutos
-      Cookies.set("token", token, { expires });
-      (async () => {
-        const data: IMeResponse | null = await getMe(token);
+      try {
+        const data: IMeResponse | null = await getMe();
         if (data && data.usuario) {
           const usuario = data.usuario;
           setUserState({
@@ -90,19 +52,51 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
             nomeGerencia: usuario.nomeGerencia ?? undefined,
             idTipoUsuario: usuario.idTipoUsuario ?? undefined,
           });
+        } else {
+          setUserState(null);
         }
-      })();
+      } finally {
+        setLoading(false);
+      }
     }
-    if (!user) {
-      Cookies.remove("token");
+    fetchUserAndManagement();
+  }, []);
+
+  function setUser(user: User | null) {
+    if (user && user.nomeGerencia === undefined) {
+      // Busca do backend para garantir nomeGerencia atualizado
+      getMe().then((data) => {
+        if (data && data.usuario) {
+          setUserState({
+            id: data.usuario.id,
+            nome: data.usuario.nome,
+            email: data.usuario.email,
+            ramal: data.usuario.ramal,
+            matricula: data.usuario.matricula,
+            gerencia: data.usuario.gerencia ?? undefined,
+            tipo: data.usuario.tipo ?? undefined,
+            ativo: data.usuario.ativo,
+            fotoPerfil: data.usuario.fotoPerfil ?? undefined,
+            nomeGerencia: data.usuario.nomeGerencia ?? undefined,
+            idTipoUsuario: data.usuario.idTipoUsuario ?? undefined,
+          });
+        } else {
+          setUserState(user);
+        }
+      });
+    } else {
+      setUserState(user);
     }
   }
 
   async function logout() {
     setLogoutLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    try {
+      await logoutApi();
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    }
     setUserState(null);
-    Cookies.remove("token");
     setLogoutLoading(false);
   }
 

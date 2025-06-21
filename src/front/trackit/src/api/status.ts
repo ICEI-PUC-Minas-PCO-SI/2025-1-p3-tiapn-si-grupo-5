@@ -1,5 +1,4 @@
 import { API_BASE_URL } from "@/api/config";
-import { authHeaders } from "@/contexts/helperCookies";
 
 export interface IStatus {
     idStatus: number;
@@ -12,7 +11,7 @@ export interface IStatus {
 export async function getAllStatus(): Promise<IStatus[]> {
     try {
         const response = await fetch(`${API_BASE_URL}/statuses`, {
-            headers: authHeaders()
+            credentials: 'include'
         });
         if (!response.ok) {
             throw new Error("Erro ao buscar status");
@@ -28,7 +27,8 @@ export async function getAllStatus(): Promise<IStatus[]> {
 export async function addStatus(nomeStatus: string, hexCorPrimaria: string, hexCorSecundaria: string): Promise<IStatus> {
     const response = await fetch(`${API_BASE_URL}/statuses`, {
         method: "POST",
-        headers: authHeaders({ "Content-Type": "application/json" }),
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nomeStatus, hexCorPrimaria, hexCorSecundaria }),
     });
     if (!response.ok) {
@@ -41,7 +41,8 @@ export async function addStatus(nomeStatus: string, hexCorPrimaria: string, hexC
 export async function updateStatus(idStatus: number, nomeStatus: string, hexCorPrimaria: string, hexCorSecundaria: string): Promise<IStatus> {
     const response = await fetch(`${API_BASE_URL}/statuses/${idStatus}`, {
         method: "PUT",
-        headers: authHeaders({ "Content-Type": "application/json" }),
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             idStatus,
             nomeStatus,
@@ -59,7 +60,8 @@ export async function updateStatus(idStatus: number, nomeStatus: string, hexCorP
 export async function deleteStatus(idStatus: number): Promise<void> {
     const response = await fetch(`${API_BASE_URL}/statuses/${idStatus}`, {
         method: "DELETE",
-        headers: authHeaders({ "Content-Type": "application/json" }),
+        credentials: 'include',
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idStatus }),
     });
     if (!response.ok) {

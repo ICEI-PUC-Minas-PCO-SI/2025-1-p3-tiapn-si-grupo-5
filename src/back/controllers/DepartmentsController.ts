@@ -1,23 +1,23 @@
 import { Request, Response } from "express";
-import { ManagementService } from "../services/managementService";
+import { DepartmentsService } from "../services/DepartmentsServices";
 
-const managementService = new ManagementService();
+const departmentsService = new DepartmentsService();
 
-export class ManagementController {
-    async getAllActiveManagement(req: Request, res: Response) {
+export class DepartmentsController {
+    async getAllActiveDepartments(req: Request, res: Response) {
         try {
-            const activeManagements = await managementService.getAllActiveManagement();
-            res.json(activeManagements);
+            const activeDepartmentss = await departmentsService.getAllActiveDepartments();
+            res.json(activeDepartmentss);
         } catch (error) {
             console.error("Erro ao buscar gerências ativas:", error);
             res.status(500).json({ error: "Erro ao buscar gerências ativas" });
         }
     }
 
-    async createManagement(req: Request, res: Response) {
+    async createDepartments(req: Request, res: Response) {
         try {
             const { nomeGerencia } = req.body;
-            const novaGerencia = await managementService.createManagement(nomeGerencia);
+            const novaGerencia = await departmentsService.createDepartments(nomeGerencia);
             res.status(201).json(novaGerencia);
         } catch (error) {
             console.error("Erro ao criar gerência:", error);
@@ -25,10 +25,10 @@ export class ManagementController {
         }
     }
 
-    async updateManagement(req: Request, res: Response) {
+    async updateDepartments(req: Request, res: Response) {
         try {
             const { idGerencia, nomeGerencia } = req.body;
-            const gerenciaAtualizada = await managementService.updateManagement(idGerencia, nomeGerencia);
+            const gerenciaAtualizada = await departmentsService.updateDepartments(idGerencia, nomeGerencia);
             res.json(gerenciaAtualizada);
         } catch (error) {
             console.error("Erro ao atualizar gerência:", error);
@@ -36,10 +36,10 @@ export class ManagementController {
         }
     }
 
-    async deleteManagement(req: Request, res: Response) {
+    async deleteDepartments(req: Request, res: Response) {
         try {
             const { idGerencia } = req.body;
-            await managementService.deleteManagement(idGerencia);
+            await departmentsService.deleteDepartments(idGerencia);
             res.status(204).send();
         } catch (error) {
             const err = error as { code?: string; message?: string };
