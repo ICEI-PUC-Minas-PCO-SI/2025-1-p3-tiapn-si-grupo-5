@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { TicketService } from "../services/TicketService";
-import { uploadFileToCloudinary } from "../services/uploadService";
+import { uploadFileToCloudinary } from "../services/UploadService";
 import fs from "fs";
-import { sendTicketStatusChangeEmail } from "../services/emailServices";
+import { sendTicketStatusChangeEmail } from "../services/EmailServices";
 
 export const ticketService = new TicketService();
 

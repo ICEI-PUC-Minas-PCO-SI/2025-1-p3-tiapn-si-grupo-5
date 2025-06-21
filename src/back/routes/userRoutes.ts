@@ -6,15 +6,6 @@ import { z } from "zod";
 import { upload } from "../middlewares/multer";
 
 // Schemas para validação
-const userRegisterSchema = z.object({
-    nomeUsuario: z.string().min(3),
-    matricula: z.string().min(4),
-    ramal: z.string().min(4),
-    email: z.string().email(),
-    senha: z.string().min(8),
-    gerencia: z.union([z.number(), z.string()]),
-    tipoUsuario: z.union([z.number(), z.string()])
-});
 const userUpdateSchema = z.object({
     matricula: z.string().min(4),
     gerencia: z.union([z.number(), z.string()]),
@@ -28,17 +19,6 @@ const userProfileUpdateSchema = z.object({
     email: z.string().email(),
     ramal: z.string().min(4)
 });
-const userLoginSchema = z.object({
-    email: z.string().email(),
-    senha: z.string().min(8)
-});
-const requestResetSchema = z.object({
-    email: z.string().email()
-});
-const resetPasswordSchema = z.object({
-    token: z.string().uuid(),
-    senha: z.string().min(8)
-});
 
 export class UserRoutes {
     private router: Router;
@@ -51,18 +31,6 @@ export class UserRoutes {
     }
 
     private initializeRoutes() {
-        this.router.post(
-            "/users/register",
-            // Registro pode ser público, manter sem autenticação
-            validatePayload(userRegisterSchema),
-            this.userController.registerUser.bind(this.userController)
-        );
-        this.router.post(
-            "/users/login",
-            // Login é público
-            validatePayload(userLoginSchema),
-            this.userController.loginUser.bind(this.userController)
-        );
         this.router.get(
             "/users",
             autenticarToken,
@@ -107,16 +75,6 @@ export class UserRoutes {
             }
         );
         this.router.post(
-            "/users/request-password-reset",
-            validatePayload(requestResetSchema),
-            this.userController.requestPasswordReset.bind(this.userController)
-        );
-        this.router.post(
-            "/users/reset-password",
-            validatePayload(resetPasswordSchema),
-            this.userController.resetPassword.bind(this.userController)
-        );
-        this.router.post(
             "/users/:idUsuario/profile-photo",
             autenticarToken,
             upload.single("file"),
@@ -126,14 +84,6 @@ export class UserRoutes {
                     .catch(next);
             }
         );
-        this.router.post("/logout", (req, res) => {
-            res.clearCookie("trackit_token", {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax"
-            });
-            res.status(200).json({ message: "Logout realizado com sucesso" });
-        });
     }
 
     public getRouter(): Router {

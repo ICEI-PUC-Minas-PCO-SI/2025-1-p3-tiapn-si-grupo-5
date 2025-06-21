@@ -1,94 +1,11 @@
 import { Request, Response } from "express";
-import jwt from 'jsonwebtoken';
 import { UserService } from "../services/UserService";
-import { sendPasswordResetEmail } from "../services/EmailServices";
 import { uploadFileToCloudinary } from "../services/UploadService";
 import fs from "fs";
 
 const userService = new UserService();
 
 export class UserController {
-    async registerUser(req: Request, res: Response) {
-        try {
-            const { nomeUsuario, matricula, ramal, email, senha, gerencia, tipoUsuario } = req.body;
-
-            // Verifica matrícula duplicada
-            const existingMatricula = await userService.findUserByMatricula(matricula);
-            if (existingMatricula) {
-                res.status(400).json({ error: "Já existe um usuário cadastrado com esta matrícula." });
-                return;
-            }
-
-            // Verifica email duplicado
-            const existingEmail = await userService.findUserByEmail(email);
-            if (existingEmail) {
-                res.status(400).json({ error: "Já existe um usuário cadastrado com este e-mail." });
-                return;
-            }
-
-            const novoUsuario = await userService.registerUser({
-                nomeUsuario, matricula, ramal, email, senha, gerencia, tipoUsuario
-            });
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { senha: _, ...usuarioSemSenha } = novoUsuario;
-            res.status(201).json(usuarioSemSenha);
-            console.log(JSON.stringify(usuarioSemSenha));
-        } catch (error) {
-            console.error("Erro ao criar usuário:", error);
-            res.status(500).json({ error: "Erro ao criar usuário" });
-        }
-    }
-
-    async loginUser(req: Request, res: Response) {
-        try {
-            const { email, senha } = req.body;
-            const { error, usuario } = await userService.loginUser(email, senha);
-            if (!usuario) {
-                res.status(401).json({ error: error || "Email ou senha inválidos" });
-                return;
-            }
-            if (!usuario.ativo) {
-                res.status(403).json({ error: "Sua conta está desativada. Entre em contato com o administrador." });
-                return;
-            }
-            let nomeGerencia: string | undefined = undefined;
-            if (usuario.idGerencia) {
-                nomeGerencia = undefined;
-            }
-            const token = jwt.sign(
-                { id: usuario.idUsuario, email: usuario.email },
-                process.env.JWT_SECRET as string,
-                { expiresIn: '30m' }
-            );
-            // Set cookie HTTP Only
-            res.cookie("trackit_token", token, {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
-                maxAge: 30 * 60 * 1000
-            });
-            res.status(200).json({
-                message: "Login realizado com sucesso",
-                usuario: {
-                    id: usuario.idUsuario,
-                    nome: usuario.nomeUsuario,
-                    email: usuario.email,
-                    ramal: usuario.ramal,
-                    matricula: usuario.matricula,
-                    gerencia: usuario.idGerencia,
-                    tipo: usuario.idTipoUsuario,
-                    ativo: usuario.ativo,
-                    fotoPerfil: usuario.fotoPerfil,
-                    nomeGerencia
-                }
-                // NÃO envie o token no corpo!
-            });
-        } catch (error) {
-            console.error("Erro no login:", error);
-            res.status(500).json({ error: "Erro no servidor" });
-        }
-    }
-
     async getAllUsers(req: Request, res: Response) {
         try {
             const clients = await userService.getAllUsers();
@@ -208,41 +125,6 @@ export class UserController {
         } catch (error) {
             console.error("Erro ao checar e-mail:", error);
             res.status(500).json({ error: "Erro ao checar e-mail" });
-        }
-    }
-
-    async requestPasswordReset(req: Request, res: Response) {
-        try {
-            const { email } = req.body;
-            const result = await userService.createPasswordResetToken(email);
-            if (!result) {
-                res.status(404).json({ error: "E-mail não encontrado" });
-                return;
-            }
-            await sendPasswordResetEmail({
-                to: result.user.email,
-                nomeUsuario: result.user.nomeUsuario,
-                token: result.token
-            });
-            res.json({ message: "E-mail de redefinição enviado com sucesso." });
-        } catch (error) {
-            console.error("Erro ao solicitar redefinição de senha:", error);
-            res.status(500).json({ error: "Erro ao solicitar redefinição de senha" });
-        }
-    }
-
-    async resetPassword(req: Request, res: Response) {
-        try {
-            const { token, senha } = req.body;
-            const result = await userService.resetPasswordByToken(token, senha);
-            if (!result.success) {
-                res.status(400).json({ error: result.error });
-                return;
-            }
-            res.json({ message: "Senha redefinida com sucesso." });
-        } catch (error) {
-            console.error("Erro ao redefinir senha:", error);
-            res.status(500).json({ error: "Erro ao redefinir senha" });
         }
     }
 
