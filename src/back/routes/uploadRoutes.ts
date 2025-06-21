@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { UploadController } from "../controllers/uploadController";
+import { UploadController } from "../controllers/UploadController";
 import { upload } from "../middlewares/multer";
 import { autenticarToken } from "../middlewares/auth-jwt";
 

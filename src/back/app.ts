@@ -1,17 +1,17 @@
 import express, { Express } from "express";
 import cors from "cors";
-import { UserRoutes } from "./routes/userRoutes";
-import { ManagementRoutes } from "./routes/managementRoutes";
-import { UserTypeRoutes } from "./routes/userTypesRoutes";
-import { TicketRoutes } from "./routes/ticketRoutes";
-import { StatusRoutes } from "./routes/statusRoutes";
-import { TicketTypeRoutes } from "./routes/ticketTypeRoutes";
+import { UserRoutes } from "./routes/UserRoutes";
+import { ManagementRoutes } from "./routes/ManagementRoutes";
+import { UserTypeRoutes } from "./routes/UserTypesRoutes";
+import { TicketRoutes } from "./routes/TicketRoutes";
+import { StatusRoutes } from "./routes/StatusRoutes";
+import { TicketTypeRoutes } from "./routes/TicketTypeRoutes";
 import { errorHandler } from "./middlewares/error-handler";
 import { PriorityRoutes } from "./routes/PriorityRoutes";
-import { DashboardRoutes } from "./routes/dashboardRoutes";
-import { ChatRoutes } from "./routes/chatRoutes";
-import { NotificationRoutes } from "./routes/notificationRoutes";
-import { UploadRoutes } from "./routes/uploadRoutes";
+import { DashboardRoutes } from "./routes/DashboardRoutes";
+import { ChatRoutes } from "./routes/ChatRoutes";
+import { NotificationRoutes } from "./routes/NotificationRoutes";
+import { UploadRoutes } from "./routes/UploadRoutes";
 import cookieParser from "cookie-parser";
 
 export class App {

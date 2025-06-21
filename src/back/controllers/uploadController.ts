@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { uploadFileToCloudinary } from "../services/uploadService";
+import { uploadFileToCloudinary } from "../services/UploadService";
 import fs from "fs";
 
 export class UploadController {

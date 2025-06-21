@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 import { UserService } from "../services/UserService";
-import { sendPasswordResetEmail } from "../services/emailServices";
-import { uploadFileToCloudinary } from "../services/uploadService";
+import { sendPasswordResetEmail } from "../services/EmailServices";
+import { uploadFileToCloudinary } from "../services/UploadService";
 import fs from "fs";
 
 const userService = new UserService();

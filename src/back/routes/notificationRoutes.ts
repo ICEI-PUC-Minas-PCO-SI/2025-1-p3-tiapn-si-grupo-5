@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { NotificationController } from "../controllers/notificationController";
+import { NotificationController } from "../controllers/NotificationController";
 import { autenticarToken } from "../middlewares/auth-jwt";
 
 export class NotificationRoutes {

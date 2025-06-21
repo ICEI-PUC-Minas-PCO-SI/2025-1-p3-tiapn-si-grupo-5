@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { DashboardController } from "../controllers/dashboardController";
+import { DashboardController } from "../controllers/DashboardController";
 import { autenticarToken } from "../middlewares/auth-jwt";
 
 export class DashboardRoutes {

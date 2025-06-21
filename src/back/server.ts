@@ -1,7 +1,7 @@
 import { App } from "./app";
 import http from "http";
 import { Server as SocketIOServer } from "socket.io";
-import { setupChatSocket } from "./sockets/chatSocket";
+import { setupChatSocket } from "./sockets/ChatSocket";
 
 const PORT = process.env.PORT || 3000;
 

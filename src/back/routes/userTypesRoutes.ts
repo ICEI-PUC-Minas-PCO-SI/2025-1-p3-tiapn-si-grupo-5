@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { UserTypeController } from "../controllers/userTypeController";
+import { UserTypeController } from "../controllers/UserTypeController";
 import { autenticarToken } from "../middlewares/auth-jwt";
 
 export class UserTypeRoutes {
