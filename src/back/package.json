@@ -1,8 +1,8 @@
 {
   "name": "back",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Backend do projeto TrackIt",
+  "main": "server.ts",
   "engine": {
     "node": "22"
   },

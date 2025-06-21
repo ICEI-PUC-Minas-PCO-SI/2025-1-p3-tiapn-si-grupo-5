@@ -3,9 +3,14 @@ import Suport from "../../assets/Suporte_solucao.svg";
 import { Link } from "react-router";
 import { LoginUser } from "@/components/login/LoginUser";
 import { Toaster } from "sonner";
+import { useState } from "react";
+import { DefaultSpinner } from "@/components/ui/spinner";
 
 export function Login() {
-
+    const [loading, setLoading] = useState(false);
+    if (loading) {
+        return <DefaultSpinner />;
+    }
     return (
         <>
             <div className="flex w-full min-h-screen">
@@ -32,7 +37,7 @@ export function Login() {
                             </h1>
                         </div>
                     </div>
-                    <LoginUser />
+                    <LoginUser loading={loading} setLoading={setLoading} />
                     <footer className="flex flex-col w-full h-full items-end justify-start gap-4 px-[3rem] mt-[-2.5rem]">
                         <Link
                             to="forgot-password"

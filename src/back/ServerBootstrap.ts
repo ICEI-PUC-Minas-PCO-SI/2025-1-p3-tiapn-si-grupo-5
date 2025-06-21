@@ -24,7 +24,7 @@ export class ServerBootstrap {
 
     public start() {
         this.server.listen(this.port, () => {
-            console.log(`Servidor rodando em http://localhost:${this.port}`);
+            console.log("Servidor rodando!");
         });
     }
 }
