@@ -319,11 +319,6 @@ export function DashboardDataTable() {
         setFilterMenuOpen(false);
     };
 
-    // Adicione o console.log aqui para depuração
-    useEffect(() => {
-        console.log("DashboardDataTable - filteredData:", filteredData);
-    }, [filteredData]);
-
     return (
         <div className="space-y-4 w-full">
             <div className="flex justify-between">
