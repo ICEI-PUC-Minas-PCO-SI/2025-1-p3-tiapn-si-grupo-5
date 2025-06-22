@@ -2,7 +2,7 @@
 FROM node:20-alpine
 
 # Diretório de trabalho
-WORKDIR /backend
+WORKDIR /back
 
 # Copia package.json e package-lock.json (ou yarn.lock)
 COPY package*.json ./
