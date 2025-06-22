@@ -75,8 +75,7 @@ export class UserRoutes {
             }
         );
         this.router.post(
-            "/users/:idUsuario/profile-photo",
-            autenticarToken,
+            "/:idUsuario/profile-photo",
             upload.single("file"),
             (req, res, next) => {
                 this.userController.uploadProfilePhoto(req, res)

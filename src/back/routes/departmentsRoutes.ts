@@ -29,12 +29,12 @@ export class DepartmentsRoutes {
             this.DepartmentsController.getAllActiveDepartments.bind(this.DepartmentsController)
         );
         this.router.get(
-            "",
+            "/",
             autenticarToken,
             this.DepartmentsController.getAllActiveDepartments.bind(this.DepartmentsController)
         );
         this.router.post(
-            "",
+            "/",
             autenticarToken,
             validatePayload(DepartmentsCreateSchema),
             this.DepartmentsController.createDepartments.bind(this.DepartmentsController)
