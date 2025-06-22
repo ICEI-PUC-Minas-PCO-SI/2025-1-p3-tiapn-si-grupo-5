@@ -7,8 +7,10 @@ export class MiddlewareConfig {
     public static register(app: Express) {
         app.use(express.json());
         app.use(cors({
-            origin: 'https://trackit-front-chi.vercel.app',
-            credentials: true
+            origin: process.env.FRONTEND_URL,
+            credentials: true,
+            methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+            allowedHeaders: ["Content-Type", "Authorization"]
         }));
         app.use(cookieParser());
         app.use(errorHandler);

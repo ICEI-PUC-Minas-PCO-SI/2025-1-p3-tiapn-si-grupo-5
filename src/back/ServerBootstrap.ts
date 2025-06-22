@@ -14,9 +14,10 @@ export class ServerBootstrap {
         this.server = http.createServer(appInstance);
         this.io = new SocketIOServer(this.server, {
             cors: {
-                origin: 'https://trackit-front-chi.vercel.app',
-                methods: ["GET", "POST"],
-                credentials: true
+                origin: process.env.FRONTEND_URL,
+                methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+                credentials: true,
+                allowedHeaders: ["Content-Type", "Authorization"]
             }
         });
         setupChatSocket(this.io);
