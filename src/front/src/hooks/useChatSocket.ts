@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import type { ChatMessage } from "@/api/chat";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:3000";
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
 export function useChatSocket(
     onReceive: (msg: ChatMessage) => void,
