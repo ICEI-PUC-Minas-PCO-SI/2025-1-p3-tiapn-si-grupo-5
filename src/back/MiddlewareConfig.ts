@@ -7,7 +7,7 @@ export class MiddlewareConfig {
     public static register(app: Express) {
         app.use(express.json());
         app.use(cors({
-            origin: "*",
+            origin: process.env.FRONTEND_URL,
             credentials: true
         }));
         app.use(cookieParser());

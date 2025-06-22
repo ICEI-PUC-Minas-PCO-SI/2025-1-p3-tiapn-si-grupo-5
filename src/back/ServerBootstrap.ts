@@ -14,7 +14,7 @@ export class ServerBootstrap {
         this.server = http.createServer(appInstance);
         this.io = new SocketIOServer(this.server, {
             cors: {
-                origin: "*",
+                origin: process.env.FRONTEND_URL,
                 methods: ["GET", "POST"],
                 credentials: true
             }
