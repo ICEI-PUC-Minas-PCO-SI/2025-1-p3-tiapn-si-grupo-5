@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import type { ChatMessage } from "@/api/chat";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
+const SOCKET_URL = "https://trackit-back.onrender.com";
 
 export function useChatSocket(
     onReceive: (msg: ChatMessage) => void,
