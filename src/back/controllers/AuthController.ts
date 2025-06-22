@@ -42,8 +42,8 @@ export class AuthController {
             );
             res.cookie("trackit_token", token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite: "lax",
+                secure: true,
+                sameSite: "none",
                 maxAge: 30 * 60 * 1000
             });
             res.status(200).json({
