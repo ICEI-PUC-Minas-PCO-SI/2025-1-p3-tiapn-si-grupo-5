@@ -23,6 +23,10 @@ export async function sendEmail({
     html?: string;
     from?: string;
 }) {
+    if (!to || typeof to !== "string" || !to.includes("@")) {
+        console.error('Tentativa de envio de e-mail sem destinatário válido:', to);
+        return; // Não lança erro, apenas loga e retorna
+    }
     try {
         const info = await transporter.sendMail({
             from: from || process.env.EMAIL_USER,
@@ -35,7 +39,8 @@ export async function sendEmail({
         return info;
     } catch (error) {
         console.error('Erro ao enviar e-mail:', error);
-        throw error;
+        // Não lança erro para não derrubar o servidor
+        return;
     }
 }
 
@@ -65,19 +70,7 @@ export async function sendNotificationEmail({
             <p style="font-size:12px;color:#888;">Esta é uma notificação automática do sistema TrackIt.</p>
         </div>
     `;
-    try {
-        const info = await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to,
-            subject,
-            html,
-        });
-        console.log('E-mail de notificação enviado:', info.response);
-        return info;
-    } catch (error) {
-        console.error('Erro ao enviar e-mail de notificação:', error);
-        throw error;
-    }
+    return sendEmail({ to, subject, html });
 }
 
 export async function sendPasswordResetEmail({
@@ -128,15 +121,4 @@ export async function sendTicketStatusChangeEmail({
         </div>
     `;
     return sendEmail({ to, subject, html });
-}
-
-if (require.main === module) {
-    (async () => {
-        await sendEmail({
-            to: "",
-            subject: "Test Email",
-            text: "Hello World!",
-            html: "<b>Hello World!</b>",
-        });
-    })();
 }
