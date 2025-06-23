@@ -167,7 +167,7 @@ export function CrudUserForm({
             matricula: fullRegistration,
             ramal: data.ramal,
             email: data.email,
-            senha: String(import.meta.env.VITE_DEFAULT_TRACKIT_PASSWORD),
+            senha: "Trackit123",
             gerencia: Number(data.management),
             tipoUsuario: Number(data.accessType),
         };
