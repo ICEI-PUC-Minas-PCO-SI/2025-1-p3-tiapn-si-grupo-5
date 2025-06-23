@@ -3,8 +3,10 @@ import { TicketService } from "../services/TicketService";
 import { uploadFileToCloudinary } from "../services/UploadService";
 import fs from "fs";
 import { sendTicketStatusChangeEmail } from "../services/EmailServices";
+import { NotificationService } from "../services/NotificationService";
 
 export const ticketService = new TicketService();
+const notificationService = new NotificationService();
 
 export class TicketController {
     async createTicket(req: Request, res: Response) {
@@ -130,12 +132,22 @@ export class TicketController {
             // Notificar usuário sobre a alteração de status
             const fullTicket = await ticketService.getTicketById(idChamado);
             if (fullTicket && fullTicket.usuario_chamado_idSolicitanteTousuario?.email) {
+                const novoStatus = fullTicket.statuschamado?.nomeStatus || "Atualizado";
+
+                // Criar notificação no banco de dados
+                await notificationService.createNotification({
+                    titulo: "Status do chamado alterado",
+                    mensagem: `O status do seu chamado #${fullTicket.idChamado} foi alterado para: ${novoStatus}`,
+                    idUsuario: fullTicket.idSolicitante!,
+                    idChamado: fullTicket.idChamado
+                });
+
                 await sendTicketStatusChangeEmail({
                     to: fullTicket.usuario_chamado_idSolicitanteTousuario.email,
                     nomeUsuario: fullTicket.usuario_chamado_idSolicitanteTousuario.nomeUsuario,
                     idChamado: fullTicket.idChamado,
                     assunto: fullTicket.assunto,
-                    novoStatus: fullTicket.statuschamado?.nomeStatus || "Atualizado"
+                    novoStatus
                 });
             }
             res.status(200).json(ticket);
@@ -156,6 +168,14 @@ export class TicketController {
             // Notificar usuário sobre o fechamento
             const fullTicket = await ticketService.getTicketById(idChamado);
             if (fullTicket && fullTicket.usuario_chamado_idSolicitanteTousuario?.email) {
+                // Criar notificação no banco de dados
+                await notificationService.createNotification({
+                    titulo: "Chamado fechado",
+                    mensagem: `Seu chamado #${fullTicket.idChamado} foi fechado.`,
+                    idUsuario: fullTicket.idSolicitante!,
+                    idChamado: fullTicket.idChamado
+                });
+
                 await sendTicketStatusChangeEmail({
                     to: fullTicket.usuario_chamado_idSolicitanteTousuario.email,
                     nomeUsuario: fullTicket.usuario_chamado_idSolicitanteTousuario.nomeUsuario,
@@ -236,6 +256,14 @@ export class TicketController {
             // Notificar usuário sobre a reabertura
             const fullTicket = await ticketService.getTicketById(idChamado);
             if (fullTicket && fullTicket.usuario_chamado_idSolicitanteTousuario?.email) {
+                // Criar notificação no banco de dados
+                await notificationService.createNotification({
+                    titulo: "Chamado reaberto",
+                    mensagem: `Seu chamado #${fullTicket.idChamado} foi reaberto.`,
+                    idUsuario: fullTicket.idSolicitante!,
+                    idChamado: fullTicket.idChamado
+                });
+
                 await sendTicketStatusChangeEmail({
                     to: fullTicket.usuario_chamado_idSolicitanteTousuario.email,
                     nomeUsuario: fullTicket.usuario_chamado_idSolicitanteTousuario.nomeUsuario,
