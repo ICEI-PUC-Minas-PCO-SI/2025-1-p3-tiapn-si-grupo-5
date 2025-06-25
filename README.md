@@ -25,7 +25,7 @@ O projeto TrackIT tem como objetivo desenvolver um sistema de gestão de demanda
 
 ## Instruções de utilização
 
-O projeto pode ser acessado através de:<a href="https://trackit-front.onrender.com/">TrackIT Acesso</a>
+O projeto pode ser acessado através de: <a href="https://trackit-front.onrender.com/">TrackIT Acesso</a>
 
 # Documentação
 
