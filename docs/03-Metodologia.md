@@ -104,6 +104,23 @@ Atualizado em: 05/06/2025
 | Lucas Fernandes Nascimento | Crud Prioridade | 05/06/2025 | 05/06/2025 | ✔️    | 05/06/2025      |
 | Lucas Fernandes Nascimento | Crud Tipo de demanda | 03/06/2025 | 05/06/2025 | ✔️    | 03/06/2025      |
 
+#### Sprint 5
+
+Atualizado em: 25/06/2025
+
+- _Scrum master_: Lucas Fernandes Nascimento
+- A divisão dos papéis pode ser verificada nas issues do Github Projects do repositório (SPRINT 5 - TRACKIT)
+
+| Responsável   | Tarefa/Requisito | Iniciado em    | Prazo      | Status | Terminado em    |
+| :----         |    :----         |      :----:    | :----:     | :----: | :----:          |
+| Lucas Fernandes Nascimento | Deploy | 21/06/2025 | 27/06/2025 | ✔️    | 22/06/2025      |
+| Lucas Fernandes Nascimento | Tooltips, melhorias no UX e validações | 18/06/2025 | 27/06/2025 | ✔️    | 20/06/2025      |
+| Lucas Fernandes Nascimento | Cookies HTTP Only| 18/06/2025 | 27/06/2025 | ✔️    | 21/06/2025      |
+| Lucas Fernandes Nascimento | Refator CRUDs de parâmetros| 18/06/2025 | 27/06/2025 | ✔️    | 19/06/2025      |
+| Lucas Fernandes Nascimento | Reset de Senha | 18/06/2025 | 27/06/2025 | ✔️    | 18/06/2025      |
+| Lucas Fernandes Nascimento | Anexação de arquivos no chamado e no chat | 18/06/2025 | 27/06/2025 | ✔️    | 18/06/2025      |
+| Lucas Fernandes Nascimento | Dashboard| 11/06/2025 | 27/06/2025 | ✔️    | 11/06/2025      |
+| Lucas Fernandes Nascimento | Chat do chamado | 11/06/2025 | 27/06/2025 | ✔️    | 11/06/2025      |
 
 
 ### Processo
