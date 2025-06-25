@@ -80,7 +80,7 @@ export async function sendPasswordResetEmail({
     nomeUsuario: string;
     token: string;
 }) {
-    const resetUrl = `${process.env.FRONTEND_URL || "http://localhost:5173"}/reset-password?token=${token}`;
+    const resetUrl = `${process.env.FRONTEND_URL}reset-password?token=${token}`;
     const subject = "Redefinição de senha - TrackIt";
     const html = `
         <div>
