@@ -27,7 +27,6 @@ import {
 import { TableSpinner } from "@/components/ui/spinner";
 import { getAllStatus } from "@/api/status";
 import type { IStatus } from "@/api/status";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function AnalystTickets() {
   type TicketWithStatus = AssignTicketTableRow & {
@@ -258,18 +257,9 @@ export function AnalystTickets() {
         <div className="flex gap-3">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button size="icon" variant="outline">
-                      <Filter className="w-4 h-4 mr-1" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    Filtrar
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Button size="icon" variant="outline">
+                <Filter className="w-4 h-4 mr-1" />
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[260px]">
               <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Prioridade</div>

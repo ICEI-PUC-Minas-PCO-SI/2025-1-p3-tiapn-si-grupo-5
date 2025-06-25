@@ -35,7 +35,6 @@ import {
 } from "@/components/ui/select";
 import { XCircle } from "lucide-react";
 import { TableSpinner } from "@/components/ui/spinner";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function AdminAssignTickets() {
   const [tickets, setTickets] = useState<AssignTicketTableRow[]>([]);
@@ -231,18 +230,9 @@ export function AdminAssignTickets() {
         <div className="flex gap-3">
           <DropdownMenu open={filterMenuOpen} onOpenChange={setFilterMenuOpen}>
             <DropdownMenuTrigger asChild>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button size="icon" variant="outline">
-                      <Filter className="w-4 h-4 mr-1" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    Filtrar
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <Button size="icon" variant="outline">
+                <Filter className="w-4 h-4" />
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[220px]">
               <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Prioridade</div>

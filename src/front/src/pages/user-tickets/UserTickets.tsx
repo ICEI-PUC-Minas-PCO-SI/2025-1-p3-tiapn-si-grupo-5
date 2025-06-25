@@ -27,7 +27,6 @@ import {
     SelectItem,
 } from "@/components/ui/select";
 import { TableSpinner } from "@/components/ui/spinner";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export interface UserTicketTableRow {
     idChamado: number;
@@ -267,18 +266,9 @@ export function UserTickets() {
                 <div className="flex gap-3">
                     <DropdownMenu open={priorityFilterOpen} onOpenChange={setPriorityFilterOpen}>
                         <DropdownMenuTrigger asChild>
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button size="icon" variant="outline">
-                                            <Filter className="w-4 h-4 mr-1" />
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        Filtrar
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
+                            <Button size="icon" variant="outline">
+                                <Filter className="w-4 h-4 mr-1" />
+                            </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="min-w-[220px]">
                             <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Prioridade</div>
