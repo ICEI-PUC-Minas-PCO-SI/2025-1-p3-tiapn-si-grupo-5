@@ -104,6 +104,8 @@ Atualizado em: 05/06/2025
 | Lucas Fernandes Nascimento | Crud Prioridade | 05/06/2025 | 05/06/2025 | ✔️    | 05/06/2025      |
 | Lucas Fernandes Nascimento | Crud Tipo de demanda | 03/06/2025 | 05/06/2025 | ✔️    | 03/06/2025      |
 
+
+
 ### Processo
 
 Durante as sprints 1 e 2, a divisão de tarefas e discussões à respeito das pautas do projeto foram feitas através de conversas no WhatsApp e reuniões via Microsoft Teams. A partir da sprint 3, foi adotado a divisão de tarfeas através das issues e do github projects, com objetivo de tornar a divisão de papéis mais transparente e organizada.

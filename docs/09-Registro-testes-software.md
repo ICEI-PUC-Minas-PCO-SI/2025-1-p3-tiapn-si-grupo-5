@@ -1,17 +1,18 @@
 # Registro de testes de software
 
-### SERÃO FEITOS NA SPRINT 5!
-
 <span style="color:red">Pré-requisitos: <a href="05-Projeto-interface.md"> Projeto de interface</a></span>, <a href="08-Plano-testes-software.md"> Plano de testes de software</a>
 
-Relatório com as evidências dos testes de software realizados no sistema pela equipe, baseado em um plano de testes pré-definido.
+Relatório com as evidências dos testes de software realizados no sistema pela equipe, baseado no plano de testes pré-definido.
 
-Para cada caso de teste definido no <a href="08-Plano-testes-software.md"> Plano de testes de software</a>, realize o registro das evidências dos testes feitos na aplicação pela equipe, que comprovem que o critério de êxito foi alcançado (ou não!). Para isso, utilize uma ferramenta de captura de tela que mostre cada um dos casos de teste definidos. Observação: cada caso de teste deverá possuir um vídeo do tipo _screencast_ para caracterizar uma evidência do referido caso.
 
-| **Caso de teste** 	| **CT-001 – Cadastrar perfil** 	|
+| **Caso de teste** 	| **CT-009 – Gerenciar parâmetros** 	|
 |:---:	|:---:	|
-| Requisito associado | RF-00X - A aplicação deve apresentar, na página principal, a funcionalidade de cadastro de usuários para que esses consigam criar e gerenciar seu perfil. |
-| Registro de evidência | [www.teste.com.br/drive/ct-01](http://www.teste.com.br/drive/ct-01) |
+| Requisito associado | RF-009 - aplicação deve permitir que os usuários que possuem perfil de gestor possam visualizar, criar, editar e deletar (se aplicável), as gerências, prioridades, status e tipos de demandas do TrackIT|
+| Registro de evidência | <img src="./images/view_param.png"/> <br> <img src="./images/create_param_1.png"/> <br> <img src="./images/create_param_2.png"/> <br> <img src="./images/edit_param_1.png"/> <br> <img src="./images/edit_param_2.png"/> <br> <img src="./images/delete_param.png"/> <br> <img src="./images/delete_param_validation.png"/> <br>| 
+
+**Explicação RF-009**: O usuário com perfil de gestor pode visualizar, criar, editar e deletar todos os parâmetros do sistema desde que não estejam associado à um chamado e/ou usuário. Isso garante um bom controle ao gestor, que consegue definir o que a equipe dele vai atender e vindo de quem. Existem validações no sistema, quantidade mínima e máxima de caracteres, restrição de integridade de FK, não permite enviar formulário vazio, dentre outras. As mesmas funcionalidades da prioridade de demanda (representado nas evidências) valem para tipo de demanda, gerência e status de demanda, com as mesmas regras também.
+
+<br>
 
 | **Caso de teste** 	| **CT-002 – Realizar login** 	|
 |:---:	|:---:	|
