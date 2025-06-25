@@ -374,12 +374,9 @@ Apresente também uma figura explicando como as tecnologias estão relacionadas 
 |                    | Tailwind CSS                            | Utility‑first CSS                     |
 |                    | shadcn/ui                               | Component library baseada em Tailwind |
 |                    | React Router                            | Navegação                             |
-|                    | React Query (TanStack Query)            | Fetch/cache de dados                  |
-|                    | React Hook Form + Zod                   | Gestão e validação de formulários     |
-|                    | Sonner (ou React‑Toastify)              | Toast notifications                   |
+|                    | Zod                   | Gestão e validação de formulários     |
 |                    | Socket.io‑client                        | Chat em tempo real                    |
 |                    | eslint + Prettier + Husky + lint‑staged | Linter, formatting e git hooks        |
-|                    | Vitest                                  | Testes unitários e de componentes     |
 | **Backend**        | Node.js                                 | Runtime                               |
 |                    | TypeScript                              | Tipagem                               |
 |                    | Express.js                              | Framework HTTP                        |
@@ -393,19 +390,19 @@ Apresente também uma figura explicando como as tecnologias estão relacionadas 
 |                    | winston ou pino                         | Logging                               |
 |                    | Jest + Supertest                        | Testes de unidade e integração        |
 |                    | ESLint + Prettier + Husky               | Linter, formatting e git hooks        |
-| **Banco de Dados** | MySQL (PlanetScale)                     | Dados relacionais                     |
+| **Banco de Dados** | Railway (PlanetScale)                   | Dados relacionais                     |
 |                    | Prisma Migrate                          | Migrations                            |
-| **Armazenamento**  | Firebase Storage                        | Arquivos e imagens                    |
-| **CI/CD & Infra**  | GitHub Actions                          | Pipeline de build/test/deploy         |
-|                    | Vercel (frontend)                       | Deploy frontend                       |
-|                    | Railway (backend)                       | Deploy backend                        |
-|                    | PlanetScale                             | Banco MySQL serverless                |
+| **Armazenamento**  | Cloudinary                              | Arquivos e imagens                    |
+| **Infra**          | Render (frontend)                       | Deploy frontend                       |
+|                    | Render (backend)                        | Deploy backend                        |
+|                    | Railway (banco de dados)                | Deploy banco de dados                 |
+|                    | Docker                                  | Conteinerização da aplicação          |
 
 
 
 ## Hospedagem
 
-Serão utilzados o Vercel e o Railway para hospedagem do frontend e backend respectivamente, além disso o banco de dados será hospedado pelo PlanetScale. Detalhes maiores da implementação serão apresentados posteriormente.
+Foram utilizados o Render para hospedagem do frontend e do backend, e o Railway para hospedagem do banco de dados.
 
 ## Qualidade de software
 
