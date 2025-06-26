@@ -48,7 +48,7 @@ export function DataTableUsers({
       ),
       cell: ({ row }: { row: Row<User> }) => {
         const name = row.original.name || "";
-        const displayName = name.length > 22 ? name.slice(0, 22) + "..." : name;
+        const displayName = name.length > 15 ? name.slice(0, 15) + "..." : name;
         // Pega as iniciais
         const initials = name
           .split(" ")
@@ -59,7 +59,7 @@ export function DataTableUsers({
         // Foto de perfil se existir
         const fotoPerfil = row.original.fotoPerfil || undefined;
         return (
-          <div className="flex items-center gap-6">
+          <div className="flex gap-10">
             <Avatar className="w-8 h-8">
               <AvatarImage src={fotoPerfil} alt={name} />
               <AvatarFallback>{initials}</AvatarFallback>

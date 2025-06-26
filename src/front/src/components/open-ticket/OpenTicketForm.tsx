@@ -59,15 +59,26 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
     const [dialogNomeArquivo, setDialogNomeArquivo] = useState("");
     const [dialogFile, setDialogFile] = useState<File | null>(null);
     const [dialogErrors, setDialogErrors] = useState<{ nomeArquivo?: string; file?: string }>({});
+    const [anexoReady, setAnexoReady] = useState(false);
 
     const {
         register,
         handleSubmit,
         control,
-        formState: { errors },
+        formState: { errors, isValid },
+        watch,
     } = useForm<openTicket>({
         resolver: zodResolver(openTicket),
+        mode: "onChange",
     });
+
+    const watchedValues = watch();
+
+    const isFormValid = isValid &&
+        watchedValues.subject?.trim() &&
+        watchedValues.priority &&
+        watchedValues.type &&
+        watchedValues.description?.trim();
 
     useEffect(() => {
         async function fetchTypesAndPriorities() {
@@ -114,6 +125,7 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
             const resultUpload = await uploadFile(dialogFile!, undefined, setUploadProgress);
             setAnexoUrl(resultUpload.url);
             setAnexoNome(dialogNomeArquivo || dialogFile!.name);
+            setAnexoReady(true);
             setOpenDialog(false);
             setDialogNomeArquivo("");
             setDialogFile(null);
@@ -161,7 +173,9 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                 return;
             }
             setAlert({ type: "success", message: "Chamado aberto com sucesso!" });
-            // Não faz reset(); apenas bloqueia os campos até redirecionar
+            setAnexoUrl(null);
+            setAnexoNome(null);
+            setAnexoReady(false);
         } catch (error) {
             setAlert({ type: "error", message: "Falha ao abrir chamado. Tente novamente." });
             setIsSubmitting(false);
@@ -297,13 +311,19 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                     type="button"
                     onClick={() => setOpenDialog(true)}
                     disabled={isSubmitting || uploading}
+                    className={`${anexoReady ? "bg-green-600 hover:bg-green-700 text-white border-green-700" : ""}`}
                 >
                     <Paperclip className="mr-2" />
                     Anexar
                 </Button>
-                {anexoNome && (
+                {!anexoReady && anexoNome && (
                     <span className="block mt-2 text-sm text-green-700">
                         Arquivo anexado: {anexoNome}
+                    </span>
+                )}
+                {anexoReady && anexoNome && (
+                    <span className="block mt-2 text-sm text-green-700 font-medium">
+                        ✓ Arquivo pronto: {anexoNome}
                     </span>
                 )}
             </div>
@@ -366,7 +386,12 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                 </DialogContent>
             </Dialog>
             <footer className="flex justify-start gap-4">
-                <Button type="submit" size="fit" disabled={isSubmitting} className="w-[11.25rem] max-w-[11.25rem]">
+                <Button
+                    type="submit"
+                    size="fit"
+                    disabled={isSubmitting || !isFormValid}
+                    className="w-[11.25rem] max-w-[11.25rem]"
+                >
                     Abrir chamado
                 </Button>
                 <Button
