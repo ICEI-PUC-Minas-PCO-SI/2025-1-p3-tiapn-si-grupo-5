@@ -14,7 +14,7 @@ export function Login() {
     return (
         <>
             <div className="flex w-full min-h-screen">
-                <div className="flex min-h-screen w-full p-9 flex-col justify-center items-center gap-1 bg-slate-100 dark:bg-slate-900">
+                <div className="hidden lg:flex min-h-screen w-full p-9 flex-col justify-center items-center gap-1 bg-slate-100 dark:bg-slate-900">
                     <div>
                         <img
                             className="w-auto h-auto"
