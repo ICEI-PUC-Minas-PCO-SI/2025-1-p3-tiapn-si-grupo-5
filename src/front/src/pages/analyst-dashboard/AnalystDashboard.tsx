@@ -153,7 +153,7 @@ export function AnalystDashboard() {
     }, [alert]);
 
     return (
-        <div className="flex flex-col h-full gap-8 w-fit">
+        <div className="flex flex-col h-full gap-4 md:gap-8 w-full">
             {alert && (
                 <div className="fixed bottom-4 right-4 z-50">
                     <GlobalAlert
@@ -163,7 +163,7 @@ export function AnalystDashboard() {
                     />
                 </div>
             )}
-            <div className="flex flex-col gap-4 justify-between">
+            <div className="flex flex-col gap-2 md:gap-4 justify-between px-2 md:px-0">
                 <h1 className="title-h1 text-slate-950 dark:text-white">
                     Meu Dashboard
                 </h1>
@@ -177,7 +177,8 @@ export function AnalystDashboard() {
                 </div>
             ) : (
                 <>
-                    <div className="flex flex-wrap gap-8 items-center w-[66rem]">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 
+                                    md:flex md:flex-wrap gap-4 md:gap-6 w-full px-2 md:px-0">
                         {ticketsByStatus.map(({ status, count }) => (
                             <KpiCard
                                 key={status.idStatus}
@@ -188,9 +189,10 @@ export function AnalystDashboard() {
                             />
                         ))}
                     </div>
-                    <h3 className="title-h3 text-slate-700 dark:text-slate-300">
+                    <h3 className="title-h3 text-slate-700 dark:text-slate-300 px-2 md:px-0">
                         Parâmetros acumulados</h3>
-                    <div className="flex flex-wrap gap-8 items-center">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 px-2 md:px-0 
+                                    xl:flex xl:flex-wrap xl:justify-start">
                         <ChartBar
                             chartData={closedTicketsByMonth}
                             chartConfig={{

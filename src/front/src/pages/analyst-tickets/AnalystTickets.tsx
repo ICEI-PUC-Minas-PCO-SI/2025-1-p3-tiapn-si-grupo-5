@@ -27,6 +27,7 @@ import {
 import { TableSpinner } from "@/components/ui/spinner";
 import { getAllStatus } from "@/api/status";
 import type { IStatus } from "@/api/status";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function AnalystTickets() {
   type TicketWithStatus = AssignTicketTableRow & {
@@ -241,7 +242,7 @@ export function AnalystTickets() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full max-w-full overflow-hidden px-2 md:px-0">
       {alert && (
         <div className="fixed bottom-4 right-4 z-50">
           <GlobalAlert
@@ -252,15 +253,26 @@ export function AnalystTickets() {
         </div>
       )}
       <h1 className="title-h1">Meus chamados</h1>
-      <div className="flex justify-between">
-        <Searchbar onSearch={handleSearch} />
-        <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+        <div className="flex-1 w-full sm:w-auto">
+          <Searchbar onSearch={handleSearch} />
+        </div>
+        <div className="flex gap-3 justify-end">
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size="icon" variant="outline">
-                <Filter className="w-4 h-4 mr-1" />
-              </Button>
-            </DropdownMenuTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                    <Button size="icon" variant="outline">
+                      <Filter className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                  Filtrar
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <DropdownMenuContent align="end" className="min-w-[260px]">
               <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Prioridade</div>
               <Select value={priorityFilter} onValueChange={handlePriorityChange}>
@@ -317,14 +329,14 @@ export function AnalystTickets() {
                   size="sm"
                   variant="ghost"
                   onClick={clearFilters}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-1 dark:text-white"
                   disabled={
                     priorityFilter === "__all__" &&
                     statusFilter === "__all__" &&
                     openingYearFilter === "__all__"
                   }
                 >
-                  <XCircle className="w-4 h-4" />
+                  <XCircle className="w-4 h-4 dark:text-white" />
                   Limpar filtros
                 </Button>
               </div>
@@ -332,7 +344,7 @@ export function AnalystTickets() {
           </DropdownMenu>
         </div>
       </div>
-      <div>
+      <div className="w-full max-w-full overflow-hidden">
         {loading ? (
           <TableSpinner />
         ) : (
