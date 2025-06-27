@@ -325,65 +325,71 @@ export function ManagementUsers() {
             </Tooltip>
           </TooltipProvider>
           <DropdownMenu open={filterMenuOpen} onOpenChange={setFilterMenuOpen}>
-            <DropdownMenuTrigger asChild>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
                     <Button size="icon" variant="outline">
                       <Filter className="w-4 h-4" />
                     </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    Filtrar
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </DropdownMenuTrigger>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                  Filtrar
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <DropdownMenuContent align="end" className="min-w-[220px]">
               {/* Filtro por tipo de acesso */}
               <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Tipo de Acesso</div>
-              <Select value={accessTypeFilter} onValueChange={handleAccessTypeChange}>
-                <SelectTrigger className="w-full mb-2">
-                  <SelectValue placeholder="Todos" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="__all__">Todos</SelectItem>
-                    {accessTypes.map(type => (
-                      <SelectItem key={type} value={type}>{type}</SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <div className="px-2 mb-2">
+                <Select value={accessTypeFilter} onValueChange={handleAccessTypeChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Todos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="__all__">Todos</SelectItem>
+                      {accessTypes.map(type => (
+                        <SelectItem key={type} value={type}>{type}</SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
               {/* Filtro por gerência */}
               <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Gerência</div>
-              <Select value={managementFilter} onValueChange={handleManagementChange}>
-                <SelectTrigger className="w-full mb-2">
-                  <SelectValue placeholder="Todas" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="__all__">Todas</SelectItem>
-                    {managements.map(m => (
-                      <SelectItem key={m.idGerencia} value={String(m.idGerencia)}>{m.nomeGerencia}</SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <div className="px-2 mb-2">
+                <Select value={managementFilter} onValueChange={handleManagementChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Todas" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="__all__">Todas</SelectItem>
+                      {managements.map(m => (
+                        <SelectItem key={m.idGerencia} value={String(m.idGerencia)}>{m.nomeGerencia}</SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
               {/* Filtro por ativo */}
               <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Ativo</div>
-              <Select value={ativoFilter} onValueChange={handleAtivoChange}>
-                <SelectTrigger className="w-full mb-2">
-                  <SelectValue placeholder="Todos" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectItem value="__all__">Todos</SelectItem>
-                    <SelectItem value="1">Sim</SelectItem>
-                    <SelectItem value="0">Não</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+              <div className="px-2 mb-2">
+                <Select value={ativoFilter} onValueChange={handleAtivoChange}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Todos" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem value="__all__">Todos</SelectItem>
+                      <SelectItem value="1">Sim</SelectItem>
+                      <SelectItem value="0">Não</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
               {/* Botão para limpar filtros */}
               <div className="flex justify-center px-2 pb-2">
                 <Button
