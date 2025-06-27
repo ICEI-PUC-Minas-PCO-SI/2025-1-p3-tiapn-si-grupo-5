@@ -121,7 +121,7 @@ Por exemplo:
 
 | **Caso de teste**  | **CT-012 – Gerenciar Parâmetros**  |
 |:---: |:---: |
-| Requisito associado | RF-011 - A aplicação deve permitir que os usuários que possuem perfil de gestor possam visualizar, criar, editar e deletar (se aplicável), as gerências, prioridades, status e tipos de demandas do TrackIT |
+| Requisito associado | RF-012 - A aplicação deve permitir que os usuários que possuem perfil de gestor possam visualizar, criar, editar e deletar (se aplicável), as gerências, prioridades, status e tipos de demandas do TrackIT |
 | Objetivo do teste | Verificar se o usuário com perfil de gestor consegue realizar as 4 operações de um CRUD para cada parâmetro |
 | Passos | - Logar no sistema com um perfil de gestor <br> - Ir na seção Parâmetros na sidebar e selecionar um dos parâmetros. <br> - Verificar se todos os parâmetros aparecem para visualização <br> - Criar um novo parâmetro <br> - Editar o parâmetro criado <br> - Deletar o parâmetro criado|
 | Critério de êxito | - Todas as operações saem conforme esperado, sem gerar nenhum comportamento estranho |
