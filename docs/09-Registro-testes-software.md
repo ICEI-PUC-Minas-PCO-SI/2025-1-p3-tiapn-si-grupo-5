@@ -62,6 +62,51 @@ Relatório com as evidências dos testes de software realizados no sistema pela 
 
 <br>
 
+| **Caso de teste** 	| **CT-007 – Analista - Visualizar e Filtrar Chamados** 	|
+|:---:	|:---:	|
+| Requisito associado | RF-006 - O analista deve visualizar todos os chamados em aberto e filtrá-los conforme necessidade. |
+| Registro de evidência | <img src="./images/Caso-de-Teste-Arthur/filtro_protocolo.png"/> <br> <img src="./images/Caso-de-Teste-Arthur/filtro_data_recente.png"/> <br> <img src="./images/Caso-de-Teste-Arthur/filtro_prioridade.png"/> <br>|
+
+**Explicação RF-007**: O analista consegue organizar a lista de chamados da forma que mais vai atender a necessidade dele, seja os chamados com prioridade mais urgente, por chamado que foi aberto a mais tempo, número de protocolo. Isso facilita para que ele consiga ter uma melhor gestão de tempo e prioridades nos seus atendimentos.
+
+<br>
+
+| **Caso de teste** 	| **CT-008 – Analista - Atribuir um Chamado para Si** 	|
+|:---:	|:---:	|
+| Requisito associado | RF-007 - O analista deve poder atribuir um chamado a si mesmo, movendo-o para sua fila de atendimento. |
+| Registro de evidência | <img src="./images/Caso-de-Teste-Arthur/atribuir1.png"/> <br> <img src="./images/Caso-de-Teste-Arthur/atribuir2.png"/> <br> <img src="./images/Caso-de-Teste-Arthur/atribuir3.png"/> <img src="./images/Caso-de-Teste-Arthur/atribuir4.png"/> <br>|
+
+**Explicação RF-008**: O analista consegue ver todos os chamados que estão pendentes necessitando de atendimento, ele pode escolher qual ou quais chamados vai atender sem precisar necessariamente agurdar o seu gestor atribuir os chamados abertos para os analistas.
+
+<br>
+
+| **Caso de teste** 	| **CT-009 – Analista - Responder e Alterar Status de um Chamado** 	|
+|:---:	|:---:	|
+| Requisito associado | RF-008 - O analista deve poder enviar mensagens no chamado e alterar o status da demanda, mantendo o fluxo do atendimento. |
+| Registro de evidência | <img src="./images/Caso-de-Teste-Arthur/ct0901.png"/> <br> <img src="./images/Caso-de-Teste-Arthur/ct0902.png"/> <br> <img src="./images/Caso-de-Teste-Arthur/ct0903.png"/> <img src="./images/Caso-de-Teste-Arthur/ct0904.png"/> <br> <img src="./images/Caso-de-Teste-Arthur/ct0905.png"/> <br> |
+
+**Explicação RF-009**: O analista consegue trocar mensagens com o usuário para que facilite o atendimento da demanda além de alterar o status do chamado durante o decorrer do atendimento para melhor controle da demanda além de ser um feedback para o usuário de como está o andamento do chamado.
+
+<br>
+
+| **Caso de teste** 	| **CT-010 – Analista - Fechar e Reabrir um Chamado** 	|
+|:---:	|:---:	|
+| Requisito associado | RF-009 - A aplicação deve permitir que o analista finalize ou reabra um chamado. |
+| Registro de evidência | <img src="./images/Caso-de-Teste-Arthur/ct1001.png"/> <br> <img src="./images/Caso-de-Teste-Arthur/ct1002.png"/> <br> <img src="./images/Caso-de-Teste-Arthur/ct1003.png"/> <img src="./images/Caso-de-Teste-Arthur/ct1004.png"/> <br> |
+
+**Explicação RF-010**: O analista consegue fechar um chamado quando entender que a demanda foi concluída ou então reabrir um chamado caso necessário.
+
+<br>
+
+| **Caso de teste** 	| **CT-011 – Analista - Visualizar Dashboard** 	|
+|:---:	|:---:	|
+| Requisito associado | RF-010 - O analista deve conseguir ver dados sobre seu desempenho, através de gráfico e números de chamados atendidos. |
+| Registro de evidência | <img src="./images/Caso-de-Teste-Arthur/ct1100.png"/> <br> <img src="./images/Caso-de-Teste-Arthur/ct1101.png"/> <br> <img src="./images/Caso-de-Teste-Arthur/ct1102.png"/> <img src="./images/Caso-de-Teste-Arthur/ct1004.png"/> <br> |
+
+**Explicação RF-010**: O analista consegue visualizar o seu desempenho através da quantidade de chamados atendidos disponibilizado através de relatórios e gráficos disponíveis no dashboard.
+
+<br>
+
 | **Caso de teste** 	| **CT-012 – Gerenciar parâmetros** 	|
 |:---:	|:---:	|
 | Requisito associado | RF-012 - aplicação deve permitir que os usuários que possuem perfil de gestor possam visualizar, criar, editar e deletar (se aplicável), as gerências, prioridades, status e tipos de demandas do TrackIT|
