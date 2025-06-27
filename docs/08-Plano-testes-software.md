@@ -101,7 +101,7 @@ Por exemplo:
 
 | **Caso de teste**  | **CT-010 – Analista - Fechar e Reabrir um Chamado**  |
 |:---: |:---: |
-| Requisito associado | RF-009 - A aplicação deve permitir que o analista troque mensagens com o usuário que abriu o chamado, além de alterar o status do chamado ao longo do decorrer do chamado. |
+| Requisito associado | RF-009 - A aplicação deve permitir que o analista finalize ou reabra um chamado. |
 | Objetivo do teste | Verificar se o analista consegue trocar informações com o requerente além de mudar o status do chamado, podendo fechar e reabrir o chamado. |
 | Passos | - Acessar o navegador <br> - https://trackit-front.onrender.com <br> - Realizar login com uma conta de analista válida <br> - Na sidebar, clicar em "Meus Chamados" <br> - Clicar no ícone da coluna "Ações" à frente do chamado que está com status "Concluído". <br> Para fechar o chamado, clique no botão "Encerrar" e confirme a ação. <br> - Para reabrir o chamado, clique em "Meus Chamados" na sidebar, localize o chamado com status "Concluído", clique no ícone da coluna "Ações", no canto superior direito, clique em "Reabrir" e confirme.| 
 | Critério de êxito | - O analista conseguir fechar e reabrir os chamados desejados. |
