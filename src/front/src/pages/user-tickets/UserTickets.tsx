@@ -250,7 +250,7 @@ export function UserTickets() {
     };
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 w-full max-w-full overflow-hidden px-2 md:px-0">
             {alert && (
                 <div className="fixed bottom-4 right-4 z-50">
                     <GlobalAlert
@@ -260,14 +260,16 @@ export function UserTickets() {
                     />
                 </div>
             )}
-            <h1 className="title-h1">Meus chamados</h1>
-            <div className="flex justify-between">
-                <Searchbar onSearch={handleSearch} />
-                <div className="flex gap-3">
+            <h1 className="title-h1 text-slate-950 dark:text-white text-xl md:text-2xl lg:text-3xl">Meus chamados</h1>
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+                <div className="flex-1 w-full sm:w-auto">
+                    <Searchbar onSearch={handleSearch} />
+                </div>
+                <div className="flex gap-3 justify-end">
                     <DropdownMenu open={priorityFilterOpen} onOpenChange={setPriorityFilterOpen}>
                         <DropdownMenuTrigger asChild>
                             <Button size="icon" variant="outline">
-                                <Filter className="w-4 h-4 mr-1" />
+                                <Filter className="w-4 h-4" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="min-w-[220px]">
@@ -310,21 +312,21 @@ export function UserTickets() {
                                     size="sm"
                                     variant="ghost"
                                     onClick={clearFilters}
-                                    className="flex items-center gap-1"
+                                    className="flex items-center gap-1 dark:text-white"
                                     disabled={
                                         priorityFilter === "__all__" &&
                                         yearAberturaFilter === "__all__"
                                     }
                                 >
-                                    <XCircle className="w-4 h-4" />
-                                    Limpar filtros
+                                    <XCircle className="w-4 h-4 dark:text-white" />
+                                    <span className="dark:text-white">Limpar filtros</span>
                                 </Button>
                             </div>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
             </div>
-            <div>
+            <div className="w-full max-w-full overflow-hidden">
                 {loading ? (
                     <TableSpinner />
                 ) : (
