@@ -6,7 +6,6 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
@@ -46,7 +45,6 @@ interface ChartPieProps {
     chartConfig: ChartConfig
     cardTitle: string
     cardDescription: string
-    footerInfo: string
     years?: number[]
     selectedYear?: string
     onYearChange?: (year: string) => void
@@ -57,7 +55,6 @@ export function ChartPie({
     chartConfig,
     cardTitle,
     cardDescription,
-    footerInfo,
     years = [],
     selectedYear = "",
     onYearChange,
@@ -68,11 +65,14 @@ export function ChartPie({
         return chartData.reduce((acc, curr) => acc + curr.quantity, 0)
     }, [chartData])
 
+    // Gera o título com o ano incluído
+    const titleWithYear = selectedYear ? `${cardTitle} em ${selectedYear}` : cardTitle
+
     return (
         <Card className="flex flex-col w-full max-w-full lg:w-128 h-auto lg:h-112">
             <CardHeader className="items-center pb-3 md:pb-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-2">
-                    <CardTitle className="text-base md:text-lg text-center sm:text-left">{cardTitle}</CardTitle>
+                    <CardTitle className="text-base md:text-lg text-center sm:text-left">{titleWithYear}</CardTitle>
                     {years.length > 0 && onYearChange && (
                         <div className="flex gap-3 justify-end">
                             <DropdownMenu
@@ -97,23 +97,25 @@ export function ChartPie({
                                     <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">
                                         Ano
                                     </div>
-                                    <Select
-                                        value={selectedYear}
-                                        onValueChange={onYearChange}
-                                    >
-                                        <SelectTrigger className="w-full mb-2">
-                                            <SelectValue placeholder="Ano" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectGroup>
-                                                {years.map((year) => (
-                                                    <SelectItem key={year} value={String(year)}>
-                                                        {year}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectGroup>
-                                        </SelectContent>
-                                    </Select>
+                                    <div className="px-2 mb-2">
+                                        <Select
+                                            value={selectedYear}
+                                            onValueChange={onYearChange}
+                                        >
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Ano" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    {years.map((year) => (
+                                                        <SelectItem key={year} value={String(year)}>
+                                                            {year}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </div>
@@ -172,11 +174,6 @@ export function ChartPie({
                     </PieChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col items-start gap-2 text-sm mt-1 px-3 md:px-6">
-                <div className="leading-none text-slate-750 text-xs md:text-sm">
-                    {footerInfo}
-                </div>
-            </CardFooter>
         </Card>
     )
 }
