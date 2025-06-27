@@ -25,18 +25,19 @@ Segue abaixo os slides da Sprint 4:
 
 - [SLIDE SPRINT 4](../docs/slides/slide_sprint_4.pdf)
 
+Segue abaixo os slides da Sprint 5:
+
+- [SLIDE SPRINT 4](../docs/slides/slide_sprint_5.pdf)
+
 
 ## Vídeo
 
-O grupo também deverá gravar um vídeo de até cinco minutos apresentando a solução. O vídeo deve incluir uma demonstração da aplicação hospedada, mostrando seu funcionamento.
+- [VÍDEO DE APRESENTAÇÃO](./trackit_presentation.mp4)
 
-Podem utilizar quaisquer recursos na produção do vídeo, mas certifiquem-se de destacar as funcionalidades da aplicação.
+### Feedback do Parceiro Extensionista
 
-A seguir, estão as especificações técnicas que devem ser seguidas na criação do vídeo:
+Validamos a entrega do TrackIT com o Hiago, que é analista da ASTIN na PBH.
 
-> - tamanho do arquivo limitado a 90Mb
-> - taxa de FPS limitada a 30 quadros por segundo
-> - resolução HD (720p) ou Full HD (1080p)
-> - formato mp4.
+- [FEEDBACK PARCEIRO EXTENSIONISTA](./trackit_feedback.mp4)
 
 
