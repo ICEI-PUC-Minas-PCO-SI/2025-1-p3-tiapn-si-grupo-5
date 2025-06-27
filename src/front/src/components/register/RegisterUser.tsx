@@ -156,7 +156,7 @@ export function RegisterUser() {
             )}
             <form
                 onSubmit={handleSubmit(handleRegisterUser)}
-                className="flex flex-col w-full h-full justify-start gap-4 px-[3rem]"
+                className="flex flex-col w-full h-full justify-start gap-4 px-4 lg:px-[3rem]"
             >
                 <div>
                     <label>
@@ -197,7 +197,7 @@ export function RegisterUser() {
                     <label>
                         Gerência:
                     </label>
-                    <Controller 
+                    <Controller
                         name="administration"
                         control={control}
                         render={({ field }) => (

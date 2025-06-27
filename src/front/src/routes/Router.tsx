@@ -21,11 +21,13 @@ import { AdminAssignTickets } from "@/pages/admin-assign-tickets/AdminAssignTick
 import { AdminTeamTickets } from "@/pages/admin-team-tickets/AdminTeamTickets";
 import { AnalystDashboard } from "@/pages/analyst-dashboard/AnalystDashboard";
 import { ChatPage } from "@/pages/chat/ChatPage";
+import { Presentation } from "@/pages/presentation/Presentation";
 
 export function Router() {
     return (
         <Routes>
             <Route path="/" element={<Login />} />
+            <Route path="/presentation" element={<Presentation />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />

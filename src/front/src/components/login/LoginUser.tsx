@@ -118,7 +118,7 @@ export function LoginUser({ loading, setLoading }: { loading: boolean; setLoadin
                     )}
                     <form
                         onSubmit={handleSubmit(handleLoginUser)}
-                        className="flex flex-col w-full h-full justify-start gap-4 px-[3rem]"
+                        className="flex flex-col w-full h-full justify-start gap-4 px-4 lg:px-[3rem]"
                     >
                         <div className="">
                             <label className="label-layout">E-mail:</label>
