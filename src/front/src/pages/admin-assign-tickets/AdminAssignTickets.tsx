@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/select";
 import { XCircle } from "lucide-react";
 import { TableSpinner } from "@/components/ui/spinner";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function AdminAssignTickets() {
   const [tickets, setTickets] = useState<AssignTicketTableRow[]>([]);
@@ -214,7 +215,7 @@ export function AdminAssignTickets() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full max-w-full overflow-hidden px-2 md:px-0">
       {alert && (
         <div className="fixed bottom-4 right-4 z-50">
           <GlobalAlert
@@ -225,15 +226,26 @@ export function AdminAssignTickets() {
         </div>
       )}
       <h1 className="title-h1">Atribuir chamados</h1>
-      <div className="flex justify-between">
-        <Searchbar onSearch={handleSearch} />
-        <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+        <div className="flex-1 w-full sm:w-auto">
+          <Searchbar onSearch={handleSearch} />
+        </div>
+        <div className="flex gap-3 justify-end">
           <DropdownMenu open={filterMenuOpen} onOpenChange={setFilterMenuOpen}>
-            <DropdownMenuTrigger asChild>
-              <Button size="icon" variant="outline">
-                <Filter className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DropdownMenuTrigger asChild>
+                    <Button size="icon" variant="outline">
+                      <Filter className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                  Filtrar
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <DropdownMenuContent align="end" className="min-w-[220px]">
               <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">Prioridade</div>
               <Select value={priorityFilter} onValueChange={handlePriorityChange}>
@@ -257,18 +269,18 @@ export function AdminAssignTickets() {
                   size="sm"
                   variant="ghost"
                   onClick={clearPriorityFilter}
-                  className="flex items-center gap-1"
+                  className="flex items-center gap-1 dark:text-white"
                   disabled={priorityFilter === "__all__"}
                 >
-                  <XCircle className="w-4 h-4" />
-                  Limpar filtros
+                  <XCircle className="w-4 h-4 dark:text-white" />
+                  <span className="dark:text-white">Limpar filtros</span>
                 </Button>
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
-      <div>
+      <div className="w-full max-w-full overflow-hidden">
         {loading ? (
           <TableSpinner />
         ) : (
@@ -289,9 +301,9 @@ export function AdminAssignTickets() {
 
       {/* Modal de atribuição */}
       <Dialog open={assignModal.open} onOpenChange={closeAssignModal}>
-        <DialogContent>
+        <DialogContent className="w-[95vw] max-w-md">
           <DialogHeader>
-            <DialogTitle>Atribuir chamado</DialogTitle>
+            <DialogTitle className="text-base md:text-lg">Atribuir chamado</DialogTitle>
           </DialogHeader>
           {assignModal.ticket && (
             <form
@@ -304,7 +316,7 @@ export function AdminAssignTickets() {
               className="flex flex-col gap-4"
             >
               <div>
-                <label className="block mb-1 font-medium">Analista</label>
+                <label className="block mb-1 font-medium text-sm">Analista</label>
                 <Select
                   value={selectedAnalyst[assignModal.ticket.idChamado] || ""}
                   onValueChange={val =>
@@ -333,10 +345,11 @@ export function AdminAssignTickets() {
                   </SelectContent>
                 </Select>
               </div>
-              <DialogFooter>
+              <DialogFooter className="flex-col sm:flex-row gap-2">
                 <Button
                   type="submit"
                   disabled={!selectedAnalyst[assignModal.ticket.idChamado]}
+                  className="w-full sm:w-auto"
                 >
                   Atribuir
                 </Button>
@@ -344,6 +357,7 @@ export function AdminAssignTickets() {
                   type="button"
                   variant="outline"
                   onClick={closeAssignModal}
+                  className="w-full sm:w-auto"
                 >
                   Cancelar
                 </Button>
@@ -355,11 +369,11 @@ export function AdminAssignTickets() {
 
       {/* Modal de confirmação */}
       <Dialog open={confirmModal.open} onOpenChange={closeConfirmModal}>
-        <DialogContent>
+        <DialogContent className="w-[95vw] max-w-md">
           <DialogHeader>
-            <DialogTitle>Confirmar atribuição</DialogTitle>
+            <DialogTitle className="text-base md:text-lg">Confirmar atribuição</DialogTitle>
           </DialogHeader>
-          <div>
+          <div className="text-sm md:text-base">
             Tem certeza que deseja atribuir o chamado{" "}
             <b>{confirmModal.ticket?.protocolo}</b> ao analista{" "}
             <b>
@@ -367,14 +381,19 @@ export function AdminAssignTickets() {
             </b>
             ?
           </div>
-          <DialogFooter>
+          <DialogFooter className="flex-col sm:flex-row gap-2">
             <Button
               onClick={handleAssignToAnalyst}
               disabled={assigning[confirmModal.ticket?.idChamado || 0]}
+              className="w-full sm:w-auto"
             >
               {assigning[confirmModal.ticket?.idChamado || 0] ? "Atribuindo..." : "Confirmar"}
             </Button>
-            <Button variant="outline" onClick={closeConfirmModal}>
+            <Button
+              variant="outline"
+              onClick={closeConfirmModal}
+              className="w-full sm:w-auto"
+            >
               Cancelar
             </Button>
           </DialogFooter>

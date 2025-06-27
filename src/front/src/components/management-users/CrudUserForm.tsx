@@ -347,6 +347,7 @@ export function CrudUserForm({
                                 </span>
                             )}
                         </div>
+                        <span className="block text-sm font-medium">A senha padrão é Trackit123</span>
                         <Button type="submit" disabled={!isValid}>Criar</Button>
                     </form>
                 </DialogContent>

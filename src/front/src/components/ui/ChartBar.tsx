@@ -64,61 +64,60 @@ export function ChartBar({
     const [filterMenuOpen, setFilterMenuOpen] = useState(false)
 
     return (
-        <Card className="w-128 h-112">
-            <CardHeader>
-                <div className="flex items-center justify-between">
-                    <CardTitle>{cardTitle}</CardTitle>
+        <Card className="w-full max-w-full lg:w-128 h-auto lg:h-112">
+            <CardHeader className="pb-3 md:pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <CardTitle className="text-base md:text-lg">{cardTitle}</CardTitle>
                     {years.length > 0 && onYearChange && (
-                        <DropdownMenu
-                            open={filterMenuOpen}
-                            onOpenChange={setFilterMenuOpen}
-                        >
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="outline" size="icon">
-                                                <Filter className="w-4 h-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        Filtrar
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
-                            <DropdownMenuContent
-                                align="end"
-                                className="min-w-[120px]"
+                        <div className="flex gap-3 justify-end">
+                            <DropdownMenu
+                                open={filterMenuOpen}
+                                onOpenChange={setFilterMenuOpen}
                             >
-                                <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">
-                                    Ano
-                                </div>
-                                <Select
-                                    value={selectedYear}
-                                    onValueChange={onYearChange}
-                                >
-                                    <SelectTrigger className="w-full mb-2">
-                                        <SelectValue placeholder="Ano" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            {years.map((year) => (
-                                                <SelectItem key={year} value={String(year)}>
-                                                    {year}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button size="icon" variant="outline">
+                                                    <Filter className="w-4 h-4" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            Filtrar
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                                <DropdownMenuContent align="end" className="min-w-[220px]">
+                                    <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">
+                                        Ano
+                                    </div>
+                                    <Select
+                                        value={selectedYear}
+                                        onValueChange={onYearChange}
+                                    >
+                                        <SelectTrigger className="w-full mb-2">
+                                            <SelectValue placeholder="Ano" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                {years.map((year) => (
+                                                    <SelectItem key={year} value={String(year)}>
+                                                        {year}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                     )}
                 </div>
-                <CardDescription>{cardDescription}</CardDescription>
+                <CardDescription className="text-sm">{cardDescription}</CardDescription>
             </CardHeader>
-            <CardContent>
-                <ChartContainer config={chartConfig}>
+            <CardContent className="px-3 md:px-6">
+                <ChartContainer config={chartConfig} className="h-[200px] sm:h-[250px] md:h-[300px] w-full">
                     <BarChart accessibilityLayer data={chartData}>
                         <CartesianGrid vertical={false} />
                         <XAxis
@@ -127,6 +126,7 @@ export function ChartBar({
                             tickMargin={10}
                             axisLine={false}
                             tickFormatter={(value) => value.slice(0, 3)}
+                            fontSize={12}
                         />
                         <ChartTooltip
                             cursor={false}
@@ -140,8 +140,8 @@ export function ChartBar({
                     </BarChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col items-start gap-2 text-sm">
-                <div className="leading-none text-slate-750 mt-4">
+            <CardFooter className="flex-col items-start gap-2 text-sm px-3 md:px-6">
+                <div className="leading-none text-slate-750 text-xs md:text-sm">
                     {footerInfo}
                 </div>
             </CardFooter>

@@ -67,6 +67,7 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
         control,
         formState: { errors, isValid },
         watch,
+        reset,
     } = useForm<openTicket>({
         resolver: zodResolver(openTicket),
         mode: "onChange",
@@ -185,7 +186,19 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
 
     async function handleCancel(e: React.MouseEvent) {
         e.preventDefault();
-        // Não faz reset
+        reset({
+            subject: "",
+            priority: "",
+            type: "",
+            description: ""
+        });
+        setDescLength(0);
+        setAnexoUrl(null);
+        setAnexoNome(null);
+        setAnexoReady(false);
+        setDialogNomeArquivo("");
+        setDialogFile(null);
+        setDialogErrors({});
     }
 
     const handleDialogFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -197,46 +210,46 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
     return (
         <form
             onSubmit={handleSubmit(handleOpenTicket)}
-            className="flex flex-col gap-[2rem] max-w-[51.3rem]"
+            className="flex flex-col gap-4 md:gap-8 max-w-full md:max-w-[51.3rem] w-full"
         >
-            <div>
-                <label>Assunto da demanda</label>
+            <div className="w-full">
+                <label className="block text-sm md:text-base font-medium mb-2">Assunto da demanda</label>
                 <Input
                     type="text"
                     placeholder="Digite o assunto da demanda"
                     {...register("subject")}
                     disabled={isSubmitting}
+                    className="w-full text-sm md:text-base"
                 />
                 {errors.subject && (
-                    <span className="text-red-500 text-sm font-'[Inter]'">
+                    <span className="text-red-500 text-xs md:text-sm font-'[Inter]' mt-1 block">
                         {errors.subject.message}
                     </span>
                 )}
             </div>
-            <div>
-                <label>Prioridade da demanda</label>
+            <div className="w-full">
+                <label className="block text-sm md:text-base font-medium mb-2">Prioridade da demanda</label>
                 <Controller
                     name="priority"
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value} disabled={isSubmitting}>
-                            <SelectTrigger className="w-full">
+                            <SelectTrigger className="w-full text-sm md:text-base">
                                 <SelectValue placeholder="Selecione a prioridade da demanda" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectLabel>Selecione a prioridade da demanda</SelectLabel>
+                                    <SelectLabel className="text-xs md:text-sm">Selecione a prioridade da demanda</SelectLabel>
                                     {priorities.map((priority) => (
-                                        <SelectItem key={priority.idPrioridade} value={String(priority.idPrioridade)}>
-                                            <span style={{
-                                                display: "inline-block",
-                                                width: 12,
-                                                height: 12,
-                                                borderRadius: "50%",
-                                                backgroundColor: priority.hexCorPrimaria,
-                                            }} />
-                                            {priority.nomePrioridade}
+                                        <SelectItem key={priority.idPrioridade} value={String(priority.idPrioridade)} className="text-sm md:text-base">
+                                            <div className="flex items-center gap-2">
+                                                <span
+                                                    className="inline-block w-3 h-3 rounded-full"
+                                                    style={{ backgroundColor: priority.hexCorPrimaria }}
+                                                />
+                                                <span className="truncate">{priority.nomePrioridade}</span>
+                                            </div>
                                         </SelectItem>
                                     ))}
                                 </SelectGroup>
@@ -245,28 +258,28 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                     )}
                 />
                 {errors.priority && (
-                    <span className="text-red-500 text-sm font-'[Inter]'">
+                    <span className="text-red-500 text-xs md:text-sm font-'[Inter]' mt-1 block">
                         {errors.priority.message}
                     </span>
                 )}
             </div>
-            <div>
-                <label>Tipo da demanda</label>
+            <div className="w-full">
+                <label className="block text-sm md:text-base font-medium mb-2">Tipo da demanda</label>
                 <Controller
                     name="type"
                     control={control}
                     defaultValue=""
                     render={({ field }) => (
                         <Select onValueChange={field.onChange} value={field.value} disabled={isSubmitting}>
-                            <SelectTrigger className="w-full">
+                            <SelectTrigger className="w-full text-sm md:text-base">
                                 <SelectValue placeholder="Selecione o tipo da demanda" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
-                                    <SelectLabel>Selecione o tipo da demanda</SelectLabel>
+                                    <SelectLabel className="text-xs md:text-sm">Selecione o tipo da demanda</SelectLabel>
                                     {ticketTypes.map((type) => (
-                                        <SelectItem key={type.idTipoChamado} value={String(type.idTipoChamado)}>
-                                            {type.nomeTipo}
+                                        <SelectItem key={type.idTipoChamado} value={String(type.idTipoChamado)} className="text-sm md:text-base">
+                                            <span className="truncate">{type.nomeTipo}</span>
                                         </SelectItem>
                                     ))}
                                 </SelectGroup>
@@ -275,13 +288,13 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                     )}
                 />
                 {errors.type && (
-                    <span className="text-red-500 text-sm font-'[Inter]'">
+                    <span className="text-red-500 text-xs md:text-sm font-'[Inter]' mt-1 block">
                         {errors.type.message}
                     </span>
                 )}
             </div>
-            <div>
-                <label>Descrição da demanda</label>
+            <div className="w-full">
+                <label className="block text-sm md:text-base font-medium mb-2">Descrição da demanda</label>
                 <Textarea
                     {...register("description")}
                     placeholder="Digite a descrição da demanda"
@@ -292,45 +305,45 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                         register("description").onChange(e);
                     }}
                     disabled={isSubmitting}
+                    className="w-full min-h-[120px] md:min-h-[150px] text-sm md:text-base"
                 />
-                <div className="flex justify-between items-end">
-                    <div>
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-2 mt-2">
+                    <div className="order-2 sm:order-1">
                         {errors.description && (
-                            <span className="text-red-500 text-sm font-'[Inter]'">
+                            <span className="text-red-500 text-xs md:text-sm font-'[Inter]'">
                                 {errors.description.message}
                             </span>
                         )}
                     </div>
-                    <div className="text-xs text-slate-500 text-right mt-1">
+                    <div className="text-xs md:text-sm text-slate-500 order-1 sm:order-2">
                         {descLength}/1500 caracteres
                     </div>
                 </div>
                 <Button
-                    size="fit"
                     variant="outline"
                     type="button"
                     onClick={() => setOpenDialog(true)}
                     disabled={isSubmitting || uploading}
-                    className={`${anexoReady ? "bg-green-600 hover:bg-green-700 text-white border-green-700" : ""}`}
+                    className={`mt-3 w-full sm:w-auto ${anexoReady ? "bg-green-600 hover:bg-green-700 text-white border-green-700" : ""}`}
                 >
-                    <Paperclip className="mr-2" />
+                    <Paperclip className="mr-2 w-4 h-4" />
                     Anexar
                 </Button>
                 {!anexoReady && anexoNome && (
-                    <span className="block mt-2 text-sm text-green-700">
+                    <span className="block mt-2 text-xs md:text-sm text-green-700 truncate">
                         Arquivo anexado: {anexoNome}
                     </span>
                 )}
                 {anexoReady && anexoNome && (
-                    <span className="block mt-2 text-sm text-green-700 font-medium">
+                    <span className="block mt-2 text-xs md:text-sm text-green-700 font-medium truncate">
                         ✓ Arquivo pronto: {anexoNome}
                     </span>
                 )}
             </div>
             <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-                <DialogContent>
+                <DialogContent className="w-[95vw] max-w-md">
                     <DialogHeader>
-                        <DialogTitle>Anexar arquivo</DialogTitle>
+                        <DialogTitle className="text-base md:text-lg">Anexar arquivo</DialogTitle>
                     </DialogHeader>
                     <div className="flex flex-col gap-3">
                         <Input
@@ -338,6 +351,7 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                             value={dialogNomeArquivo}
                             onChange={e => setDialogNomeArquivo(e.target.value)}
                             disabled={uploading}
+                            className="text-sm md:text-base"
                         />
                         {dialogErrors.nomeArquivo && (
                             <span className="text-red-500 text-xs mb-1">{dialogErrors.nomeArquivo}</span>
@@ -348,10 +362,10 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                                 accept="image/*,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
                                 onChange={handleDialogFileChange}
                                 disabled={uploading}
-                                className="flex-1"
+                                className="flex-1 text-sm md:text-base"
                             />
                             {dialogFile && (
-                                <span className="block text-xs text-slate-700 mt-1 truncate max-w-[180px]">
+                                <span className="block text-xs text-slate-700 mt-1 truncate max-w-full">
                                     {dialogFile.name}
                                 </span>
                             )}
@@ -366,11 +380,12 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                             <Progress value={uploadProgress} className="w-full mt-2" />
                         )}
                     </div>
-                    <DialogFooter className="mt-2">
+                    <DialogFooter className="mt-2 flex-col sm:flex-row gap-2">
                         <Button
                             type="button"
                             onClick={handleUpload}
                             disabled={uploading}
+                            className="w-full sm:w-auto"
                         >
                             Anexar
                         </Button>
@@ -379,25 +394,26 @@ export function OpenTicketForm({ setAlert }: { setAlert: (alert: { type: "succes
                             variant="outline"
                             onClick={() => setOpenDialog(false)}
                             disabled={uploading}
+                            className="w-full sm:w-auto"
                         >
                             Cancelar
                         </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-            <footer className="flex justify-start gap-4">
+            <footer className="flex flex-col sm:flex-row justify-start gap-3 sm:gap-4 mt-4">
                 <Button
                     type="submit"
-                    size="fit"
+                    size="default"
                     disabled={isSubmitting || !isFormValid}
-                    className="w-[11.25rem] max-w-[11.25rem]"
+                    className="w-full sm:w-auto sm:min-w-[11.25rem] text-sm md:text-base"
                 >
-                    Abrir chamado
+                    {isSubmitting ? "Abrindo..." : "Abrir chamado"}
                 </Button>
                 <Button
-                    className="text-slate-950 w-[11.25rem] max-w-[11.25rem] 
+                    className="w-full sm:w-auto sm:min-w-[11.25rem] text-slate-950 
                         shadow-[0px_2px_8px_0px_rgba(0,0,0,0.25)] hover:text-slate-700 
-                        hover:shadow-[0px_4px_16px_0px_rgba(0,0,0,0.30)] transition-all duration-200 dark:text-slate-300"
+                        hover:shadow-[0px_4px_16px_0px_rgba(0,0,0,0.30)] transition-all duration-200 dark:text-slate-300 text-sm md:text-base"
                     variant={"outline"}
                     type="button"
                     onClick={handleCancel}

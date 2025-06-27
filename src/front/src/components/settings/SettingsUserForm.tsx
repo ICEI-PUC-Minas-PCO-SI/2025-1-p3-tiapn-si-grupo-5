@@ -119,12 +119,12 @@ export function SettingsUserForm({
 
     return (
         <form
-            className="flex flex-col gap-6 max-w-xl"
+            className="flex flex-col gap-4 md:gap-6 max-w-full md:max-w-xl w-full"
             onSubmit={handleSubmit}
         >
-            <div className="flex gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
-                    <label>Nome:</label>
+                    <label className="block mb-1 text-sm font-medium">Nome:</label>
                     <Input
                         type="text"
                         name="nome"
@@ -136,18 +136,18 @@ export function SettingsUserForm({
                     />
                 </div>
                 <div className="flex-1">
-                    <label>Matrícula:</label>
+                    <label className="block mb-1 text-sm font-medium">Matrícula:</label>
                     <Input
                         type="text"
                         value={user?.matricula || "Não informado"}
                         disabled
-                        className="bg-slate-100 cursor-not-allowed"
+                        className="bg-slate-100 cursor-not-allowed dark:bg-slate-800"
                         placeholder="XXXXXXXX-Y"
                     />
                 </div>
             </div>
             <div>
-                <label className="block mb-1 font-medium">E-mail:</label>
+                <label className="block mb-1 text-sm font-medium">E-mail:</label>
                 <Input
                     type="email"
                     name="email"
@@ -158,9 +158,9 @@ export function SettingsUserForm({
                     inputMode="email"
                 />
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1">
-                    <label>Ramal:</label>
+                    <label className="block mb-1 text-sm font-medium">Ramal:</label>
                     <Input
                         type="text"
                         name="ramal"
@@ -172,17 +172,17 @@ export function SettingsUserForm({
                     />
                 </div>
                 <div className="flex-1">
-                    <label>Gerência:</label>
+                    <label className="block mb-1 text-sm font-medium">Gerência:</label>
                     <Input
                         type="text"
                         value={user?.nomeGerencia || "Não informado"}
                         disabled
-                        className="bg-slate-100 cursor-not-allowed"
+                        className="bg-slate-100 cursor-not-allowed dark:bg-slate-800"
                         placeholder="ASTIN"
                     />
                 </div>
             </div>
-            <div className="flex gap-4 items-center">
+            <div className="flex justify-start">
                 <Button
                     type="button"
                     variant="outline"
@@ -192,20 +192,22 @@ export function SettingsUserForm({
                         navigate("/forgot-password");
                     }}
                     tabIndex={0}
+                    className="w-full sm:w-auto"
                 >
-                    <Shield />
+                    <Shield className="mr-2" />
                     Trocar senha
                 </Button>
             </div>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <Button
                     type="submit"
-                    className="w-40"
+                    className="w-full sm:w-40"
                     disabled={isSubmitting || !isChanged}
                 >
-                    Salvar
+                    {isSubmitting ? "Salvando..." : "Salvar"}
                 </Button>
-                <Button variant="outline"
+                <Button
+                    variant="outline"
                     size="fit"
                     type="button"
                     onClick={() => setFormValues({
@@ -213,6 +215,7 @@ export function SettingsUserForm({
                         email: user?.email || "",
                         ramal: user?.ramal || "",
                     })}
+                    className="w-full sm:w-auto"
                 >
                     Cancelar
                 </Button>

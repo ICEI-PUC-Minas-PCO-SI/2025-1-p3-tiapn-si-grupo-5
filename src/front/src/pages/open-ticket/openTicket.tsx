@@ -22,7 +22,7 @@ export function OpenTicket() {
     }, [alert, navigate]);
 
     return (
-        <div className="flex flex-col gap-[2rem]">
+        <div className="flex flex-col gap-4 md:gap-8 px-2 md:px-0">
             {alert && (
                 <GlobalAlert
                     type={alert.type}
@@ -30,11 +30,11 @@ export function OpenTicket() {
                     onClose={() => setAlert(null)}
                 />
             )}
-            <header className="max-w-[51.4rem]">
-                <h1 className="title-h1 text-slate-950 dark:text-white">Abrir Chamado</h1>
-                <h3 className="title-h3 text-slate-700 dark:text-slate-300">Preencha o chamado com as informações solicitadas</h3>
+            <header className="max-w-full md:max-w-[51.4rem]">
+                <h1 className="title-h1 text-slate-950 dark:text-white text-xl md:text-2xl lg:text-3xl">Abrir Chamado</h1>
+                <h3 className="title-h3 text-slate-700 dark:text-slate-300 text-sm md:text-base">Preencha o chamado com as informações solicitadas</h3>
             </header>
-            <main>
+            <main className="w-full">
                 <OpenTicketForm setAlert={setAlert} />
             </main>
         </div>

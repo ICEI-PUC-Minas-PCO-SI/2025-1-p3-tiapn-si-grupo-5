@@ -69,63 +69,62 @@ export function ChartPie({
     }, [chartData])
 
     return (
-        <Card className="flex flex-col w-128 h-112">
-            <CardHeader className="items-center pb-0">
-                <div className="flex items-center justify-between w-full">
-                    <CardTitle>{cardTitle}</CardTitle>
+        <Card className="flex flex-col w-full max-w-full lg:w-128 h-auto lg:h-112">
+            <CardHeader className="items-center pb-3 md:pb-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between w-full gap-2">
+                    <CardTitle className="text-base md:text-lg text-center sm:text-left">{cardTitle}</CardTitle>
                     {years.length > 0 && onYearChange && (
-                        <DropdownMenu
-                            open={filterMenuOpen}
-                            onOpenChange={setFilterMenuOpen}
-                        >
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button variant="outline" size="icon">
-                                                <Filter className="w-4 h-4" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        Filtrar
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
-                            <DropdownMenuContent
-                                align="end"
-                                className="min-w-[120px]"
+                        <div className="flex gap-3 justify-end">
+                            <DropdownMenu
+                                open={filterMenuOpen}
+                                onOpenChange={setFilterMenuOpen}
                             >
-                                <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">
-                                    Ano
-                                </div>
-                                <Select
-                                    value={selectedYear}
-                                    onValueChange={onYearChange}
-                                >
-                                    <SelectTrigger className="w-full mb-2">
-                                        <SelectValue placeholder="Ano" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            {years.map((year) => (
-                                                <SelectItem key={year} value={String(year)}>
-                                                    {year}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button size="icon" variant="outline">
+                                                    <Filter className="w-4 h-4" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            Filtrar
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                                <DropdownMenuContent align="end" className="min-w-[220px]">
+                                    <div className="px-4 py-2 font-semibold text-sm text-gray-700 dark:text-white">
+                                        Ano
+                                    </div>
+                                    <Select
+                                        value={selectedYear}
+                                        onValueChange={onYearChange}
+                                    >
+                                        <SelectTrigger className="w-full mb-2">
+                                            <SelectValue placeholder="Ano" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                {years.map((year) => (
+                                                    <SelectItem key={year} value={String(year)}>
+                                                        {year}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                     )}
                 </div>
-                <CardDescription>{cardDescription}</CardDescription>
+                <CardDescription className="text-sm text-center sm:text-left">{cardDescription}</CardDescription>
             </CardHeader>
-            <CardContent className="flex-1 pb-0">
+            <CardContent className="flex-1 pb-0 px-3 md:px-6">
                 <ChartContainer
                     config={chartConfig}
-                    className="mx-auto aspect-square max-h-[250px]"
+                    className="mx-auto aspect-square max-h-[200px] sm:max-h-[220px] md:max-h-[250px] w-full"
                 >
                     <PieChart>
                         <ChartTooltip
@@ -136,7 +135,8 @@ export function ChartPie({
                             data={chartData}
                             dataKey="quantity"
                             nameKey="tipochamado"
-                            innerRadius={60}
+                            innerRadius={40}
+                            outerRadius={80}
                             strokeWidth={5}
                         >
                             <Label
@@ -152,14 +152,14 @@ export function ChartPie({
                                                 <tspan
                                                     x={viewBox.cx}
                                                     y={viewBox.cy}
-                                                    className="fill-foreground text-3xl font-bold"
+                                                    className="fill-foreground text-xl md:text-3xl font-bold"
                                                 >
                                                     {totalQuantity.toLocaleString()}
                                                 </tspan>
                                                 <tspan
                                                     x={viewBox.cx}
-                                                    y={(viewBox.cy || 0) + 24}
-                                                    className="fill-muted-foreground"
+                                                    y={(viewBox.cy || 0) + 20}
+                                                    className="fill-muted-foreground text-sm"
                                                 >
                                                     Total
                                                 </tspan>
@@ -172,8 +172,8 @@ export function ChartPie({
                     </PieChart>
                 </ChartContainer>
             </CardContent>
-            <CardFooter className="flex-col items-start gap-2 text-sm mt-1">
-                <div className="leading-none text-slate-750">
+            <CardFooter className="flex-col items-start gap-2 text-sm mt-1 px-3 md:px-6">
+                <div className="leading-none text-slate-750 text-xs md:text-sm">
                     {footerInfo}
                 </div>
             </CardFooter>

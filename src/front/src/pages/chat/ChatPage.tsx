@@ -159,7 +159,7 @@ export function ChatPage() {
     }
 
     return (
-        <div className="flex flex-col gap-6 h-full bg-white dark:bg-slate-950">
+        <div className="flex flex-col gap-4 md:gap-6 h-full bg-white dark:bg-slate-950 px-2 md:px-0">
             {alert && (
                 <GlobalAlert
                     type={alert.type}
@@ -167,20 +167,20 @@ export function ChatPage() {
                     onClose={() => setAlert(null)}
                 />
             )}
-            <header className="flex flex-col gap-4">
-                <div className="flex justify-between items-center mb-4">
-                    {/* Pai: justify-between */}
-                    <div className="flex flex-1 justify-between items-center gap-4">
+            <header className="flex flex-col gap-3 md:gap-4">
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 md:gap-4 mb-2 md:mb-4">
+                    {/* Mobile: Stack vertically, Desktop: Side by side */}
+                    <div className="flex flex-col sm:flex-row sm:flex-1 sm:justify-between sm:items-center gap-3 sm:gap-4">
                         {/* Esquerda: Assunto + Protocolo */}
-                        <div className="flex items-center gap-3">
-                            <h1 className="title-h1 text-slate-950 dark:text-white">
+                        <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
+                            <h1 className="title-h1 text-slate-950 dark:text-white text-lg md:text-xl lg:text-2xl truncate">
                                 {ticket?.assunto
-                                    ? ticket.assunto.length > 30
-                                        ? ticket.assunto.slice(0, 30) + "..."
+                                    ? ticket.assunto.length > 25
+                                        ? ticket.assunto.slice(0, 25) + "..."
                                         : ticket.assunto
                                     : "Assunto da demanda"}
                             </h1>
-                            <Badge variant="outline" className="h-10 dark:bg-slate-800 dark:text-white dark:border-slate-700 align-top">
+                            <Badge variant="outline" className="h-8 md:h-10 dark:bg-slate-800 dark:text-white dark:border-slate-700 flex-shrink-0 text-xs md:text-sm">
                                 {ticket?.protocolo && ticket.protocolo.length === 8
                                     ? `#${ticket.protocolo.slice(0, 6)}/${ticket.protocolo.slice(6, 8)}`
                                     : ticket?.protocolo
@@ -189,41 +189,45 @@ export function ChatPage() {
                             </Badge>
                         </div>
                         {/* Direita: Prioridade + Status */}
-                        <div className="flex gap-4 items-center">
+                        <div className="flex gap-2 md:gap-4 items-center flex-shrink-0">
                             <Badge
-                                className="text-sm px-3 py-1 rounded h-10"
+                                className="text-xs md:text-sm px-2 md:px-3 py-1 rounded h-8 md:h-10 flex-shrink-0"
                                 style={{
                                     backgroundColor: ticket?.prioridadechamado?.hexCorPrimaria,
                                     color: ticket?.prioridadechamado?.hexCorSecundaria,
                                     border: "1px solid #e5e7eb"
                                 }}
                             >
-                                {ticket?.prioridadechamado?.nomePrioridade || "Prioridade"}
+                                <span className="truncate max-w-[80px] md:max-w-none">
+                                    {ticket?.prioridadechamado?.nomePrioridade || "Prioridade"}
+                                </span>
                             </Badge>
                             <Badge
-                                className="text-sm px-3 py-1 rounded h-10"
+                                className="text-xs md:text-sm px-2 md:px-3 py-1 rounded h-8 md:h-10 flex-shrink-0"
                                 style={{
                                     backgroundColor: ticket?.statuschamado?.hexCorPrimaria || "#888",
                                     color: ticket?.statuschamado?.hexCorSecundaria,
                                     border: "1px solid #e5e7eb"
                                 }}
                             >
-                                {ticket?.statuschamado?.nomeStatus || "Em aberto"}
+                                <span className="truncate max-w-[80px] md:max-w-none">
+                                    {ticket?.statuschamado?.nomeStatus || "Em aberto"}
+                                </span>
                             </Badge>
                         </div>
                     </div>
                 </div>
-                <div className="mb-4 flex items-center justify-between">
-                    <h2 className="title-h2 text-slate-800 dark:text-slate-300">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-2 md:mb-4">
+                    <h2 className="title-h2 text-slate-800 dark:text-slate-300 text-base md:text-lg truncate">
                         {ticket?.tipochamado?.nomeTipo || "Tipo de demanda"}
                     </h2>
                     {isAnalyst && (
-                        <div className="flex gap-2">
+                        <div className="flex flex-wrap gap-2">
                             {/* Botão de reabrir chamado se fechado */}
                             {ticket?.dataFechamento && (
                                 <>
                                     <Button
-                                        className="bg-green-600 hover:bg-green-700 text-white border-green-700"
+                                        className="bg-green-600 hover:bg-green-700 text-white border-green-700 text-xs md:text-sm"
                                         variant="default"
                                         size="sm"
                                         onClick={() => setReopenModalOpen(true)}
@@ -232,9 +236,9 @@ export function ChatPage() {
                                         Reabrir
                                     </Button>
                                     <Dialog open={reopenModalOpen} onOpenChange={setReopenModalOpen}>
-                                        <DialogContent>
+                                        <DialogContent className="w-[95vw] max-w-md">
                                             <DialogHeader>
-                                                <DialogTitle>Reabrir chamado</DialogTitle>
+                                                <DialogTitle className="text-base md:text-lg">Reabrir chamado</DialogTitle>
                                             </DialogHeader>
                                             <form
                                                 onSubmit={e => {
@@ -243,7 +247,7 @@ export function ChatPage() {
                                                 }}
                                                 className="flex flex-col gap-4"
                                             >
-                                                <div>
+                                                <div className="text-sm md:text-base">
                                                     Tem certeza que deseja reabrir o chamado{" "}
                                                     <b>
                                                         {ticket?.protocolo && ticket.protocolo.length === 8
@@ -254,10 +258,11 @@ export function ChatPage() {
                                                     </b>
                                                     ?
                                                 </div>
-                                                <DialogFooter>
+                                                <DialogFooter className="flex-col sm:flex-row gap-2">
                                                     <Button
                                                         type="submit"
                                                         disabled={reopening}
+                                                        className="w-full sm:w-auto"
                                                     >
                                                         {reopening ? "Reabrindo..." : "Confirmar"}
                                                     </Button>
@@ -265,6 +270,7 @@ export function ChatPage() {
                                                         type="button"
                                                         variant="outline"
                                                         onClick={() => setReopenModalOpen(false)}
+                                                        className="w-full sm:w-auto"
                                                     >
                                                         Cancelar
                                                     </Button>
@@ -282,14 +288,14 @@ export function ChatPage() {
                                     setSelectedStatus(ticket?.idStatus ? String(ticket.idStatus) : "");
                                     setStatusModalOpen(true);
                                 }}
-                                className="dark:border-slate-700 dark:text-white"
+                                className="dark:border-slate-700 dark:text-white text-xs md:text-sm"
                             >
                                 Alterar status
                             </Button>
                             <Dialog open={statusModalOpen} onOpenChange={setStatusModalOpen}>
-                                <DialogContent>
+                                <DialogContent className="w-[95vw] max-w-md">
                                     <DialogHeader>
-                                        <DialogTitle>Alterar status do chamado</DialogTitle>
+                                        <DialogTitle className="text-base md:text-lg">Alterar status do chamado</DialogTitle>
                                     </DialogHeader>
                                     <form
                                         onSubmit={e => {
@@ -319,10 +325,11 @@ export function ChatPage() {
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
-                                        <DialogFooter>
+                                        <DialogFooter className="flex-col sm:flex-row gap-2">
                                             <Button
                                                 type="submit"
                                                 disabled={!selectedStatus || updatingStatus}
+                                                className="w-full sm:w-auto"
                                             >
                                                 {updatingStatus ? "Salvando..." : "Confirmar"}
                                             </Button>
@@ -330,6 +337,7 @@ export function ChatPage() {
                                                 type="button"
                                                 variant="outline"
                                                 onClick={() => setStatusModalOpen(false)}
+                                                className="w-full sm:w-auto"
                                             >
                                                 Cancelar
                                             </Button>
@@ -341,7 +349,7 @@ export function ChatPage() {
                             {!ticket?.dataFechamento && (
                                 <>
                                     <Button
-                                        className="dark:bg-red-700 dark:text-white"
+                                        className="dark:bg-red-700 dark:text-white text-xs md:text-sm"
                                         variant="delete"
                                         size="sm"
                                         onClick={() => setCloseModalOpen(true)}
@@ -349,9 +357,9 @@ export function ChatPage() {
                                         Encerrar
                                     </Button>
                                     <Dialog open={closeModalOpen} onOpenChange={setCloseModalOpen}>
-                                        <DialogContent>
+                                        <DialogContent className="w-[95vw] max-w-md">
                                             <DialogHeader>
-                                                <DialogTitle>Encerrar chamado</DialogTitle>
+                                                <DialogTitle className="text-base md:text-lg">Encerrar chamado</DialogTitle>
                                             </DialogHeader>
                                             <form
                                                 onSubmit={e => {
@@ -360,7 +368,7 @@ export function ChatPage() {
                                                 }}
                                                 className="flex flex-col gap-4"
                                             >
-                                                <div>
+                                                <div className="text-sm md:text-base">
                                                     Tem certeza que deseja encerrar o chamado{" "}
                                                     <b>
                                                         {ticket?.protocolo && ticket.protocolo.length === 8
@@ -371,11 +379,12 @@ export function ChatPage() {
                                                     </b>
                                                     ?
                                                 </div>
-                                                <DialogFooter>
+                                                <DialogFooter className="flex-col sm:flex-row gap-2">
                                                     <Button
                                                         type="submit"
                                                         disabled={closing}
                                                         variant="delete"
+                                                        className="w-full sm:w-auto"
                                                     >
                                                         {closing ? "Encerrando..." : "Confirmar"}
                                                     </Button>
@@ -383,6 +392,7 @@ export function ChatPage() {
                                                         type="button"
                                                         variant="outline"
                                                         onClick={() => setCloseModalOpen(false)}
+                                                        className="w-full sm:w-auto"
                                                     >
                                                         Cancelar
                                                     </Button>
@@ -401,13 +411,14 @@ export function ChatPage() {
                                 size="sm"
                                 onClick={() => setAnalystModalOpen(true)}
                                 disabled={assigningToAnalyst}
+                                className="text-xs md:text-sm w-full sm:w-auto"
                             >
                                 Atribuir
                             </Button>
                             <Dialog open={analystModalOpen} onOpenChange={setAnalystModalOpen}>
-                                <DialogContent>
+                                <DialogContent className="w-[95vw] max-w-md">
                                     <DialogHeader>
-                                        <DialogTitle>Atribuir chamado a analista</DialogTitle>
+                                        <DialogTitle className="text-base md:text-lg">Atribuir chamado a analista</DialogTitle>
                                     </DialogHeader>
                                     <form
                                         onSubmit={e => {
@@ -438,10 +449,11 @@ export function ChatPage() {
                                                 </SelectGroup>
                                             </SelectContent>
                                         </Select>
-                                        <DialogFooter>
+                                        <DialogFooter className="flex-col sm:flex-row gap-2">
                                             <Button
                                                 type="submit"
                                                 disabled={!selectedAnalyst || assigningToAnalyst}
+                                                className="w-full sm:w-auto"
                                             >
                                                 {assigningToAnalyst ? "Atribuindo..." : "Confirmar"}
                                             </Button>
@@ -449,6 +461,7 @@ export function ChatPage() {
                                                 type="button"
                                                 variant="outline"
                                                 onClick={() => setAnalystModalOpen(false)}
+                                                className="w-full sm:w-auto"
                                             >
                                                 Cancelar
                                             </Button>
@@ -459,87 +472,98 @@ export function ChatPage() {
                         </>
                     )}
                 </div>
-                <div className="flex justify-between items-center mb-4">
-                    <span className="paragraph text-slate-700 dark:text-slate-300">
-                        {ticket?.usuario_chamado_idSolicitanteTousuario?.nomeUsuario
-                            ? `Aberto por: ${ticket.usuario_chamado_idSolicitanteTousuario.nomeUsuario}` : ""}
-                        {ticket?.usuario_chamado_idSolicitanteTousuario?.gerencia?.nomeGerencia
-                            ? ` | ${ticket.usuario_chamado_idSolicitanteTousuario.gerencia.nomeGerencia}` : ""}
-                    </span>
-                    <span className="paragraph text-slate-700 dark:text-slate-300">
-                        Analista Responsável: {ticket?.usuario_chamado_idAnalistaTousuario?.nomeUsuario || "-"}
-                    </span>
-                    <span className="paragraph text-slate-700 dark:text-slate-300">
-                        Data de Abertura: {ticket?.dataAbertura ? new Date(ticket.dataAbertura).toLocaleDateString("pt-BR") : "-"}
-                    </span>
-                    {isAnalyst && !ticket?.usuario_chamado_idAnalistaTousuario && (
-                        <>
-                            <Button
-                                className="dark:bg-sky-700 dark:text-white"
-                                variant="default"
-                                size="sm"
-                                onClick={() => setAssignModalOpen(true)}
-                                disabled={assigning}
-                            >
-                                Atender
-                            </Button>
-                            <Dialog open={assignModalOpen} onOpenChange={setAssignModalOpen}>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle>Assumir chamado</DialogTitle>
-                                    </DialogHeader>
-                                    <form
-                                        onSubmit={e => {
-                                            e.preventDefault();
-                                            handleConfirmAssignTicket();
-                                        }}
-                                        className="flex flex-col gap-4"
-                                    >
-                                        <div>
-                                            Tem certeza que deseja assumir o chamado{" "}
-                                            <b>
-                                                {ticket?.protocolo && ticket.protocolo.length === 8
-                                                    ? `#${ticket.protocolo.slice(0, 6)}/${ticket.protocolo.slice(6, 8)}`
-                                                    : ticket?.protocolo
-                                                        ? `#${ticket.protocolo}`
-                                                        : "#XXXXXXXX/YY"}
-                                            </b>
-                                            ?
-                                        </div>
-                                        <DialogFooter>
-                                            <Button
-                                                type="submit"
-                                                disabled={assigning}
-                                            >
-                                                {assigning ? "Assumindo..." : "Confirmar"}
-                                            </Button>
-                                            <Button
-                                                type="button"
-                                                variant="outline"
-                                                onClick={() => setAssignModalOpen(false)}
-                                            >
-                                                Cancelar
-                                            </Button>
-                                        </DialogFooter>
-                                    </form>
-                                </DialogContent>
-                            </Dialog>
-                        </>
-                    )}
-                    {isAnalyst && ticket?.usuario_chamado_idAnalistaTousuario && (
-                        <span className="paragraph text-slate-700 dark:text-slate-300">
-                            Data de Fechamento: {ticket?.dataFechamento ? new Date(ticket.dataFechamento).toLocaleDateString("pt-BR") : "-"}
+                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 md:gap-4 mb-2 md:mb-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm md:text-base">
+                        <span className="paragraph text-slate-700 dark:text-slate-300 truncate">
+                            {ticket?.usuario_chamado_idSolicitanteTousuario?.nomeUsuario
+                                ? `Aberto por: ${ticket.usuario_chamado_idSolicitanteTousuario.nomeUsuario.length > 20
+                                    ? ticket.usuario_chamado_idSolicitanteTousuario.nomeUsuario.slice(0, 20) + "..."
+                                    : ticket.usuario_chamado_idSolicitanteTousuario.nomeUsuario}` : ""}
+                            {ticket?.usuario_chamado_idSolicitanteTousuario?.gerencia?.nomeGerencia
+                                ? ` | ${ticket.usuario_chamado_idSolicitanteTousuario.gerencia.nomeGerencia.length > 15
+                                    ? ticket.usuario_chamado_idSolicitanteTousuario.gerencia.nomeGerencia.slice(0, 15) + "..."
+                                    : ticket.usuario_chamado_idSolicitanteTousuario.gerencia.nomeGerencia}` : ""}
                         </span>
-                    )}
-                    {!isAnalyst && (
-                        <span className="paragraph text-slate-700 dark:text-slate-300">
-                            Data de Fechamento: {ticket?.dataFechamento ? new Date(ticket.dataFechamento).toLocaleDateString("pt-BR") : "-"}
+                        <span className="paragraph text-slate-700 dark:text-slate-300 truncate">
+                            Analista: {ticket?.usuario_chamado_idAnalistaTousuario?.nomeUsuario
+                                ? ticket.usuario_chamado_idAnalistaTousuario.nomeUsuario.length > 20
+                                    ? ticket.usuario_chamado_idAnalistaTousuario.nomeUsuario.slice(0, 20) + "..."
+                                    : ticket.usuario_chamado_idAnalistaTousuario.nomeUsuario
+                                : "-"}
                         </span>
-                    )}
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm md:text-base">
+                        <span className="paragraph text-slate-700 dark:text-slate-300">
+                            Abertura: {ticket?.dataAbertura ? new Date(ticket.dataAbertura).toLocaleDateString("pt-BR") : "-"}
+                        </span>
+                        {isAnalyst && !ticket?.usuario_chamado_idAnalistaTousuario && (
+                            <>
+                                <Button
+                                    className="dark:bg-sky-700 dark:text-white text-xs md:text-sm w-full sm:w-auto"
+                                    variant="default"
+                                    size="sm"
+                                    onClick={() => setAssignModalOpen(true)}
+                                    disabled={assigning}
+                                >
+                                    Atender
+                                </Button>
+                                <Dialog open={assignModalOpen} onOpenChange={setAssignModalOpen}>
+                                    <DialogContent className="w-[95vw] max-w-md">
+                                        <DialogHeader>
+                                            <DialogTitle className="text-base md:text-lg">Assumir chamado</DialogTitle>
+                                        </DialogHeader>
+                                        <form
+                                            onSubmit={e => {
+                                                e.preventDefault();
+                                                handleConfirmAssignTicket();
+                                            }}
+                                            className="flex flex-col gap-4"
+                                        >
+                                            <div className="text-sm md:text-base">
+                                                Tem certeza que deseja assumir o chamado{" "}
+                                                <b>
+                                                    {ticket?.protocolo && ticket.protocolo.length === 8
+                                                        ? `#${ticket.protocolo.slice(0, 6)}/${ticket.protocolo.slice(6, 8)}`
+                                                        : ticket?.protocolo
+                                                            ? `#${ticket.protocolo}`
+                                                            : "#XXXXXXXX/YY"}
+                                                </b>
+                                                ?
+                                            </div>
+                                            <DialogFooter className="flex-col sm:flex-row gap-2">
+                                                <Button
+                                                    type="submit"
+                                                    disabled={assigning}
+                                                    className="w-full sm:w-auto"
+                                                >
+                                                    {assigning ? "Assumindo..." : "Confirmar"}
+                                                </Button>
+                                                <Button
+                                                    type="button"
+                                                    variant="outline"
+                                                    onClick={() => setAssignModalOpen(false)}
+                                                    className="w-full sm:w-auto"
+                                                >
+                                                    Cancelar
+                                                </Button>
+                                            </DialogFooter>
+                                        </form>
+                                    </DialogContent>
+                                </Dialog>
+                            </>
+                        )}
+                        {(isAnalyst && ticket?.usuario_chamado_idAnalistaTousuario) || !isAnalyst ? (
+                            <span className="paragraph text-slate-700 dark:text-slate-300">
+                                Fechamento: {ticket?.dataFechamento ? new Date(ticket.dataFechamento).toLocaleDateString("pt-BR") : "-"}
+                            </span>
+                        ) : null}
+                    </div>
                 </div>
                 <Separator className="dark:bg-slate-700" />
             </header>
-            <Chat descricao={ticket?.descricao || ""} />
+            <div className="flex-1 min-h-0">
+                <Chat descricao={ticket?.descricao || ""} />
+            </div>
         </div>
     )
 }

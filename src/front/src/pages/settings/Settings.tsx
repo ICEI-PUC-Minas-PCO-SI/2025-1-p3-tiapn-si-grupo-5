@@ -62,7 +62,7 @@ export function Settings() {
     };
 
     return (
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-6 md:gap-10 w-full max-w-full overflow-hidden px-2 md:px-0">
             {alert && (
                 <div className="fixed bottom-4 right-4 z-50">
                     <GlobalAlert
@@ -72,13 +72,13 @@ export function Settings() {
                     />
                 </div>
             )}
-            <div>
+            <div className="space-y-2">
                 <h1 className="title-h1 text-slate-950 dark:text-white">Configurações</h1>
                 <h2 className="title-h3 text-slate-700 dark:text-slate-300">Aqui você pode editar os dados da sua conta.</h2>
             </div>
-            <header className="flex items-center gap-4">
-                <div className="relative">
-                    <Avatar className="h-24 w-24">
+            <header className="flex flex-col sm:flex-row items-center sm:items-start gap-4 md:gap-6">
+                <div className="relative flex-shrink-0">
+                    <Avatar className="h-20 w-20 md:h-24 md:w-24">
                         {previewUrl
                             ? <AvatarImage src={previewUrl} alt={name} />
                             : lastSavedPreview
@@ -100,7 +100,7 @@ export function Settings() {
                         }
                     </Avatar>
                     <label className="absolute bottom-0 right-0 cursor-pointer bg-white dark:bg-slate-800 rounded-full p-1 shadow-md border border-slate-200 dark:border-slate-700">
-                        <ImagePlus className="w-5 h-5 text-slate-700 dark:text-slate-200" />
+                        <ImagePlus className="w-4 h-4 md:w-5 md:h-5 text-slate-700 dark:text-slate-200" />
                         <Input
                             type="file"
                             accept="image/*"
@@ -114,18 +114,18 @@ export function Settings() {
                         />
                     </label>
                 </div>
-                <div className="flex flex-col gap-4">
-                    <div className="flex gap-3 items-center">
+                <div className="flex flex-col gap-2 md:gap-4 text-center sm:text-left">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-center">
                         {user?.tipo === 1 ? (
                             <>
-                                <CircleCheckBig className="inline-block text-green-600" />
+                                <CircleCheckBig className="text-green-600 w-5 h-5" />
                                 <p className="menu-2 text-green-600">
                                     Gestor da Astin
                                 </p>
                             </>
                         ) : user?.tipo === 2 ? (
                             <>
-                                <CircleCheckBig className="inline-block text-green-600" />
+                                <CircleCheckBig className="text-green-600 w-5 h-5" />
                                 <p className="menu-2 text-green-600">
                                     Analista da Astin
                                 </p>
@@ -134,7 +134,7 @@ export function Settings() {
                     </div>
                 </div>
             </header>
-            <main className="flex flex-col">
+            <main className="flex flex-col w-full max-w-full overflow-hidden">
                 <SettingsUserForm
                     onFeedback={(type, message) => setAlert({ type, message })}
                     profilePhotoFile={selectedFile}

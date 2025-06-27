@@ -235,7 +235,7 @@ export function ManagementParams() {
   }));
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full max-w-full overflow-hidden px-2 md:px-0">
       {alert && (
         <div className="fixed bottom-4 right-4 z-50">
           <GlobalAlert
@@ -245,14 +245,14 @@ export function ManagementParams() {
           />
         </div>
       )}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
-        <div className="flex-1">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-2">
+        <div className="flex-1 w-full sm:w-auto">
           <Searchbar
             placeholder="Pesquise pelo nome"
             onSearch={setSearch}
           />
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 justify-end">
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
               <TooltipProvider>
@@ -268,9 +268,9 @@ export function ManagementParams() {
                 </Tooltip>
               </TooltipProvider>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="w-[95vw] max-w-md">
               <DialogHeader>
-                <DialogTitle>
+                <DialogTitle className="text-base md:text-lg">
                   {editingManagement ? "Editar gerência" : "Nova gerência"}
                 </DialogTitle>
               </DialogHeader>
@@ -284,16 +284,17 @@ export function ManagementParams() {
                   <span className="text-red-500 text-sm">{nameError}</span>
                 )}
               </div>
-              <DialogFooter className="mt-2">
+              <DialogFooter className="mt-2 flex-col sm:flex-row gap-2">
                 <Button
                   type="button"
                   onClick={handleSave}
                   disabled={!canSave}
+                  className="w-full sm:w-auto"
                 >
                   Salvar
                 </Button>
                 <DialogClose asChild>
-                  <Button type="button" variant="outline">
+                  <Button type="button" variant="outline" className="w-full sm:w-auto">
                     Cancelar
                   </Button>
                 </DialogClose>
