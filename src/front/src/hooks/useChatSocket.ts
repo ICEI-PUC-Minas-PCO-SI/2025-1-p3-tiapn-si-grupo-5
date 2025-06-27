@@ -5,8 +5,9 @@ Retorna uma ref para o socket para ser usada no componente Chat.tsx */
 import { useEffect, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import type { ChatMessage } from "@/api/chat";
+import { API_BASE_URL } from "@/api/config";
 
-const SOCKET_URL = "https://trackit-back.onrender.com";
+const SOCKET_URL = API_BASE_URL;
 
 export function useChatSocket(
     onReceive: (msg: ChatMessage) => void,

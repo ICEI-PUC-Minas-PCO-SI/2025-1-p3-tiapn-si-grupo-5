@@ -315,27 +315,28 @@ export default function Chat(props: ChatProps) {
 
     // Renderização do componente
     return (
-        <div className="flex flex-col w-full mx-auto border rounded bg-white h-[600px] dark:bg-slate-900 dark:border-slate-800">
+        <div className="flex flex-col w-full mx-auto border rounded bg-white h-[500px] md:h-[600px] dark:bg-slate-900 dark:border-slate-800">
             {/* Header com botão retração */}
-            <div className="flex items-center justify-between border-b px-4 py-2 dark:border-slate-800 dark:bg-slate-900">
-                <span className="font-semibold text-base dark:text-white">Chat</span>
+            <div className="flex items-center justify-between border-b px-3 md:px-4 py-2 dark:border-slate-800 dark:bg-slate-900">
+                <span className="font-semibold text-sm md:text-base dark:text-white">Chat</span>
                 <Button
                     variant="ghost"
                     size="icon"
                     aria-label="Retrair/Expandir"
                     onClick={() => setShowDescricao((v) => !v)}
+                    className="h-8 w-8 md:h-10 md:w-10 hidden md:flex"
                 >
-                    {showDescricao ? <ChevronsLeft /> : <ChevronsRight />}
+                    {showDescricao ? <ChevronsLeft className="h-4 w-4 md:h-5 md:w-5 " /> : <ChevronsRight className="h-4 w-4 md:h-5 md:w-5" />}
                 </Button>
             </div>
             <div className="flex w-full flex-1 min-h-0">
-                <div className={`transition-all duration-400 ${showDescricao ? "w-1/2 border-r" : "w-full"} flex flex-col h-full dark:border-slate-800`}>
-                    <div className="flex-1 overflow-y-auto p-6">
-                        <div className="flex flex-col gap-6">
+                <div className={`transition-all duration-400 ${showDescricao ? "w-full md:w-1/2 md:border-r" : "w-full"} flex flex-col h-full dark:border-slate-800`}>
+                    <div className="flex-1 overflow-y-auto p-3 md:p-6">
+                        <div className="flex flex-col gap-4 md:gap-6">
                             {loading ? (
-                                <span className="text-center text-slate-500 dark:text-slate-300">Carregando mensagens...</span>
+                                <span className="text-center text-slate-500 dark:text-slate-300 text-sm md:text-base">Carregando mensagens...</span>
                             ) : error ? (
-                                <span className="text-center text-red-500">{error}</span>
+                                <span className="text-center text-red-500 text-sm md:text-base">{error}</span>
                             ) : (
                                 <>
                                     {messages.map((msg) => {
@@ -380,9 +381,9 @@ export default function Chat(props: ChatProps) {
                         </div>
                     </div>
                 </div>
-                {/* Conteúdo da descrição */}
+                {/* Conteúdo da descrição - Oculto no mobile quando showDescricao for true */}
                 {showDescricao && (
-                    <div className="flex flex-col bg-white w-1/2 min-w-[240px] max-w-[50vw] overflow-hidden h-full dark:bg-slate-900 dark:border-slate-800">
+                    <div className="hidden md:flex flex-col bg-white w-1/2 min-w-[240px] max-w-[50vw] overflow-hidden h-full dark:bg-slate-900 dark:border-slate-800">
                         <div className="flex items-center justify-between border-b px-4 py-2 dark:border-slate-800 dark:bg-slate-900">
                             <span className="font-semibold text-base dark:text-white">Descrição da demanda</span>
                             <Button
@@ -400,7 +401,7 @@ export default function Chat(props: ChatProps) {
                                 <Button
                                     type="button"
                                     variant="outline"
-                                    className="mt-4 flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800 p-2 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                                    className="mt-4 flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800 p-2 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors w-full"
                                     style={{ textDecoration: "none" }}
                                     onClick={async () => {
                                         try {
@@ -421,56 +422,119 @@ export default function Chat(props: ChatProps) {
                                         }
                                     }}
                                 >
-                                    <div className="flex items-center gap-2">
-                                        <Paperclip className="w-4 h-4 text-sky-700 dark:text-sky-400" />
-                                        <span className="font-medium text-slate-900 dark:text-slate-100 text-xs">{ticketInfo.nomeArquivo}</span>
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <Paperclip className="w-4 h-4 text-sky-700 dark:text-sky-400 flex-shrink-0" />
+                                        <span className="font-medium text-slate-900 dark:text-slate-100 text-xs truncate">{ticketInfo.nomeArquivo}</span>
                                     </div>
-                                    <Download />
+                                    <Download className="w-4 h-4 flex-shrink-0" />
                                 </Button>
                             )}
                         </div>
                     </div>
                 )}
+                {/* Modal overlay para descrição no mobile */}
+                {showDescricao && (
+                    <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end">
+                        <div className="bg-white dark:bg-slate-900 w-full h-3/4 rounded-t-lg flex flex-col">
+                            <div className="flex items-center justify-between border-b px-4 py-3 dark:border-slate-800">
+                                <span className="font-semibold text-base dark:text-white">Descrição da demanda</span>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => setShowDescricao(false)}
+                                    aria-label="Ocultar descrição"
+                                    className="h-8 w-8"
+                                >
+                                    <ChevronsLeft className="h-4 w-4" />
+                                </Button>
+                            </div>
+                            <div className="flex-1 p-4 overflow-y-auto">
+                                <div className="whitespace-pre-line text-slate-900 text-sm dark:text-slate-200 mb-4">
+                                    {ticketInfo.descricao}
+                                </div>
+                                {ticketInfo.urlAnexo && ticketInfo.nomeArquivo && (
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="mt-4 flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800 p-3 rounded-lg border border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors w-full"
+                                        style={{ textDecoration: "none" }}
+                                        onClick={async () => {
+                                            try {
+                                                const response = await fetch(ticketInfo.urlAnexo!);
+                                                if (!response.ok) throw new Error("Erro ao baixar arquivo");
+                                                const blob = await response.blob();
+                                                const url = window.URL.createObjectURL(blob);
+                                                const link = document.createElement("a");
+                                                link.href = url;
+                                                link.download = ticketInfo.nomeArquivo!;
+                                                document.body.appendChild(link);
+                                                link.click();
+                                                document.body.removeChild(link);
+                                                window.URL.revokeObjectURL(url);
+                                            } catch (e) {
+                                                setGlobalAlert({ type: "error", message: "Erro ao baixar o arquivo." });
+                                                console.error("Erro ao baixar o arquivo:", e);
+                                            }
+                                        }}
+                                    >
+                                        <div className="flex items-center gap-2 min-w-0">
+                                            <Paperclip className="w-4 h-4 text-sky-700 dark:text-sky-400 flex-shrink-0" />
+                                            <span className="font-medium text-slate-900 dark:text-slate-100 text-sm truncate">{ticketInfo.nomeArquivo}</span>
+                                        </div>
+                                        <Download className="w-4 h-4 flex-shrink-0" />
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
-            <form className="flex items-end gap-2 border-t px-4 py-3 bg-white dark:bg-slate-900 dark:border-slate-800" onSubmit={handleSend}>
+            <form className="flex items-end gap-3 md:gap-4 border-t px-4 py-4 bg-white dark:bg-slate-900 dark:border-slate-800" onSubmit={handleSend}>
                 {/* Botão de anexo que abre dialog */}
                 <Button
-                    className={`h-11 ${anexoReady ? "bg-green-600 hover:bg-green-700 text-white border-green-700" : ""}`}
+                    className={`h-10 w-10 md:h-11 md:w-11 flex-shrink-0 ${anexoReady ? "bg-green-600 hover:bg-green-700 text-white border-green-700" : ""}`}
                     type="button"
                     variant={anexoUrl && !anexoReady ? "default" : "outline"}
                     size="icon"
                     onClick={handleAttachClick}
                     disabled={uploading}
                 >
-                    <Paperclip className="w-5 h-5" />
+                    <Paperclip className="w-4 h-4 md:w-5 md:h-5" />
                 </Button>
-                {/* Exibe nome do arquivo anexado apenas se NÃO estiver pronto para envio */}
-                {!anexoReady && anexoNome && (
-                    <span className="text-xs text-sky-700 dark:text-sky-400 max-w-[120px] truncate">{anexoNome}</span>
-                )}
-                <Textarea
-                    className="resize-none min-h-[44px] max-h-32 flex-1 dark:bg-slate-800 dark:text-slate-200"
-                    placeholder="Digite sua mensagem..."
-                    rows={1}
-                    value={input}
-                    onChange={e => setInput(e.target.value)}
-                    ref={textareaRef}
-                    onKeyDown={handleInputKeyDown}
-                />
+
+                <div className="flex-1 flex flex-col gap-1">
+                    {/* Exibe nome do arquivo anexado apenas se NÃO estiver pronto para envio */}
+                    {!anexoReady && anexoNome && (
+                        <span className="text-xs text-sky-700 dark:text-sky-400 px-1 truncate max-w-full">
+                            📎 {anexoNome}
+                        </span>
+                    )}
+                    <Textarea
+                        className="resize-none min-h-[40px] md:min-h-[44px] max-h-32 w-full dark:bg-slate-800 dark:text-slate-200 text-sm md:text-base"
+                        placeholder="Digite sua mensagem..."
+                        rows={1}
+                        value={input}
+                        onChange={e => setInput(e.target.value)}
+                        ref={textareaRef}
+                        onKeyDown={handleInputKeyDown}
+                    />
+                </div>
+
                 <Button
                     type="submit"
-                    className="h-11 w-11 p-0 rounded-full"
+                    size="icon"
                     variant="default"
+                    className="h-10 w-10 md:h-11 md:w-11 flex-shrink-0"
                     disabled={!input.trim()}
                 >
-                    <Send className="w-5 h-5" />
+                    <Send className="w-4 h-4 md:w-5 md:h-5" />
                 </Button>
             </form>
             {/* Dialog de anexo */}
             <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-                <DialogContent>
+                <DialogContent className="w-[95vw] max-w-md">
                     <DialogHeader>
-                        <DialogTitle>Anexar arquivo</DialogTitle>
+                        <DialogTitle className="text-base md:text-lg">Anexar arquivo</DialogTitle>
                     </DialogHeader>
                     <div className="flex flex-col gap-3">
                         <Input
@@ -478,6 +542,7 @@ export default function Chat(props: ChatProps) {
                             value={dialogNomeArquivo}
                             onChange={e => setDialogNomeArquivo(e.target.value)}
                             disabled={uploading}
+                            className="text-sm md:text-base"
                         />
                         {dialogErrors.nomeArquivo && (
                             <span className="text-red-500 text-xs mb-1">{dialogErrors.nomeArquivo}</span>
@@ -488,10 +553,10 @@ export default function Chat(props: ChatProps) {
                                 accept="image/*,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv"
                                 onChange={handleDialogFileChange}
                                 disabled={uploading}
-                                className="flex-1"
+                                className="flex-1 text-sm md:text-base"
                             />
                             {dialogFile && (
-                                <span className="block text-xs text-slate-700 mt-1 truncate max-w-[180px]">
+                                <span className="block text-xs text-slate-700 mt-1 truncate max-w-[200px]">
                                     {dialogFile.name}
                                 </span>
                             )}
@@ -506,7 +571,7 @@ export default function Chat(props: ChatProps) {
                             <Progress value={uploadProgress} className="w-full mt-2" />
                         )}
                     </div>
-                    <DialogFooter className="mt-2">
+                    <DialogFooter className="mt-2 flex-col sm:flex-row gap-2">
                         <Button
                             type="button"
                             onClick={handleDialogAttach}
@@ -515,6 +580,7 @@ export default function Chat(props: ChatProps) {
                                 !dialogFile ||
                                 !dialogNomeArquivo.trim()
                             }
+                            className="w-full sm:w-auto"
                         >
                             Anexar
                         </Button>
@@ -523,6 +589,7 @@ export default function Chat(props: ChatProps) {
                             variant="outline"
                             onClick={() => setOpenDialog(false)}
                             disabled={uploading}
+                            className="w-full sm:w-auto"
                         >
                             Cancelar
                         </Button>
