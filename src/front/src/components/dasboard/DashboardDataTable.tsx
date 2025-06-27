@@ -207,9 +207,9 @@ export function DashboardDataTable() {
                 <span
                     className="block truncate"
                     style={{
-                        width: "180px",
-                        maxWidth: "180px",
-                        minWidth: "180px",
+                        width: "120px",
+                        maxWidth: "120px",
+                        minWidth: "120px",
                         display: "inline-block",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -264,9 +264,9 @@ export function DashboardDataTable() {
                 <span
                     className="block truncate"
                     style={{
-                        width: "180px",
-                        maxWidth: "180px",
-                        minWidth: "180px",
+                        width: "140px",
+                        maxWidth: "140px",
+                        minWidth: "140px",
                         display: "inline-block",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -320,10 +320,12 @@ export function DashboardDataTable() {
     };
 
     return (
-        <div className="space-y-4 w-full">
-            <div className="flex justify-between">
-                <Searchbar onSearch={setSearch} />
-                <div className="flex gap-3">
+        <div className="space-y-4 w-full max-w-full overflow-hidden">
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-3">
+                <div className="w-full sm:w-auto">
+                    <Searchbar onSearch={setSearch} />
+                </div>
+                <div className="flex gap-3 justify-end">
                     <DropdownMenu open={filterMenuOpen} onOpenChange={setFilterMenuOpen}>
                         <TooltipProvider>
                             <Tooltip>
@@ -394,11 +396,11 @@ export function DashboardDataTable() {
                     </DropdownMenu>
                 </div>
             </div>
-            <div>
+            <div className="w-full overflow-x-auto">
                 {loading ? (
                     <TableSpinner />
                 ) : (
-                    <table className="w-full border rounded bg-white text-sm dark:bg-slate-900 dark:text-slate-200">
+                    <table className="w-full min-w-[600px] border rounded bg-white text-sm dark:bg-slate-900 dark:text-slate-200">
                         <thead>
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <tr key={headerGroup.id} className="bg-gray-100 text-gray-700 dark:bg-slate-800">
@@ -447,11 +449,11 @@ export function DashboardDataTable() {
                     </table>
                 )}
             </div>
-            <div className="flex items-center justify-between py-4">
-                <span className="text-sm text-muted-foreground">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between py-4 gap-3">
+                <span className="text-sm text-muted-foreground text-center sm:text-left">
                     Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
                 </span>
-                <div className="flex gap-3">
+                <div className="flex gap-3 justify-center sm:justify-end">
                     <Button
                         size="icon"
                         variant="outline"

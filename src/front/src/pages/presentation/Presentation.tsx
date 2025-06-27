@@ -302,7 +302,7 @@ export function Presentation() {
                                             className="w-10 h-10 md:w-12 md:h-12 mx-auto rounded-full flex items-center justify-center border-2 border-white"
                                             style={{ backgroundColor: stat.color }}
                                         >
-                                            <span className="text-white font-bold text-sm md:text-base drop-shadow-sm">{index + 1}</span>
+                                            <span className="text-slate-950 font-bold text-sm md:text-base drop-shadow-sm dark:text-white">{index + 1}</span>
                                         </div>
                                     </CardHeader>
                                     <CardContent className="px-2 md:px-4">
