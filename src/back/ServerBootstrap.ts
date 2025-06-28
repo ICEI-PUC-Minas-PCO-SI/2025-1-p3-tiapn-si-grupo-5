@@ -14,7 +14,7 @@ export class ServerBootstrap {
         this.server = http.createServer(appInstance);
         this.io = new SocketIOServer(this.server, {
             cors: {
-                origin: "http://localhost:5173",
+                origin: "https://trackit-front.onrender.com",
                 methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
                 credentials: true,
                 allowedHeaders: ["Content-Type", "Authorization"]
@@ -25,7 +25,7 @@ export class ServerBootstrap {
 
     public start() {
         this.server.listen(this.port, () => {
-            console.log("Servidor rodando!");
+            console.log("Backend do TrackIT rodando!");
         });
     }
 }
