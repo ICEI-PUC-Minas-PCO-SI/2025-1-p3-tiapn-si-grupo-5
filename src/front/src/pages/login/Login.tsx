@@ -4,16 +4,13 @@ import { Link } from "react-router";
 import { LoginUser } from "@/components/login/LoginUser";
 import { Toaster } from "sonner";
 import { useState } from "react";
-import { DefaultSpinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Presentation } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function Login() {
     const [loading, setLoading] = useState(false);
-    if (loading) {
-        return <DefaultSpinner />;
-    }
+    
     return (
         <>
             <div className="flex w-full min-h-screen">

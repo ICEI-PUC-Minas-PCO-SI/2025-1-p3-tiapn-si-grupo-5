@@ -54,11 +54,11 @@ export class AuthService {
                 fotoPerfil: true
             }
         });
-        if (!usuario) return { error: "Usuário não encontrado", usuario: null };
-        if (!usuario.ativo) return { error: "Usuário inativo", usuario: null };
+        if (!usuario) return { error: "Usuário não encontrado.", usuario: null };
+        if (!usuario.ativo) return { error: "Usuário inativo.", usuario: null };
         const usuarioSenha = await prisma.usuario.findUnique({ where: { email }, select: { senha: true } });
         const senhaValida = usuarioSenha && await compareHashedPassword(senha, usuarioSenha.senha);
-        if (!senhaValida) return { error: "Senha inválida", usuario: null };
+        if (!senhaValida) return { error: "Senha inválida.", usuario: null };
         return { error: null, usuario };
     }
 
