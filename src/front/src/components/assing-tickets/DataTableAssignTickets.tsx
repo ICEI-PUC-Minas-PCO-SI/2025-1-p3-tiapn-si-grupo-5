@@ -268,9 +268,9 @@ export function DataTableAssignTickets({
     });
 
     return (
-        <div className="w-full max-w-full overflow-hidden">
-            <div className="w-full overflow-x-auto">
-                <table className="w-full min-w-[600px] border rounded bg-white text-sm dark:bg-slate-900 dark:text-slate-200">
+        <div className="w-full max-w-full overflow-hidden xl:overflow-visible">
+            <div className="w-full overflow-x-auto xl:overflow-x-visible">
+                <table className="w-full min-w-[600px] xl:min-w-0 border rounded bg-white text-sm dark:bg-slate-900 dark:text-slate-200">
                     <thead>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <tr key={headerGroup.id} className="bg-gray-100 text-gray-700 dark:bg-slate-800">
