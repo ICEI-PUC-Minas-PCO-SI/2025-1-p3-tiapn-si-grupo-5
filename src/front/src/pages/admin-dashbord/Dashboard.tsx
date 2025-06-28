@@ -243,7 +243,6 @@ export function Dashboard() {
                             }}
                             cardTitle="Chamados Resolvidos por Mês"
                             cardDescription="Gráfico de barras dos chamados resolvidos ao longo do ano"
-                            footerInfo={`Dados acumulados de ${selectedYearBar || "----"}`}
                             years={closedTicketYears}
                             selectedYear={selectedYearBar}
                             onYearChange={setSelectedYearBar}
@@ -257,7 +256,6 @@ export function Dashboard() {
                             }}
                             cardTitle="Distribuição de Chamados"
                             cardDescription="Gráfico de pizza mostrando a distribuição dos chamados por status"
-                            footerInfo={`Dados acumulados de ${selectedYearPie || "----"}`}
                             years={closedTicketYears}
                             selectedYear={selectedYearPie}
                             onYearChange={setSelectedYearPie}
@@ -271,7 +269,6 @@ export function Dashboard() {
                             }}
                             cardTitle="Demandas por Nível de Prioridade"
                             cardDescription="Gráfico de pizza mostrando as demandas por nível de prioridade"
-                            footerInfo={`Dados acumulados de ${selectedYearPriorityPie || "----"}`}
                             years={closedTicketYears}
                             selectedYear={selectedYearPriorityPie}
                             onYearChange={setSelectedYearPriorityPie}
@@ -281,7 +278,6 @@ export function Dashboard() {
                             chartConfig={lineChartConfig}
                             cardTitle="Demandas por Tipo de Chamado"
                             cardDescription="Gráfico de linhas mostrando demandas port tipo de chamado ao longo dos meses"
-                            footerInfo={`Dados acumulados de ${selectedYearLine || "----"}`}
                             years={closedTicketYears}
                             selectedYear={selectedYearLine}
                             onYearChange={setSelectedYearLine}

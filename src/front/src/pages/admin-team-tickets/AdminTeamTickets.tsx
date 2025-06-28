@@ -114,7 +114,7 @@ export function AdminTeamTickets() {
                     };
                     const statusObj = statuses.find(s => s.idStatus === t.idStatus) || {
                         idStatus: t.idStatus ?? 0,
-                        nomeStatus: "Não Definido",
+                        nomeStatus: "Em aberto",
                         hexCorPrimaria: "#888",
                         hexCorSecundaria: "#fff"
                     };

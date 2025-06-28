@@ -101,7 +101,7 @@ export function AnalystTickets() {
           };
           const statusObj = statuses.find(s => s.idStatus === t.idStatus) || {
             idStatus: t.idStatus ?? 0,
-            nomeStatus: t.idStatus ? "Não Definido" : "-",
+            nomeStatus: t.idStatus ? "Em aberto" : "-",
             hexCorPrimaria: "#888",
             hexCorSecundaria: "#fff"
           };

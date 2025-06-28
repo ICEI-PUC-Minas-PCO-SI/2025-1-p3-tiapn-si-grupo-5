@@ -203,7 +203,6 @@ export function AnalystDashboard() {
                             }}
                             cardTitle="Chamados Resolvidos por Mês"
                             cardDescription="Gráfico de barras dos chamados resolvidos ao longo do ano"
-                            footerInfo={`Dados acumulados de ${selectedYearBar || "----"}`}
                             years={closedTicketYears}
                             selectedYear={selectedYearBar}
                             onYearChange={setSelectedYearBar}
@@ -217,7 +216,6 @@ export function AnalystDashboard() {
                             }}
                             cardTitle="Distribuição de Chamados"
                             cardDescription="Gráfico de pizza mostrando a distribuição dos chamados por status"
-                            footerInfo={`Dados acumulados de ${selectedYearStatusPie || "----"}`}
                             years={closedTicketYears}
                             selectedYear={selectedYearStatusPie}
                             onYearChange={setSelectedYearStatusPie}
@@ -231,7 +229,6 @@ export function AnalystDashboard() {
                             }}
                             cardTitle="Demandas por Nível de Prioridade"
                             cardDescription="Gráfico de pizza mostrando as demandas por nível de prioridade"
-                            footerInfo={`Dados acumulados de ${selectedYearPriorityPie || "----"}`}
                             years={closedTicketYears}
                             selectedYear={selectedYearPriorityPie}
                             onYearChange={setSelectedYearPriorityPie}
@@ -241,7 +238,6 @@ export function AnalystDashboard() {
                             chartConfig={lineChartConfig}
                             cardTitle="Demandas por Tipo de Chamado"
                             cardDescription="Gráfico de linhas mostrando demandas por tipo de chamado ao longo dos meses"
-                            footerInfo={`Dados acumulados de ${selectedYearLine || "----"}`}
                             years={closedTicketYears}
                             selectedYear={selectedYearLine}
                             onYearChange={setSelectedYearLine}
