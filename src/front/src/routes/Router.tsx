@@ -22,6 +22,7 @@ import { AdminTeamTickets } from "@/pages/admin-team-tickets/AdminTeamTickets";
 import { AnalystDashboard } from "@/pages/analyst-dashboard/AnalystDashboard";
 import { ChatPage } from "@/pages/chat/ChatPage";
 import { Presentation } from "@/pages/presentation/Presentation";
+import { NotFound } from "@/pages/not-found/NotFound";
 
 export function Router() {
     return (
@@ -42,6 +43,12 @@ export function Router() {
                 <Route path="settings" element={< Settings />} />
                 <Route path="chat" element={<ChatPage />} />
             </Route>
+            {/* Rota 404 específica para área do analista - fora do DefaultLayout */}
+            <Route path="/user/*" element={
+                <PrivateRoute allowedTypes={[3]}>
+                    <NotFound />
+                </PrivateRoute>
+            } />
             <Route path="/analyst" element={
                 <PrivateRoute allowedTypes={[2]}>
                     <DefaultLayoult />
@@ -54,6 +61,12 @@ export function Router() {
                 <Route path="dashboard" element={<AnalystDashboard />} />
                 <Route path="chat" element={<ChatPage />} />
             </Route>
+            {/* Rota 404 específica para área do analista - fora do DefaultLayout */}
+            <Route path="/analyst/*" element={
+                <PrivateRoute allowedTypes={[2]}>
+                    <NotFound />
+                </PrivateRoute>
+            } />
             <Route path="/admin" element={
                 <PrivateRoute allowedTypes={[1]}>
                     <DefaultLayoult />
@@ -71,6 +84,14 @@ export function Router() {
                 <Route path="assigned-tickets" element={<AdminTeamTickets />} />
                 <Route path="chat" element={<ChatPage />} />
             </Route>
+            {/* Rota 404 específica para área do admin - fora do DefaultLayout */}
+            <Route path="/admin/*" element={
+                <PrivateRoute allowedTypes={[1]}>
+                    <NotFound />
+                </PrivateRoute>
+            } />
+            {/* Captura todas as outras rotas inexistentes */}
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 }
