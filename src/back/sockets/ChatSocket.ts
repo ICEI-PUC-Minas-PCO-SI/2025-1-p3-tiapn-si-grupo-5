@@ -3,6 +3,7 @@ import { PrismaClient } from "../generated/prisma";
 import { ChatService } from "../services/ChatService";
 import { sendNotificationEmail } from "../services/EmailServices";
 import { NotificationService } from "../services/NotificationService";
+import { logger } from "../logger/Logger";
 
 const prisma = new PrismaClient();
 const chatService = new ChatService();
@@ -24,20 +25,28 @@ type JoinChamadoData = {
 
 export function setupChatSocket(io: SocketIOServer) {
     io.on("connection", (socket: Socket) => {
-        console.log(`[SOCKET] Nova conexão: ${socket.id}`);
+        logger.info('ChatSocket', 'SOCKET_CONNECTION', undefined, { socketId: socket.id });
 
         // Usuário entra em uma sala específica (ex: por idUsuario)
         socket.on("join", (userId: number) => {
-            console.log(`[SOCKET] join recebido: userId=${userId}`);
+            logger.info('ChatSocket', 'JOIN_USER_ROOM', userId, { socketId: socket.id });
             if (userId) socket.join(`user_${userId}`);
         });
 
         // Usuário tenta entrar em uma sala de chamado
         socket.on("joinChamado", async (data: JoinChamadoData) => {
-            console.log(`[SOCKET] joinChamado recebido:`, data);
             const { idChamado, idUsuario } = data || {};
+
+            logger.info('ChatSocket', 'JOIN_CHAMADO_ATTEMPT', idUsuario, {
+                idChamado,
+                socketId: socket.id
+            });
+
             if (!idChamado || !idUsuario) {
-                console.log(`[SOCKET] joinChamado faltando dados: idChamado=${idChamado}, idUsuario=${idUsuario}`);
+                logger.warn('ChatSocket', 'JOIN_CHAMADO_MISSING_DATA', idUsuario, {
+                    idChamado,
+                    socketId: socket.id
+                });
                 socket.emit("chat:error", { error: "Dados obrigatórios ausentes para entrar na sala do chamado." });
                 return;
             }
@@ -53,53 +62,60 @@ export function setupChatSocket(io: SocketIOServer) {
                     select: { idTipoUsuario: true }
                 });
 
-                console.log(`[SOCKET] joinChamado chamado=`, chamado, "usuario=", usuario);
-
                 if (!chamado || !usuario) {
-                    console.log(`[SOCKET] joinChamado chamado ou usuario não encontrado`);
+                    logger.warn('ChatSocket', 'JOIN_CHAMADO_NOT_FOUND', idUsuario, {
+                        idChamado,
+                        chamadoExists: !!chamado,
+                        usuarioExists: !!usuario
+                    });
                     socket.emit("chat:error", { error: "Chamado ou usuário não encontrado." });
                     return;
                 }
 
-                // REMOVA O BLOQUEIO ABAIXO:
-                // const isSolicitante = chamado.idSolicitante === idUsuario;
-                // const isAnalista = chamado.idAnalista === idUsuario;
-                // const isGestor = usuario.idTipoUsuario === 1;
-
-                // if (isSolicitante || isAnalista || isGestor) {
                 socket.join(`chamado_${idChamado}`);
-                // Salva o userId no socket para detecção correta depois
                 socket.data.userId = idUsuario;
-                console.log(`[SOCKET] Usuário ${idUsuario} entrou na sala chamado_${idChamado}`);
+
+                logger.info('ChatSocket', 'JOIN_CHAMADO_SUCCESS', idUsuario, {
+                    idChamado,
+                    socketId: socket.id,
+                    roomName: `chamado_${idChamado}`
+                });
+
                 socket.emit("chat:joined", { idChamado });
 
                 // Marcar notificações pendentes desse chamado como lidas para o usuário
                 await notificationService.markAllAsReadForChamado(idUsuario, idChamado);
 
-                // } else {
-                //     console.log(`[SOCKET] Usuário ${idUsuario} não tem permissão para chamado_${idChamado}`);
-                //     socket.emit("chat:error", { error: "Você não tem permissão para acessar este chat." });
-                // }
+                logger.info('ChatSocket', 'NOTIFICATIONS_MARKED_READ', idUsuario, { idChamado });
+
             } catch (err) {
-                console.log(`[SOCKET] Erro ao validar permissão para entrar na sala do chamado:`, err);
+                logger.error('ChatSocket', 'JOIN_CHAMADO_ERROR', idUsuario, err as Error);
                 socket.emit("chat:error", { error: "Erro ao validar permissão para entrar na sala do chamado.", err });
             }
         });
 
         socket.on("chat:send", async (data: ChatSendData) => {
-            console.log("[BACK][SOCKET] Evento chat:send recebido:", data);
-            try {
-                const { idChamado, idRemetente, mensagem, remetente, urlAnexo, nomeArquivo } = data;
-                // Log para debug do remetente recebido
-                console.log("[BACK][SOCKET] remetente recebido:", remetente, "idRemetente:", idRemetente);
+            const { idChamado, idRemetente, mensagem, remetente, urlAnexo, nomeArquivo } = data;
 
+            logger.info('ChatSocket', 'CHAT_MESSAGE_ATTEMPT', idRemetente, {
+                idChamado,
+                remetente,
+                hasAttachment: !!(urlAnexo || nomeArquivo),
+                messageLength: mensagem?.length || 0
+            });
+
+            try {
                 if (!idChamado || !idRemetente || !mensagem || !remetente) {
-                    console.log(`[SOCKET] chat:send faltando dados`);
+                    logger.warn('ChatSocket', 'CHAT_MESSAGE_MISSING_DATA', idRemetente, {
+                        idChamado,
+                        hasMessage: !!mensagem,
+                        remetente
+                    });
                     socket.emit("chat:error", { error: "Dados obrigatórios ausentes." });
                     return;
                 }
 
-                // Salva no banco usando o ChatService (agora aceita gestor)
+                // Salva no banco usando o ChatService
                 const novaMensagem = await chatService.saveMessage({
                     idChamado,
                     idRemetente,
@@ -109,7 +125,13 @@ export function setupChatSocket(io: SocketIOServer) {
                     nomeArquivo,
                 });
 
-                // Busca a mensagem recém-criada com join do usuário (igual ao REST)
+                logger.logCreate('ChatSocket', 'CHAT_MESSAGE', novaMensagem.idMensagem, idRemetente, {
+                    idChamado,
+                    remetente,
+                    hasAttachment: !!(urlAnexo || nomeArquivo)
+                });
+
+                // Busca a mensagem recém-criada com join do usuário
                 const mensagemCompleta = await prisma.msgchamado.findUnique({
                     where: { idMensagem: novaMensagem.idMensagem },
                     include: {
@@ -128,8 +150,14 @@ export function setupChatSocket(io: SocketIOServer) {
                     }
                 });
 
-                // Envia para todos na sala do chamado IMEDIATAMENTE (sem aguardar notificação)
+                // Envia para todos na sala do chamado
                 io.to(`chamado_${idChamado}`).emit("chat:receive", mensagemCompleta);
+
+                logger.info('ChatSocket', 'CHAT_MESSAGE_BROADCASTED', idRemetente, {
+                    idChamado,
+                    messageId: novaMensagem.idMensagem,
+                    roomName: `chamado_${idChamado}`
+                });
 
                 // Busca os dados do chamado e participantes
                 const chamado = await prisma.chamado.findUnique({
@@ -143,11 +171,7 @@ export function setupChatSocket(io: SocketIOServer) {
                     }
                 });
 
-                // Lógica de notificação:
-                // Se gestor envia, notifica todos os outros (analista e solicitante), exceto o gestor
-                // Se analista envia, notifica solicitante
-                // Se solicitante envia, notifica analista
-
+                // Lógica de notificação baseada no tipo de remetente
                 const destinatarios: { id: number, email: string, nome: string }[] = [];
 
                 if (remetente === "gestor") {
@@ -175,8 +199,6 @@ export function setupChatSocket(io: SocketIOServer) {
                             nome: chamado.usuario_chamado_idAnalistaTousuario.nomeUsuario
                         });
                     }
-                    // Adicione este log:
-                    console.log("[SOCKET][DEBUG] Destinatários para gestor:", destinatarios);
                 } else if (remetente === "analista") {
                     if (
                         chamado?.idSolicitante &&
@@ -201,6 +223,13 @@ export function setupChatSocket(io: SocketIOServer) {
                     }
                 }
 
+                logger.info('ChatSocket', 'NOTIFICATION_TARGETS_IDENTIFIED', idRemetente, {
+                    idChamado,
+                    remetente,
+                    destinatariosCount: destinatarios.length,
+                    destinatariosInfo: JSON.stringify(destinatarios.map(d => ({ id: d.id, nome: d.nome })))
+                });
+
                 // Para cada destinatário, verifica se está na sala e envia notificação/email se não estiver
                 for (const destinatario of destinatarios) {
                     // Verifica se o destinatário está na sala do chamado
@@ -215,8 +244,16 @@ export function setupChatSocket(io: SocketIOServer) {
                             }
                         }
                     }
+
                     if (!destinatarioNaSala) {
-                        console.log(`[SOCKET][NOTIF] Criando notificação para idUsuario=${destinatario.id} (remetente=${remetente})`);
+                        // Log único consolidado para notificação offline
+                        logger.info('ChatSocket', 'OFFLINE_USER_NOTIFICATION', idRemetente, {
+                            targetUserId: destinatario.id,
+                            targetUserName: destinatario.nome,
+                            idChamado,
+                            notificationType: 'email_and_database'
+                        });
+
                         (async () => {
                             try {
                                 await notificationService.createNotification({
@@ -225,6 +262,7 @@ export function setupChatSocket(io: SocketIOServer) {
                                     idUsuario: destinatario.id,
                                     idChamado,
                                 });
+
                                 await sendNotificationEmail({
                                     to: destinatario.email,
                                     nomeUsuario: destinatario.nome || "Usuário",
@@ -232,23 +270,31 @@ export function setupChatSocket(io: SocketIOServer) {
                                     assunto: chamado?.assunto || "",
                                     mensagem,
                                 });
+
                             } catch (err) {
-                                console.error("[SOCKET] Erro ao enviar notificação/e-mail:", err);
+                                logger.error('ChatSocket', 'NOTIFICATION_SEND_ERROR', idRemetente, err as Error);
                             }
                         })();
+                    } else {
+                        logger.info('ChatSocket', 'USER_ONLINE_NO_NOTIFICATION_NEEDED', idRemetente, {
+                            targetUserId: destinatario.id,
+                            idChamado
+                        });
                     }
                 }
 
-                console.log(`[SOCKET] Mensagem salva e emitida para chamado_${idChamado}:`, mensagemCompleta);
-
             } catch (err) {
-                console.log(`[SOCKET] Erro ao salvar mensagem:`, err);
+                logger.error('ChatSocket', 'CHAT_MESSAGE_ERROR', idRemetente, err as Error);
                 socket.emit("chat:error", { error: "Erro ao salvar mensagem.", err });
             }
         });
 
         socket.on("disconnect", () => {
-            console.log(`[SOCKET] Desconectado: ${socket.id}`);
+            const userId = socket.data?.userId;
+            logger.info('ChatSocket', 'SOCKET_DISCONNECT', userId, {
+                socketId: socket.id,
+                userId: userId || 'unknown'
+            });
         });
     });
 }
