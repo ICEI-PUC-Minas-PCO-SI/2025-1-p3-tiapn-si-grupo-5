@@ -4,6 +4,7 @@ import { uploadFileToCloudinary } from "../services/UploadService";
 import fs from "fs";
 import { sendTicketStatusChangeEmail } from "../services/EmailServices";
 import { NotificationService } from "../services/NotificationService";
+import { logger } from "../logger/Logger";
 
 export const ticketService = new TicketService();
 const notificationService = new NotificationService();
@@ -11,10 +12,8 @@ const notificationService = new NotificationService();
 export class TicketController {
     async createTicket(req: Request, res: Response) {
         try {
-            console.log("[TicketController] Content-Type:", req.headers["content-type"]);
-            console.log("[TicketController] req.body:", req.body);
-            console.log("[TicketController] req.file:", req.file);
             const { assunto, descricao, idSolicitante, idTipoChamado, idPrioridade, nomeArquivo, urlAnexo } = req.body;
+
             if (!assunto || !descricao || !idSolicitante || !idTipoChamado || !idPrioridade) {
                 return res.status(400).json({ error: "Campos obrigatórios ausentes." });
             }
@@ -24,21 +23,12 @@ export class TicketController {
 
             // Só faz upload se vier arquivo (compatibilidade)
             if (req.file) {
-                console.log("[TicketController] Arquivo recebido:", req.file.originalname, req.file.path);
+                logger.logFileUpload(Number(idSolicitante), req.file.originalname, 'TicketController');
                 const result = await uploadFileToCloudinary(req.file.path, req.file.originalname);
-                console.log("[TicketController] Objeto completo de resposta do Cloudinary:", result);
                 urlAnexoFinal = result.secure_url;
                 nomeArquivoFinal = req.file.originalname;
                 fs.unlinkSync(req.file.path);
-                console.log("[TicketController] urlAnexo definida como:", urlAnexoFinal);
-            } else {
-                console.log("[TicketController] Nenhum arquivo recebido para upload. Usando urlAnexo do body:", urlAnexoFinal);
             }
-
-            console.log("[TicketController] Dados para criar ticket:", {
-                assunto, descricao, idSolicitante, idTipoChamado, idPrioridade, urlAnexo: urlAnexoFinal, nomeArquivoFinal
-            });
-
             const ticket = await ticketService.createTicket(
                 assunto,
                 descricao,
@@ -48,11 +38,18 @@ export class TicketController {
                 urlAnexoFinal,
                 nomeArquivoFinal
             );
-            console.log("[TicketController] Ticket criado:", ticket);
+
+            logger.logCreate('TicketController', 'TICKET', ticket.idChamado, Number(idSolicitante), {
+                assunto,
+                tipoChamado: idTipoChamado,
+                prioridade: idPrioridade,
+                hasAttachment: !!urlAnexoFinal
+            });
+
             res.status(201).json(ticket);
         } catch (error) {
             const err = error as { code?: string; message?: string };
-            console.error("Erro ao criar chamado:", error);
+            logger.error('TicketController', 'CREATE_TICKET_ERROR', undefined, error as Error);
             if (err.code === "ASSOCIATED_TICKETS") {
                 res.status(400).json({ error: "Não é possível criar chamado associado a parâmetros inválidos." });
             } else {
@@ -65,8 +62,7 @@ export class TicketController {
         try {
             const tickets = await ticketService.getAllTickets();
             res.json(tickets);
-        } catch (error) {
-            console.error("Erro ao buscar chamados:", error);
+        } catch {
             res.status(500).json({ error: "Erro ao buscar chamados" });
         }
     }
@@ -75,8 +71,7 @@ export class TicketController {
         try {
             const tickets = await ticketService.getUnassignedTickets();
             res.json(tickets);
-        } catch (error) {
-            console.error("Erro ao buscar chamados não atribuídos:", error);
+        } catch {
             res.status(500).json({ error: "Erro ao buscar chamados não atribuídos" });
         }
     }
@@ -87,8 +82,7 @@ export class TicketController {
             const idAnalista = req.usuario.id;
             const tickets = await ticketService.getTicketsByAnalystId(idAnalista);
             res.json(tickets);
-        } catch (error) {
-            console.error("Erro ao buscar meus chamados:", error);
+        } catch {
             res.status(500).json({ error: "Erro ao buscar meus chamados" });
         }
     }
@@ -98,10 +92,15 @@ export class TicketController {
             const idChamado = Number(req.params.idChamado);
             // @ts-expect-error usuario injetado pelo middleware de autenticação
             const idAnalista = req.usuario.id;
+
+            logger.logUpdate('TicketController', 'TICKET_ASSIGNMENT', idChamado, idAnalista, {
+                action: 'SELF_ASSIGN'
+            });
+
             const ticket = await ticketService.assignTicket(idChamado, idAnalista);
             res.status(200).json(ticket);
         } catch (error) {
-            console.error("Erro ao assumir chamado:", error);
+            logger.error('TicketController', 'ASSIGN_TICKET_ERROR', undefined, error as Error);
             res.status(500).json({ error: "Erro ao assumir chamado" });
         }
     }
@@ -110,13 +109,21 @@ export class TicketController {
         try {
             const idChamado = Number(req.params.idChamado);
             const { idAnalista } = req.body;
+            // @ts-expect-error usuario injetado pelo middleware
+            const requestUserId = req.usuario?.id;
+
             if (!idAnalista) {
                 return res.status(400).json({ error: "idAnalista é obrigatório para atribuição." });
             }
+
+            logger.logUpdate('TicketController', 'TICKET_ANALYST', idChamado, requestUserId, {
+                newAnalyst: idAnalista
+            });
+
             const ticket = await ticketService.updateTicketAnalyst(idChamado, Number(idAnalista));
             res.status(200).json(ticket);
         } catch (error) {
-            console.error("Erro ao atualizar analista do chamado:", error);
+            logger.error('TicketController', 'UPDATE_ANALYST_ERROR', undefined, error as Error);
             res.status(500).json({ error: "Erro ao atualizar analista do chamado" });
         }
     }
@@ -125,9 +132,17 @@ export class TicketController {
         try {
             const idChamado = Number(req.params.idChamado);
             const { idStatus } = req.body;
+            // @ts-expect-error usuario injetado pelo middleware
+            const requestUserId = req.usuario?.id;
+
             if (!idStatus) {
                 return res.status(400).json({ error: "idStatus é obrigatório para atualizar o status." });
             }
+
+            logger.logUpdate('TicketController', 'TICKET_STATUS', idChamado, requestUserId, {
+                newStatus: idStatus
+            });
+
             const ticket = await ticketService.updateTicketStatus(idChamado, Number(idStatus));
             // Notificar usuário sobre a alteração de status
             const fullTicket = await ticketService.getTicketById(idChamado);
@@ -152,7 +167,7 @@ export class TicketController {
             }
             res.status(200).json(ticket);
         } catch (error) {
-            console.error("Erro ao atualizar status do chamado:", error);
+            logger.error('TicketController', 'UPDATE_STATUS_ERROR', undefined, error as Error);
             res.status(500).json({ error: "Erro ao atualizar status do chamado" });
         }
     }
@@ -161,9 +176,18 @@ export class TicketController {
         try {
             const idChamado = Number(req.params.idChamado);
             const { dataFechamento } = req.body;
+            // @ts-expect-error usuario injetado pelo middleware
+            const requestUserId = req.usuario?.id;
+
             if (!dataFechamento) {
                 return res.status(400).json({ error: "dataFechamento é obrigatório para encerrar o chamado." });
             }
+
+            logger.critical('TicketController', 'CLOSE_TICKET', requestUserId, {
+                ticketId: idChamado,
+                closeDate: dataFechamento
+            });
+
             const ticket = await ticketService.closeTicket(idChamado, new Date(dataFechamento));
             // Notificar usuário sobre o fechamento
             const fullTicket = await ticketService.getTicketById(idChamado);
@@ -186,7 +210,7 @@ export class TicketController {
             }
             res.status(200).json(ticket);
         } catch (error) {
-            console.error("Erro ao encerrar chamado:", error);
+            logger.error('TicketController', 'CLOSE_TICKET_ERROR', undefined, error as Error);
             res.status(500).json({ error: "Erro ao encerrar chamado" });
         }
     }
@@ -197,8 +221,7 @@ export class TicketController {
             const idGerencia = req.usuario.gerencia;
             const tickets = await ticketService.getTicketsByManagement(idGerencia);
             res.json(tickets);
-        } catch (error) {
-            console.error("Erro ao buscar chamados da equipe:", error);
+        } catch {
             res.status(500).json({ error: "Erro ao buscar chamados da equipe" });
         }
     }
@@ -208,8 +231,7 @@ export class TicketController {
             const idAnalista = Number(req.params.idAnalista);
             const tickets = await ticketService.getTicketsByAnalystId(idAnalista);
             res.json(tickets);
-        } catch (error) {
-            console.error("Erro ao buscar chamados do analista:", error);
+        } catch {
             res.status(500).json({ error: "Erro ao buscar chamados do analista" });
         }
     }
@@ -219,8 +241,7 @@ export class TicketController {
             const idSolicitante = Number(req.params.idSolicitante);
             const tickets = await ticketService.getTicketsBySolicitanteId(idSolicitante);
             res.json(tickets);
-        } catch (error) {
-            console.error("Erro ao buscar chamados do usuário:", error);
+        } catch {
             res.status(500).json({ error: "Erro ao buscar chamados do usuário" });
         }
     }
@@ -240,8 +261,7 @@ export class TicketController {
                 urlAnexo: ticket.urlAnexo ?? null,
                 nomeArquivo: ticket.nomeArquivo ?? null
             });
-        } catch (error) {
-            console.error("Erro ao buscar chamado por id:", error);
+        } catch {
             res.status(500).json({ error: "Erro ao buscar chamado por id" });
         }
     }
@@ -249,9 +269,17 @@ export class TicketController {
     async reopenTicket(req: Request, res: Response) {
         try {
             const idChamado = Number(req.params.idChamado);
+            // @ts-expect-error usuario injetado pelo middleware
+            const requestUserId = req.usuario?.id;
+
             if (!idChamado) {
                 return res.status(400).json({ error: "idChamado é obrigatório para reabrir o chamado." });
             }
+
+            logger.critical('TicketController', 'REOPEN_TICKET', requestUserId, {
+                ticketId: idChamado
+            });
+
             const ticket = await ticketService.reopenTicket(idChamado);
             // Notificar usuário sobre a reabertura
             const fullTicket = await ticketService.getTicketById(idChamado);
@@ -274,7 +302,7 @@ export class TicketController {
             }
             res.status(200).json(ticket);
         } catch (error) {
-            console.error("Erro ao reabrir chamado:", error);
+            logger.error('TicketController', 'REOPEN_TICKET_ERROR', undefined, error as Error);
             res.status(500).json({ error: "Erro ao reabrir chamado" });
         }
     }
