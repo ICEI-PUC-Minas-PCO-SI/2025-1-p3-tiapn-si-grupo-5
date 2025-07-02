@@ -2,15 +2,22 @@ import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
 import { uploadFileToCloudinary } from "../services/UploadService";
 import fs from "fs";
+import { logger } from "../logger/Logger";
 
 const userService = new UserService();
 
 export class UserController {
     async getAllUsers(req: Request, res: Response) {
         try {
+            // @ts-expect-error usuario injetado pelo middleware
+            const requestUserId = req.usuario?.id;
+
+            logger.info('UserController', 'GET_ALL_USERS', requestUserId);
+
             const clients = await userService.getAllUsers();
             res.json(clients);
         } catch (error) {
+            logger.error('UserController', 'GET_ALL_USERS_ERROR', undefined, error as Error);
             console.error("Erro ao buscar usuários:", error);
             res.status(500).json({ error: "Erro ao buscar usuários" });
         }
@@ -20,9 +27,15 @@ export class UserController {
         try {
             const { idUsuario } = req.params;
             const { matricula, gerencia, tipoUsuario } = req.body;
+            // @ts-expect-error usuario injetado pelo middleware
+            const requestUserId = req.usuario?.id;
+
+            logger.logUpdate('UserController', 'USER', idUsuario, requestUserId, { matricula, gerencia, tipoUsuario });
+
             const updatedUser = await userService.updateUser(Number(idUsuario), { matricula, gerencia, tipoUsuario });
             res.status(200).json(updatedUser);
         } catch (error) {
+            logger.error('UserController', 'UPDATE_USER_ERROR', undefined, error as Error);
             console.error("Erro ao atualizar usuário:", error);
             res.status(500).json({ error: "Erro ao atualizar usuário" });
         }
@@ -32,9 +45,18 @@ export class UserController {
         try {
             const { idUsuario } = req.params;
             const { ativo } = req.body;
+            // @ts-expect-error usuario injetado pelo middleware
+            const requestUserId = req.usuario?.id;
+
+            logger.critical('UserController', 'CHANGE_USER_STATUS', requestUserId, {
+                targetUserId: idUsuario,
+                newStatus: ativo ? 'ACTIVE' : 'INACTIVE'
+            });
+
             const updatedUser = await userService.changeUserStatus(Number(idUsuario), ativo);
             res.status(200).json(updatedUser);
         } catch (error) {
+            logger.error('UserController', 'CHANGE_USER_STATUS_ERROR', undefined, error as Error);
             console.error("Erro ao mudar status do usuário:", error);
             res.status(500).json({ error: "Erro ao mudar status do usuário" });
         }
@@ -74,15 +96,22 @@ export class UserController {
         try {
             const usuarioId = Number(req.params.idUsuario);
             const { nome, email, ramal } = req.body;
+            // @ts-expect-error usuario injetado pelo middleware
+            const requestUserId = req.usuario?.id;
+
             if (!nome || !email || !ramal) {
                 res.status(400).json({ error: "Todos os campos são obrigatórios." });
                 return;
             }
+
             const existingUser = await userService.findUserByEmail(email);
             if (existingUser && existingUser.idUsuario !== usuarioId) {
                 res.status(400).json({ error: "Este e-mail já está em uso por outro usuário." });
                 return;
             }
+
+            logger.logUpdate('UserController', 'USER_PROFILE', usuarioId, requestUserId, { nome, email, ramal });
+
             const updatedUser = await userService.updateProfileUser(usuarioId, { nome, email, ramal });
             res.status(200).json({
                 id: updatedUser.idUsuario,
@@ -95,11 +124,10 @@ export class UserController {
                 ativo: updatedUser.ativo,
                 fotoPerfil: updatedUser.fotoPerfil,
             });
-            return;
         } catch (error) {
+            logger.error('UserController', 'UPDATE_PROFILE_ERROR', undefined, error as Error);
             console.error("Erro ao atualizar perfil do usuário:", error);
             res.status(500).json({ error: "Erro ao atualizar perfil do usuário" });
-            return;
         }
     }
 
@@ -131,19 +159,24 @@ export class UserController {
     async uploadProfilePhoto(req: Request, res: Response) {
         try {
             const idUsuario = Number(req.params.idUsuario);
+            // @ts-expect-error usuario injetado pelo middleware
+            const requestUserId = req.usuario?.id;
+
             if (!req.file) {
                 return res.status(400).json({ error: "Nenhum arquivo enviado." });
             }
-            console.log("[UserController] Foto recebida:", req.file.originalname, req.file.path);
+
+            logger.logFileUpload(requestUserId || idUsuario, req.file.originalname, 'UserController');
+
             const result = await uploadFileToCloudinary(req.file.path, req.file.originalname);
-            console.log("[UserController] Resposta do Cloudinary:", result);
             const fotoPerfilUrl = result.secure_url;
             fs.unlinkSync(req.file.path);
 
-            const updatedUser = await userService.updateProfilePhoto(idUsuario, fotoPerfilUrl);
-            console.log("[UserController] Usuário atualizado com fotoPerfil:", updatedUser);
+            logger.logUpdate('UserController', 'USER_PHOTO', idUsuario, requestUserId, { photoUrl: fotoPerfilUrl });
+
             res.status(200).json({ fotoPerfil: fotoPerfilUrl });
         } catch (error) {
+            logger.error('UserController', 'UPLOAD_PHOTO_ERROR', undefined, error as Error);
             console.error("Erro ao fazer upload da foto de perfil:", error);
             res.status(500).json({ error: "Erro ao fazer upload da foto de perfil." });
         }

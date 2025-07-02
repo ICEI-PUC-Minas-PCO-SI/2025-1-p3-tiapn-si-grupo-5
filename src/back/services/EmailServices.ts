@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import { logger } from '../logger/Logger';
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -22,8 +23,8 @@ export async function sendEmail({
     from?: string;
 }) {
     if (!to || typeof to !== "string" || !to.includes("@")) {
-        console.error('Tentativa de envio de e-mail sem destinatário válido:', to);
-        return; // Não lança erro, apenas loga e retorna
+        logger.warn('EmailService', 'INVALID_EMAIL_ADDRESS', undefined, { to, subject });
+        return;
     }
     try {
         const info = await transporter.sendMail({
@@ -33,11 +34,16 @@ export async function sendEmail({
             text,
             html,
         });
-        console.log('E-mail enviado:', info.response);
+        
+        logger.info('EmailService', 'EMAIL_SENT_SUCCESS', undefined, { 
+            to, 
+            subject, 
+            messageId: info.messageId 
+        });
+        
         return info;
     } catch (error) {
-        console.error('Erro ao enviar e-mail:', error);
-        // Não lança erro para não derrubar o servidor
+        logger.error('EmailService', 'EMAIL_SEND_FAILED', undefined, error as Error);
         return;
     }
 }
@@ -55,6 +61,13 @@ export async function sendNotificationEmail({
     assunto: string;
     mensagem: string;
 }) {
+    logger.info('EmailService', 'SEND_NOTIFICATION_EMAIL', undefined, { 
+        to, 
+        nomeUsuario, 
+        idChamado, 
+        assunto 
+    });
+    
     const subject = `Nova mensagem no chamado #${idChamado}`;
     const html = `
         <div style="font-family: Arial, sans-serif; color: #222;">
@@ -80,6 +93,12 @@ export async function sendPasswordResetEmail({
     nomeUsuario: string;
     token: string;
 }) {
+    logger.info('EmailService', 'SEND_PASSWORD_RESET_EMAIL', undefined, { 
+        to, 
+        nomeUsuario, 
+        tokenPrefix: token.substring(0, 8) + '...' 
+    });
+    
     const resetUrl = `${process.env.FRONTEND_URL}reset-password?token=${token}`;
     const subject = "Redefinição de senha - TrackIt";
     const html = `
@@ -107,6 +126,14 @@ export async function sendTicketStatusChangeEmail({
     assunto: string;
     novoStatus: string;
 }) {
+    logger.info('EmailService', 'SEND_STATUS_CHANGE_EMAIL', undefined, { 
+        to, 
+        nomeUsuario, 
+        idChamado, 
+        assunto, 
+        novoStatus 
+    });
+    
     const subject = `Atualização no chamado #${idChamado}`;
     const html = `
         <div style="font-family: Arial, sans-serif; color: #222;">

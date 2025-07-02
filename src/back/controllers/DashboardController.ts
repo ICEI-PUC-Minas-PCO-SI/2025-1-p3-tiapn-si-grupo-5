@@ -56,8 +56,7 @@ export class DashboardController {
             const { idAnalista } = req.query;
             const summary = await dashboardService.getAnalystDashboardSummary(Number(idAnalista));
             res.json(summary);
-        } catch (error) {
-            console.log("Erro ao buscar chamados por analista:", error)
+        } catch {
             res.status(500).json({ error: "Erro ao buscar chamados por analista" });
         }
     }
@@ -66,8 +65,7 @@ export class DashboardController {
         try {
             const summary = await dashboardService.getDashboardSummary();
             res.json(summary);
-        } catch (error) {
-            console.log("Erro ao buscar resumo do dashboard:", error);
+        } catch {
             res.status(500).json({ error: "Erro ao buscar resumo do dashboard" });
         }
     }
