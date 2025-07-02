@@ -8,12 +8,8 @@ export class ChatController {
     async getMessagesByChamado(req: Request, res: Response) {
         try {
             const idChamado = Number(req.params.idChamado);
-            // @ts-expect-error usuario injetado pelo middleware
-            const requestUserId = req.usuario?.id;
 
             if (!idChamado) return res.status(400).json({ error: "idChamado é obrigatório" });
-
-            logger.info('ChatController', 'GET_MESSAGES', requestUserId, { ticketId: idChamado });
 
             const messages = await chatService.getMessagesByChamado(idChamado);
             res.json(messages);

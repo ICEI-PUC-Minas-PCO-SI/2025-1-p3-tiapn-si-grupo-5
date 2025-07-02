@@ -7,15 +7,11 @@ const priorityService = new PriorityService();
 export class PriorityController {
     async getPriorities(req: Request, res: Response) {
         try {
-            // @ts-expect-error usuario injetado pelo middleware
-            const requestUserId = req.usuario?.id;
-
-            logger.info('PriorityController', 'GET_PRIORITIES', requestUserId);
-
             const priorities = await priorityService.getPriorities();
             res.json(priorities);
         } catch (error) {
             logger.error('PriorityController', 'GET_PRIORITIES_ERROR', undefined, error as Error);
+            console.error("Erro ao buscar prioridades:", error);
             res.status(500).json({ error: "Erro ao buscar prioridades" });
         }
     }
@@ -37,6 +33,7 @@ export class PriorityController {
             res.status(201).json(novaPrioridade);
         } catch (error) {
             logger.error('PriorityController', 'CREATE_PRIORITY_ERROR', undefined, error as Error);
+            console.error("Erro ao criar prioridade:", error);
             res.status(500).json({ error: "Erro ao criar prioridade" });
         }
     }
@@ -57,6 +54,7 @@ export class PriorityController {
             res.json(prioridadeAtualizada);
         } catch (error) {
             logger.error('PriorityController', 'UPDATE_PRIORITY_ERROR', undefined, error as Error);
+            console.error("Erro ao atualizar prioridade:", error);
             res.status(500).json({ error: "Erro ao atualizar prioridade" });
         }
     }
@@ -74,6 +72,7 @@ export class PriorityController {
         } catch (error) {
             const err = error as { code?: string; message?: string };
             logger.error('PriorityController', 'DELETE_PRIORITY_ERROR', undefined, error as Error);
+            console.error("Erro ao deletar prioridade:", error);
             if (err.code === "ASSOCIATED_TICKETS") {
                 res.status(400).json({ error: "Não é possível excluir uma prioridade associada a chamados." });
             } else {
@@ -82,3 +81,4 @@ export class PriorityController {
         }
     }
 }
+

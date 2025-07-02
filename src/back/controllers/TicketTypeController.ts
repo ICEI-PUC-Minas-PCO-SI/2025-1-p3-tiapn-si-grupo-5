@@ -7,11 +7,6 @@ const ticketTypeService = new TicketTypeService();
 export class TicketTypeController {
     async getTicketTypes(req: Request, res: Response) {
         try {
-            // @ts-expect-error usuario injetado pelo middleware
-            const requestUserId = req.usuario?.id;
-
-            logger.info('TicketTypeController', 'GET_TICKET_TYPES', requestUserId);
-
             const tipos = await ticketTypeService.getTicketTypes();
             res.json(tipos);
         } catch (error) {

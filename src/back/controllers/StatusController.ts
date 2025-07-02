@@ -7,11 +7,6 @@ const statusService = new StatusService();
 export class StatusController {
     async getStatus(req: Request, res: Response) {
         try {
-            // @ts-expect-error usuario injetado pelo middleware
-            const requestUserId = req.usuario?.id;
-
-            logger.info('StatusController', 'GET_STATUS', requestUserId);
-
             const status = await statusService.getStatus();
             res.json(status);
         } catch (error) {

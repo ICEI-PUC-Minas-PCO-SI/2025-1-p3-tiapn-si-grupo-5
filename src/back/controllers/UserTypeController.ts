@@ -7,11 +7,6 @@ const userTypeService = new UserTypeService();
 export class UserTypeController {
     async getUserTypes(req: Request, res: Response) {
         try {
-            // @ts-expect-error usuario injetado pelo middleware
-            const requestUserId = req.usuario?.id;
-
-            logger.info('UserTypeController', 'GET_USER_TYPES', requestUserId);
-
             const userTypes = await userTypeService.getUserTypes();
             res.json(userTypes);
         } catch (error) {

@@ -7,11 +7,6 @@ const departmentsService = new DepartmentsService();
 export class DepartmentsController {
     async getAllActiveDepartments(req: Request, res: Response) {
         try {
-            // @ts-expect-error usuario injetado pelo middleware
-            const requestUserId = req.usuario?.id;
-
-            logger.info('DepartmentsController', 'GET_ACTIVE_DEPARTMENTS', requestUserId);
-
             const activeDepartmentss = await departmentsService.getAllActiveDepartments();
             res.json(activeDepartmentss);
         } catch (error) {

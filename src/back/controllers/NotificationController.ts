@@ -8,12 +8,8 @@ export class NotificationController {
     async getUserNotifications(req: Request, res: Response) {
         try {
             const idUsuario = Number(req.params.idUsuario);
-            // @ts-expect-error usuario injetado pelo middleware
-            const requestUserId = req.usuario?.id;
 
             if (!idUsuario) return res.status(400).json({ error: "idUsuario obrigatório" });
-
-            logger.info('NotificationController', 'GET_USER_NOTIFICATIONS', requestUserId, { targetUserId: idUsuario });
 
             const notifications = await notificationService.getUserNotifications(idUsuario);
             res.json(notifications);
@@ -48,12 +44,8 @@ export class NotificationController {
     async getUnreadChamados(req: Request, res: Response) {
         try {
             const idUsuario = Number(req.params.idUsuario);
-            // @ts-expect-error usuario injetado pelo middleware
-            const requestUserId = req.usuario?.id;
 
             if (!idUsuario) return res.status(400).json({ error: "idUsuario obrigatório" });
-
-            logger.info('NotificationController', 'GET_UNREAD_TICKETS', requestUserId, { targetUserId: idUsuario });
 
             const chamados = await notificationService.getUnreadChamados(idUsuario);
             res.json(chamados);

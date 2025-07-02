@@ -9,6 +9,7 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+// template base para emails
 const getEmailTemplate = (content: string, title: string) => `
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -40,7 +41,7 @@ const getEmailTemplate = (content: string, title: string) => `
         }
         
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #187094 0%, #0f4c6b 50%, #031a22 100%);
             padding: 40px 30px;
             text-align: center;
             color: white;
@@ -81,28 +82,28 @@ const getEmailTemplate = (content: string, title: string) => `
         
         .greeting {
             font-size: 24px;
-            color: #2c3e50;
+            color: #031a22;
             margin-bottom: 20px;
             font-weight: 600;
         }
         
         .message {
             font-size: 16px;
-            color: #4a5568;
+            color: #0f4c6b;
             margin-bottom: 20px;
         }
         
         .highlight-box {
-            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
-            border-left: 4px solid #667eea;
+            background: linear-gradient(135deg, #f1f8fb 0%, #e6f4f8 100%);
+            border-left: 4px solid #187094;
             padding: 20px;
             margin: 25px 0;
             border-radius: 8px;
         }
         
         .ticket-info {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
+            background: #f8fcfd;
+            border: 1px solid #b8d9e4;
             border-radius: 8px;
             padding: 20px;
             margin: 20px 0;
@@ -111,7 +112,7 @@ const getEmailTemplate = (content: string, title: string) => `
         .ticket-number {
             font-size: 20px;
             font-weight: bold;
-            color: #667eea;
+            color: #187094;
             margin-bottom: 10px;
         }
         
@@ -123,18 +124,18 @@ const getEmailTemplate = (content: string, title: string) => `
         
         .info-label {
             font-weight: 600;
-            color: #2d3748;
+            color: #031a22;
             min-width: 100px;
         }
         
         .info-value {
-            color: #4a5568;
+            color: #0f4c6b;
         }
         
         .status-badge {
             display: inline-block;
             padding: 6px 12px;
-            background: #667eea;
+            background: linear-gradient(135deg, #187094 0%, #0f4c6b 100%);
             color: white;
             border-radius: 20px;
             font-size: 14px;
@@ -144,35 +145,37 @@ const getEmailTemplate = (content: string, title: string) => `
         .button {
             display: inline-block;
             padding: 12px 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, #187094 0%, #0f4c6b 50%, #031a22 100%);
+            color: white !important;
             text-decoration: none;
             border-radius: 8px;
             font-weight: 600;
             margin: 20px 0;
             transition: transform 0.2s;
+            box-shadow: 0 4px 12px rgba(24, 112, 148, 0.3);
         }
         
         .button:hover {
             transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(24, 112, 148, 0.4);
         }
         
         .footer {
-            background: #f8f9fa;
+            background: #f8fcfd;
             padding: 30px;
             text-align: center;
-            border-top: 1px solid #e9ecef;
+            border-top: 1px solid #b8d9e4;
         }
         
         .footer-text {
             font-size: 14px;
-            color: #6c757d;
+            color: #0f4c6b;
             margin-bottom: 10px;
         }
         
         .footer-links {
             font-size: 12px;
-            color: #adb5bd;
+            color: #187094;
         }
         
         @media (max-width: 600px) {
@@ -244,13 +247,13 @@ export async function sendEmail({
             text,
             html,
         });
-        
-        logger.info('EmailService', 'EMAIL_SENT_SUCCESS', undefined, { 
-            to, 
-            subject, 
-            messageId: info.messageId 
+
+        logger.info('EmailService', 'EMAIL_SENT_SUCCESS', undefined, {
+            to,
+            subject,
+            messageId: info.messageId
         });
-        
+
         return info;
     } catch (error) {
         logger.error('EmailService', 'EMAIL_SEND_FAILED', undefined, error as Error);
@@ -271,15 +274,9 @@ export async function sendNotificationEmail({
     assunto: string;
     mensagem: string;
 }) {
-    logger.info('EmailService', 'SEND_NOTIFICATION_EMAIL', undefined, { 
-        to, 
-        nomeUsuario, 
-        idChamado, 
-        assunto 
-    });
-    
+
     const subject = `📩 Nova mensagem no chamado #${idChamado}`;
-    
+
     const content = `
         <div class="content">
             <div class="greeting">Olá, ${nomeUsuario}! 👋</div>
@@ -309,7 +306,7 @@ export async function sendNotificationEmail({
             </a>
         </div>
     `;
-    
+
     const html = getEmailTemplate(content, `Nova mensagem - Chamado #${idChamado}`);
     return sendEmail({ to, subject, html });
 }
@@ -323,15 +320,15 @@ export async function sendPasswordResetEmail({
     nomeUsuario: string;
     token: string;
 }) {
-    logger.info('EmailService', 'SEND_PASSWORD_RESET_EMAIL', undefined, { 
-        to, 
-        nomeUsuario, 
-        tokenPrefix: token.substring(0, 8) + '...' 
+    logger.info('EmailService', 'SEND_PASSWORD_RESET_EMAIL', undefined, {
+        to,
+        nomeUsuario,
+        tokenPrefix: token.substring(0, 8) + '...'
     });
-    
+
     const resetUrl = `${process.env.FRONTEND_URL}reset-password?token=${token}`;
     const subject = "🔐 Redefinição de senha - TrackIT";
-    
+
     const content = `
         <div class="content">
             <div class="greeting">Olá, ${nomeUsuario}! 👋</div>
@@ -357,7 +354,7 @@ export async function sendPasswordResetEmail({
             </div>
         </div>
     `;
-    
+
     const html = getEmailTemplate(content, "Redefinição de senha");
     return sendEmail({ to, subject, html });
 }
@@ -375,16 +372,16 @@ export async function sendTicketStatusChangeEmail({
     assunto: string;
     novoStatus: string;
 }) {
-    logger.info('EmailService', 'SEND_STATUS_CHANGE_EMAIL', undefined, { 
-        to, 
-        nomeUsuario, 
-        idChamado, 
-        assunto, 
-        novoStatus 
+    logger.info('EmailService', 'SEND_STATUS_CHANGE_EMAIL', undefined, {
+        to,
+        nomeUsuario,
+        idChamado,
+        assunto,
+        novoStatus
     });
-    
+
     const subject = `📊 Atualização no chamado #${idChamado}`;
-    
+
     // Escolher emoji baseado no status
     let statusEmoji = "📊";
     const statusLower = novoStatus.toLowerCase();
@@ -397,7 +394,7 @@ export async function sendTicketStatusChangeEmail({
     } else if (statusLower.includes("reaberto")) {
         statusEmoji = "🔄";
     }
-    
+
     const content = `
         <div class="content">
             <div class="greeting">Olá, ${nomeUsuario}! 👋</div>
@@ -428,7 +425,8 @@ export async function sendTicketStatusChangeEmail({
             </a>
         </div>
     `;
-    
+
     const html = getEmailTemplate(content, `Atualização - Chamado #${idChamado}`);
     return sendEmail({ to, subject, html });
 }
+

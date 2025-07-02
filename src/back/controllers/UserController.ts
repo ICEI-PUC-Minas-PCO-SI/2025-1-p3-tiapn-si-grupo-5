@@ -9,11 +9,6 @@ const userService = new UserService();
 export class UserController {
     async getAllUsers(req: Request, res: Response) {
         try {
-            // @ts-expect-error usuario injetado pelo middleware
-            const requestUserId = req.usuario?.id;
-
-            logger.info('UserController', 'GET_ALL_USERS', requestUserId);
-
             const clients = await userService.getAllUsers();
             res.json(clients);
         } catch (error) {
